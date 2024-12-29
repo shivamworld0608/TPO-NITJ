@@ -6,7 +6,7 @@ const Sdashboard = () => {
       <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
         Welcome to
         <span className="bg-custom-blue text-transparent bg-clip-text">
-          {" "}Student Dasboard for Internships and Placements
+          {" "}Student Dasboard for Internships and Placements of NIT Jalandhar
         </span>
       </h1>
     </div>
