@@ -16,3 +16,10 @@ const OA = () => {
 };
 
 export default OA;
+
+git pull origin main
+git add .
+git commit -m "sdashboard changes"
+git push origin main
+
+
