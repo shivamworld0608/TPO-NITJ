@@ -10,6 +10,11 @@ import Recruiter from "./Pages/Recruiter";
 import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
+import HomeDashboard from "./Pages/StudentDashboard/HomeDashboard";
+import JobApplication from "./Pages/StudentDashboard/JobApplication";
+import OA from "./Pages/StudentDashboard/OA";
+import Interview from "./Pages/StudentDashboard/Interview";
+import Mailbox from "./Pages/StudentDashboard/Mailbox";
 
 const App = () => {
 
@@ -27,7 +32,13 @@ const App = () => {
         <Route path="/login" element={<Login/>} />
         <Route path="/placements" element={<Placement/>} />
         <Route path="/recruiter" element={<Recruiter/>} />
-        <Route path="/sdashboard" element={authUser? <Sdashboard/> : <Navigate to="/" /> } />
+        <Route path="/sdashboard" element={authUser ? <Sdashboard /> : <Navigate to="/" />}>
+          <Route path="home" element={<HomeDashboard />} />
+          <Route path="job-application" element={<JobApplication />} />
+          <Route path="oa" element={<OA />} />
+          <Route path="interviews" element={<Interview />} />
+          <Route path="mailbox" element={<Mailbox />} />
+        </Route>
         <Route path="/rdashboard" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
         <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
       </Routes>
