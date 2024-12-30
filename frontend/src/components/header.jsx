@@ -6,6 +6,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {User} from "lucide-react";
 
+import ProfileImage from '../assets/nitj-logo.png';
+
 
 const Header = () => {
   const { authUser, userData } = useSelector((state) => state.auth);
@@ -34,7 +36,7 @@ const Header = () => {
       <div className="container mx-auto flex flex-col items-center py-0">
         <div className="flex items-center gap-6 py-4">
           <img
-            src="nitj-logo.png"
+            src={ProfileImage}
             alt="Institute Logo"
             className="w-36 h-36"
           />
