@@ -66,7 +66,7 @@ const PlacementInsights = () => {
   });
 
   return (
-    <div className="p-6 bg-gray-50">
+    <div className="sm:p-6 bg-gray-50">
       <motion.div
         className="bg-white p-6 shadow-lg rounded-md"
         initial={{ opacity: 0 }}
