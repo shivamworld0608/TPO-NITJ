@@ -23,7 +23,7 @@ const Sidebar = ({ onNavigate }) => {
 
   return (
     <div
-      className={`bg-gray-800 text-white ${isOpen ? "w-64" : "w-16"} flex flex-col transition-all duration-300`}
+      className={`bg-gray-800 text-white ${isOpen ? "sm:w-64" : "sm:w-16"} sm:h-[1731.6px] flex flex-col transition-all duration-300 w-full ${isOpen ? "h-[700px]" : "h-10"} `}
     >
       <button
         onClick={toggleSidebar}
@@ -39,7 +39,7 @@ const Sidebar = ({ onNavigate }) => {
             onClick={() => onNavigate(item.id)}
           >
             {item.icon}
-            {isOpen && <span>{item.name}</span>}
+            {(isOpen || innerWidth < 625) && <span>{item.name}</span>}
           </button>
         ))}
       </nav>
