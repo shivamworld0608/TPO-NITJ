@@ -8,7 +8,7 @@ import jwt from "jsonwebtoken";
 import authroutes from "./routes/auth.js";
 import interviewroutes from "./routes/interview.js";
 import oaroutes from "./routes/oa.js";
-import applicationformroutes from "./routes/applicationform.js";
+/* import applicationformroutes from "./routes/applicationform.js"; */
 
 const app = express();
 dotenv.config();
@@ -48,7 +48,7 @@ app.get('/check-auth', authenticate, (req, res) => {
 app.use('/auth', authroutes);
 app.use('/interview', interviewroutes);
 app.use('/oa',oaroutes);
-app.use('/applicationform',applicationformroutes);
+/* app.use('/applicationform',applicationformroutes); */
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
