@@ -144,10 +144,10 @@ const JobManagement = () => {
         <tbody>
           {paginatedJobs.map((job) => (
             <tr key={job.id} className="border-b">
-              <td className="px-4 py-2">{job.title}</td>
+              <td className="sm:px-4 px-2 py-2">{job.title}</td>
               <td className="px-4 py-2">{job.company}</td>
               <td className="px-4 py-2">{job.status}</td>
-              <td className="px-4 py-2 flex space-x-4">
+              <td className="px-4 py-2 flex sm:flex-row flex-col sm:space-y-0 space-y-4 items-center justify-center sm:space-x-4">
                 <button
                   onClick={() => handleEditJob(job)}
                   className="px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600"

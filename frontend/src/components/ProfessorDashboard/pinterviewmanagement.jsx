@@ -142,22 +142,22 @@ const InterviewManagement = () => {
       <h3 className="text-lg font-semibold mb-4">Scheduled Interviews</h3>
       <table className="min-w-full table-auto">
         <thead>
-          <tr>
-            <th className="px-4 py-2 border-b">Candidate Name</th>
-            <th className="px-4 py-2 border-b">Job Title</th>
-            <th className="px-4 py-2 border-b">Date</th>
-            <th className="px-4 py-2 border-b">Status</th>
-            <th className="px-4 py-2 border-b">Actions</th>
+          <tr className="sm:text-base text-sm"> 
+            <th className="sm:px-4 px-2 py-2 border-b">Candidate Name</th>
+            <th className="sm:px-4 px-2 py-2 border-b">Job Title</th>
+            <th className="sm:px-4 px-2 py-2 border-b">Date</th>
+            <th className="sm:px-4 px-2 py-2 border-b">Status</th>
+            <th className="sm:px-4 px-2 py-2 border-b">Actions</th>
           </tr>
         </thead>
         <tbody>
           {paginatedInterviews.map((interview) => (
-            <tr key={interview.id} className="border-b">
-              <td className="px-4 py-2">{interview.candidate}</td>
-              <td className="px-4 py-2">{interview.job}</td>
-              <td className="px-4 py-2">{interview.date}</td>
-              <td className="px-4 py-2">{interview.status}</td>
-              <td className="px-4 py-2 flex space-x-4">
+            <tr key={interview.id} className="border-b sm:text-base text-sm">
+              <td className="sm:px-4 px-2 py-2">{interview.candidate}</td>
+              <td className="sm:px-4 px-2 py-2">{interview.job}</td>
+              <td className="sm:px-4 px-2 py-2">{interview.date}</td>
+              <td className="sm:px-4 px-2 py-2">{interview.status}</td>
+              <td className="sm:px-4 px-2 py-2 flex flex-col space-y-4 items-center justify-center sm:space-y-0 sm:flex-row sm:space-x-4">
                 <button
                   onClick={() => handleEditInterview(interview)}
                   className="px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600"
