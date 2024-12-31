@@ -11,6 +11,7 @@ import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
 
+
 const App = () => {
 
   const dispatch = useDispatch();
@@ -27,7 +28,7 @@ const App = () => {
         <Route path="/login" element={<Login/>} />
         <Route path="/placements" element={<Placement/>} />
         <Route path="/recruiter" element={<Recruiter/>} />
-        <Route path="/sdashboard" element={authUser? <Sdashboard/> : <Navigate to="/" /> } />
+        <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/" />}/>         
         <Route path="/rdashboard" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
         <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
       </Routes>
