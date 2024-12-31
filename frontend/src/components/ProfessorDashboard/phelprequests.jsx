@@ -132,7 +132,7 @@ const HelpRequests = () => {
   };
 
   return (
-    <div className="p-6 w-full flex flex-col space-y-4 bg-gray-50">
+    <div className="sm:p-6 w-full flex flex-col space-y-4 bg-gray-50">
       <div className="bg-white p-6 shadow-md rounded-md w-full">
         <h2 className="text-2xl font-semibold mb-4 flex justify-between items-center">
           Help Requests
