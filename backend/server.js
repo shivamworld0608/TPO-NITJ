@@ -4,10 +4,13 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+
 import authroutes from "./routes/auth.js";
+import interviewroutes from "./routes/interview.js";
+import oaroutes from "./routes/oa.js";
+import applicationformroutes from "./routes/applicationform.js";
 
 const app = express();
-
 dotenv.config();
 app.use(cors({credentials: true, origin: process.env.CLIENT_URL}));
 
@@ -43,9 +46,11 @@ app.get('/check-auth', authenticate, (req, res) => {
 });
 
 app.use('/auth', authroutes);
-/* app.use('/', authenticate, dasboardroutes); */
+app.use('/interview', interviewroutes);
+app.use('/oa',oaroutes);
+app.use('/applicationform',applicationformroutes);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

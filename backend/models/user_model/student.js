@@ -36,6 +36,12 @@ const studentSchema = new mongoose.Schema({
   cgpa: {
     type: String,
    },
+  gender: {
+    type:String,
+  },
+  active_backlogs: {
+    type: Boolean,
+  },
   image: {
     type: String,
     },
