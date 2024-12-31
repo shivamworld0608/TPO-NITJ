@@ -28,9 +28,9 @@ const App = () => {
         <Route path="/login" element={<Login/>} />
         <Route path="/placements" element={<Placement/>} />
         <Route path="/recruiter" element={<Recruiter/>} />
-        <Route path="/sdashboard/*" element={<Sdashboard />}/>         
-        <Route path="/rdashboard" element={<Rdashboard/>} />
-        <Route path="/pdashboard" element={<Pdashboard/>} />
+        <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/"/>}/>         
+        <Route path="/rdashboard" element={authUser ? <Rdashboard /> : <Navigate to="/"/>} />
+        <Route path="/pdashboard" element={authUser ? <Pdashboard /> : <Navigate to="/"/>} />
       </Routes>
       <Toaster />
     </Router>
