@@ -154,8 +154,8 @@ const OAManagement = () => {
             <tr key={oa.id} className="border-b">
               <td className="px-4 py-2">{oa.studentName}</td>
               <td className="px-4 py-2">{oa.company}</td>
-              <td className="px-4 py-2">{oa.status}</td>
-              <td className="px-4 py-2 flex space-x-4">
+              <td className="sm:px-4 px-2 py-2">{oa.status}</td>
+              <td className="px-4 py-2 flex flex-col space-y-4 items-center justify-center sm:space-x-4 sm:flex-row sm:space-y-0">
                 <button
                   onClick={() => handleEditOA(oa)}
                   className="px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600"

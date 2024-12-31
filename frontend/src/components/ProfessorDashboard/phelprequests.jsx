@@ -138,7 +138,7 @@ const HelpRequests = () => {
           Help Requests
           <button
             onClick={() => setIsAddingRequest(true)}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all"
+            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all "
           >
             <FaPlus className="mr-2" />
             Add Request
