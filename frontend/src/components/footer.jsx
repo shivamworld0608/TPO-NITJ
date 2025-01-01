@@ -69,9 +69,9 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="hidden basis-2/3 p-[25px] lg:block">
+      <div className="basis-2/3 p-[25px] lg:block">
         <h2 className="my-1 text-xl font-semibold">Quick Links</h2>
-        <div className="flex flex-row p-[15px]">
+        <div className="flex flex-row p-[15px] gap-10">
           {[
             [
               { text: "Admission", href: "https://www.nitj.ac.in/admissions/index.html#btech" },
