@@ -96,7 +96,7 @@ const ExperienceSharing = () => {
   };
 
   return (
-    <div className="p-6 w-full bg-gray-50">
+    <div className="sm:p-6 w-full bg-gray-50">
       <div className="bg-white p-6 shadow-md rounded-md">
         <h2 className="text-2xl font-semibold mb-4 flex justify-between items-center">
           Experience Sharing

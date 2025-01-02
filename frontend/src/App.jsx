@@ -32,7 +32,6 @@ const App = () => {
         <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/" />}/>         
         <Route path="/rdashboard" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
         <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
-        <Route path="/jobdeatil" element={authUser? <Jobdetail/> : <Navigate to="/" />} />
       </Routes>
       <Toaster />
     </Router>
