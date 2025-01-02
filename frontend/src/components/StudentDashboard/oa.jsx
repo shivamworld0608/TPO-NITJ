@@ -14,8 +14,8 @@ const OnlineAssessment = () => {
                 setLoading(true);
                 const userId = "6769a8e96891a0b319d033a8";
 
-                const upcomingResponse = await axios.get(`http://localhost:5000/oa/eligible-upcoming/${userId}/`);
-                const pastResponse = await axios.get(`http://localhost:5000/oa/eligible-past/${userId}/`);
+                const upcomingResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-upcoming/${userId}/`);
+                const pastResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-past/${userId}/`);
 
                 setUpcomingJobs(upcomingResponse.data.oas || []);
                 setPreviousJobs(pastResponse.data.oas || []);

@@ -19,7 +19,7 @@ export default function Oadetails(props) {
                     return;
                 }
                
-                const dummyData = await axios.get(`http://localhost:5000/oa/details/${props.job_id}/`);
+                const dummyData = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/details/${props.job_id}/`);
 
                 setJobDetails(dummyData.data.oa ||[]);
             } catch (error) {
@@ -41,7 +41,7 @@ export default function Oadetails(props) {
               console.error("User ID not found in token");
               return;
             }
-            const result = await axios.get(`http://localhost:5000/oa/check-shortlist-status/${userId}/${props.job_id}/`);
+            const result = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/check-shortlist-status/${userId}/${props.job_id}/`);
     
             setJobResult(result.data.message && result.data.message !== "" ? result.data.message : "Not yet"); 
           } catch (error) {
