@@ -27,7 +27,7 @@ const PlacementPolicy = () => {
   ];
 
   return (
-    <div className="p-6 bg-gray-100 space-y-6">
+    <div className="sm:p-6 bg-gray-100 space-y-6">
       <div className="bg-white shadow-md rounded-md p-6">
         <h2 className="text-2xl font-semibold mb-4">Placement Policy</h2>
 
