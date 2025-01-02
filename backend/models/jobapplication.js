@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+  import mongoose from "mongoose";
 
 const JobApplicationSchema = new mongoose.Schema({
    job_id: {
@@ -16,7 +16,7 @@ const JobApplicationSchema = new mongoose.Schema({
      type: String,
    },
    jobdescription: {
-     type: String,
+     type: String,  
    },
    joblocation: {
      type: String,
