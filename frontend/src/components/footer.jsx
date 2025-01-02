@@ -120,9 +120,12 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="border-t border-zinc-400 flex flex-col bg-slate-800 px-2 p-[20px] text-center text-white lg:flex-col justify-between ">
+      <div className="border-t border-zinc-400 flex flex-col bg-slate-800 px-7 p-[20px] text-center text-white lg:flex-row justify-between ">
         <div className="pb-[10px] text-[12px] lg:pb-0 lg:text-[15px]">
           © Copyright 2022, All Rights Reserved NIT Jalandhar
+        </div>
+        <div className="pb-[10px] text-[12px] lg:pb-0 lg:text-[15px]">
+          Developed By : Web Development Cell, NIT Jalandhar
         </div>
       </div>
     </>
