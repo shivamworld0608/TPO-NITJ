@@ -1,5 +1,5 @@
 import React from 'react';
-import TeamSection from '../components/TeamSection';
+import TeamSection from '../components/Developers/TeamSection.jsx';
 import Header from '../components/header';
 import Footer from '../components/footer';
 const teamData = {
