@@ -10,6 +10,7 @@ import Recruiter from "./Pages/Recruiter";
 import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
+import Jobdetail from "./Pages/Jobdetail";
 
 
 const App = () => {
