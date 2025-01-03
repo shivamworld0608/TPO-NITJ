@@ -10,7 +10,7 @@ const DeveloperSchema = new mongoose.Schema({
   linkedinUrl: {
     type: String,
   },
-  mobileNo: {
+  mobile: {
     type: String,
   },
   role: {
