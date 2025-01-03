@@ -11,13 +11,8 @@ import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
 import TeamPage from "./Pages/TeamPage";
-<<<<<<< HEAD
-
-
-=======
 import WhyRecruit from "./Pages/WhyRecruit";
 import FAQ from "./Pages/Faqs";
->>>>>>> upstream/main
 
 const App = () => {
 
@@ -40,11 +35,7 @@ const App = () => {
         <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/" />}/>         
         <Route path="/rdashboard" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
         <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
-<<<<<<< HEAD
-        
-=======
         <Route path="/whyrecruit" element={<WhyRecruit />} />
->>>>>>> upstream/main
       </Routes>
       <Toaster />
     </Router>
