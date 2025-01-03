@@ -70,7 +70,7 @@ const Header = () => {
             </li>
             <li>
               <a
-                href="/"
+                href="/whyrecruit"
                 className="text-custom-blue font-semibold hover:text-blue-800"
               >
                 Why Recruit?
