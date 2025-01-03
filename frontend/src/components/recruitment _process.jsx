@@ -1,4 +1,3 @@
-import { CircleDot } from "lucide-react";
 import Header from "./header";
 import Footer from "./footer";
 import { useState } from "react";
@@ -6,16 +5,13 @@ import { useState } from "react";
 const Card = ({ title, content, headerColor = "custom-blue", index }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Toggle Read More
   const toggleReadMore = () => setIsExpanded(!isExpanded);
 
-  // Determine if the content exceeds the threshold
   const contentThreshold = 150;
   const isContentLong = content.length > contentThreshold;
 
   return (
     <div className="group rounded-xl overflow-hidden bg-white shadow-lg hover:shadow-2xl hover:scale-[1.05] hover:rotate-1 transition-all duration-300 border border-gray-200">
-      {/* Header Section */}
       <div className={`${headerColor} p-8 flex flex-col items-center text-center gap-4`}>
         <div className="flex-shrink-0 flex items-center justify-center bg-white text-blue-600 rounded-full w-14 h-14 shadow-lg font-bold text-2xl">
           {String(index).padStart(2, "0")}
@@ -25,7 +21,6 @@ const Card = ({ title, content, headerColor = "custom-blue", index }) => {
         </h3>
       </div>
 
-      {/* Content Section */}
       <div className="p-8">
         <p
           className={`text-gray-700 leading-relaxed text-lg group-hover:text-blue-600 group-hover:underline transition-colors duration-300 ${
@@ -35,7 +30,6 @@ const Card = ({ title, content, headerColor = "custom-blue", index }) => {
           {isExpanded ? content : `${content.substring(0, contentThreshold)}`}
         </p>
 
-        {/* Read More Button */}
         {isContentLong && (
           <button
             onClick={toggleReadMore}
