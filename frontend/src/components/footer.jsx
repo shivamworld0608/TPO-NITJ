@@ -125,7 +125,7 @@ const Footer = () => {
           © Copyright 2022, All Rights Reserved NIT Jalandhar
         </div>
         <div className="pb-[10px] text-[12px] lg:pb-0 lg:text-[15px]">
-          Developed By : Web Development Cell, NIT Jalandhar
+          Developed By <a href="/team" className="text-yellow-300 hover:text-yellow-300">Placement Portal Dev Team</a>
         </div>
       </div>
     </>

@@ -12,7 +12,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Home from './StudentDashboard/home';
-import JobApplications from './StudentDashboard/job-application';
+import JobApplications from './StudentDashboard/jobprofile';
 import Interviews from './StudentDashboard/interviews';
 import MailboxComponent from './StudentDashboard/mailbox';
 import OnlineAssessment from './StudentDashboard/oa';
