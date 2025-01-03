@@ -16,6 +16,8 @@ import Interviews from './StudentDashboard/interviews';
 import MailboxComponent from './StudentDashboard/mailbox';
 import OnlineAssessment from './StudentDashboard/oa';
 import ProfileImage from '../assets/chillguy.png';
+
+
 const StudentDashboards = () => {
   const navigate = useNavigate();
   const location = useLocation();

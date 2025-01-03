@@ -78,7 +78,7 @@ const Header = () => {
             </li>
             <li>
               <a
-                href="/"
+                href="/faq"
                 className="text-custom-blue font-semibold hover:text-blue-800"
               >
                 FAQ's
