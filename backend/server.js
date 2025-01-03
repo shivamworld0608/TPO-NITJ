@@ -8,6 +8,12 @@ import jwt from "jsonwebtoken";
 import authroutes from "./routes/auth.js";
 import interviewroutes from "./routes/interview.js";
 import oaroutes from "./routes/oa.js";
+import profileroutes from "./routes/profile.js";
+import devteamroutes from "./routes/devteam.js";
+import jobprofileroutes from "./routes/jobprofile.js";
+
+/* import applicationroutes from "./routes/application.js"; */
+ import formTemplateroutes from "./routes/formTemplate.js"; 
 /* import applicationformroutes from "./routes/applicationform.js"; */
 
 const app = express();
@@ -41,6 +47,7 @@ mongoose.connect(process.env.MONGO_URI)
     console.log(err);
 })
 
+
 app.get('/check-auth', authenticate, (req, res) => {
   res.status(200).json({ message: 'Authenticated', user: req.user });
 });
@@ -48,6 +55,11 @@ app.get('/check-auth', authenticate, (req, res) => {
 app.use('/auth', authroutes);
 app.use('/interview', interviewroutes);
 app.use('/oa',oaroutes);
+app.use('/profile',authenticate, profileroutes);
+app.use('/devteam',devteamroutes);
+app.use('/jobprofile',authenticate,jobprofileroutes);
+
+app.use('/api', formTemplateroutes);
 /* app.use('/applicationform',applicationformroutes); */
 
 const port = process.env.PORT || 5000;
