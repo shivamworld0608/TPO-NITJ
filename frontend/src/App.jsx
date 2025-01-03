@@ -31,7 +31,7 @@ const App = () => {
         <Route path="/recruiter" element={<Recruiter/>} />
         <Route path="/team" element={<TeamPage/>} />
         <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/" />}/>         
-        <Route path="/rdashboard" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
+        <Route path="/rdashboard/*" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
         <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
       </Routes>
       <Toaster />

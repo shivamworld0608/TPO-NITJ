@@ -1,13 +1,15 @@
   import mongoose from "mongoose";
 
-const JobApplicationSchema = new mongoose.Schema({
+const JobProfileSchema = new mongoose.Schema({
+  recruiter_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Recruiter",
+  },
    job_id: {
      type: String,
-     required: true,
    },
    company_name: {
      type: String,
-     required: true,
    },
    company_logo: {
      type: String,
@@ -36,26 +38,22 @@ const JobApplicationSchema = new mongoose.Schema({
    }},
    deadline: {
      type: Date,
-     required: true,
    },
    Hiring_Workflow: {
     type: [
       {
         step_type: {
           type: String,
-          required: true,
           enum: ['Online Assessment', 'Technical Interview', 'HR Interview', 'Group Discussion', 'Final Announcement'],
         },
         step_name: {
           type: String,
-          required: true,
         },
         description: {
           type: String,
         },
         tentative_date: {
           type: Date,
-          required: true,
         },
       },
     ],
@@ -63,10 +61,10 @@ const JobApplicationSchema = new mongoose.Schema({
    },
    eligibility_criteria: {
     type: {
-      department_allowed: {
-        type: [String],
+      department_allowed: [{
+        type: String,
         enum: ['CSE', 'ECE', 'EE', 'ME', 'CE', 'IT', 'CH','ICE','BT','TT','IPE'],
-      },
+      }],
       gender_allowed: {
         type: String,
         enum: ['Male', 'Female', 'Other', 'Any'],
@@ -97,7 +95,7 @@ const JobApplicationSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-  const JobApplication = mongoose.model('JobApplication', JobApplicationSchema);
+  const JobProfile = mongoose.model('JobProfile', JobProfileSchema);
 
-  export default JobApplication;
+  export default JobProfile;
   
