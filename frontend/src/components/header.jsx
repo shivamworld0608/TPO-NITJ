@@ -62,7 +62,7 @@ const Header = () => {
         </div>
       </div>
       {/* <!-- Menu for mobile ends--> */}
-      <header className="fixed top-0 right-0 left-0 z-40 bg-black">
+      <header className="fixed top-0 right-0 left-0 z-40">
         {/* <!-- TOP NAV BAR stats --> */}
         <div id="top_bar"
           className="absolute top-0 right-0 left-0 transition-transform delay-200 h-7 bg-[#0369a0] py-0.5 px-2 sm:px-12 text-xs uppercase text-white shadow-md">
