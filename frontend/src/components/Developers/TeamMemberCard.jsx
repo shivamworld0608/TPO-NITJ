@@ -1,7 +1,7 @@
 import React from 'react';
 import { Phone, Linkedin } from 'lucide-react';
 
-const TeamMemberCard = ({ image, name, linkedin, mobile }) => (
+const TeamMemberCard = ({ image, name, linkedinUrl, mobile }) => (
     <div className="w-80 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 bg-white overflow-hidden">
         <div className="w-full h-48 relative">
             <img
@@ -16,7 +16,7 @@ const TeamMemberCard = ({ image, name, linkedin, mobile }) => (
         <div className="p-6">
             <div className="flex flex-col space-y-4">
                 <a
-                    href={linkedin}
+                    href={linkedinUrl}
                     className="flex items-center space-x-3 text-blue-600 hover:text-blue-800 transition-colors p-2 rounded-lg hover:bg-blue-50 group"
                     target="_blank"
                     rel="noopener noreferrer"

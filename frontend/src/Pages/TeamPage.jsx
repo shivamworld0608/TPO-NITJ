@@ -1,53 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import TeamSection from '../components/Developers/TeamSection.jsx';
 import Header from '../components/header';
 import Footer from '../components/footer';
-const teamData = {
-    coordinator: [
-        {
-            image: "https://t4.ftcdn.net/jpg/06/48/39/19/360_F_648391979_uMz6EwAlKNIJnK9r46UpTiM17nT8GuLl.jpg",
-            name: "John Doe",
-            linkedin: "https://www.linkedin.com/in/prem-kumar-kardale-b72192268/",
-            mobile: "+91 9988776655"
-        }
-    ],
-    devTeam: [
-        {
-            image: "https://t4.ftcdn.net/jpg/06/48/39/19/360_F_648391979_uMz6EwAlKNIJnK9r46UpTiM17nT8GuLl.jpg",
-            name: "Jane Smith",
-            linkedin: "https://www.linkedin.com/in/prem-kumar-kardale-b72192268/",
-            mobile: "+91 9988776655"
-        },
-        {
-            image: "https://t4.ftcdn.net/jpg/06/48/39/19/360_F_648391979_uMz6EwAlKNIJnK9r46UpTiM17nT8GuLl.jpg",
-            name: "Mike Johnson",
-            linkedin: "https://www.linkedin.com/in/prem-kumar-kardale-b72192268/",
-            mobile: "+91 9988776655"
-        }
-    ],
-    developers: [
-        {
-            image: "https://t4.ftcdn.net/jpg/06/48/39/19/360_F_648391979_uMz6EwAlKNIJnK9r46UpTiM17nT8GuLl.jpg",
-            name: "Sarah Wilson",
-            linkedin: "https://www.linkedin.com/in/prem-kumar-kardale-b72192268/",
-            mobile: "+91 9988776655"
-        },
-        {
-            image: "https://t4.ftcdn.net/jpg/06/48/39/19/360_F_648391979_uMz6EwAlKNIJnK9r46UpTiM17nT8GuLl.jpg",
-            name: "Tom Brown",
-            linkedin: "https://www.linkedin.com/in/prem-kumar-kardale-b72192268/",
-            mobile: "+91 9988776655"
-        },
-        {
-            image: "https://t4.ftcdn.net/jpg/06/48/39/19/360_F_648391979_uMz6EwAlKNIJnK9r46UpTiM17nT8GuLl.jpg",
-            name: "Emily Davis",
-            linkedin: "https://www.linkedin.com/in/prem-kumar-kardale-b72192268/",
-            mobile: "+91 9988776655"
-        }
-    ]
-};
 
 const TeamPage = () => {
+    const [teamData, setTeamData] = useState({ coordinator: [], devTeam: [], developers: [] });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchTeamData = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/devteam/get`); // Replace with your backend URL
+                const developers = response.data.developers;
+
+                // Group the data by roles
+                const groupedData = developers.reduce(
+                    (acc, member) => {
+                        if (member.role === 'Coordinator') {
+                            acc.coordinator.push(member);
+                        } else if (member.role === 'Developer Team Leads') {
+                            acc.devTeam.push(member);
+                        } else if (member.role === 'Developer') {
+                            acc.developers.push(member);
+                        }
+                        return acc;
+                    },
+                    { coordinator: [], devTeam: [], developers: [] }
+                );
+
+                setTeamData(groupedData);
+            } catch (error) {
+                console.error(error);
+                setError('Failed to load team data.');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchTeamData();
+    }, []);
+
+    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
+
     return (
         <div className="min-h-screen bg-gray-50">
             <Header />
@@ -60,18 +57,9 @@ const TeamPage = () => {
                 </div>
 
                 <div className="space-y-16">
-                    <TeamSection
-                        title="Coordinator"
-                        members={teamData.coordinator}
-                    />
-                    <TeamSection
-                        title="Development Team Leads"
-                        members={teamData.devTeam}
-                    />
-                    <TeamSection
-                        title="Developers"
-                        members={teamData.developers}
-                    />
+                    <TeamSection title="Coordinator" members={teamData.coordinator} />
+                    <TeamSection title="Development Team Leads" members={teamData.devTeam} />
+                    <TeamSection title="Developers" members={teamData.developers} />
                 </div>
             </div>
             <Footer />
