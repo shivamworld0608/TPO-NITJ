@@ -16,6 +16,7 @@ import JobApplications from './StudentDashboard/jobprofile';
 import Interviews from './StudentDashboard/interviews';
 import MailboxComponent from './StudentDashboard/mailbox';
 import OnlineAssessment from './StudentDashboard/oa';
+import SharedExperience from './StudentDashboard/shared-experience';
 import Profile from './StudentDashboard/profile';
 import ProfileImage from '../assets/chillguy.png';
 const StudentDashboards = () => {
@@ -84,6 +85,7 @@ const StudentDashboards = () => {
             <Route path="oa" element={<OnlineAssessment />} />
             <Route path="interviews" element={<Interviews />} />
             <Route path="mailbox" element={<MailboxComponent />} />
+            <Route path="shared-experience" element={<SharedExperience />} />
             <Route path="profile" element={<Profile />} />
           </Routes>
         </main>
