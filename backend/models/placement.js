@@ -12,8 +12,13 @@ const PlacementSchema = new mongoose.Schema(
       type: String,
       enum: ["Tech", "Non-Tech"],
     },
-    batch:{
-        type:String
+    year:{
+        type:String,
+        enum:['2022','2023','2024','2025','2026','2027','2028','2029','2030']
+    },
+    degree: {
+      type:String,
+      enum:['BTECH','MTECH','MBA']
     },
     shortlisted_students: [
       {
@@ -24,15 +29,16 @@ const PlacementSchema = new mongoose.Schema(
         image: {
           type: String,
         },
-        rollno: {
-          type: String,
-        },
         email:{
             type:String
         },
+        gender:{
+          type:String,
+          enum:['Male','Female','Other']
+        },
         department: {
           type: String,
-          enum: ['CSE', 'ECE', 'EE', 'ME', 'CE', 'IT', 'CH','ICE','BT','TT','IPE'],
+          enum: ['CSE', 'ECE', 'EE', 'ME', 'CE', 'IT', 'CH','ICE','BT','TT','IPE','DS','VLSI','AI','HM'],
         },
       }
     ]

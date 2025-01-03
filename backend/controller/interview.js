@@ -69,7 +69,6 @@ export const getTodayShortlistsGroupedByCompany = async (req, res) => {
         }
       });
   
-      console.log("Found interviews count:", interviews.length);
   
       if (interviews.length === 0) {
         return res.status(200).json({ 
