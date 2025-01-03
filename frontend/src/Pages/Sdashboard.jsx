@@ -3,7 +3,6 @@ import Footer from "../components/footer";
 import Sdashboards from "../components/sdashboard";
 
 
-
 const SDashboard = () => {
   return (
     <>

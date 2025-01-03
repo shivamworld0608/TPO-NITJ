@@ -9,6 +9,9 @@ const studentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  phone: {
+    type: String,
+  },
   password: {
     type: String,
     required: true,
@@ -19,17 +22,14 @@ const studentSchema = new mongoose.Schema({
   },
   department: {
     type: String,
-    required: true,
+    enum: ['CSE', 'ECE', 'EE', 'ME', 'CE', 'IT', 'CH','ICE','BT','TT','IPE'],
   },
   year: {
     type: String,
   },
-  semester: {
+  batch: {
     type: String,
-    },
-  phone: {
-    type: String,
-    },
+  },
   address: {
     type: String,
     },
@@ -38,6 +38,7 @@ const studentSchema = new mongoose.Schema({
    },
   gender: {
     type:String,
+     enum: ['Male', 'Female', 'Other'],
   },
   active_backlogs: {
     type: Boolean,
@@ -47,7 +48,7 @@ const studentSchema = new mongoose.Schema({
     },
   placementstatus: {
         type: String,
-        enum: ["notplaced", "below dream", "dream", "super dream" ],
+        enum: ['notplaced','Below Dream', 'Dream', 'Super Dream'  ],
     }
 }, { timestamps: true });
 

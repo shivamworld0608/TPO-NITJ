@@ -1,5 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useSelector } from "react-redux";
 import {
   faHome,
   faBriefcase,
@@ -15,10 +16,12 @@ import JobApplications from './StudentDashboard/job-application';
 import Interviews from './StudentDashboard/interviews';
 import MailboxComponent from './StudentDashboard/mailbox';
 import OnlineAssessment from './StudentDashboard/oa';
+import Profile from './StudentDashboard/profile';
 import ProfileImage from '../assets/chillguy.png';
 const StudentDashboards = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const {userData } = useSelector((state) => state.auth);
   const menuItems = [
     { path: '/sdashboard/home', label: 'Home', icon: faHome },
     { path: '/sdashboard/job-application', label: 'Job Application', icon: faBriefcase },
@@ -27,6 +30,7 @@ const StudentDashboards = () => {
     { path: '/sdashboard/mailbox', label: 'Mailbox', icon: faEnvelope },
     { path: '/sdashboard/request-help', label: 'Request Help', icon: faHandsHelping },
     { path: '/sdashboard/shared-experience', label: 'Shared Experience', icon: faShareSquare },
+    { path: '/sdashboard/profile', label: 'Profile', icon: faShareSquare },
   ];
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
@@ -60,13 +64,13 @@ const StudentDashboards = () => {
               className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50"
             >
               <img
-                src={ProfileImage} // Replace with the dynamic profile picture URL
+                src={userData.image || ProfileImage}
                 alt="Profile"
                 className="w-10 h-10 rounded-full"
               />
               <div className="ml-3">
-                <p className="text-gray-900 font-medium">Puneet Khoiya</p>
-                <p className="text-gray-500 text-sm">Student</p>
+                <p className="text-gray-900 font-medium">{userData.name}</p>
+                <p className="text-gray-500 text-sm">{userData.email}</p>
               </div>
             </button>
           </div>
@@ -80,8 +84,7 @@ const StudentDashboards = () => {
             <Route path="oa" element={<OnlineAssessment />} />
             <Route path="interviews" element={<Interviews />} />
             <Route path="mailbox" element={<MailboxComponent />} />
-            {/* Add route for the profile */}
-            <Route path="profile" element={<div>Profile Page</div>} />
+            <Route path="profile" element={<Profile />} />
           </Routes>
         </main>
       </div>

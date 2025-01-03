@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+  import mongoose from "mongoose";
 
 const JobApplicationSchema = new mongoose.Schema({
    job_id: {
@@ -12,11 +12,11 @@ const JobApplicationSchema = new mongoose.Schema({
    company_logo: {
      type: String,
    },
-   jobtitle: {
+   job_role: {
      type: String,
    },
    jobdescription: {
-     type: String,
+     type: String,  
    },
    joblocation: {
      type: String,
@@ -25,6 +25,15 @@ const JobApplicationSchema = new mongoose.Schema({
      type: String,
      enum:['Tech','Non-Tech'],
    },
+   job_salary:{
+     type: {
+      ctc: {
+        type: String,
+      },
+      base_salary: {
+        type: String,
+     }
+   }},
    deadline: {
      type: String,
      required: true,
@@ -34,11 +43,31 @@ const JobApplicationSchema = new mongoose.Schema({
      enum:['Live','Past','Upcoming'],
    },
    Hiring_Workflow: {
-       type: String,
+    type: [
+      {
+        step_name: {
+          type: String,
+          required: true,
+        },
+        step_type: {
+          type: String,
+          required: true,
+          enum: ['Online Assessment', 'Technical Interview', 'HR Interview', 'Group Discussion', 'Final Announcement', 'Other'],
+        },
+        description: {
+          type: String,
+        },
+        tentative_date: {
+          type: Date,
+          required: true,
+        },
+      },
+    ],
+    default: [],
    },
    eligibility_criteria: {
     type: {
-      branches_allowed: {
+      department_allowed: {
         type: [String],
         enum: ['CSE', 'ECE', 'EE', 'ME', 'CE', 'IT', 'CH','ICE','BT','TT','IPE'],
       },
@@ -57,7 +86,7 @@ const JobApplicationSchema = new mongoose.Schema({
         default: 0.0,
       },
       active_backlogs: {
-        type: boolean,
+        type: Boolean,
     },
   }},
   job_category: {
@@ -68,7 +97,7 @@ const JobApplicationSchema = new mongoose.Schema({
      type: [String],
    },
    Approved_Status: {
-     type: boolean,
+     type: Boolean,
   }
 }, { timestamps: true });
 

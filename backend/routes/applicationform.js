@@ -1,4 +1,4 @@
-/* import express from "express";
+ import express from "express";
 const router=express.Router();
 
 import {  getInterviewDetails,
@@ -13,4 +13,4 @@ router.get("/today-shortlists", getTodayShortlistsGroupedByCompany);
 router.get("/eligible-upcoming/:userId", getEligibleUpcomingInterviews);
 router.get("/eligible-past/:userId", getEligiblePastInterviews);
 
-export default router; */
+export default router; 

@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {User} from "lucide-react";
+import { User } from "lucide-react";
 
 
 const Header = () => {
