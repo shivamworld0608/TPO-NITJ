@@ -10,6 +10,7 @@ import Recruiter from "./Pages/Recruiter";
 import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
+import Jobdetail from "./Pages/Jobdetail";
 
 
 const App = () => {
@@ -28,9 +29,9 @@ const App = () => {
         <Route path="/login" element={<Login/>} />
         <Route path="/placements" element={<Placement/>} />
         <Route path="/recruiter" element={<Recruiter/>} />
-        <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/"/>}/>         
-        <Route path="/rdashboard" element={authUser ? <Rdashboard /> : <Navigate to="/"/>} />
-        <Route path="/pdashboard" element={authUser ? <Pdashboard /> : <Navigate to="/"/>} />
+        <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/" />}/>         
+        <Route path="/rdashboard" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
+        <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
       </Routes>
       <Toaster />
     </Router>
