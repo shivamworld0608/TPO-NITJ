@@ -35,24 +35,20 @@ const JobApplicationSchema = new mongoose.Schema({
      }
    }},
    deadline: {
-     type: String,
+     type: Date,
      required: true,
-   },
-   Status: {
-     type: String,
-     enum:['Live','Past','Upcoming'],
    },
    Hiring_Workflow: {
     type: [
       {
-        step_name: {
-          type: String,
-          required: true,
-        },
         step_type: {
           type: String,
           required: true,
-          enum: ['Online Assessment', 'Technical Interview', 'HR Interview', 'Group Discussion', 'Final Announcement', 'Other'],
+          enum: ['Online Assessment', 'Technical Interview', 'HR Interview', 'Group Discussion', 'Final Announcement'],
+        },
+        step_name: {
+          type: String,
+          required: true,
         },
         description: {
           type: String,

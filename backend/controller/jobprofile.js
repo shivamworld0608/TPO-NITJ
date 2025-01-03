@@ -9,7 +9,8 @@
 //approve job application
 //reject job application
 
-import JobApplication from "../models/jobapplication.js";
+import { trusted } from "mongoose";
+import JobApplication from "../models/jobprofile.js";
 import Student from "../models/user_model/student.js";
 
 // Recruiter Controllers
@@ -51,14 +52,54 @@ export const deleteJobApplication = async (req, res) => {
 // Student Controllers
 
 // Get Job Applications
-export const getJobApplicationstostudents = async (req, res) => {
+
+export const getJobProfiletostudent = async (req, res) => {
+  try {
+    const studentId = req.user.userId;
+    if (!studentId) {
+      return res.status(400).json({ message: "User ID is missing in the request." });
+    }
+    const jobApplications = await JobApplication.find({Approved_Status:true});
+    const applied = [];
+    const notApplied = [];
+    const liveButNotApplied = [];
+
+    const currentDate = new Date();
+
+    jobApplications.forEach((job) => {
+      const isApplied = job.Applied_Students.includes(studentId);
+      const isLive = new Date(job.deadline) > currentDate;
+
+      if (isApplied) {
+        applied.push(job);
+      } else if (!isApplied && isLive) {
+        liveButNotApplied.push(job);
+      } else {
+        notApplied.push(job);
+      }
+    });
+
+    return res.status(200).json({
+      applied,
+      notApplied,
+      liveButNotApplied,
+    });
+  } catch (error) {
+    console.error("Error fetching job status:", error);
+    return res.status(500).json({ message: "An error occurred while fetching job status." });
+  }
+};
+
+export const getJobProfiledetails = async (req, res) => {
     try {
-        const jobs = await JobApplication.find({Approved_Status: true});
-        res.status(200).json(jobs);
+        const { job_id } = req.params;
+        const job = await JobApplication.find({ job_id });
+        res.status(200).json(job);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-};
+}
+
 export const getapprovedJobApplicationstoprofessors = async (req, res) => {
     try {
         const jobs = await JobApplication.find({Approved_Status: true});
@@ -76,15 +117,6 @@ export const getnotapprovedJobApplicationstoprofessors = async (req, res) => {
     }
 };
 
-export const getJobApplicationsdetails = async (req, res) => {
-    try {
-        const { job_id } = req.params;
-        const job = await JobApplication.find({ job_id });
-        res.status(200).json(job);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
 
 /* export const appliedstudenttojob = async (req, res) => {
     try {
