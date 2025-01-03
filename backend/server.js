@@ -9,6 +9,7 @@ import authroutes from "./routes/auth.js";
 import interviewroutes from "./routes/interview.js";
 import oaroutes from "./routes/oa.js";
 import profileroutes from "./routes/profile.js";
+import devteamroutes from "./routes/devteam.js";
 import jobapplicationroutes from "./routes/jobapplication.js";
 
 /* import applicationroutes from "./routes/application.js"; */
@@ -54,8 +55,9 @@ app.get('/check-auth', authenticate, (req, res) => {
 app.use('/auth', authroutes);
 app.use('/interview', interviewroutes);
 app.use('/oa',oaroutes);
-app.use('/jobapplication',jobapplicationroutes);
 app.use('/profile',authenticate, profileroutes);
+app.use('/devteam',devteamroutes);
+app.use('/jobapplication',jobapplicationroutes);
 
 app.use('/api', formTemplateroutes);
 /* app.use('/applicationform',applicationformroutes); */
