@@ -39,30 +39,8 @@ const Header = () => {
         </svg>
 
       </button>
-      <div className=" z-50 p-0 top-0 flex items-start justify-start h-full w-full fixed bg-transparent backdrop-blur-2xl"
-        id="nav-menu" style={{ display: 'none' }} >
-        <div id="menu" className="h-screen w-2/3 z-10 relative">
-          <div id="menu-content" className="menu-content z-50 bg-accent h-full relative">
-            {/* <!-- cross button--> */}
-            <div className="top-bar">
-              <div className="menu-btn z-50 flex justify-end py-4 px-4">
-                <div className="line bg-white w-[20px] h-[2px] rotate-45 absolute">
-                </div>
-                <div className="line bg-white w-[20px] h-[2px] -rotate-45"></div>
-              </div>
-            </div>
-
-            <div
-              className="extra-links absolute bottom-1.5 left-0 w-full select-none flex flex-col align-middle justify-center">
-              <a className="text-center text-white" href="/">Privacy Policy</a>
-
-              <a className="text-center text-white" href="/">Terms & conditions</a>
-            </div>
-          </div>
-        </div>
-      </div>
       {/* <!-- Menu for mobile ends--> */}
-      <header className="fixed top-0 right-0 left-0 z-40">
+      <header className="fixed top-0 right-0 left-0 z-40 bg-white ">
         {/* <!-- TOP NAV BAR stats --> */}
         <div id="top_bar"
           className="absolute top-0 right-0 left-0 transition-transform delay-200 h-7 bg-[#0369a0] py-0.5 px-2 sm:px-12 text-xs uppercase text-white shadow-md">
@@ -303,6 +281,9 @@ const Header = () => {
         </div>
         {/* <!-- INSTITUTE LOGO & NAME ends -->
         <!-- Logo CONTAINER starts --> */}
+        {/* <div class="absolute hidden sm:block left-[50px] z-40 mx-auto -translate-x-1/2 -translate-y-1/3 sm:translate-y-0 scale-75 sm:scale-100 sm:left-1/2" style="width: 230px">
+          <img src="logo-curve.png" alt="" />
+        </div> */}
         <a href="/index.html">
           <div id="logo_250"
             className="absolute h-[120px] aspect-square left-[50px] sm:left-1/2 scale-[0.40] sm:scale-100 -translate-y-1/3 top-9 sm:top-7 sm:translate-y-0 z-40 -translate-x-1/2 sm:py-0">
@@ -345,7 +326,7 @@ const Header = () => {
                   </svg>
                 </button>
               </div>
-              <div className="basis-2/5 hidden sm:block">
+              <div className="basis-2/5 hidden sm:block top-0 ">
                 <div className="flex w-full flex-row justify-between px-4">
                   <div className="flex items-center">
                     <a href="/index.html" className="hidden sm:block text-xs">
@@ -367,7 +348,7 @@ const Header = () => {
                   </div>
                 </div>
               </div>
-              <div className="basis-2/5 hidden sm:block w-full">
+              <div className="basis-2/5 hidden sm:block w-full top-0">
                 <div className="flex w-full flex-row justify-between">
                   <div className="basis-4/5">
                     <div className="flex flex-row justify-between">
