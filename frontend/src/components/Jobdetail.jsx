@@ -99,20 +99,61 @@ const Jobdetail = ({ job_id, onBack }) => {
                 </div>
             </div>
         ),
-        eligibilityCriteria: (
-            <>
-                <p><strong>Branch Allowed:</strong> {jobDetails.eligibility_criteria?.department_allowed?.join(', ') || "N/A"}</p>
-                <p><strong>Gender Allowed:</strong> {jobDetails.eligibility_criteria?.gender_allowed || "N/A"}</p>
-                <p><strong>Eligible Batch:</strong> {jobDetails.eligibility_criteria?.eligible_batch || "N/A"}</p>
-                <p><strong>Minimum CGPA:</strong> {jobDetails.eligibility_criteria?.minimum_cgpa || "N/A"}</p>
-                <p><strong>Active Backlogs:</strong> {jobDetails.eligibility_criteria?.active_backlogs === false ? "No active backlogs allowed" : "N/A"}</p>
-                <p><strong>Student Status:</strong> 
-                    <span className={status === "Eligible to apply" ? 'text-green-500' : 'text-red-500'}>
-                        {status}
-                    </span>
-                </p>
-            </>
-        ),
+eligibilityCriteria: (
+    <div className="bg-gray-100 p-4 rounded-md shadow-md">
+        <h3 className="text-lg font-bold mb-4 text-gray-700">Eligibility Criteria</h3>
+        <div className="space-y-2">
+            <p>
+                <strong className="text-gray-600">Branch Allowed:</strong> 
+                <span className="text-gray-800"> {jobDetails.eligibility_criteria?.department_allowed?.join(', ') || "N/A"}</span>
+            </p>
+            <p>
+                <strong className="text-gray-600">Gender Allowed:</strong> 
+                <span className="text-gray-800"> {jobDetails.eligibility_criteria?.gender_allowed || "N/A"}</span>
+            </p>
+            <p>
+                <strong className="text-gray-600">Eligible Batch:</strong> 
+                <span className="text-gray-800"> {jobDetails.eligibility_criteria?.eligible_batch || "N/A"}</span>
+            </p>
+            <p>
+                <strong className="text-gray-600">Minimum CGPA:</strong> 
+                <span className="text-gray-800"> {jobDetails.eligibility_criteria?.minimum_cgpa || "N/A"}</span>
+            </p>
+            <p>
+                <strong className="text-gray-600">Active Backlogs:</strong> 
+                <span className="text-gray-800">
+                    {jobDetails.eligibility_criteria?.active_backlogs === false ? "No active backlogs allowed" : "N/A"}
+                </span>
+            </p>
+            <p>
+                <strong className="text-gray-600">Student Status:</strong> 
+                <span className={status.eligible ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold'}>
+                    {status.eligible ? "Eligible" : "Not Eligible"}
+                    {status.reason ? ` (${status.reason})` : ""}
+                </span>
+            </p>
+        </div>
+        <div className="mt-4">
+            <button 
+                className={`px-4 py-2 rounded-md font-semibold text-white ${
+                    status.eligible 
+                        ? "bg-green-500 hover:bg-green-600" 
+                        : "bg-gray-300 cursor-not-allowed"
+                }`}
+                disabled={!status.eligible}
+                onClick={() => {
+                    if (status.eligible) {
+                        // Render the ApplicationForm component
+                        navigateToApplicationForm();
+                    }
+                }}
+            >
+                {status.eligible ? "Apply Now" : "Not Eligible"}
+            </button>
+        </div>
+    </div>
+),
+
         deadline: (
             <p className="text-center"><strong>Please Apply before: {jobDetails.deadline || "N/A"}</strong></p>
         ),
