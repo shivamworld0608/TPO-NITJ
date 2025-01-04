@@ -1,12 +1,11 @@
 import React from "react";
-import Header from "../components/header";
-import Footer from "../components/footer";
+import Header from "./header";
+import Footer from "./footer";
 
 const TpoMessage = () => {
   return (
     <>
-      <Header />
-      <div className="mt-32 top-20">
+      <div className="mt-72 top-20">
         <div className="max-w-4xl mx-auto bg-gray-50 rounded-lg overflow-hidden shadow-lg mt-20 mb-40">
           <div className="flex flex-col md:flex-row">
             {/* Left side with image and name */}
@@ -59,7 +58,6 @@ const TpoMessage = () => {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     </>
   );

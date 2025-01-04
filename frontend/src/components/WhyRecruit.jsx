@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Share2, BarChart2, Users, Grid, ChevronDown, ChevronUp, ArrowRight, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
-import Header from "../components/header";
-import Footer from "../components/footer";
 
 const WhyRecruit = () => {
   const [expandedSection, setExpandedSection] = useState(null);
@@ -61,7 +59,6 @@ const WhyRecruit = () => {
 
   return (
     <>
-      <Header />
       <div className="min-h-screen  from-gray-50 to-gray-100 bg-[#C6DDFC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <motion.div
@@ -134,7 +131,7 @@ const WhyRecruit = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-16 bg-blue-900 text-white rounded-lg p-8 shadow-xl"
+            className="mt-16 bg-custom-blue text-white rounded-lg p-8 shadow-xl"
           >
             <h2 className="text-3xl font-bold mb-6">Our Excellence</h2>
             <p className="text-blue-100 text-lg mb-6">
@@ -165,14 +162,13 @@ const WhyRecruit = () => {
             </p>
             <a
               href="#contact"
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-custom-blue hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300"
             >
               Get in Touch <ArrowRight className="ml-2 w-5 h-5" />
             </a>
           </motion.div>
         </div>
       </div>
-      <Footer/>
     </>
   );
 };
