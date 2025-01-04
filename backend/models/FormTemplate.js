@@ -26,9 +26,8 @@ const formFieldSchema = new mongoose.Schema({
 
 const formTemplateSchema = new mongoose.Schema({
   jobId: {
-  /*   type: mongoose.Schema.Types.ObjectId,
-    ref: 'JobApplication', */
-    type: String,
+   type: mongoose.Schema.Types.ObjectId,
+    ref: 'JobProfile',
     required: true
   },
   recruiterId: {

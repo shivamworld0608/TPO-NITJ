@@ -6,7 +6,7 @@ const SDashboard = () => {
   return (
     <>
       <Header />
-      <Sdashboards />
+      <div className="mt-36"><Sdashboards /></div>
       <Footer/>
     </>
   );

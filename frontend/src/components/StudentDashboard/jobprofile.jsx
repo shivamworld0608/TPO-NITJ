@@ -43,7 +43,7 @@ const JobApplications = () => {
     return <p className="text-center text-lg text-red-500">{error}</p>;
   }
 
-  if (visibleDetailId) {
+/*   if (visibleDetailId) {
     // Render only the details of the visible card
     return (
       <div className="container mx-auto px-4 py-6">
@@ -55,7 +55,18 @@ const JobApplications = () => {
         />
       </div>
     );
-  }
+  } */
+  if (visibleDetailId) {
+    return (
+        <div className="container mx-auto px-4 py-6">
+            <Jobdetail
+                job_id={visibleDetailId}
+                onBack={() => setVisibleDetailId(null)} // Back to job list
+            />
+        </div>
+    );
+}
+
 
   return (
     <>

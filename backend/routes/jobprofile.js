@@ -3,7 +3,7 @@ const router=express.Router();
 
 import { checkEligibility, getJobProfiletostudent,getJobProfiledetails, getJobsByRecruiter,createJobProfile,updateJob,deleteJob } from "../controller/jobprofile.js";
 
-router.get("/eligibility/:jobId/:studentId", checkEligibility);
+router.get("/eligibility/:_id/", checkEligibility);
 router.get("/getjobs", getJobProfiletostudent);
 router.get("/:_id", getJobProfiledetails);
 router.post("/createjob", createJobProfile);

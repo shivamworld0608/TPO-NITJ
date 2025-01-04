@@ -149,7 +149,7 @@ export const getJobProfiledetails = async (req, res) => {
   try {
     const { _id } = req.params;
     const job = await JobProfile.findById(_id);
-    res.status(200).json(job);
+    res.status(200).json({job});
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -222,11 +222,12 @@ export const rejectJobProfile = async (req, res) => {
 
 export const checkEligibility = async (req, res) => {
   try {
-    const { studentId, jobId } = req.params;
+    const studentId = req.user.userId;
+    const { _id } = req.params;
     const student = await Student.findById(studentId);
-    const JobProfile = await JobProfile.findById(jobId);
+    const job = await JobProfile.findById(_id);
 
-    if (!student || !JobProfile) {
+    if (!student || !job) {
       return res.status(404).json({ message: "Student or Job Application not found" });
     }
     const {
@@ -235,8 +236,8 @@ export const checkEligibility = async (req, res) => {
       eligible_batch,
       minimum_cgpa,
       active_backlogs,
-    } = JobProfile.eligibility_criteria;
-    y
+    } = job.eligibility_criteria;
+
     if (!department_allowed.includes(student.department)) {
       return res.json({ eligible: false, reason: "Department not eligible" });
     }
@@ -259,7 +260,7 @@ export const checkEligibility = async (req, res) => {
 
     const jobCategoryOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
     const studentCategoryIndex = jobCategoryOrder.indexOf(student.placementstatus);
-    const jobCategoryIndex = jobCategoryOrder.indexOf(JobProfile.job_category);
+    const jobCategoryIndex = jobCategoryOrder.indexOf(job.job_category);
 
     if (
       studentCategoryIndex !== -1 &&
