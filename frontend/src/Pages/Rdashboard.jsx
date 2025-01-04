@@ -5,7 +5,7 @@ import Rdashboard from "../components/rdashboard";
 import React from 'react';
 import { Calendar, Home, FileText, Mail, Settings, LogOut } from 'lucide-react';
 
-const Sidebar = () => (
+/* const Sidebar = () => (
   <div className="w-64 bg-white h-screen p-4 border-r">
     <div className="flex items-center gap-2 mb-8">
       <img src="/api/placeholder/40/40" alt="Logo" className="rounded-full" />
@@ -62,12 +62,14 @@ const ApplicationCard = ({ title, subtitle, icon, color }) => (
     </div>
   </button>
 );
-
-const StatisticsChart = () => (
+ */
+/* const StatisticsChart = () => (
   <div className="bg-white p-6 rounded-lg border">
     <h3 className="text-lg font-semibold mb-4">Statistics</h3>
     <div className="relative w-48 h-48">
-      {/* Replace with actual chart implementation */}
+    
+
+
       <div className="absolute inset-0 rounded-full border-8 border-blue-500"></div>
     </div>
     <div className="mt-4 grid grid-cols-2 gap-2">
@@ -98,26 +100,32 @@ const DemographicsSection = () => (
       <div>
         <h4 className="text-sm font-medium mb-2">Branch Distribution</h4>
         <div className="h-48">
-          {/* Add actual chart implementation */}
+         
+
+
         </div>
       </div>
       <div>
         <h4 className="text-sm font-medium mb-2">Gender Ratio</h4>
         <div className="h-48">
-          {/* Add actual chart implementation */}
+        
+
+
         </div>
       </div>
       <div>
         <h4 className="text-sm font-medium mb-2">CGPA Distribution</h4>
         <div className="h-48">
-          {/* Add actual chart implementation */}
+          
+
+          
         </div>
       </div>
     </div>
   </div>
-);
+); */
 
-const RDashboard = () => (
+/* const RDashboard = () => (
   <div className="min-h-screen bg-gray-50 flex">
     <Sidebar />
     
@@ -166,19 +174,17 @@ const RDashboard = () => (
     </main>
   </div>
 );
-
+ */
 // export default Dashboard;
 
 
-// const RDashboard = () => {
-//   return (
-//     <>
-//       <Header />
-//       <Rdashboard />
-//       <Footer/>
-
-//     </>
-//   );
-// };
+const RDashboard = () => {
+  return (
+    <>
+      <Header />
+      <Rdashboard />
+       <Footer/>
+    </>   );
+};
 
 export default RDashboard;

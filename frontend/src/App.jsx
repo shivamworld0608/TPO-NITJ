@@ -11,7 +11,8 @@ import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
 import TeamPage from "./Pages/TeamPage";
-
+import WhyRecruit from "./Pages/WhyRecruit";
+import FAQ from "./Pages/Faqs";
 
 const App = () => {
 
@@ -29,10 +30,12 @@ const App = () => {
         <Route path="/login" element={<Login/>} />
         <Route path="/placements" element={<Placement/>} />
         <Route path="/recruiter" element={<Recruiter/>} />
+        <Route path="/faq" element={<FAQ/>} />
         <Route path="/team" element={<TeamPage/>} />
         <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/" />}/>         
-        <Route path="/rdashboard" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
+        <Route path="/rdashboard/*" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
         <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
+        <Route path="/whyrecruit" element={<WhyRecruit />} />
       </Routes>
       <Toaster />
     </Router>

@@ -292,8 +292,6 @@ const Header = () => {
         </a>
         {/* <!-- Logo CONTAINER ends -->
         <!-- NAV BAR starts--> */}
-
-
         <div className="sm:block bg-accent drop-shadow-lg z-40 bg-[#0369a0]">
           <div className="container">
             <div
