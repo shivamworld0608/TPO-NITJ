@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
-const RecruiterFormTemplate = () => {
+import toast from 'react-hot-toast';
+const RecruiterFormTemplate = ({jobId}) => {
   const [title, setTitle] = useState('');
   const [fields, setFields] = useState([]);
 
@@ -37,17 +37,15 @@ const RecruiterFormTemplate = () => {
     });
     setFields(updatedFields);
   };
-  const recruiterId="676bbf7fc4ece7cb5bd58b25";
-  const jobId="J001"
   const handleSubmit = async () => {
     try {
-      await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/api/form-templates`, { recruiterId,title, fields, jobId });
-      alert('Form Template Created Successfully!');
+      await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/api/form-templates`, {title, fields, jobId },{withCredentials: true});
+      toast.success('Form template created successfully!');
       setTitle('');
       setFields([]);
     } catch (err) {
       console.error(err);
-      alert('Error creating form template.');
+      toast.error('Failed to create form template');
     }
   };
 

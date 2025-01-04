@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-export default function Jobdetail(props) {
+const Jobdetail=(props)=> {
     const [activeInfo, setActiveInfo] = useState('jobDescription');
     const [jobDetails, setJobDetails] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -8,24 +9,13 @@ export default function Jobdetail(props) {
     const [status, setStatus] = useState(null);
 
     useEffect(() => {
-        setTimeout(() => {
-            setJobDetails(dummyData);
-            setLoading(false);
-        }, 1000);
-    }, []);
-
-
-    useEffect(() => {
         const fetchDetails = async () => {
             try {
                 setLoading(true);
 
-
-                console.log(props.jpid)
-                console.log(props.job_id)
-                const dummyData = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/jobprofile/${props.jpid}`);
-
-                setJobDetails(dummyData.data ||[]);
+                const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/jobprofile/${props.job_id}`,{withCredentials: true});
+                console.log("Dummy Data:", response.data.job);
+                setJobDetails(response.data ||[]);
             } catch (error) {
                 console.error("Error fetching assessments:", error);
             } finally {
@@ -65,7 +55,7 @@ export default function Jobdetail(props) {
     const info = {
         jobDescription: (
             <>
-                <p><strong>Job ID:</strong> {jobDetails.job_id || "N/A"}</p>
+                <p><strong>Job ID:</strong> {jobDetails?.job_id || "N/A"}</p>
                 <p><strong>Company:</strong> {jobDetails.company_name || "N/A"}</p>
                 <p><strong>Job Title:</strong> {jobDetails.job_role || "N/A"}</p>
                 <p><strong>Job Location:</strong> {jobDetails.joblocation || "N/A"}</p>
@@ -183,4 +173,6 @@ export default function Jobdetail(props) {
             </div>
         </>
     )
-}
+};
+
+export default Jobdetail;

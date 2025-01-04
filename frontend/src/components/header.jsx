@@ -327,7 +327,7 @@ const Header = () => {
               <div className="basis-2/5 hidden sm:block top-0 ">
                 <div className="flex w-full flex-row justify-between px-4">
                   <div className="flex items-center">
-                    <a href="/index.html" className="hidden sm:block text-xs">
+                    <a href="/" className="hidden sm:block text-xs">
                       <svg xmlns="http://www.w3.org/2000/svg" height="24" className="h-6 w-6"
                         fill="currentColor" viewBox="0 -960 960 960" width="24">
                         <path
@@ -336,13 +336,13 @@ const Header = () => {
                     </a>
                   </div>
                   <div id="menu-1" className="group cursor-default hover:bg-blue-800">
-                    <div id="Administration" className="p-1.5 font-medium uppercase">Administration</div>
+                    <div id="Administration" className="p-1.5 font-medium uppercase"><a href="/placements">Placements</a></div>
                   </div>
                   <div id="menu-2" className="group cursor-default hover:bg-blue-800">
-                    <div id="Academics" className="p-1.5 font-medium uppercase">Academics</div>
+                    <div id="Academics" className="p-1.5 font-medium uppercase"><a href="/internships"></a>Internships</div>
                   </div>
                   <div id="menu-3" className="group cursor-default hover:bg-blue-800">
-                    <div id="Admissions" className="p-1.5 font-medium uppercase">Admissions</div>
+                    <div id="Admissions" className="p-1.5 font-medium uppercase">Alumni</div>
                   </div>
                 </div>
               </div>
@@ -351,13 +351,13 @@ const Header = () => {
                   <div className="basis-4/5">
                     <div className="flex flex-row justify-between">
                       <div id="menu-4" className="group cursor-default hover:bg-blue-800">
-                        <div id="Research" className="p-1.5 font-medium uppercase">Research</div>
+                        <div id="Research" className="p-1.5 font-medium uppercase"><a href="/team">People</a></div>
                       </div>
                       <div id="menu-5" className="group cursor-default hover:bg-blue-800">
-                        <div id="Alumni" className="p-1.5 font-medium uppercase">Alumni</div>
+                        <div id="Alumni" className="p-1.5 font-medium uppercase"><a href="/faq">FAQs</a></div>
                       </div>
                       <div id="menu-6" className="group relative cursor-default hover:bg-blue-800">
-                        <div id="Life at NITJ" className="p-1.5 font-medium uppercase">Life at NITJ</div>
+                        <div id="Life at NITJ" className="p-1.5 font-medium uppercase">{authUser?(<button onClick={handleLogout}>Logout</button>):(<a href="/">Login</a>)}</div>
                       </div>
                     </div>
                   </div>

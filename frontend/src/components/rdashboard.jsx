@@ -13,7 +13,7 @@ import {
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Home from './StudentDashboard/home';
 import CreatedJobs from './RecruiterDashboard/createdjob';
-import Interviews from './StudentDashboard/interviews';
+import RecruiterFormTemplate from './RecruiterDashboard/RecruiterFormTemple';
 import MailboxComponent from './StudentDashboard/mailbox';
 import OnlineAssessment from './StudentDashboard/oa';
 import Profile from './StudentDashboard/profile';
@@ -25,6 +25,7 @@ const RecruiterDashboards = () => {
   const menuItems = [
     { path: '/rdashboard/home', label: 'Home', icon: faHome },
     { path: '/rdashboard/createdjob', label: 'Created Job Profile', icon: faBriefcase },
+    { path: '/rdashboard/createdapplicationform', label: 'Create Application form', icon: faBriefcase },
     { path: '/rdashboard/oa', label: 'OA Management', icon: faClipboard },
     { path: '/rdashboard/interviews', label: 'Interview Management', icon: faComments },
     { path: '/rdashboard/mailbox', label: 'Mailbox', icon: faEnvelope },
@@ -80,8 +81,8 @@ const RecruiterDashboards = () => {
             <Route path="/" element={<Home />} />
             <Route path="home" element={<Home />} />
             <Route path="createdjob" element={<CreatedJobs />} />
+            <Route path="createdapplicationform" element={<RecruiterFormTemplate />} />
             <Route path="oa" element={<OnlineAssessment />} />
-            <Route path="interviews" element={<Interviews />} />
             <Route path="mailbox" element={<MailboxComponent />} />
             <Route path="profile" element={<Profile />} />
           </Routes>

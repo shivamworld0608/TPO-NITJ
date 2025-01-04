@@ -3,7 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { checkAuth } from './Redux/authSlice';
-import Home from "./Pages/Home";
+import Home from "./Pages/LandingPage";
 import Login from "./Pages/Login";
 import Placement from "./Pages/Placement";
 import Recruiter from "./Pages/Recruiter";

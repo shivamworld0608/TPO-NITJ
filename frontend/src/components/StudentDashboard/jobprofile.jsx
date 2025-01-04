@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import JobCard from  '../../components/JobCard';  
+import JobCard from  '../../components/JobCard';
+import Jobdetail from '../../components/Jobdetail';  
 
 const JobApplications = () => {
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -46,7 +47,7 @@ const JobApplications = () => {
     // Render only the details of the visible card
     return (
       <div className="container mx-auto px-4 py-6">
-        <JobCard
+        <Jobdetail
           key={visibleDetailId}
           job_id={visibleDetailId}
           isVisible={true}
@@ -77,7 +78,7 @@ const JobApplications = () => {
               deadline={job.deadline}
               jpid={job._id}
               isVisible={false}
-              onShowDetails={() => setVisibleDetailId(job.job_id)}  // Show details
+              onShowDetails={() => setVisibleDetailId(job._id)}  // Show details
             />
           ))}
         </div>
@@ -105,7 +106,7 @@ const JobApplications = () => {
               onShowDetails={() =>
                 {
                   // console.log("jpid:", job._id);
-                  setVisibleDetailId(job.job_id);
+                  setVisibleDetailId(job._id);
                 } 
               }  // Show details
                   
@@ -133,7 +134,7 @@ const JobApplications = () => {
               deadline={job.deadline}
               jpid={job._id}
               isVisible={false}
-              onShowDetails={() => setVisibleDetailId(job.job_id)}  // Show details
+              onShowDetails={() => setVisibleDetailId(job._id)}  // Show details
             />
           ))}
         </div>
