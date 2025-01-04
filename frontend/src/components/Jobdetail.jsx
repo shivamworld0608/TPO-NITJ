@@ -141,7 +141,7 @@ eligibilityCriteria: (
                         : "bg-gray-300 cursor-not-allowed"
                 }`}
                 disabled={!status.eligible}
-                onClick={onShow}
+                onClick={onShow()}
             >
                 {status.eligible ? "Apply Now" : "Not Eligible"}
             </button>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 
-const ProfessorApplicationForm = ({ formTemplateId }) => {
+const AppliedStudentp = ({jobId }) => {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,7 +11,7 @@ const ProfessorApplicationForm = ({ formTemplateId }) => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/${formTemplateId}`);
+        const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/${jobId}`, { withCredentials: true });
         setSubmissions(response.data);
       } catch (err) {
         setError('Failed to load submissions.');
@@ -99,4 +99,4 @@ const ProfessorApplicationForm = ({ formTemplateId }) => {
     </div>
   );
 };
-export default ProfessorApplicationForm;
+export default AppliedStudentp;
