@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 
-const Jobdetail = ({ job_id, onBack }) => {
+const Jobdetail = ({ job_id, onBack,onShow }) => {
     const [activeInfo, setActiveInfo] = useState("jobDescription");
     const [jobDetails, setJobDetails] = useState({});
     const [loading, setLoading] = useState(true);
@@ -141,12 +141,7 @@ eligibilityCriteria: (
                         : "bg-gray-300 cursor-not-allowed"
                 }`}
                 disabled={!status.eligible}
-                onClick={() => {
-                    if (status.eligible) {
-                        // Render the ApplicationForm component
-                        navigateToApplicationForm();
-                    }
-                }}
+                onClick={onShow}
             >
                 {status.eligible ? "Apply Now" : "Not Eligible"}
             </button>
