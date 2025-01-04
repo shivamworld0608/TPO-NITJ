@@ -172,7 +172,7 @@ const WhyRecruit = () => {
           </motion.div>
         </div>
       </div>
-      <Footer />
+      <Footer/>
     </>
   );
 };

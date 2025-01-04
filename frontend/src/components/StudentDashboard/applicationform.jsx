@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
-const ApplicationForm = ({ formTemplateId, studentId }) => {
+const ApplicationForm = ({ jobId }) => {
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,10 +10,10 @@ const ApplicationForm = ({ formTemplateId, studentId }) => {
   useEffect(() => {
     const fetchFormTemplate = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/form-templates/${formTemplateId}`);
+        const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/form-templates/${jobId}`,{withCredentials: true});
         const templateFields = response.data.fields;
 
-        const studentResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/students/${studentId}`);
+        const studentResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/students`,{withCredentials: true});
         const studentData = studentResponse.data;
 
         const populatedFields = templateFields.map((field) => ({
@@ -51,11 +52,11 @@ const ApplicationForm = ({ formTemplateId, studentId }) => {
         })),
       };
 
-      await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions`, submissionData);
-      alert('Form submitted successfully!');
+      await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions`, submissionData,{withCredentials: true});
+      toast.success('Form submitted successfully!');
     } catch (err) {
       console.error(err);
-      alert('Error submitting the form.');
+      toast.error('Failed to submit form.');
     }
   };
 

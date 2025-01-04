@@ -7,7 +7,7 @@ const Faqs = () => {
   return (
     <>
       <Header />
-      <FAQ />
+      <div className="mt-44"><FAQ /></div>
       <Footer/>
 
     </>

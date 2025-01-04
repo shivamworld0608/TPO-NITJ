@@ -3,13 +3,17 @@ import axios from 'axios';
 
 import EditJobModal from './editcreatedjob';
 import CreateJob from './createjob';
+import RecruiterFormTemplate from './RecruiterFormTemple';
+import ViewJobDetails from './ViewJob';
 
 const CreatedJobs = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingJob, setEditingJob] = useState(null); // To handle editing
-  const [isCreatingJob, setIsCreatingJob] = useState(false); // To toggle create job view
+  const [editingJob, setEditingJob] = useState(null);
+  const [isCreatingJob, setIsCreatingJob] = useState(false);
+  const [selectedJobForForm, setSelectedJobForForm] = useState(null);
+  const [viewingJobDetails, setViewingJobDetails] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -28,7 +32,6 @@ const CreatedJobs = () => {
 
     fetchJobs();
   }, []);
-
   const deleteJob = async (jobId) => {
     if (window.confirm('Are you sure you want to delete this job?')) {
       try {
@@ -49,14 +52,23 @@ const CreatedJobs = () => {
     setEditingJob(job); // Set the job to edit
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
+  // Render job details if a job is being viewed
+  if (viewingJobDetails) {
+    return (
+      <div className="container mx-auto px-4 py-6">
+        <h1 className="text-center text-3xl font-semibold mb-6">Job Details</h1>
+        <ViewJobDetails 
+          job={viewingJobDetails} 
+          onClose={() => setViewingJobDetails(null)} 
+        />
+      </div>
+    );
   }
 
-  if (error) {
-    return <div>{error}</div>;
-  }
-
+  // Render job creation form
   if (isCreatingJob) {
     return (
       <div className="container mx-auto px-4 py-6">
@@ -64,7 +76,7 @@ const CreatedJobs = () => {
         <CreateJob
           onJobCreated={(newJob) => {
             setJobs((prevJobs) => [...prevJobs, newJob]);
-            setIsCreatingJob(false); // Return to job list after creation
+            setIsCreatingJob(false);
           }}
           onCancel={() => setIsCreatingJob(false)}
         />
@@ -72,6 +84,20 @@ const CreatedJobs = () => {
     );
   }
 
+  // Render application form creation
+  if (selectedJobForForm) {
+    return (
+      <div className="container mx-auto px-4 py-6">
+        <h1 className="text-center text-3xl font-semibold mb-6">Create Application Form</h1>
+        <RecruiterFormTemplate
+          jobId={selectedJobForForm}
+          onCancel={() => setSelectedJobForForm(null)}
+        />
+      </div>
+    );
+  }
+
+  // Default view: List of created jobs
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex justify-between items-center mb-6">
@@ -92,7 +118,7 @@ const CreatedJobs = () => {
               <h2 className="font-bold text-xl">{job.job_role}</h2>
               <p className="text-gray-500">{job.company_name}</p>
               <p className="text-sm text-gray-400">Deadline: {new Date(job.deadline).toLocaleDateString()}</p>
-              <div className="mt-4 flex justify-between">
+              <div className="mt-4 flex justify-between flex-wrap gap-2">
                 <button
                   className="bg-green-500 text-white px-4 py-2 rounded"
                   onClick={() => editJob(job)}
@@ -104,6 +130,18 @@ const CreatedJobs = () => {
                   onClick={() => deleteJob(job._id)}
                 >
                   Delete
+                </button>
+                <button
+                  className="bg-yellow-500 text-white px-4 py-2 rounded"
+                  onClick={() => setSelectedJobForForm(job._id)}
+                >
+                  Create Application Form
+                </button>
+                <button
+                  className="bg-purple-500 text-white px-4 py-2 rounded"
+                  onClick={() => setViewingJobDetails(job)}
+                >
+                  View Job Application
                 </button>
               </div>
             </div>
