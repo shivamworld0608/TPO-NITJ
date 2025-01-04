@@ -1,15 +1,17 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
-import Sdashboards from "../components/sdashboard";
+import FAQ from "../components/faqs";
 
-const SDashboard = () => {
+
+const Faqs = () => {
   return (
     <>
       <Header />
-      <Sdashboards />
+      <FAQ />
       <Footer/>
+
     </>
   );
 };
 
-export default SDashboard;
+export default Faqs;
