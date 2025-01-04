@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import JobCard from '../JobCard';
+import JobCard from  '../../components/JobCard';  
 
 const JobApplications = () => {
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -8,6 +8,7 @@ const JobApplications = () => {
   const [liveNotAppliedJobs, setLiveNotAppliedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [visibleDetailId, setVisibleDetailId] = useState(null);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -41,6 +42,20 @@ const JobApplications = () => {
     return <p className="text-center text-lg text-red-500">{error}</p>;
   }
 
+  if (visibleDetailId) {
+    // Render only the details of the visible card
+    return (
+      <div className="container mx-auto px-4 py-6">
+        <JobCard
+          key={visibleDetailId}
+          job_id={visibleDetailId}
+          isVisible={true}
+          onHideDetails={() => setVisibleDetailId(null)}
+        />
+      </div>
+    );
+  }
+
   return (
     <>
       <div>
@@ -48,17 +63,21 @@ const JobApplications = () => {
           Upcoming Jobs
         </h1>
       </div>
+
+      {/* Live Not Applied Jobs */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {liveNotAppliedJobs.map((job, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {liveNotAppliedJobs.map((job) => (
             <JobCard
-              key={job.jobid || index}
-              jobid={job.jobid}
+              key={job.job_id}
+              job_id={job.job_id}
               jobtype={job.jobtype}
               company={job.company_name}
               jobtitle={job.job_role}
               deadline={job.deadline}
               jpid={job._id}
+              isVisible={false}
+              onShowDetails={() => setVisibleDetailId(job.job_id)}  // Show details
             />
           ))}
         </div>
@@ -69,17 +88,27 @@ const JobApplications = () => {
           Applied Jobs
         </h1>
       </div>
+
+      {/* Applied Jobs */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {appliedJobs.map((job, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {appliedJobs.map((job) => (
             <JobCard
-              key={job.jobid || index}
-              jobid={job.jobid}
+              key={job.job_id}
+              job_id={job.job_id}
               jobtype={job.jobtype}
               company={job.company_name}
               jobtitle={job.job_role}
               deadline={job.deadline}
               jpid={job._id}
+              isVisible={false}
+              onShowDetails={() =>
+                {
+                  // console.log("jpid:", job._id);
+                  setVisibleDetailId(job.job_id);
+                } 
+              }  // Show details
+                  
             />
           ))}
         </div>
@@ -90,17 +119,21 @@ const JobApplications = () => {
           Not Applied Jobs
         </h1>
       </div>
+
+      {/* Not Applied Jobs */}
       <div className="container mx-auto px-4 py-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {notAppliedJobs.map((job, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {notAppliedJobs.map((job) => (
             <JobCard
-              key={job.jobid || index}
-              jobid={job.jobid}
+              key={job.job_id}
+              job_id={job.job_id}
               jobtype={job.jobtype}
               company={job.company_name}
               jobtitle={job.job_role}
               deadline={job.deadline}
               jpid={job._id}
+              isVisible={false}
+              onShowDetails={() => setVisibleDetailId(job.job_id)}  // Show details
             />
           ))}
         </div>
