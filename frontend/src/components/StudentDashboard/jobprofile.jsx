@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import JobCard from  '../../components/JobCard';
-import Jobdetail from '../../components/Jobdetail';  
+import JobCard from '../../components/JobCard';
+import Jobdetail from '../../components/Jobdetail';
+import ApplicationForm from '../../components/StudentDashboard/applicationform'
 
 const JobApplications = () => {
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -10,6 +11,7 @@ const JobApplications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [visibleDetailId, setVisibleDetailId] = useState(null);
+  const [application, setapplication] = useState(false);
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -43,29 +45,29 @@ const JobApplications = () => {
     return <p className="text-center text-lg text-red-500">{error}</p>;
   }
 
-/*   if (visibleDetailId) {
-    // Render only the details of the visible card
+
+  if (visibleDetailId) {
+    console.log(application) 
+
     return (
       <div className="container mx-auto px-4 py-6">
         <Jobdetail
-          key={visibleDetailId}
           job_id={visibleDetailId}
-          isVisible={true}
-          onHideDetails={() => setVisibleDetailId(null)}
+          onBack={() => setVisibleDetailId(null)} // Back to job list
+          onShow={() => setapplication(true)}
         />
       </div>
     );
-  } */
-  if (visibleDetailId) {
+  }
+
+  if (application) {
+    console.log(application)
     return (
-        <div className="container mx-auto px-4 py-6">
-            <Jobdetail
-                job_id={visibleDetailId}
-                onBack={() => setVisibleDetailId(null)} // Back to job list
-            />
-        </div>
+      <div className="container mx-auto px-4 py-6">
+        <ApplicationForm onHide={() => setapplication(null)} />
+      </div>
     );
-}
+  }
 
 
   return (
@@ -114,13 +116,12 @@ const JobApplications = () => {
               deadline={job.deadline}
               jpid={job._id}
               isVisible={false}
-              onShowDetails={() =>
-                {
-                  // console.log("jpid:", job._id);
-                  setVisibleDetailId(job._id);
-                } 
+              onShowDetails={() => {
+                // console.log("jpid:", job._id);
+                setVisibleDetailId(job._id);
+              }
               }  // Show details
-                  
+
             />
           ))}
         </div>
