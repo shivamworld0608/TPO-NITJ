@@ -13,6 +13,7 @@ import Pdashboard from "./Pages/Pdashboard";
 import TeamPage from "./Pages/TeamPage";
 import WhyRecruit from "./Pages/WhyRecruit";
 import FAQ from "./Pages/Faqs";
+import TpoMessage from "./Pages/TpoMessage";
 
 const App = () => {
 
@@ -36,6 +37,7 @@ const App = () => {
         <Route path="/rdashboard/*" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
         <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
         <Route path="/whyrecruit" element={<WhyRecruit />} />
+        <Route path ="/tpomessage" element = {<TpoMessage/>} />
       </Routes>
       <Toaster />
     </Router>
