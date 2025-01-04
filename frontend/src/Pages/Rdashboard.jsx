@@ -182,7 +182,7 @@ const RDashboard = () => {
   return (
     <>
       <Header />
-      <Rdashboard />
+      <div className="mt-36"><Rdashboard /></div>
        <Footer/>
     </>   );
 };

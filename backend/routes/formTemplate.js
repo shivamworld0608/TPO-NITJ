@@ -15,14 +15,14 @@ const router = express.Router();
 
 // Form Template Routes
 router.post('/form-templates', createFormTemplate); // Recruiter creates template
-router.get('/form-templates/:id', getFormTemplate); // Fetch specific form template
+router.get('/form-templates/:jobId', getFormTemplate); // Fetch specific form template
 router.put('/form-templates/:id', updateFormTemplate); // TPO configures auto-fill
-router.get('/students/:id', getStudent);
+
+router.get('/students', getStudent);
 
 // Form Submission Routes
 router.post('/form-submissions', submitForm); // Student submits form
-/* router.get('/form-submissions/:jobId', getFormSubmissions);  */// Fetch submissions by job
-router.get('/form-submissions/:formTemplateId', getFormSubmissions);
+router.get('/form-submissions/:jobId', getFormSubmissions);
 router.delete('/form-submissions/:id', deleteFormSubmission);
 
 export default router;

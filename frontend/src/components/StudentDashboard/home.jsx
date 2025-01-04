@@ -52,7 +52,7 @@ const Home = () => {
   return (
     <div className="p-6 min-h-screen">
       {/* Header */}
-      <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
+      <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide mb-8">
         Welcome to{" "}
         <span className="bg-custom-blue text-transparent bg-clip-text">
           Student Dashboard

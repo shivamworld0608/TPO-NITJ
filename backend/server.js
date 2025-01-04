@@ -59,7 +59,7 @@ app.use('/profile',authenticate, profileroutes);
 app.use('/devteam',devteamroutes);
 app.use('/jobprofile',authenticate,jobprofileroutes);
 
-app.use('/api', formTemplateroutes);
+app.use('/api',authenticate, formTemplateroutes);
 /* app.use('/applicationform',applicationformroutes); */
 
 const port = process.env.PORT || 5000;

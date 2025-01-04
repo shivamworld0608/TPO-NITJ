@@ -4,7 +4,12 @@ import Student from '../models/user_model/student.js';
 // Create a new form template
 export const createFormTemplate = async (req, res) => {
   try {
-    const { title, jobId, recruiterId, fields } = req.body;
+    console.log("Request Body:", req.body);
+    const recruiterId = req.user.userId;
+    const { title, jobId, fields } = req.body;
+    console.log("Recruiter ID:", recruiterId);
+    console.log("Job ID:", jobId);
+    console.log("Fields:", fields);
     const formTemplate = new FormTemplate({ title, jobId, recruiterId, fields });
     await formTemplate.save();
     res.status(201).json({ message: 'Form Template created successfully', formTemplate });
@@ -16,8 +21,8 @@ export const createFormTemplate = async (req, res) => {
 // Get a form template by ID
 export const getFormTemplate = async (req, res) => {
   try {
-    const { id } = req.params;
-    const formTemplate = await FormTemplate.findById(id);
+    const { jobId } = req.params;
+    const formTemplate = await FormTemplate.findOne({ jobId });
     if (!formTemplate) {
       return res.status(404).json({ message: 'Form Template not found' });
     }
