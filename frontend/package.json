@@ -21,6 +21,7 @@
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.469.0",
+    "multer": "^1.4.5-lts.1",
     "react": "^18.3.1",
     "react-calendar": "^5.1.0",
     "react-chartjs-2": "^5.2.0",
@@ -48,6 +49,6 @@
     "postcss": "^8.4.49",
     "sass-embedded": "^1.83.0",
     "tailwindcss": "^3.4.17",
-    "vite": "^6.0.6"
+    "vite": "^6.0.7"
   }
 }
