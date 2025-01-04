@@ -281,7 +281,7 @@ const Header = () => {
         </div>
         {/* <!-- INSTITUTE LOGO & NAME ends -->
         <!-- Logo CONTAINER starts --> */}
-        <div className="absolute  sm:block left-[50px] z-40 mx-auto -translate-x-1/2 -translate-y-1/3 sm:translate-y-0 scale-75 sm:scale-100 sm:left-1/2 " style={{ width: "230px" }}>
+        <div className="absolute hidden sm:block left-[50px] z-40 mx-auto -translate-x-1/2 -translate-y-1/3 sm:translate-y-0 scale-75 sm:scale-100 sm:left-1/2 " style={{ width: "230px" }}>
           <img src="Rectangle.png" alt="" />
         </div>
         <a href="/index.html">
