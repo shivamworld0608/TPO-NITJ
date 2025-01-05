@@ -4,12 +4,8 @@ import Student from '../models/user_model/student.js';
 // Create a new form template
 export const createFormTemplate = async (req, res) => {
   try {
-    console.log("Request Body:", req.body);
     const recruiterId = req.user.userId;
     const { title, jobId, fields } = req.body;
-    console.log("Recruiter ID:", recruiterId);
-    console.log("Job ID:", jobId);
-    console.log("Fields:", fields);
     const formTemplate = new FormTemplate({ title, jobId, recruiterId, fields });
     await formTemplate.save();
     res.status(201).json({ message: 'Form Template created successfully', formTemplate });
@@ -33,9 +29,9 @@ export const getFormTemplate = async (req, res) => {
 };
 
 export const getStudent = async (req, res) => {
-    const { id } = req.params;
+    const _id=req.user.userId
     try {
-      const student = await Student.findById(id);
+      const student = await Student.findById(_id);
   
       if (!student) {
         return res.status(404).json({ message: 'Student not found' });
@@ -51,11 +47,11 @@ export const getStudent = async (req, res) => {
 // Update a form template (used by TPO for configuration)
 export const updateFormTemplate = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { jobId } = req.params;
     const { fields } = req.body;
 
     const formTemplate = await FormTemplate.findByIdAndUpdate(
-      id,
+      jobId,
       { fields },
       { new: true }
     );

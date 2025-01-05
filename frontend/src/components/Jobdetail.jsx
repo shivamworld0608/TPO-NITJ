@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
+import ApplicationForm from "./StudentDashboard/applicationform";
 
 const Jobdetail = ({ job_id, onBack,onShow }) => {
     const [activeInfo, setActiveInfo] = useState("jobDescription");
@@ -8,6 +9,7 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [status, setStatus] = useState("");
+    const [application, setapplication] = useState(false);
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -52,6 +54,15 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
     if (error) {
         return <div className="min-h-screen flex items-center justify-center text-red-600">{error}</div>;
     }
+
+    if (application) {
+        console.log(application)
+        return (
+          <div className="container mx-auto px-4 py-6">
+            <ApplicationForm onHide={() => setapplication(false)} jobId={job_id} />
+          </div>
+        );
+      }
 
     const info = {
         jobDescription: (
@@ -141,7 +152,7 @@ eligibilityCriteria: (
                         : "bg-gray-300 cursor-not-allowed"
                 }`}
                 disabled={!status.eligible}
-                onClick={onShow()}
+                onClick={() => setapplication(true)}
             >
                 {status.eligible ? "Apply Now" : "Not Eligible"}
             </button>

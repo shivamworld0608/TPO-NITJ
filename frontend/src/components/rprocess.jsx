@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Card = ({ title, content, headerColor = "custom-blue", index }) => {
+const Card = ({ title, content, index }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleReadMore = () => setIsExpanded(!isExpanded);

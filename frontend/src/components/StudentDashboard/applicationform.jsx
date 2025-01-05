@@ -31,7 +31,7 @@ const ApplicationForm = ({ jobId ,onHide}) => {
     };
 
     fetchFormTemplate();
-  }, [formTemplateId, studentId]);
+  }, [jobId]);
 
   const handleFieldChange = (index, value) => {
     const updatedFields = fields.map((field, i) =>
@@ -43,8 +43,7 @@ const ApplicationForm = ({ jobId ,onHide}) => {
   const handleSubmit = async () => {
     try {
       const submissionData = {
-        formTemplateId,
-        studentId,
+        jobId,
         fields: fields.map(({ fieldName, value, isLocked }) => ({
           fieldName,
           value,
@@ -54,6 +53,7 @@ const ApplicationForm = ({ jobId ,onHide}) => {
 
       await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions`, submissionData,{withCredentials: true});
       toast.success('Form submitted successfully!');
+      onHide();
     } catch (err) {
       console.error(err);
       toast.error('Failed to submit form.');
