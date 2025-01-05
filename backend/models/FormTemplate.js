@@ -30,11 +30,6 @@ const formTemplateSchema = new mongoose.Schema({
     ref: 'JobProfile',
     required: true
   },
-  recruiterId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Recuiter',
-    required: true
-  },
   title: {
     type: String,
   },

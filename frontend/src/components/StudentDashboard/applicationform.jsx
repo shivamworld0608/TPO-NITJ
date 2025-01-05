@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
+import { FaArrowLeft } from "react-icons/fa";
 
 const ApplicationForm = ({ jobId ,onHide}) => {
   const [fields, setFields] = useState([]);
@@ -65,6 +66,15 @@ const ApplicationForm = ({ jobId ,onHide}) => {
 
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
+         <div className="mb-6">
+                <button
+                    className="flex items-center text-blue-600 hover:text-blue-800"
+                    onClick={onHide}
+                >
+                    <FaArrowLeft className="mr-2" />
+                </button>
+            </div>
+
       <h1 className="text-2xl font-bold mb-6 text-center">Application Form</h1>
 
       {fields.map((field, index) => (

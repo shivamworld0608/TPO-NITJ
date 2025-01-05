@@ -32,6 +32,7 @@
     "react-router-dom": "^7.1.0",
     "react-select": "^5.9.0",
     "redux-persist": "^6.0.0",
+    "sweetalert2": "^11.15.10",
     "vite-plugin-env-compatible": "^2.0.1",
     "xlsx": "^0.18.5"
   },
