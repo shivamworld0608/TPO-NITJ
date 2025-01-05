@@ -3,10 +3,11 @@ import FormSubmission from '../models/FormSubmission.js';
 // Submit a form (by student)
 export const submitForm = async (req, res) => {
   try {
-    const { formTemplateId, studentId, fields } = req.body;
-    console.log("Form Submission:", formTemplateId, studentId, fields);
+    const studentId = req.user.userId;
+    const { jobId, fields } = req.body;
+    console.log( studentId, fields);
     const formSubmission = new FormSubmission({
-      formTemplateId,
+      jobId,
       studentId,
       fields,
     

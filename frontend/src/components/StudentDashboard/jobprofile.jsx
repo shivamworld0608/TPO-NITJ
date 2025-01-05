@@ -11,7 +11,7 @@ const JobApplications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [visibleDetailId, setVisibleDetailId] = useState(null);
-  const [application, setapplication] = useState(false);
+ /*  const [application, setapplication] = useState(false); */
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -47,20 +47,18 @@ const JobApplications = () => {
 
 
   if (visibleDetailId) {
-    console.log(application) 
 
     return (
       <div className="container mx-auto px-4 py-6">
         <Jobdetail
           job_id={visibleDetailId}
           onBack={() => setVisibleDetailId(null)} // Back to job list
-          onShow={() => setapplication(true)}
         />
       </div>
     );
   }
 
-  if (application) {
+/*   if (application) {
     console.log(application)
     return (
       <div className="container mx-auto px-4 py-6">
@@ -68,7 +66,7 @@ const JobApplications = () => {
       </div>
     );
   }
-
+ */
 
   return (
     <>
