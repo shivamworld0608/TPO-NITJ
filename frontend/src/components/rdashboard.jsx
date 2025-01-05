@@ -13,7 +13,7 @@ import {
 import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Home from './StudentDashboard/home';
 import CreatedJobs from './RecruiterDashboard/createdjob';
-import RecruiterFormTemplate from './RecruiterDashboard/RecruiterFormTemple';
+import RecruiterFormTemplate from './RecruiterDashboard/createapplicationform';
 import MailboxComponent from './StudentDashboard/mailbox';
 import OnlineAssessment from './StudentDashboard/oa';
 import Profile from './StudentDashboard/profile';
