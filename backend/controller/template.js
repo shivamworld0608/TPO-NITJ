@@ -1,16 +1,60 @@
 import FormTemplate from '../models/FormTemplate.js';
 import Student from '../models/user_model/student.js';
 
-// Create a new form template
+export const checkapplicationformtemplateexists = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const formTemplate = await FormTemplate.findOne({ jobId });
+    if (!formTemplate) {
+      return res.status(404).json({exist:false, message: 'Form Template not found' });
+    }
+    res.status(200).json({exist:true, message: 'Form Template exists', formTemplate });
+  } catch (err) {
+    res.status(500).json({ message: 'Error checking form template', error: err.message });
+  }
+}
+
 export const createFormTemplate = async (req, res) => {
   try {
-    const recruiterId = req.user.userId;
     const { title, jobId, fields } = req.body;
-    const formTemplate = new FormTemplate({ title, jobId, recruiterId, fields });
+    const formTemplate = new FormTemplate({ title, jobId, fields });
     await formTemplate.save();
     res.status(201).json({ message: 'Form Template created successfully', formTemplate });
   } catch (err) {
     res.status(500).json({ message: 'Failed to create form template', error: err.message });
+  }
+};
+
+export const deleteFormTemplate = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const deletedFormTemplate = await FormTemplate.findOneAndDelete(jobId);
+    if (!deletedFormTemplate) {
+      return res.status(404).json({ message: 'Form Template not found' });
+    }
+    res.status(200).json({ message: 'Form Template deleted successfully', deletedFormTemplate });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to delete form template', error: err.message });
+  }
+};
+
+export const updateFormTemplate = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const {title, fields } = req.body;
+    console.log(title, jobId, fields);
+    const formTemplate = await FormTemplate.findOneAndUpdate(
+      { jobId },
+      { title,fields },
+      { new: true }
+    );
+    console.log("formTemplate", formTemplate);
+    if (!formTemplate) {
+      return res.status(404).json({ message: 'Form Template not found' });
+    }
+    res.status(200).json({ message: 'Form Template updated successfully', formTemplate });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update form template', error: err.message });
   }
 };
 
@@ -28,6 +72,13 @@ export const getFormTemplate = async (req, res) => {
   }
 };
 
+
+
+
+
+
+
+//I will change its directory later
 export const getStudent = async (req, res) => {
     const _id=req.user.userId
     try {
@@ -44,22 +95,4 @@ export const getStudent = async (req, res) => {
     }
   };
 
-// Update a form template (used by TPO for configuration)
-export const updateFormTemplate = async (req, res) => {
-  try {
-    const { jobId } = req.params;
-    const { fields } = req.body;
 
-    const formTemplate = await FormTemplate.findByIdAndUpdate(
-      jobId,
-      { fields },
-      { new: true }
-    );
-    if (!formTemplate) {
-      return res.status(404).json({ message: 'Form Template not found' });
-    }
-    res.status(200).json({ message: 'Form Template updated successfully', formTemplate });
-  } catch (err) {
-    res.status(500).json({ message: 'Failed to update form template', error: err.message });
-  }
-};

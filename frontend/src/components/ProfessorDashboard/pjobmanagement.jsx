@@ -1,228 +1,172 @@
-import React, { useState } from "react";
-import { FaSearch, FaEdit, FaTrashAlt, FaPlus, FaCheck, FaTimes } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import ViewJobDetails from "./ViewJob"; // Import JobDetails component
 
-const JobManagement = () => {
-  const [jobs, setJobs] = useState([
-    { id: 1, title: "Software Engineer", company: "XYZ Corp", status: "Active" },
-    { id: 2, title: "Data Analyst", company: "ABC Ltd.", status: "Closed" },
-    { id: 3, title: "Product Manager", company: "LMN Inc.", status: "Active" },
-    { id: 4, title: "Frontend Developer", company: "QRS Ltd.", status: "Closed" },
-  ]);
-  
-  const [newJob, setNewJob] = useState({ title: "", company: "", status: "Active" });
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredJobs, setFilteredJobs] = useState(jobs);
-  const [editJob, setEditJob] = useState(null); // For editing a job
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(null); // For delete confirmation
-  
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewJob({ ...newJob, [name]: value });
+const JobProfilesonp = () => {
+  const [jobProfiles, setJobProfiles] = useState({ approved: [], notApproved: [] });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [selectedJob, setSelectedJob] = useState(null); // State to track the selected job
+
+  useEffect(() => {
+    const fetchJobProfiles = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/professor/getjobs`,
+          { withCredentials: true }
+        );
+        setJobProfiles(response.data);
+        console.log("data is", response.data);
+      } catch (err) {
+        setError(err.response?.data?.error || "Failed to fetch job profiles.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobProfiles();
+  }, []);
+
+  const handleApprove = async (jobId) => {
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to approve this job?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, approve it!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        await axios.put(
+          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/approvejob/${jobId}`,
+          {},
+          { withCredentials: true }
+        );
+        Swal.fire("Approved!", "The job has been approved.", "success");
+        setJobProfiles((prev) => ({
+          ...prev,
+          notApproved: prev.notApproved.filter((job) => job._id !== jobId),
+          approved: [...prev.approved, prev.notApproved.find((job) => job._id === jobId)],
+        }));
+      } catch (err) {
+        Swal.fire("Error", "Failed to approve the job.", "error");
+      }
+    }
   };
 
-  const handleAddJob = () => {
-    setJobs([...jobs, { id: jobs.length + 1, ...newJob }]);
-    setNewJob({ title: "", company: "", status: "Active" });
-    setFilteredJobs([...jobs, { id: jobs.length + 1, ...newJob }]);
+  const handleReject = async (jobId) => {
+    const confirm = await Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to reject this job?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, reject it!",
+      cancelButtonText: "Cancel",
+    });
+
+    if (confirm.isConfirmed) {
+      try {
+        await axios.put(
+          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/rejectjob/${jobId}`,
+          {},
+          { withCredentials: true }
+        );
+        Swal.fire("Rejected!", "The job has been rejected.", "success");
+        setJobProfiles((prev) => ({
+          ...prev,
+          notApproved: prev.notApproved.filter((job) => job._id !== jobId),
+        }));
+      } catch (err) {
+        Swal.fire("Error", "Failed to reject the job.", "error");
+      }
+    }
   };
 
-  const handleEditJob = (job) => {
-    setEditJob(job);
-    setNewJob(job); // Pre-populate form with job details for editing
+  const handleViewDetails = (job) => {
+    setSelectedJob(job); // Set the selected job when button is clicked
   };
 
-  const handleSaveEdit = () => {
-    const updatedJobs = jobs.map((job) =>
-      job.id === editJob.id ? { ...job, ...newJob } : job
-    );
-    setJobs(updatedJobs);
-    setFilteredJobs(updatedJobs);
-    setEditJob(null);
-    setNewJob({ title: "", company: "", status: "Active" });
-  };
+  if (loading) return <div className="text-center py-10">Loading...</div>;
+  if (error) return <div className="text-center text-red-500 py-10">Error: {error}</div>;
 
-  const handleDeleteJob = (job) => {
-    setJobs(jobs.filter((item) => item.id !== job.id));
-    setFilteredJobs(jobs.filter((item) => item.id !== job.id));
-    setShowDeleteConfirm(null);
-  };
-
-  const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-    setFilteredJobs(
-      jobs.filter(
-        (job) =>
-          job.title.toLowerCase().includes(e.target.value.toLowerCase()) ||
-          job.company.toLowerCase().includes(e.target.value.toLowerCase())
-      )
-    );
-  };
-
-  const handleStatusChange = (id, status) => {
-    const updatedJobs = jobs.map((job) =>
-      job.id === id ? { ...job, status } : job
-    );
-    setJobs(updatedJobs);
-    setFilteredJobs(updatedJobs);
-  };
-
-  // Pagination settings
-  const itemsPerPage = 5;
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const totalPages = Math.ceil(filteredJobs.length / itemsPerPage);
-  const paginatedJobs = filteredJobs.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+  const JobCard = ({ job, showActions }) => (
+    <div className="border rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
+      <img
+        src={job.company_logo}
+        alt={`${job.company_name} logo`}
+        className="w-24 h-24 mx-auto mb-4 object-contain"
+      />
+      <h3 className="text-lg font-semibold text-center">{job.company_name}</h3>
+      <p className="text-sm"><strong>Job ID:</strong> {job.job_id}</p>
+      <p className="text-sm"><strong>Role:</strong> {job.role}</p>
+      <p className="text-sm"><strong>Salary:</strong> {job.salary}</p>
+      <p className="text-sm"><strong>Location:</strong> {job.location}</p>
+      <p className="text-sm"><strong>Posted On:</strong> {new Date(job.createdAt).toLocaleDateString()}</p>
+      {showActions && (
+        <div className="mt-4 flex justify-around">
+          <button
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            onClick={() => handleApprove(job._id)}
+          >
+            Approve
+          </button>
+          <button
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            onClick={() => handleReject(job._id)}
+          >
+            Reject
+          </button>
+        </div>
+      )}
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-2"
+            onClick={() => handleViewDetails(job)} // Show details when clicked
+          >
+            View Details
+          </button>
+    </div>
   );
 
   return (
-    <div className="bg-white p-6 shadow-md rounded-md">
-      <h2 className="text-2xl font-semibold mb-6">Job Management</h2>
+    <div className="container mx-auto px-4 py-8">
 
-      {/* Search Bar */}
-      <div className="mb-6 flex items-center space-x-2">
-        <FaSearch className="text-gray-500" />
-        <input
-          type="text"
-          placeholder="Search by job title or company"
-          value={searchQuery}
-          onChange={handleSearch}
-          className="p-2 border border-gray-300 rounded w-full"
-        />
-      </div>
+      {selectedJob && <ViewJobDetails onClose={() => setSelectedJob(null)} job={selectedJob} />} {/* Render JobDetails when a job is selected */}
 
-      {/* Add/Edit Job Form */}
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold mb-4">{editJob ? "Edit Job" : "Add New Job"}</h3>
-        <div className="grid grid-cols-1 gap-4 mb-4">
-          <input
-            type="text"
-            name="title"
-            placeholder="Job Title"
-            value={newJob.title}
-            onChange={handleInputChange}
-            className="p-2 border border-gray-300 rounded"
-          />
-          <input
-            type="text"
-            name="company"
-            placeholder="Company Name"
-            value={newJob.company}
-            onChange={handleInputChange}
-            className="p-2 border border-gray-300 rounded"
-          />
-          <select
-            name="status"
-            value={newJob.status}
-            onChange={handleInputChange}
-            className="p-2 border border-gray-300 rounded"
-          >
-            <option value="Active">Active</option>
-            <option value="Closed">Closed</option>
-          </select>
-        </div>
-        <button
-          onClick={editJob ? handleSaveEdit : handleAddJob}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          {editJob ? "Save Changes" : "Add Job"}
-        </button>
-      </div>
+      {!selectedJob && (
+          <>
+          <h1 className="text-2xl font-bold text-center mb-8">Job Profiles</h1>
+          <section className="mb-8">
+            <h2 className="text-xl font-semibold mb-4">Approved</h2>
+            {jobProfiles.approved.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {jobProfiles.approved.map((job) => (
+                  <JobCard key={job._id} job={job} showActions={false} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-600">No approved job profiles.</p>
+            )}
+          </section>
 
-      {/* Job List */}
-      <h3 className="text-lg font-semibold mb-4">Job Listings</h3>
-      <table className="min-w-full table-auto">
-        <thead>
-          <tr>
-            <th className="px-4 py-2 border-b">Job Title</th>
-            <th className="px-4 py-2 border-b">Company</th>
-            <th className="px-4 py-2 border-b">Status</th>
-            <th className="px-4 py-2 border-b">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {paginatedJobs.map((job) => (
-            <tr key={job.id} className="border-b">
-              <td className="sm:px-4 px-2 py-2">{job.title}</td>
-              <td className="px-4 py-2">{job.company}</td>
-              <td className="px-4 py-2">{job.status}</td>
-              <td className="px-4 py-2 flex sm:flex-row flex-col sm:space-y-0 space-y-4 items-center justify-center sm:space-x-4">
-                <button
-                  onClick={() => handleEditJob(job)}
-                  className="px-2 py-1 text-white bg-yellow-500 rounded hover:bg-yellow-600"
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  onClick={() => setShowDeleteConfirm(job)}
-                  className="px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600"
-                >
-                  <FaTrashAlt />
-                </button>
-                <button
-                  onClick={() => handleStatusChange(job.id, "Active")}
-                  className="px-2 py-1 text-white bg-green-500 rounded hover:bg-green-600"
-                >
-                  <FaCheck />
-                </button>
-                <button
-                  onClick={() => handleStatusChange(job.id, "Closed")}
-                  className="px-2 py-1 text-white bg-gray-500 rounded hover:bg-gray-600"
-                >
-                  <FaTimes />
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      {/* Pagination Controls */}
-      <div className="mt-4 flex justify-between">
-        <button
-          onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
-          disabled={currentPage === 1}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Prev
-        </button>
-        <span className="self-center text-lg">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
-          disabled={currentPage === totalPages}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Next
-        </button>
-      </div>
-
-      {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && (
-        <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-md">
-            <h3 className="text-lg font-semibold mb-4">Are you sure you want to delete this job?</h3>
-            <div className="flex space-x-4">
-              <button
-                onClick={() => handleDeleteJob(showDeleteConfirm)}
-                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Yes
-              </button>
-              <button
-                onClick={() => setShowDeleteConfirm(null)}
-                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-              >
-                No
-              </button>
-            </div>
-          </div>
-        </div>
+          <section>
+            <h2 className="text-xl font-semibold mb-4">Not Approved</h2>
+            {jobProfiles.notApproved.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {jobProfiles.notApproved.map((job) => (
+                  <JobCard key={job._id} job={job} showActions={true} />
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-600">No not approved job profiles.</p>
+            )}
+          </section>
+        </>
       )}
     </div>
   );
 };
 
-export default JobManagement;
+export default JobProfilesonp;

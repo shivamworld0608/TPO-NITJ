@@ -151,18 +151,15 @@ export const getJobProfiledetails = async (req, res) => {
   }
 }
 
-export const getapprovedJobProfilestoprofessors = async (req, res) => {
+export const getJobProfilesForProfessors = async (req, res) => {
   try {
-    const jobs = await JobProfile.find({ Approved_Status: true });
-    res.status(200).json(jobs);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-export const getnotapprovedJobProfilestoprofessors = async (req, res) => {
-  try {
-    const jobs = await JobProfile.find({ Approved_Status: false });
-    res.status(200).json(jobs);
+    const approvedJobs = await JobProfile.find({ Approved_Status: true });
+    const notApprovedJobs = await JobProfile.find({ Approved_Status: false });
+
+    res.status(200).json({
+      approved: approvedJobs,
+      notApproved: notApprovedJobs,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -183,9 +180,11 @@ export const getnotapprovedJobProfilestoprofessors = async (req, res) => {
 // Approve Job Application
 export const approveJobProfile = async (req, res) => {
   try {
-    const { job_id } = req.params;
+    console.log("Approving job...");
+    const { _id } = req.params;
+    console.log("id", _id);
     const approvedJob = await JobProfile.findByIdAndUpdate(
-      job_id,
+      _id,
       { Approved_Status: true },
       { new: true }
     );
@@ -200,8 +199,8 @@ export const approveJobProfile = async (req, res) => {
 // Reject Job Application
 export const rejectJobProfile = async (req, res) => {
   try {
-    const { job_id } = req.params;
-    const deletedJob = await JobProfile.findByIdAndDelete(job_id);
+    const {_id } = req.params;
+    const deletedJob = await JobProfile.findByIdAndDelete(_id);
 
     if (!deletedJob) {
       return res.status(404).json({ message: "Job not found" });
