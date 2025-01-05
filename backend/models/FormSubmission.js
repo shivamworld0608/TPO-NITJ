@@ -17,7 +17,13 @@ const formSubmissionSchema = new mongoose.Schema({
     isAutoFilled: Boolean,
     studentPropertyPath: String
   }],
-  resumeUrl: String
+  resumeUrl: {
+    type: String,
+  },
+  visible: {
+    type: Boolean,
+    default: false
+  }
 });
 
 /*  formSubmissionSchema.pre('save', async function(next) {

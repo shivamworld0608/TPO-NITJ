@@ -12,7 +12,7 @@ const AppliedStudents = ({ jobId, onBack }) => {
     const fetchSubmissions = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/${jobId}`,
+          `${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/recruiter/${jobId}`,
           { withCredentials: true }
         );
         setSubmissions(response.data);
