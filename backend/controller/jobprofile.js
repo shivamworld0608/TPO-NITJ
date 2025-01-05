@@ -45,11 +45,7 @@ export const createJobProfile = async (req, res) => {
       base_salary,
       deadline: new Date(deadline),
       Hiring_Workflow,
-      department_allowed,
-      gender_allowed,
-      eligible_batch,
-      minimum_cgpa,
-      active_backlogs,
+      eligibility_criteria:{department_allowed, gender_allowed, eligible_batch, minimum_cgpa, active_backlogs},
     });
     await newJob.save();
     res.status(201).json({
@@ -224,8 +220,10 @@ export const checkEligibility = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const { _id } = req.params;
-    const student = await Student.findById(studentId);
+    const student = await Student.findById({_id:studentId});
     const job = await JobProfile.findById(_id);
+    console.log("Job:", job);
+    console.log("Student:", student);
 
     if (!student || !job) {
       return res.status(404).json({ message: "Student or Job Application not found" });

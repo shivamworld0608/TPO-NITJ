@@ -38,6 +38,7 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
                     `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/eligibility/${job_id}`,
                     { withCredentials: true }
                 );
+                console.log(response.data);
                 setStatus(response.data || "");
             } catch (error) {
                 setError("Failed to fetch eligibility status. Please try again.");

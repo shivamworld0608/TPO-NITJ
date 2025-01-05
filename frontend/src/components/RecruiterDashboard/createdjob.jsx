@@ -3,7 +3,7 @@ import axios from 'axios';
 
 import EditJobModal from './editcreatedjob';
 import CreateJob from './createjob';
-import RecruiterFormTemplate from './RecruiterFormTemple';
+import RecruiterFormTemplate from './createapplicationform';
 import ViewJobDetails from './ViewJob';
 
 const CreatedJobs = () => {

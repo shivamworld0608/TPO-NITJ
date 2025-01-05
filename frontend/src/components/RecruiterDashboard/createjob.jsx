@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Select from 'react-select';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const departmentOptions = [
   { value: 'CSE', label: 'CSE' },
@@ -96,11 +97,30 @@ const CreateJob = () => {
   const handleSubmit = async(e) => {
     e.preventDefault();
     console.log('Form Data Submitted:', formData);
+        if (!formData.department_allowed.length) {
+          toast.error('Please select at least one department allowed.');
+          return;
+        }
+    
+        if (!formData.eligible_batch) {
+          toast.error('Eligible batch is required.');
+          return;
+        }
+
+        if (!formData.gender_allowed) {
+          toast.error('Eligible Gender allowed is required.');
+          return;
+        }
+    
+        if (formData.minimum_cgpa <= 0) {
+          toast.error('Minimum CGPA must be greater than 0.');
+          return;
+        }
     try {
         const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/jobprofile/createjob`, formData, {
           withCredentials: true,
         });
-        alert('Job application created successfully!');
+        toast.success('Job created successfully!');
       } catch (error) {
         console.error('Error creating job application:', error);
       }
