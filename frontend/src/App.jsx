@@ -11,6 +11,8 @@ import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
 import TeamPage from "./Pages/TeamPage";
+import Insight from "./Pages/Insight";
+
 
 
 const App = () => {
@@ -30,6 +32,7 @@ const App = () => {
         <Route path="/placements" element={<Placement/>} />
         <Route path="/recruiter" element={<Recruiter/>} />
         <Route path="/team" element={<TeamPage/>} />
+        <Route path="/insights" element={<Insight/>} />
         <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/" />}/>         
         <Route path="/rdashboard" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
         <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />

@@ -84,6 +84,14 @@ const Header = () => {
                 FAQ's
               </a>
             </li>
+            <li>
+              <a
+                href="/insights"
+                className="text-custom-blue font-semibold hover:text-blue-800"
+              >
+                Placement Insights
+              </a>
+            </li>
           </ul>
           {authUser && (
             <div className="flex items-center gap-4">
