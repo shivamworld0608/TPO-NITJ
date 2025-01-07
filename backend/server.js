@@ -11,10 +11,7 @@ import oaroutes from "./routes/oa.js";
 import profileroutes from "./routes/profile.js";
 import devteamroutes from "./routes/devteam.js";
 import jobprofileroutes from "./routes/jobprofile.js";
-
-/* import applicationroutes from "./routes/application.js"; */
  import formTemplateroutes from "./routes/formTemplate.js"; 
-/* import applicationformroutes from "./routes/applicationform.js"; */
 
 const app = express();
 dotenv.config();
