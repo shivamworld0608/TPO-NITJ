@@ -24,14 +24,17 @@ app.use(cookieParser());
 app.use(express.json());
 
 const authenticate = (req, res, next) => {
+    console.log("authenticating");
     const token = req.cookies?.token;
     if (!token) {
+      console.log("No token provided");
         return res.status(401).json({ message: 'No token provided' });
     }
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decoded;
       next();
+      console.log("Authenticated");
     }
     catch (err) {
       return res.status(401).json({ message: 'Invalid or Expired token' });
@@ -59,7 +62,7 @@ app.use('/profile',authenticate, profileroutes);
 app.use('/devteam',devteamroutes);
 app.use('/jobprofile',authenticate,jobprofileroutes);
 
-app.use('/api', formTemplateroutes);
+app.use('/api',authenticate, formTemplateroutes);
 /* app.use('/applicationform',applicationformroutes); */
 
 const port = process.env.PORT || 5000;

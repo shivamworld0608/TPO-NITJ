@@ -50,6 +50,7 @@ const Sidebar = ({ onNavigate }) => {
   const menuItems = [
     { name: "Dashboard", icon: <FaHome />, id: "dashboard" },
     { name: "Job Management", icon: <FaBriefcase />, id: "job-management" },
+    { name: "Job Profile Management", icon: <FaBriefcase />, id: "job-management" },
     { name: "OA Management", icon: <FaClipboardList />, id: "oa-management" },
     { name: "Interview Management", icon: <FaClipboardList />, id: "interview-management" },
     { name: "Notifications", icon: <FaBell />, id: "notifications" },

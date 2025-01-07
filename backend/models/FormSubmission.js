@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 const formSubmissionSchema = new mongoose.Schema({
-  formTemplateId: {
+  jobId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'FormTemplate',
+    ref: 'JobProfile',
     required: true
   },
   studentId: {

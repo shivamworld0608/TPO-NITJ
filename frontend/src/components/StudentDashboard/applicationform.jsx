@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { FaArrowLeft } from "react-icons/fa";
 
-const ApplicationForm = ({ formTemplateId, studentId }) => {
+const ApplicationForm = ({ jobId ,onHide}) => {
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -9,10 +11,10 @@ const ApplicationForm = ({ formTemplateId, studentId }) => {
   useEffect(() => {
     const fetchFormTemplate = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/form-templates/${formTemplateId}`);
+        const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/form-templates/${jobId}`,{withCredentials: true});
         const templateFields = response.data.fields;
 
-        const studentResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/students/${studentId}`);
+        const studentResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/students`,{withCredentials: true});
         const studentData = studentResponse.data;
 
         const populatedFields = templateFields.map((field) => ({
@@ -30,7 +32,7 @@ const ApplicationForm = ({ formTemplateId, studentId }) => {
     };
 
     fetchFormTemplate();
-  }, [formTemplateId, studentId]);
+  }, [jobId]);
 
   const handleFieldChange = (index, value) => {
     const updatedFields = fields.map((field, i) =>
@@ -42,8 +44,7 @@ const ApplicationForm = ({ formTemplateId, studentId }) => {
   const handleSubmit = async () => {
     try {
       const submissionData = {
-        formTemplateId,
-        studentId,
+        jobId,
         fields: fields.map(({ fieldName, value, isLocked }) => ({
           fieldName,
           value,
@@ -51,11 +52,12 @@ const ApplicationForm = ({ formTemplateId, studentId }) => {
         })),
       };
 
-      await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions`, submissionData);
-      alert('Form submitted successfully!');
+      await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions`, submissionData,{withCredentials: true});
+      toast.success('Form submitted successfully!');
+      onHide();
     } catch (err) {
       console.error(err);
-      alert('Error submitting the form.');
+      toast.error('Failed to submit form.');
     }
   };
 
@@ -64,6 +66,15 @@ const ApplicationForm = ({ formTemplateId, studentId }) => {
 
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
+         <div className="mb-6">
+                <button
+                    className="flex items-center text-blue-600 hover:text-blue-800"
+                    onClick={onHide}
+                >
+                    <FaArrowLeft className="mr-2" />
+                </button>
+            </div>
+
       <h1 className="text-2xl font-bold mb-6 text-center">Application Form</h1>
 
       {fields.map((field, index) => (

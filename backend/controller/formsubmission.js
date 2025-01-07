@@ -3,10 +3,11 @@ import FormSubmission from '../models/FormSubmission.js';
 // Submit a form (by student)
 export const submitForm = async (req, res) => {
   try {
-    const { formTemplateId, studentId, fields } = req.body;
-    console.log("Form Submission:", formTemplateId, studentId, fields);
+    const studentId = req.user.userId;
+    const { jobId, fields } = req.body;
+    console.log( studentId, fields);
     const formSubmission = new FormSubmission({
-      formTemplateId,
+      jobId,
       studentId,
       fields,
     
@@ -23,15 +24,14 @@ export const submitForm = async (req, res) => {
 
 // Get Submissions Controller
 export const getFormSubmissions = async (req, res) => {
-    const { formTemplateId } = req.params;
-    console.log("Form Template ID:", formTemplateId);
+    const { jobId } = req.params;
   
-    if (!formTemplateId) {
-      return res.status(400).json({ message: 'FormTemplateId is required.' });
+    if (!jobId) {
+      return res.status(400).json({ message: 'jobId is required.' });
     }
   
     try {
-      const submissions = await FormSubmission.find({ formTemplateId })
+      const submissions = await FormSubmission.find({ jobId })
         .populate('studentId', 'name email rollno department');
       res.status(200).json(submissions);
     } catch (error) {

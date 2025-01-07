@@ -1,17 +1,17 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
-import Placements from "../components/placements";
+import FAQ from "../components/faqs";
 
 
-const Placement = () => {
+const Faqs = () => {
   return (
     <>
       <Header />
-      <div className="mt-56"><Placements /></div>
+      <div className="mt-44"><FAQ /></div>
       <Footer/>
 
     </>
   );
 };
 
-export default Placement;
+export default Faqs;

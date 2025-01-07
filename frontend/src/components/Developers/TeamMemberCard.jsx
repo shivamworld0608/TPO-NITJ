@@ -17,7 +17,7 @@ const TeamMemberCard = ({ image, name, linkedinUrl, mobile }) => (
             <div className="flex flex-col space-y-4">
                 <a
                     href={linkedinUrl}
-                    className="flex items-center space-x-3 text-blue-600 hover:text-blue-800 transition-colors p-2 rounded-lg hover:bg-blue-50 group"
+                    className="flex items-center space-x-3 text-custom-blue hover:text-blue-800 transition-colors p-2 rounded-lg hover:bg-blue-50 group"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
