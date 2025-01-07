@@ -57,7 +57,7 @@ app.get('/check-auth', authenticate, (req, res) => {
 
 app.use('/auth', authroutes);
 app.use('/interview', interviewroutes);
-app.use('/oa',oaroutes);
+app.use('/oa',authenticate,oaroutes);
 app.use('/profile',authenticate, profileroutes);
 app.use('/devteam',devteamroutes);
 app.use('/jobprofile',authenticate,jobprofileroutes);

@@ -18,12 +18,13 @@ import MailboxComponent from './StudentDashboard/mailbox';
 import OnlineAssessment from './StudentDashboard/oa';
 import Profile from './StudentDashboard/profile';
 import ProfileImage from '../assets/chillguy.png';
+import CopycreateJob from './RecruiterDashboard/copycreatedjob.jsx';
 const RecruiterDashboards = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const {userData } = useSelector((state) => state.auth);
   const menuItems = [
-    { path: '/rdashboard/home', label: 'Home', icon: faHome },
+    { path: '/rdashboard/home', label: 'copy created job', icon: faHome },
     { path: '/rdashboard/createdjob', label: 'Created Job Profile', icon: faBriefcase },
     { path: '/rdashboard/createdapplicationform', label: 'Create Application form', icon: faBriefcase },
     { path: '/rdashboard/oa', label: 'OA Management', icon: faClipboard },
@@ -79,7 +80,7 @@ const RecruiterDashboards = () => {
         <main className="flex-1 bg-white p-4">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="home" element={<Home />} />
+            <Route path="home" element={<CopycreateJob />} />
             <Route path="createdjob" element={<CreatedJobs />} />
             <Route path="createdapplicationform" element={<RecruiterFormTemplate />} />
             <Route path="oa" element={<OnlineAssessment />} />

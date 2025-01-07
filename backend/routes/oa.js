@@ -10,7 +10,7 @@ import {  getOADetails,
 router.get("/details/:jobId/", getOADetails);
 router.get("/check-shortlist-status/:userId/:job_id/", checkShortlistStatus);
 router.get("/today-shortlists", getTodayShortlistsGroupedByCompany);
-router.get("/eligible-upcoming/:userId", getEligibleUpcomingOAs);
+router.get("/eligible-upcoming", getEligibleUpcomingOAs);
 router.get("/eligible-past/:userId", getEligiblePastOAs);
 
 export default router;
