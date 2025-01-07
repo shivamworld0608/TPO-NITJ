@@ -284,8 +284,8 @@ const CreateJob = () => {
                 className="w-full border px-3 py-2 rounded"
               >
                 <option value="">Select Course</option>
-                <option value="BTech">BTech</option>
-                <option value="MTech">MTech</option>
+                <option value="B.Tech">B.Tech</option>
+                <option value="M.Tech">M.Tech</option>
                 <option value="MBA">MBA</option>
               </select>
             </div>

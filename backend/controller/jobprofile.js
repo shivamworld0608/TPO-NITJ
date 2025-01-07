@@ -1,14 +1,7 @@
-//for student
-//get job application
-//apply for job application
-
-//for tpo
-//approve job application
-//reject job application
-
-import { trusted } from "mongoose";
 import JobProfile from "../models/jobprofile.js";
 import Student from "../models/user_model/student.js";
+import FormSubmission from '../models/FormSubmission.js';
+import Placement from '../models/placement.js';
 export const createJobProfilecopy = async (req, res) => {
   try {
     const recruiter_id = req.user.userId;
@@ -32,10 +25,57 @@ export const createJobProfilecopy = async (req, res) => {
       course_allowed,
       active_backlogs,
     } = req.body;
-   
+
     console.log(recruiter_id);
 
-    // Create job profile
+    // Process and validate Hiring_Workflow
+    const processedWorkflow = Hiring_Workflow.map(step => {
+      const processedStep = {
+        step_type: step.step_type,
+        details: {},
+        eligible_students: step.eligible_students || [],
+        shortlisted_students: step.shortlisted_students || []
+      };
+
+      // Initialize details based on step type
+      switch (step.step_type) {
+        case 'OA':
+          processedStep.details = {
+            oa_date: step.details?.oa_date || '',
+            oa_login_time: step.details?.oa_login_time || '',
+            oa_duration: step.details?.oa_duration || '',
+            oa_info: step.details?.oa_info || '',
+            oa_link: step.details?.oa_link || ''
+          };
+          break;
+
+        case 'Interview':
+          processedStep.details = {
+            interview_type: step.details?.interview_type || '',
+            interview_date: step.details?.interview_date || '',
+            interview_time: step.details?.interview_time || '',
+            interview_info: step.details?.interview_info || '',
+            interview_link: step.details?.interview_link || ''
+          };
+          break;
+
+        case 'GD':
+          processedStep.details = {
+            gd_date: step.details?.gd_date || '',
+            gd_time: step.details?.gd_time || '',
+            gd_info: step.details?.gd_info || '',
+            gd_link: step.details?.gd_link || ''
+          };
+          break;
+
+        default:
+          throw new Error(`Invalid step type: ${step.step_type}`);
+      }
+
+      return processedStep;
+    });
+
+    // Create job profile with processed workflow
     const jobProfile = new JobProfile({
       recruiter_id,
       job_id,
@@ -46,35 +86,37 @@ export const createJobProfilecopy = async (req, res) => {
       joblocation,
       job_type,
       job_category,
-      job_salary:{
+      job_salary: {
         ctc,
         base_salary
       },
-      Hiring_Workflow,
-      eligibility_criteria:{
+      Hiring_Workflow: processedWorkflow,
+      eligibility_criteria: {
         department_allowed,
         gender_allowed,
         eligible_batch,
         minimum_cgpa,
         active_backlogs,
         course_allowed
-
       },
       deadline,
-
     });
-    try {
-      const savedProfile = await jobProfile.save();
-      res.status(201).json({ message: "Job profile created successfully!", data: savedProfile });
-    } catch (error) {
-      console.error("Validation error:", error); // Log the full error
-      res.status(500).json({ message: "Failed to create job profile.", error: error.message });
-    }
-    
+
+    // Save the job profile
+    const savedProfile = await jobProfile.save();
     console.log(savedProfile);
-    res.status(201).json({ message: "Job profile created successfully!", data: savedProfile });
+    
+    return res.status(201).json({ 
+      message: "Job profile created successfully!", 
+      data: savedProfile 
+    });
+
   } catch (error) {
-    res.status(500).json({ message: "Failed to create job profile.", error: error.message });
+    console.error("Error creating job profile:", error);
+    return res.status(500).json({ 
+      message: "Failed to create job profile.", 
+      error: error.message 
+    });
   }
 };
 
@@ -224,7 +266,7 @@ export const getJobProfilesForProfessors = async (req, res) => {
   try {
     const approvedJobs = await JobProfile.find({ Approved_Status: true });
     const notApprovedJobs = await JobProfile.find({ Approved_Status: false });
-
+    console.log("approvedJobs", approvedJobs);
     res.status(200).json({
       approved: approvedJobs,
       notApproved: notApprovedJobs,
@@ -233,18 +275,6 @@ export const getJobProfilesForProfessors = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-
-/* export const appliedstudenttojob = async (req, res) => {
-    try {
-        const { job_id } = req.params;
-        const job = await JobProfile.find({ job_id });
-        res.status(200).json(job.applied);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-}
- */
 
 // Approve Job Application
 export const approveJobProfile = async (req, res) => {
@@ -282,22 +312,18 @@ export const rejectJobProfile = async (req, res) => {
 };
 
 
-//eligibilty of any student
-
 export const checkEligibility = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const { _id } = req.params;
     const student = await Student.findById({_id:studentId});
     const job = await JobProfile.findById(_id);
-    console.log("Job:", job);
-    console.log("Student:", student);
-
     if (!student || !job) {
       return res.status(404).json({ message: "Student or Job Application not found" });
     }
     const {
       department_allowed,
+      course_allowed,
       gender_allowed,
       eligible_batch,
       minimum_cgpa,
@@ -312,6 +338,9 @@ export const checkEligibility = async (req, res) => {
       return res.json({ eligible: false, reason: "Gender not eligible" });
     }
 
+    if (course_allowed && course_allowed !== student.course) {
+      return res.json({ eligible: false, reason: "Course not eligible" });
+    }
     if (eligible_batch && eligible_batch !== student.batch) {
       return res.json({ eligible: false, reason: "Batch not eligible" });
     }
@@ -342,5 +371,84 @@ export const checkEligibility = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+export const addshortlistStudents = async (req, res) => {
+  try {
+    const { jobId, stepIndex, students } = req.body;
+
+    // Find the job by ID
+    const job = await JobProfile.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    const step = job.Hiring_Workflow[stepIndex];
+    if (!step) {
+      return res.status(400).json({ error: 'Invalid step index' });
+    }
+
+    // Find student IDs from FormSubmission using email
+    const studentIds = [];
+    for (const student of students) {
+      const formSubmission = await FormSubmission.findOne({
+        jobId: jobId,
+        'fields.value': student.email,
+      });
+
+      if (formSubmission) {
+        studentIds.push(formSubmission.studentId);
+      } else {
+        console.error(`FormSubmission not found for email: ${student.email}`);
+      }
+    }
+
+    // Add student IDs to the current step's shortlisted_students array
+    step.shortlisted_students.push(...studentIds);
+
+    if (job.Hiring_Workflow[stepIndex + 1]) {
+      // Add student IDs to the next step's eligible_students array
+      job.Hiring_Workflow[stepIndex + 1].eligible_students.push(...studentIds);
+    } else {
+      // If no next step, prepare data for Placement model
+      const placementData = [];
+      for (const studentId of studentIds) {
+        const student = await Student.findById(studentId);
+        if (student) {
+          placementData.push({
+            name: student.name,
+            image: student.image || '',
+            email: student.email,
+            gender: student.gender,
+            department: student.department,
+          });
+        } else {
+          console.error(`Student not found for ID: ${studentId}`);
+        }
+      }
+
+      // Create a new placement entry
+      const placement = new Placement({
+        company_name: job.company_name,
+        company_logo: job.company_logo,
+        placement_type: job.job_category,
+        batch: job.eligibility_criteria?.eligible_batch,
+        degree: job.eligibility_criteria?.course_allowed,
+        shortlisted_students: placementData,
+        ctc: job.job_salary?.ctc || 'N/A', // Include CTC
+      });
+
+      await placement.save();
+    }
+
+    // Save the updated job
+    await job.save();
+
+    res.status(200).json({ message: 'Students shortlisted successfully.' });
+  } catch (error) {
+    console.error('Error shortlisting students:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };

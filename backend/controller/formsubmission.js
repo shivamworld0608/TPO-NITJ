@@ -1,20 +1,32 @@
 import FormSubmission from '../models/FormSubmission.js';
+import JobProfile from '../models/jobprofile.js';
 
 // Submit a form (by student)
 export const submitForm = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const { jobId, fields } = req.body;
-    console.log( studentId, fields);
     const formSubmission = new FormSubmission({
       jobId,
       studentId,
       fields,
-    
     });
-  console.log("Form Submission:", formSubmission);
     await formSubmission.save();
-    console.log("after saving");
+    await JobProfile.findOneAndUpdate(
+      { _id: jobId },
+      { $addToSet: { Applied_Students: studentId } },
+      { new: true }
+    );
+    await JobProfile.findOneAndUpdate(
+      {
+        _id: jobId,
+        "Hiring_Workflow.0": { $exists: true },
+      },
+      {
+        $addToSet: { "Hiring_Workflow.0.eligible_students": studentId },
+      },
+      { new: true }
+    );
     res.status(201).json({ message: 'Form submitted successfully', formSubmission });
   } catch (err) {
     res.status(500).json({ message: 'Failed to submit form', error: err.message });

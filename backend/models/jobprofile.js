@@ -52,17 +52,23 @@ const JobProfileSchema = new mongoose.Schema(
             type: String,
             enum: [ "OA", "Interview", "GD"],
           },
-/*           current_step_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            refPath: "Hiring_Workflow.step_type",
-          },
-          next_step_id: {
-            type: mongoose.Schema.Types.ObjectId,
-            refPath: "Hiring_Workflow.step_type",
-          }, */
           details: {
-            type: mongoose.Schema.Types.Mixed, // To allow dynamic fields for each step type
+            type: mongoose.Schema.Types.Mixed,
           },
+          eligible_students: {
+            type: [{
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "Student",
+            }],
+            default: []
+          },
+          shortlisted_students: {
+            type: [{
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "Student",
+            }],
+            default: []
+          }
         },
       ],
       default: [],
@@ -106,7 +112,7 @@ const JobProfileSchema = new mongoose.Schema(
         },
         course_allowed: {
           type: String,
-          enum: ["BTech", "MTech", "MBA"],
+          enum: ["B.Tech", "M.Tech", "MBA"],
         },
       },
     },
@@ -114,12 +120,13 @@ const JobProfileSchema = new mongoose.Schema(
       type: String,
       enum: ["Below Dream", "Dream", "Super Dream"],
     },
-    Current_Eligible_Students:[{
+    Applied_Students:[{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Student",
   }],
     Approved_Status: {
       type: Boolean,
+      default: false
     },
   },
   { timestamps: true }
