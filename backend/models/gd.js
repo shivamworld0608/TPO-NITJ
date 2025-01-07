@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
-const InterviewSchema = new mongoose.Schema({
+const GDSchema = new mongoose.Schema({
   job_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "JobProfile",
   },
-  interview_type: {
+  interview_name: {
       type: String,
   },
   company_name: {
@@ -15,16 +15,16 @@ const InterviewSchema = new mongoose.Schema({
   company_logo: {
     type:String,
   },
-  interview_date: {
+  gd_date: {
       type: Date,
   },
-  interview_link: {
+  gd_link: {
     type: String,
   },
-  interview_time: {
+  gd_time: {
     type: String,
   },
-  interview_info: {
+  gd_info: {
     type: String,
   },
   eligible_students: [
@@ -51,6 +51,6 @@ const InterviewSchema = new mongoose.Schema({
   ]
 }, { timestamps: true });
 
-const Interview = mongoose.model('Interview', InterviewSchema);
+const GD = mongoose.model('GD', GDSchema);
 
-export default Interview;
+export default GD;

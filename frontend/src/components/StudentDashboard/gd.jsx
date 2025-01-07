@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Oacard from "../../components/Oacard";
 import axios from "axios";
 
-const OnlineAssessment = () => {
+const GD = () => {
     const [upcomingJobs, setUpcomingJobs] = useState([]);
     const [previousJobs, setPreviousJobs] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -13,10 +13,10 @@ const OnlineAssessment = () => {
             try {
                 setLoading(true);
                 const userId = "6769a8e96891a0b319d033a8";
-                console.log(userId);
-                const upcomingResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-upcoming`,{useCredentials: true});
-                console.log("hello i am shivam",upcomingResponse.data.upcomingOAs);
-                const pastResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-past/${userId}/`,{useCredentials: true});
+
+                const upcomingResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-upcoming/${userId}/`);
+                const pastResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-past/${userId}/`);
+
                 setUpcomingJobs(upcomingResponse.data.oas || []);
                 setPreviousJobs(pastResponse.data.oas || []);
             } catch (error) {
@@ -54,7 +54,7 @@ const OnlineAssessment = () => {
         <>
             <div>
             <h1 className="container text-center font-medium text-custom-blue text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mx-auto p-6 sm:p-8 md:p-10">
-            UPCOMING OA's
+            UPCOMING GD's
 </h1>
 
             </div>
@@ -76,7 +76,7 @@ const OnlineAssessment = () => {
 
             <div>
                 <h1 className="container text-center font-medium text-custom-blue text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mx-auto p-6 sm:p-8 md:p-10">
-                    ATTEMPTED OA's
+                    ATTEMPTED GD's
                 </h1>
             </div>
             <div className="container mx-auto px-4 py-6">
@@ -98,4 +98,4 @@ const OnlineAssessment = () => {
     );
 };
 
-export default OnlineAssessment;
+export default GD;

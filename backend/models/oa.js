@@ -2,8 +2,8 @@ import mongoose from "mongoose";
 
 const OASchema = new mongoose.Schema({
   job_id: {
-    type: String,
-    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "JobProfile",
   },
   company_name: {
     type: String,
@@ -12,35 +12,21 @@ const OASchema = new mongoose.Schema({
   company_logo: {
       type: String,
   },
-  test_date: {
+  oa_date: {
       type: Date,
   },
-  login_time: {
+  oa_login_time: {
     type: String,
     required: true,
   },
-  test_duration: {
+  oa_duration: {
     type: String,
-    required: true,
   },
-  test_pattern: {
+  oa_info: {
     type: String,
-    required: true,
   },
-  important_guidelines: {
-      type: String,
-      required: true,
-  },
-  test_link: {
+  oa_link: {
     type: String,
-    required: true,
-  },
-  notification: {
-      type: String,
-      required: true
-  },
-  result_date: {
-      type: Date,
   },
   eligible_students: [
     {
@@ -48,15 +34,8 @@ const OASchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      rollno: {
-        type: String,
-      },
       email:{
           type:String
-      },
-      department: {
-        type: String,
-        enum:['CSE', 'ECE', 'EE', 'ME', 'CE', 'IT', 'CH','ICE','BT','TT','IPE'],
       },
     }
   ],
@@ -66,18 +45,8 @@ const OASchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      image: {
-        type: String,
-      },
-      rollno: {
-        type: String,
-      },
       email:{
           type:String
-      },
-      department: {
-        type: String,
-        enum:['CSE', 'ECE', 'EE', 'ME', 'CE', 'IT', 'CH','ICE','BT','TT','IPE'],
       },
     }
   ]

@@ -14,6 +14,7 @@ import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import Home from './StudentDashboard/home';
 import JobApplications from './StudentDashboard/jobprofile';
 import Interviews from './StudentDashboard/interviews';
+import GD from './StudentDashboard/gd';
 import MailboxComponent from './StudentDashboard/mailbox';
 import OnlineAssessment from './StudentDashboard/oa';
 import SharedExperience from './StudentDashboard/shared-experience';
@@ -28,6 +29,7 @@ const StudentDashboards = () => {
     { path: '/sdashboard/job-application', label: 'Job Application', icon: faBriefcase },
     { path: '/sdashboard/oa', label: 'OA', icon: faClipboard },
     { path: '/sdashboard/interviews', label: 'Interview', icon: faComments },
+    { path: '/sdashboard/gd', label: 'GD', icon: faComments },
     { path: '/sdashboard/mailbox', label: 'Mailbox', icon: faEnvelope },
     { path: '/sdashboard/request-help', label: 'Request Help', icon: faHandsHelping },
     { path: '/sdashboard/shared-experience', label: 'Shared Experience', icon: faShareSquare },
@@ -84,6 +86,7 @@ const StudentDashboards = () => {
             <Route path="job-application" element={<JobApplications />} />
             <Route path="oa" element={<OnlineAssessment />} />
             <Route path="interviews" element={<Interviews />} />
+            <Route path="gd" element={<GD />} />
             <Route path="mailbox" element={<MailboxComponent />} />
             <Route path="shared-experience" element={<SharedExperience />} />
             <Route path="profile" element={<Profile />} />

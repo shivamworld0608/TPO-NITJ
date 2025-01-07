@@ -9,6 +9,75 @@
 import { trusted } from "mongoose";
 import JobProfile from "../models/jobprofile.js";
 import Student from "../models/user_model/student.js";
+export const createJobProfilecopy = async (req, res) => {
+  try {
+    const recruiter_id = req.user.userId;
+    const {
+      job_id,
+      company_name,
+      company_logo,
+      job_role,
+      jobdescription,
+      joblocation,
+      job_type,
+      job_category,
+      ctc,
+      base_salary,
+      deadline,
+      Hiring_Workflow,
+      department_allowed,
+      gender_allowed,
+      eligible_batch,
+      minimum_cgpa,
+      course_allowed,
+      active_backlogs,
+    } = req.body;
+   
+    console.log(recruiter_id);
+
+    // Create job profile
+    const jobProfile = new JobProfile({
+      recruiter_id,
+      job_id,
+      company_name,
+      company_logo,
+      job_role,
+      jobdescription,
+      joblocation,
+      job_type,
+      job_category,
+      job_salary:{
+        ctc,
+        base_salary
+      },
+      Hiring_Workflow,
+      eligibility_criteria:{
+        department_allowed,
+        gender_allowed,
+        eligible_batch,
+        minimum_cgpa,
+        active_backlogs,
+        course_allowed
+
+      },
+      deadline,
+
+    });
+    try {
+      const savedProfile = await jobProfile.save();
+      res.status(201).json({ message: "Job profile created successfully!", data: savedProfile });
+    } catch (error) {
+      console.error("Validation error:", error); // Log the full error
+      res.status(500).json({ message: "Failed to create job profile.", error: error.message });
+    }
+    
+    console.log(savedProfile);
+    res.status(201).json({ message: "Job profile created successfully!", data: savedProfile });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to create job profile.", error: error.message });
+  }
+};
+
 
 export const createJobProfile = async (req, res) => {
   try {
