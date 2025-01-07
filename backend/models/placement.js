@@ -12,13 +12,16 @@ const PlacementSchema = new mongoose.Schema(
       type: String,
       enum: ["Tech", "Non-Tech"],
     },
-    year:{
+    batch:{
         type:String,
         enum:['2022','2023','2024','2025','2026','2027','2028','2029','2030']
     },
     degree: {
       type:String,
-      enum:['BTECH','MTECH','MBA']
+      enum:['B.Tech','M.Tech','MBA']
+    },
+    ctc:{
+      type:String,
     },
     shortlisted_students: [
       {

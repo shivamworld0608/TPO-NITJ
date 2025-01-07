@@ -56,7 +56,7 @@ const StudentDashboards = () => {
     { path: '/sdashboard/mailbox', label: 'Mailbox', icon: faEnvelope },
     { path: '/sdashboard/request-help', label: 'Request Help', icon: faHandsHelping },
     { path: '/sdashboard/shared-experience', label: 'Shared Experience', icon: faShareSquare },
-    { path: '/sdashboard/profile', label: 'Profile', icon: faShareSquare },
+    { path: '/sdashboard/profile', label: 'Profile', icon: faUser },
   ];
 
   return (

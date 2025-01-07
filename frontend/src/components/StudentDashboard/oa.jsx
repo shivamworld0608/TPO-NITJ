@@ -12,13 +12,11 @@ const OnlineAssessment = () => {
         const fetchAssessments = async () => {
             try {
                 setLoading(true);
-                const userId = "6769a8e96891a0b319d033a8";
-                console.log(userId);
-                const upcomingResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-upcoming`,{useCredentials: true});
-                console.log("hello i am shivam",upcomingResponse.data.upcomingOAs);
-                const pastResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-past/${userId}/`,{useCredentials: true});
-                setUpcomingJobs(upcomingResponse.data.oas || []);
-                setPreviousJobs(pastResponse.data.oas || []);
+                const upcomingResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-upcoming`,{withCredentials: true});
+/*                 const pastResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-past`,{useCredentials: true}); */
+                setUpcomingJobs(upcomingResponse.data.upcomingOAs || []);
+                console.log("upcoming",upcomingJobs);
+               /*  setPreviousJobs(pastResponse.data.oas || []); */
             } catch (error) {
                 console.error("Error fetching assessments:", error);
             } finally {
@@ -53,43 +51,43 @@ const OnlineAssessment = () => {
     return (
         <>
             <div>
-            <h1 className="container text-center font-medium text-custom-blue text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mx-auto p-6 sm:p-8 md:p-10">
+            <h1 className="container text-center font-medium text-custom-blue text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mx-auto p-6 sm:p-8 md:p-10 underline underline-offset-8">
             UPCOMING OA's
 </h1>
 
             </div>
             <div className="container mx-auto px-4 py-6">
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {upcomingJobs.map((job) => (
+                    {upcomingJobs.map((oa) => (
                         <Oacard
-                            key={job.job_id}
-                            job_id={job.job_id}
-                            test_date={job.test_date}
-                            company_name={job.company_name}
-                            result_date={job.result_date}
-                            isVisible={false}
-                            onShowDetails={() => setVisibleDetailId(job.job_id)}
+                        company_name={oa.company_name}
+                        company_logo={oa.company_logo}
+                        oa_date={oa.oa_date}
+                        oa_login_time={oa.oa_login_time}
+                        oa_duration={oa.oa_duration}
+                        oa_info={oa.oa_info}
+                        oa_link={oa.oa_link}
                         />
                     ))}
                 </div>
             </div>
 
             <div>
-                <h1 className="container text-center font-medium text-custom-blue text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mx-auto p-6 sm:p-8 md:p-10">
-                    ATTEMPTED OA's
+                <h1 className="container text-center font-medium text-custom-blue text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mx-auto p-6 sm:p-8 md:p-10 underline underline-offset-8">
+                    Past OA's
                 </h1>
             </div>
             <div className="container mx-auto px-4 py-6">
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {previousJobs.map((job) => (
+                    {previousJobs.map((oa) => (
                         <Oacard
-                            key={job.job_id}
-                            job_id={job.job_id}
-                            test_date={job.test_date}
-                            company_name={job.company_name}
-                            result_date={job.result_date}
-                            isVisible={false}
-                            onShowDetails={() => setVisibleDetailId(job.job_id)}
+                        company_name={oa.company_name}
+                        company_logo={oa.company_logo}
+                        oa_date={oa.oa_date}
+                        oa_login_time={oa.oa_login_time}
+                        oa_duration={oa.oa_duration}
+                        oa_info={oa.oa_info}
+                        oa_link={oa.oa_link}
                         />
                     ))}
                 </div>
