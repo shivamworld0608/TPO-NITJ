@@ -6,11 +6,12 @@ function Insight() {
   return (
     <>
       <Header />
+      <div className="mt-40">
       <Insights />
+      </div>
       <Footer/>
     </>
   )
 }
 
 export default Insight;
-

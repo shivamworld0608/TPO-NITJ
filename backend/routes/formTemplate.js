@@ -1,6 +1,8 @@
 import express from 'express';
 import {
+  checkapplicationformtemplateexists,
   createFormTemplate,
+  deleteFormTemplate,
   getFormTemplate,
   updateFormTemplate,
   getStudent
@@ -13,16 +15,24 @@ import {
 
 const router = express.Router();
 
-// Form Template Routes
-router.post('/form-templates', createFormTemplate); // Recruiter creates template
-router.get('/form-templates/:id', getFormTemplate); // Fetch specific form template
-router.put('/form-templates/:id', updateFormTemplate); // TPO configures auto-fill
-router.get('/students/:id', getStudent);
+// for recruiter and recruiter
+router.get('/check-aft-exist/:jobId',checkapplicationformtemplateexists);
+router.post('/form-templates', createFormTemplate); // Recruiter and tpo creates template
+router.put('/delete-form-template/:jobId', deleteFormTemplate);
+router.put('/form-templates/:jobId', updateFormTemplate); // TPO configures auto-fill
 
-// Form Submission Routes
-router.post('/form-submissions', submitForm); // Student submits form
-/* router.get('/form-submissions/:jobId', getFormSubmissions);  */// Fetch submissions by job
-router.get('/form-submissions/:formTemplateId', getFormSubmissions);
+
+// for student
+router.get('/form-templates/:jobId', getFormTemplate); // Fetch specific form template
+router.get('/students', getStudent);
+router.post('/form-submissions', submitForm);
+
+
+//professor form template edit, delete, create
+
+
+//professor form submission
+router.get('/form-submissions/:jobId', getFormSubmissions);
 router.delete('/form-submissions/:id', deleteFormSubmission);
 
 export default router;

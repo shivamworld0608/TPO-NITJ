@@ -8,7 +8,7 @@ const PDashboard = () => {
   return (
     <>
       <Header />
-      <Pdashboard />
+      <div className="mt-36"><Pdashboard /></div>
       <Footer/>
     </>
   );

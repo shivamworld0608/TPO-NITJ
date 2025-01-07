@@ -3,6 +3,7 @@ import axios from 'axios';
 import TeamSection from '../components/Developers/TeamSection.jsx';
 import Header from '../components/header';
 import Footer from '../components/footer';
+import BouncingLoader from '../components/BouncingLoader';
 
 const TeamPage = () => {
     const [teamData, setTeamData] = useState({ coordinator: [], devTeam: [], developers: [] });
@@ -42,15 +43,15 @@ const TeamPage = () => {
         fetchTeamData();
     }, []);
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+    if (loading) return <BouncingLoader size="medium" text="Loading..." />;
     if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-white">
             <Header />
-            <div className="container mx-auto px-4 py-12 max-w-7xl">
+            <div className="container mx-auto mt-32 px-4 py-12 max-w-7xl">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-4">Team Members</h1>
+                    <h1 className="text-4xl font-bold text-custom-blue mb-4">Team Members</h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                         Meet the talented individuals who make our team exceptional
                     </p>

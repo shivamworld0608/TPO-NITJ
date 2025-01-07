@@ -1,6 +1,3 @@
-//for recuiter
-//create,edit,delete job application
-
 //for student
 //get job application
 //apply for job application
@@ -10,43 +7,97 @@
 //reject job application
 
 import { trusted } from "mongoose";
-import JobApplication from "../models/jobprofile.js";
+import JobProfile from "../models/jobprofile.js";
 import Student from "../models/user_model/student.js";
 
-// Recruiter Controllers
-// Create Job Application
-export const createJobApplication = async (req, res) => {
-    try {
-        const newJob = new JobApplication(req.body);
-        const savedJob = await newJob.save();
-        res.status(201).json(savedJob);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+export const createJobProfile = async (req, res) => {
+  try {
+    const recruiter_id = req.user.userId;
+    const {
+      job_id,
+      company_name,
+      company_logo,
+      job_role,
+      jobdescription,
+      joblocation,
+      jobtype,
+      ctc,
+      base_salary,
+      deadline,
+      Hiring_Workflow,
+      department_allowed,
+      gender_allowed,
+      eligible_batch,
+      minimum_cgpa,
+      active_backlogs,
+    } = req.body;
+
+    const newJob = new JobProfile({
+      recruiter_id,
+      job_id,
+      company_name,
+      company_logo,
+      job_role,
+      jobdescription,
+      joblocation,
+      jobtype,
+      ctc,
+      base_salary,
+      deadline: new Date(deadline),
+      Hiring_Workflow,
+      eligibility_criteria:{department_allowed, gender_allowed, eligible_batch, minimum_cgpa, active_backlogs},
+    });
+    await newJob.save();
+    res.status(201).json({
+      success: true,
+      message: 'Job created successfully',
+      job: newJob,
+    });
+  } catch (error) {
+    console.error('Error creating job:', error.message);
+    res.status(500).json({ success: false, error: 'Server Error' });
+  }
 };
 
-// Edit Job Application
-export const editJobApplication = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const updatedJob = await JobApplication.findByIdAndUpdate(id, req.body, { new: true });
-        if (!updatedJob) return res.status(404).json({ message: "Job not found" });
-        res.status(200).json(updatedJob);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+
+export const getJobsByRecruiter = async (req, res) => {
+  try {
+    const recruiterId = req.user.userId;
+    const jobs = await JobProfile.find({ recruiter_id: recruiterId }); // Query to find jobs by recruiter
+    if (!jobs || jobs.length === 0) {
+      return res.status(404).json({ success: false, message: 'No jobs found for this recruiter' });
     }
+    res.status(200).json({ success: true, jobs });
+  } catch (error) {
+    console.error('Error fetching jobs:', error.message);
+    res.status(500).json({ success: false, error: 'Server Error' });
+  }
 };
 
-// Delete Job Application
-export const deleteJobApplication = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const deletedJob = await JobApplication.findByIdAndDelete(id);
-        if (!deletedJob) return res.status(404).json({ message: "Job not found" });
-        res.status(200).json({ message: "Job deleted successfully" });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+export const updateJob = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const job = await JobProfile.findById(_id);
+    if (!job) {
+      return res.status(404).json({ success: false, message: 'Job not found' });
     }
+    const updatedJob = await JobProfile.findByIdAndUpdate(_id, req.body, { new: true });
+    res.status(200).json({ success: true, message: 'Job updated successfully', job: updatedJob });
+  } catch (error) {
+    console.error('Error updating job:', error.message);
+    res.status(500).json({ success: false, error: 'Server Error' });
+  }
+};
+
+export const deleteJob = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    await JobProfile.findByIdAndDelete(_id);
+    res.status(200).json({ success: true, message: 'Job deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting job:', error.message);
+    res.status(500).json({ success: false, error: 'Server Error' });
+  }
 };
 
 // Student Controllers
@@ -59,14 +110,14 @@ export const getJobProfiletostudent = async (req, res) => {
     if (!studentId) {
       return res.status(400).json({ message: "User ID is missing in the request." });
     }
-    const jobApplications = await JobApplication.find({Approved_Status:true});
+    const JobProfiles = await JobProfile.find({ Approved_Status: true });
     const applied = [];
     const notApplied = [];
     const liveButNotApplied = [];
 
     const currentDate = new Date();
 
-    jobApplications.forEach((job) => {
+    JobProfiles.forEach((job) => {
       const isApplied = job.Applied_Students.includes(studentId);
       const isLive = new Date(job.deadline) > currentDate;
 
@@ -91,37 +142,34 @@ export const getJobProfiletostudent = async (req, res) => {
 };
 
 export const getJobProfiledetails = async (req, res) => {
-    try {
-        const { job_id } = req.params;
-        const job = await JobApplication.find({ job_id });
-        res.status(200).json(job);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+  try {
+    const { _id } = req.params;
+    const job = await JobProfile.findById(_id);
+    res.status(200).json({job});
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 }
 
-export const getapprovedJobApplicationstoprofessors = async (req, res) => {
-    try {
-        const jobs = await JobApplication.find({Approved_Status: true});
-        res.status(200).json(jobs);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-};
-export const getnotapprovedJobApplicationstoprofessors = async (req, res) => {
-    try {
-        const jobs = await JobApplication.find({Approved_Status: false});
-        res.status(200).json(jobs);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+export const getJobProfilesForProfessors = async (req, res) => {
+  try {
+    const approvedJobs = await JobProfile.find({ Approved_Status: true });
+    const notApprovedJobs = await JobProfile.find({ Approved_Status: false });
+
+    res.status(200).json({
+      approved: approvedJobs,
+      notApproved: notApprovedJobs,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 
 /* export const appliedstudenttojob = async (req, res) => {
     try {
         const { job_id } = req.params;
-        const job = await JobApplication.find({ job_id });
+        const job = await JobProfile.find({ job_id });
         res.status(200).json(job.applied);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -130,36 +178,38 @@ export const getnotapprovedJobApplicationstoprofessors = async (req, res) => {
  */
 
 // Approve Job Application
-export const approveJobApplication = async (req, res) => {
-    try {
-        const { job_id } = req.params;
-        const approvedJob = await JobApplication.findByIdAndUpdate(
-            job_id,
-            { Approved_Status: true },
-            { new: true }
-        );
-        if (!approvedJob) return res.status(404).json({ message: "Job not found" });
-        res.status(200).json({ message: "Job approved successfully", approvedJob });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
+export const approveJobProfile = async (req, res) => {
+  try {
+    console.log("Approving job...");
+    const { _id } = req.params;
+    console.log("id", _id);
+    const approvedJob = await JobProfile.findByIdAndUpdate(
+      _id,
+      { Approved_Status: true },
+      { new: true }
+    );
+    if (!approvedJob) return res.status(404).json({ message: "Job not found" });
+    res.status(200).json({ message: "Job approved successfully", approvedJob });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 
 // Reject Job Application
-export const rejectJobApplication = async (req, res) => {
-    try {
-        const { job_id } = req.params;
-        const deletedJob = await JobApplication.findByIdAndDelete(job_id);
+export const rejectJobProfile = async (req, res) => {
+  try {
+    const {_id } = req.params;
+    const deletedJob = await JobProfile.findByIdAndDelete(_id);
 
-        if (!deletedJob) {
-            return res.status(404).json({ message: "Job not found" });
-        }
-
-        res.status(200).json({ message: "Job application deleted successfully", deletedJob });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    if (!deletedJob) {
+      return res.status(404).json({ message: "Job not found" });
     }
+
+    res.status(200).json({ message: "Job application deleted successfully", deletedJob });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
 
@@ -167,11 +217,14 @@ export const rejectJobApplication = async (req, res) => {
 
 export const checkEligibility = async (req, res) => {
   try {
-    const { studentId, jobId } = req.params;
-    const student = await Student.findById(studentId);
-    const jobApplication = await JobApplication.findById(jobId);
+    const studentId = req.user.userId;
+    const { _id } = req.params;
+    const student = await Student.findById({_id:studentId});
+    const job = await JobProfile.findById(_id);
+    console.log("Job:", job);
+    console.log("Student:", student);
 
-    if (!student || !jobApplication) {
+    if (!student || !job) {
       return res.status(404).json({ message: "Student or Job Application not found" });
     }
     const {
@@ -180,8 +233,8 @@ export const checkEligibility = async (req, res) => {
       eligible_batch,
       minimum_cgpa,
       active_backlogs,
-    } = jobApplication.eligibility_criteria;
-y
+    } = job.eligibility_criteria;
+
     if (!department_allowed.includes(student.department)) {
       return res.json({ eligible: false, reason: "Department not eligible" });
     }
@@ -204,7 +257,7 @@ y
 
     const jobCategoryOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
     const studentCategoryIndex = jobCategoryOrder.indexOf(student.placementstatus);
-    const jobCategoryIndex = jobCategoryOrder.indexOf(jobApplication.job_category);
+    const jobCategoryIndex = jobCategoryOrder.indexOf(job.job_category);
 
     if (
       studentCategoryIndex !== -1 &&
