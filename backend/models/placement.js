@@ -21,7 +21,7 @@ const PlacementSchema = new mongoose.Schema(
       enum:['B.Tech','M.Tech','MBA']
     },
     ctc:{
-      type:String,
+      type:Number,
     },
     shortlisted_students: [
       {
@@ -50,5 +50,4 @@ const PlacementSchema = new mongoose.Schema(
 );
 
 const Placement = mongoose.model("Placement", PlacementSchema);
-
 export default Placement;
