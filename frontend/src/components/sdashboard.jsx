@@ -25,7 +25,6 @@ import OnlineAssessment from "./StudentDashboard/oa";
 import SharedExperience from "./StudentDashboard/shared-experience";
 import Profile from "./StudentDashboard/profile";
 import ProfileImage from "../assets/chillguy.png";
-import Request from "./StudentDashboard/Request"
 
 const StudentDashboards = () => {
   const navigate = useNavigate();
@@ -180,20 +179,6 @@ const StudentDashboards = () => {
         </aside>
 
         {/* Main Content */}
-<<<<<<< HEAD
-        <main className="flex-1 bg-white p-4">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="home" element={<Home />} />
-            <Route path="job-application" element={<JobApplications />} />
-            <Route path="oa" element={<OnlineAssessment />} />
-            <Route path="interviews" element={<Interviews />} />
-            <Route path="mailbox" element={<MailboxComponent />} />
-            <Route path="shared-experience" element={<SharedExperience />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="request-help" element={<Request/>} />
-          </Routes>
-=======
         <main
           className={`flex-1 flex flex-col transition-all duration-300 ${
             isOpen ? "ml-60" : "ml-16"
@@ -231,7 +216,6 @@ const StudentDashboards = () => {
               </a>
             </div>
           </footer>
->>>>>>> aabd35adfdef8e7fa4c06d041edf5f5d70b3f502
         </main>
       </div>
     </div>
