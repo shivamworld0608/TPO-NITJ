@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const EditJobModal = ({ job, onClose, onJobUpdated }) => {
   const [formData, setFormData] = useState({
@@ -61,7 +62,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
     e.preventDefault();
     try {
       const response = await axios.put(`${import.meta.env.REACT_APP_BASE_URL}/jobprofile/updatejob/${job._id}`, formData, { withCredentials: true });
-      alert('Job updated successfully!');
+      toast.success('Job updated successfully!');
       onJobUpdated(response.data.job);
       onClose();
     } catch (error) {

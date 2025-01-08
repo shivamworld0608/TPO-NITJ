@@ -181,9 +181,7 @@ const DemographicsSection = () => (
 const RDashboard = () => {
   return (
     <>
-      <Header />
-      <div className="mt-36"><Rdashboard /></div>
-       <Footer/>
+ <Rdashboard />
     </>   );
 };
 
