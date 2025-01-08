@@ -418,6 +418,7 @@ export const addshortlistStudents = async (req, res) => {
         const student = await Student.findById(studentId);
         if (student) {
           placementData.push({
+            studentId: studentId,
             name: student.name,
             image: student.image || '',
             email: student.email,

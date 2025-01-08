@@ -25,6 +25,10 @@ const PlacementSchema = new mongoose.Schema(
     },
     shortlisted_students: [
       {
+        studentId:{
+          type:mongoose.Schema.Types.ObjectId,
+          ref:'Student'
+        },
         name: {
           type: String,
           required: true,
