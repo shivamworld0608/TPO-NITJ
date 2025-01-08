@@ -17,7 +17,7 @@
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
     "file-saver": "^2.0.5",
-    "framer-motion": "^11.15.0",
+    "framer-motion": "^11.16.0",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.469.0",
@@ -32,7 +32,7 @@
     "react-router-dom": "^7.1.0",
     "react-select": "^5.9.0",
     "redux-persist": "^6.0.0",
-    "sweetalert2": "^11.15.10",
+    "sweetalert2": "^11.6.13",
     "vite-plugin-env-compatible": "^2.0.1",
     "xlsx": "^0.18.5"
   },
