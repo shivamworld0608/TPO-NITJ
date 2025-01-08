@@ -57,19 +57,19 @@ export const updatesProfile = async (req, res) => {
         if (!student) {
             return res.status(404).json({ message: 'Student not found' });
         }
-        user.name = name;
-        user.email = email;
-        if(phone!="") user.phone = phone;
-        if(rollno!="") user.rollno = rollno;
-        if(department!="") user.department = department;
-        if(year!="") user.year = year;
-        if(batch!="") user.batch = batch;
-        if(address!="") user.address = address;
-        if(cgpa!="") user.cgpa = cgpa;
-        if(gender!="") user.gender = gender;
+        student.name = name;
+        student.email = email;
+        if(phone!="") student.phone = phone;
+        if(rollno!="") student.rollno = rollno;
+        if(department!="") student.department = department;
+        if(year!="") student.year = year;
+        if(batch!="") student.batch = batch;
+        if(address!="") student.address = address;
+        if(cgpa!="") student.cgpa = cgpa;
+        if(gender!="") student.gender = gender;
 
-        await user.save();
-        res.status(200).json({ message: 'Profile updated successfully', user });
+        await student.save();
+        res.status(200).json({ message: 'Profile updated successfully', user:student });
     } catch (error) {
         console.error('Error updating user profile:', error);
         res.status(500).json({ message: 'Server error' });

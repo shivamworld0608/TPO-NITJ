@@ -7,15 +7,18 @@ const SDashboard = () => {
     <>
       {/* <Header /> */}
       <div className="mt-3"><Sdashboards /></div>
-      {/* <Footer/> */}
-      <div className="border-t  border-zinc-400 flex flex-col bg-slate-800 px-24 p-[20px] text-center text-white lg:flex-row justify-between ">
-        <div className="pb-[10px] text-[12px] lg:pb-0 lg:text-[15px]">
-          © Copyright 2022, All Rights Reserved NIT Jalandhar
-        </div>
-        <div className="pb-[10px] text-[12px] lg:pb-0 lg:text-[15px]">
-          Developed By <a href="/team" className="text-yellow-300 hover:text-yellow-300">Placement Portal Dev Team</a>
-        </div>
-      </div>
+      {/* Footer */}
+  <footer className="bg-slate-800 text-white text-center border-t border-zinc-400 p-4 flex-shrink-0 bottom-0 w-full">
+    <div className="text-sm lg:text-base">
+      © Copyright 2022, All Rights Reserved NIT Jalandhar
+    </div>
+    <div className="mt-2 text-sm lg:text-base">
+      Developed By{" "}
+      <a href="/team" className="text-yellow-300 hover:text-yellow-400">
+        Placement Portal Dev Team
+      </a>
+    </div>
+  </footer>
     </>
   );
 };
