@@ -73,10 +73,18 @@ const StudentDashboards = () => {
       <div className="flex flex-1">
         {/* Sidebar */}
         <aside
-          className={`bg-white border-r border-gray-200 transition-all duration-300 flex-shrink-0 flex flex-col  ${
+          className={`fixed top-0 bottom-0 min-h-fit left-0 bg-white border-r border-gray-200 transition-all duration-300 flex-shrink-0 flex flex-col ${
             isOpen ? "w-60" : "w-16"
           }`}
         >
+          {
+            isOpen ? <h1 className="font-bold text-2xl sm:text-1xl lg:text-2xl text-center tracking-wide mt-4">
+            TPO-
+            <span className="bg-custom-blue text-transparent bg-clip-text">
+              NITJ
+            </span>
+          </h1> : null
+          }
           <div className="p-4">
             <button
               onClick={toggleSidebar}
@@ -93,7 +101,7 @@ const StudentDashboards = () => {
                       onClick={() => navigate(item.path)}
                       className={`flex items-center w-full text-left px-2 py-2 rounded-lg ${
                         location.pathname === item.path
-                          ? "bg-blue-500 text-white"
+                          ? "bg-custom-blue text-white"
                           : "text-gray-600 hover:bg-blue-50"
                       }`}
                     >
@@ -105,9 +113,9 @@ const StudentDashboards = () => {
 
                 {!isOpen && (
                   <button
-                    className={`flex items-center w-full text-left px-3 py-2 rounded-lg ${
+                    className={`flex items-center w-full text-left px-2 py-2 rounded-lg ${
                       location.pathname === "/sdashboard/profile"
-                        ? "bg-blue-500 text-white"
+                        ? "bg-custom-blue text-white"
                         : "text-gray-600 hover:bg-blue-50"
                     }`}
                     onClick={() => navigate("/sdashboard/profile")}
@@ -122,10 +130,10 @@ const StudentDashboards = () => {
           <div className="p-4">
             <button
               onClick={() => navigate("/sdashboard/profile")}
-              className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50"
+              className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 border "
             >
               {isOpen && (
-                <div className="flex items-center">
+                <div className="flex items-center justify-center">
                   <img
                     src={userData?.image || ProfileImage}
                     alt="Profile"
@@ -143,7 +151,7 @@ const StudentDashboards = () => {
           </div>
         </aside>
         {/* Main Content */}
-        <main className="flex-1 bg-white p-4">
+        <main className={`flex-1 bg-white p-4 ${isOpen ? "ml-60" : "ml-16"}`}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="home" element={<Home />} />
