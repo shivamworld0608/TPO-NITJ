@@ -30,6 +30,10 @@ const studentSchema = new mongoose.Schema({
   batch: {
     type: String,
   },
+  course:{
+    type:String,
+    enum:["B.Tech","M.Tech","MBA"]
+  },
   address: {
     type: String,
     },

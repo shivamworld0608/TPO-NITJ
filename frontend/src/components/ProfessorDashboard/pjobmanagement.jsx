@@ -12,12 +12,13 @@ const JobProfilesonp = () => {
   useEffect(() => {
     const fetchJobProfiles = async () => {
       try {
+        console.log("hello i am fetching job profile");
         const response = await axios.get(
           `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/professor/getjobs`,
           { withCredentials: true }
         );
         setJobProfiles(response.data);
-        console.log("data is", response.data);
+        console.log("data is mine", response.data);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to fetch job profiles.");
       } finally {

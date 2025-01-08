@@ -10,7 +10,10 @@ import {
 import {
   submitForm,
   getFormSubmissions,
-  deleteFormSubmission
+  getFormSubmissionstorecruiter,
+  deleteFormSubmission,
+  deleteAllFormSubmissions,
+  makeVisible
 } from '../controller/formsubmission.js';
 
 const router = express.Router();
@@ -34,5 +37,11 @@ router.post('/form-submissions', submitForm);
 //professor form submission
 router.get('/form-submissions/:jobId', getFormSubmissions);
 router.delete('/form-submissions/:id', deleteFormSubmission);
+router.delete('/form-submissions/delete-all/:jobId', deleteAllFormSubmissions);
+router.patch('/form-submissions/make-visible/:jobId', makeVisible);
+
+//recruiter form submission
+router.get('/form-submissions/recruiter/:jobId', getFormSubmissionstorecruiter);
+
 
 export default router;
