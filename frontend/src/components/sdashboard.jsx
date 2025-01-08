@@ -34,7 +34,6 @@ const StudentDashboards = () => {
   const {userData } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(true);
 
-  // Handle sidebar toggle based on screen size
   useEffect(() => {
     const handleResize = () => {
       setIsOpen(window.innerWidth >= 640);
@@ -180,20 +179,6 @@ const StudentDashboards = () => {
         </aside>
 
         {/* Main Content */}
-<<<<<<< HEAD
-        <main className="flex-1 bg-white p-4">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="home" element={<Home />} />
-            <Route path="job-application" element={<JobApplications />} />
-            <Route path="oa" element={<OnlineAssessment />} />
-            <Route path="interviews" element={<Interviews />} />
-            <Route path="mailbox" element={<MailboxComponent />} />
-            <Route path="shared-experience" element={<SharedExperience />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="request-help" element={<Request/>} />
-          </Routes>
-=======
         <main
           className={`flex-1 flex flex-col transition-all duration-300 ${
             isOpen ? "ml-60" : "ml-16"
@@ -213,6 +198,7 @@ const StudentDashboards = () => {
                 element={<SharedExperience />}
               />
               <Route path="profile" element={<Profile />} />
+              <Route path="request-help" element={<Request/>} />
             </Routes>
           </div>
 
@@ -231,7 +217,6 @@ const StudentDashboards = () => {
               </a>
             </div>
           </footer>
->>>>>>> aabd35adfdef8e7fa4c06d041edf5f5d70b3f502
         </main>
       </div>
     </div>
