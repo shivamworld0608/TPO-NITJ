@@ -37,9 +37,9 @@ const SharedExperience = () => {
     setSelectedExperience(experience);
     setShowEditor(true);
   };
-  const handleDelete = (experience) => {
-    setSelectedExperience(experience);
-    setShowEditor(true);
+  const handleDelete = async(experience) => {
+    await axios.delete(
+      `${import.meta.env.REACT_APP_BASE_URL}/sharedexperience/delete/${experience._id}`,)
   };
 
   const handleViewDetails = (experience) => {
