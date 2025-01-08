@@ -33,6 +33,7 @@ const StudentDashboards = () => {
   const {userData } = useSelector((state) => state.auth);
   const [isOpen, setIsOpen] = useState(true);
 
+  // Handle sidebar toggle based on screen size
   useEffect(() => {
     const handleResize = () => {
       setIsOpen(window.innerWidth >= 640);
@@ -197,7 +198,6 @@ const StudentDashboards = () => {
                 element={<SharedExperience />}
               />
               <Route path="profile" element={<Profile />} />
-              <Route path="request-help" element={<Request/>} />
             </Routes>
           </div>
 
