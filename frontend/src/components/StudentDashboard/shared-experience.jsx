@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa"; // Import arrow icon from react-icons
+import Editor from "../ckeditor";
 
 const SharedExperience = () => {
+  const [ShowEditor, setShowEditor] = useState(false);
   const dummyExperiences = [
     {
       _id: "1",
@@ -59,6 +61,10 @@ const SharedExperience = () => {
     fetchExperiences();
   }, []);
 
+  if(ShowEditor){
+    return <Editor />
+  }
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       {/* Header */}
@@ -115,10 +121,8 @@ const SharedExperience = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {/* Add Experience Card */}
-          <div className="bg-white border-dashed border-4 border-gray-300 rounded-xl flex items-center justify-center cursor-pointer shadow-lg hover:shadow-2xl transition-transform hover:scale-105 duration-300">
-            <button className="text-5xl text-gray-400 hover:text-gray-600">
-              +
-            </button>
+          <div onClick={() => setShowEditor(true)} className="bg-white border-dashed border-4 border-gray-300 rounded-xl flex items-center justify-center cursor-pointer shadow-lg hover:shadow-2xl transition-transform hover:scale-105 duration-300 text-custom-blue text-7xl">
+            +
           </div>
 
           {/* Render Experience Cards */}
