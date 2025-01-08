@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 import EditJobModal from './editcreatedjob';
 import CreateJob from './createjob';
-import RecruiterFormTemplate from './createapplicationform';
 import ViewJobDetails from './ViewJob';
 
 const CreatedJobs = () => {
@@ -12,7 +12,6 @@ const CreatedJobs = () => {
   const [error, setError] = useState(null);
   const [editingJob, setEditingJob] = useState(null);
   const [isCreatingJob, setIsCreatingJob] = useState(false);
-  const [selectedJobForForm, setSelectedJobForForm] = useState(null);
   const [viewingJobDetails, setViewingJobDetails] = useState(null);
 
   useEffect(() => {
@@ -32,43 +31,52 @@ const CreatedJobs = () => {
 
     fetchJobs();
   }, []);
+
   const deleteJob = async (jobId) => {
-    if (window.confirm('Are you sure you want to delete this job?')) {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won’t be able to undo this action!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (result.isConfirmed) {
       try {
         await axios.delete(
           `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/deletejob/${jobId}`,
           { withCredentials: true }
         );
         setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
-        alert('Job deleted successfully!');
+        Swal.fire('Deleted!', 'The job has been deleted.', 'success');
       } catch (error) {
         console.error('Error deleting job:', error.message);
-        alert('Failed to delete the job');
+        Swal.fire('Failed!', 'Failed to delete the job. Please try again.', 'error');
       }
     }
   };
 
   const editJob = (job) => {
-    setEditingJob(job); // Set the job to edit
+    setEditingJob(job);
   };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  // Render job details if a job is being viewed
   if (viewingJobDetails) {
     return (
       <div className="container mx-auto px-4 py-6">
         <h1 className="text-center text-3xl font-semibold mb-6">Job Details</h1>
-        <ViewJobDetails 
-          job={viewingJobDetails} 
-          onClose={() => setViewingJobDetails(null)} 
+        <ViewJobDetails
+          job={viewingJobDetails}
+          onClose={() => setViewingJobDetails(null)}
         />
       </div>
     );
   }
 
-  // Render job creation form
   if (isCreatingJob) {
     return (
       <div className="container mx-auto px-4 py-6">
@@ -84,20 +92,6 @@ const CreatedJobs = () => {
     );
   }
 
-  // Render application form creation
-  if (selectedJobForForm) {
-    return (
-      <div className="container mx-auto px-4 py-6">
-        <h1 className="text-center text-3xl font-semibold mb-6">Create Application Form</h1>
-        <RecruiterFormTemplate
-          jobId={selectedJobForForm}
-          onCancel={() => setSelectedJobForForm(null)}
-        />
-      </div>
-    );
-  }
-
-  // Default view: List of created jobs
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="flex justify-between items-center mb-6">
@@ -117,7 +111,9 @@ const CreatedJobs = () => {
             <div key={job._id} className="relative bg-white p-6 rounded-lg shadow-md">
               <h2 className="font-bold text-xl">{job.job_role}</h2>
               <p className="text-gray-500">{job.company_name}</p>
-              <p className="text-sm text-gray-400">Deadline: {new Date(job.deadline).toLocaleDateString()}</p>
+              <p className="text-sm text-gray-400">
+                Deadline: {new Date(job.deadline).toLocaleDateString()}
+              </p>
               <div className="mt-4 flex justify-between flex-wrap gap-2">
                 <button
                   className="bg-green-500 text-white px-4 py-2 rounded"
@@ -130,12 +126,6 @@ const CreatedJobs = () => {
                   onClick={() => deleteJob(job._id)}
                 >
                   Delete
-                </button>
-                <button
-                  className="bg-yellow-500 text-white px-4 py-2 rounded"
-                  onClick={() => setSelectedJobForForm(job._id)}
-                >
-                  Create Application Form
                 </button>
                 <button
                   className="bg-purple-500 text-white px-4 py-2 rounded"
