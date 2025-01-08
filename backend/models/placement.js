@@ -20,6 +20,9 @@ const PlacementSchema = new mongoose.Schema(
       type:String,
       enum:['BTECH','MTECH','MBA']
     },
+    ctc:{
+      type:String
+    },
     shortlisted_students: [
       {
         name: {
