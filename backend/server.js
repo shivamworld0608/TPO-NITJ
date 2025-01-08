@@ -11,7 +11,8 @@ import oaroutes from "./routes/oa.js";
 import profileroutes from "./routes/profile.js";
 import devteamroutes from "./routes/devteam.js";
 import jobprofileroutes from "./routes/jobprofile.js";
- import formTemplateroutes from "./routes/formTemplate.js"; 
+import formTemplateroutes from "./routes/formTemplate.js";
+import sharedexperienceroutes from "./routes/sharedexperience.js";
 
 const app = express();
 dotenv.config();
@@ -58,6 +59,7 @@ app.use('/oa',authenticate,oaroutes);
 app.use('/profile',authenticate, profileroutes);
 app.use('/devteam',devteamroutes);
 app.use('/jobprofile',authenticate,jobprofileroutes);
+app.use('/sharedexperience',authenticate,sharedexperienceroutes);
 
 app.use('/api',authenticate, formTemplateroutes);
 /* app.use('/applicationform',applicationformroutes); */
