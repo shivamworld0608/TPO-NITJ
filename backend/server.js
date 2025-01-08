@@ -11,10 +11,8 @@ import oaroutes from "./routes/oa.js";
 import profileroutes from "./routes/profile.js";
 import devteamroutes from "./routes/devteam.js";
 import jobprofileroutes from "./routes/jobprofile.js";
-
-/* import applicationroutes from "./routes/application.js"; */
  import formTemplateroutes from "./routes/formTemplate.js"; 
-/* import applicationformroutes from "./routes/applicationform.js"; */
+ import placementroutes from "./routes/placement.js";
 
 const app = express();
 dotenv.config();
@@ -57,10 +55,11 @@ app.get('/check-auth', authenticate, (req, res) => {
 
 app.use('/auth', authroutes);
 app.use('/interview', interviewroutes);
-app.use('/oa',oaroutes);
+app.use('/oa',authenticate,oaroutes);
 app.use('/profile',authenticate, profileroutes);
 app.use('/devteam',devteamroutes);
 app.use('/jobprofile',authenticate,jobprofileroutes);
+app.use("/placements",placementroutes);
 
 app.use('/api',authenticate, formTemplateroutes);
 /* app.use('/applicationform',applicationformroutes); */

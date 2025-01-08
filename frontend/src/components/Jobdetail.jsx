@@ -82,34 +82,44 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
         ),
         hiringFlow: (
             <div className="font-sans p-6">
-                <div className="relative max-w-2xl mx-auto">
-                    <div className="flex flex-col space-y-8">
-                        {jobDetails?.Hiring_Workflow?.map((step, index) => (
-                            <div key={index} className="relative flex items-center space-x-6 group">
-                                <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center text-white shadow-lg group-hover:bg-blue-500 transition-colors">
-                                    <span className="text-sm">{index + 1}</span>
-                                </div>
-                                <div
-                                    className={`absolute w-1 bg-gray-300 top-0 left-3 group-hover:bg-blue-500 transition-all`}
-                                    style={{
-                                        height: index === jobDetails.Hiring_Workflow.length - 1 ? '120px' : '200px',
-                                    }}
-                                ></div>
-                                <div className="ml-10 w-full">
-                                    <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-500 transition-colors">
-                                        {step.step_type || "To be announced"}
-                                    </h3>
-                                    <p className="text-gray-600 mt-2">{step.step_name || "To be announced"}</p>
-                                    <p className="text-sm text-gray-500 mt-2">{step.description || "To be announced"}</p>
-                                    <p className="text-sm text-gray-500 mt-2">
-                                        <strong>Date: </strong> {step.tentative_date || "To be announced"}
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
+    <div className="relative max-w-2xl mx-auto">
+        <div className="flex flex-col space-y-8">
+            {jobDetails?.Hiring_Workflow?.map((step, index) => (
+                <div key={index} className="relative flex items-start space-x-6 group">
+                    {/* Dot Container */}
+                    <div className="relative flex flex-col items-center">
+                        <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center text-white shadow-lg group-hover:bg-blue-500 transition-colors">
+                            <span className="text-sm">{index + 1}</span>
+                        </div>
+                        {/* Vertical Line */}
+                        {index !== jobDetails.Hiring_Workflow.length  && (
+                            <div className="absolute top-7 left-1/2 transform -translate-x-1/2 w-1 bg-gray-300 group-hover:bg-blue-500 transition-all" style={{
+                                height: index === jobDetails.Hiring_Workflow.length - 1 ? '140px' : '170px',
+                            }}></div>
+                        )}
+                    </div>
+
+                    {/* Step Details */}
+                    <div className="ml-10 p-4 w-2/5 h-44 border border-blue-500 rounded-lg bg-white shadow-md group-hover:shadow-lg transition-shadow">
+                        <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-500 transition-colors">
+                            {step.step_type || "To be announced"}
+                        </h3>
+                        <p className="text-gray-600 mt-2 group-hover:text-blue-500 transition-colors">
+                            {step.step_name || "To be announced"}
+                        </p>
+                        <p className="text-sm text-gray-500 mt-2 group-hover:text-blue-500 transition-colors">
+                            {step.description || "To be announced"}
+                        </p>
+                        <p className="text-sm text-gray-500 mt-2 group-hover:text-blue-500 transition-colors">
+                            <strong>Date: </strong> {step.tentative_date || "To be announced"}
+                        </p>
                     </div>
                 </div>
-            </div>
+            ))}
+        </div>
+    </div>
+</div>
+
         ),
 eligibilityCriteria: (
     <div className="bg-gray-100 p-4 rounded-md shadow-md">

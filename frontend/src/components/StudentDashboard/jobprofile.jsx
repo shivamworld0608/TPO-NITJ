@@ -3,6 +3,7 @@ import axios from 'axios';
 import JobCard from '../../components/JobCard';
 import Jobdetail from '../../components/Jobdetail';
 import ApplicationForm from '../../components/StudentDashboard/applicationform'
+import BouncingLoader from '../BouncingLoader';
 
 const JobApplications = () => {
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -37,9 +38,7 @@ const JobApplications = () => {
     fetchJobs();
   }, []);
 
-  if (loading) {
-    return <p className="text-center text-lg">Loading...</p>;
-  }
+  if (loading) return <BouncingLoader size="medium" text="Loading..." />;
 
   if (error) {
     return <p className="text-center text-lg text-red-500">{error}</p>;
