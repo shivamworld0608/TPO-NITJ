@@ -9,7 +9,6 @@ import { User } from "lucide-react";
 
 const Header = () => {
   const { authUser, userData } = useSelector((state) => state.auth);
-  console.log(authUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

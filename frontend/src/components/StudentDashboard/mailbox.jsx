@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaSearch, FaEnvelope, FaPen, FaTimes } from "react-icons/fa";
+import { FaSearch, FaEnvelope, FaPen, FaTimes, FaPlus } from "react-icons/fa";
 
 // Sample message data
 const sampleMessages = [
@@ -49,7 +49,7 @@ const MessageItem = ({ message, onMarkAsRead, onDelete }) => {
     <div
       className={`flex items-center p-4 mb-4 rounded-md border-2 transition-all duration-300 ${
         read ? "bg-gray-100" : "bg-white"
-      } ${read ? "border-gray-300" : "border-blue-500"}`}
+      } ${read ? "border-gray-300" : "border-custom-blue"}`}
     >
       <div className="flex-shrink-0">
         <FaEnvelope className="text-blue-500" />
@@ -82,11 +82,17 @@ const MailboxComponent = () => {
   const [messages, setMessages] = useState(sampleMessages);
   const [searchTerm, setSearchTerm] = useState("");
   const [isComposing, setIsComposing] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("All");
   const [newMessage, setNewMessage] = useState({
     sender: "",
     subject: "",
     body: "",
   });
+
+  //Handle dropdown filter
+  const handleFilterChange = (filter) => {
+    setSelectedFilter(filter);
+  };
 
   // Handle message delete
   const handleDeleteMessage = (id) => {
@@ -103,9 +109,10 @@ const MailboxComponent = () => {
   };
 
   // Filter messages based on search term
-  const filteredMessages = messages.filter((message) =>
-    message.sender.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    message.subject.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredMessages = messages.filter(
+    (message) =>
+      message.sender.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      message.subject.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Handle search input change
@@ -143,17 +150,14 @@ const MailboxComponent = () => {
   };
 
   return (
-    
     <div className="sm:p-6 w-full flex flex-col space-y-4 bg-gray-100">
       <div className="bg-white p-6 shadow-md rounded-md w-full">
-      <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide mb-8 ">
-      Mail
-    <span className="bg-custom-blue text-transparent bg-clip-text">
-      Box
-    </span>
-    
-  </h1>
-
+        <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide mb-8 ">
+          Mail
+          <span className="bg-custom-blue text-transparent bg-clip-text">
+            Box
+          </span>
+        </h1>
 
         {/* Search Bar */}
         <div className="mb-4 flex items-center">
@@ -165,12 +169,46 @@ const MailboxComponent = () => {
             value={searchTerm}
             onChange={handleSearchChange}
           />
-          <button
-            onClick={handleComposeMessage}
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-all"
-          >
-            Compose
-          </button>
+
+          <div className="relative w-2/6 sm:w-1/3 md:w-1/4 lg:w-1/6">
+            <select className="w-full p-2.5 text-gray-500 bg-white border rounded-md shadow-sm outline-none appearance-none focus:border-custom-blue-600">
+              {["All", "Inbox", "Sent", "Pending", "Draft"].map((filter) => (
+                <option
+                  key={filter}
+                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleFilterChange(filter)}
+                >
+                  {filter}
+                </option>
+              ))}
+            </select>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="w-4 h-4 absolute top-1/2 right-3 transform -translate-y-1/2 pointer-events-none"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </div>
+
+          <div className="relative">
+            <button
+              onClick={() => setIsComposing(true)}
+              className="relative group bg-custom-blue text-white p-2 rounded-full flex items-center justify-center hover:bg-custom-blue transition-all"
+            >
+              <FaPlus/>
+              <span className="absolute left-1/2 top-[calc(100%+0.5rem)] transform -translate-y-1/2 opacity-0 group-hover:opacity-100 bg-custom-blue text-white text-sm px-3 py-1 rounded-md transition-all whitespace-nowrap">
+                Compose
+              </span>
+            </button>
+          </div>
         </div>
 
         {/* Compose Message Modal */}
@@ -204,7 +242,7 @@ const MailboxComponent = () => {
               <div className="flex justify-end">
                 <button
                   onClick={handleSendMessage}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                  className="bg-custom-blue text-white px-4 py-2 rounded-md hover:bg-custom-blue"
                 >
                   Send
                 </button>
@@ -240,6 +278,3 @@ const MailboxComponent = () => {
 };
 
 export default MailboxComponent;
-
-
-

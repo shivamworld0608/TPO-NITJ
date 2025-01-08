@@ -79,7 +79,7 @@ const AppliedStudentp = ({ jobId }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/${jobId}/all`, { withCredentials: true });
+          await axios.delete(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/delete-all/${jobId}`, { withCredentials: true });
           setSubmissions([]); // Clear submissions after removal
           Swal.fire('Removed!', 'All students have been removed.', 'success');
         } catch (err) {
@@ -90,10 +90,10 @@ const AppliedStudentp = ({ jobId }) => {
     });
   };
 
-  const handleMakeVisible = async (submissionId) => {
+  const handleMakeVisibleToAll = async () => {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'This student will be made visible to the recruiter.',
+      text: 'All students will be made visible to the recruiter.',
       icon: 'info',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -102,15 +102,13 @@ const AppliedStudentp = ({ jobId }) => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.patch(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/${submissionId}`, 
-            { isVisible: true }, { withCredentials: true });
-          setSubmissions(submissions.map(submission => 
-            submission._id === submissionId ? { ...submission, isVisible: true } : submission
-          ));
-          Swal.fire('Made Visible!', 'The student is now visible to the recruiter.', 'success');
+          const updatedSubmissions = submissions.map(submission => ({ ...submission, isVisible: true }));
+          await axios.patch(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/make-visible/${jobId}`, { isVisible: true }, { withCredentials: true });
+          setSubmissions(updatedSubmissions); // Update state to reflect visibility change
+          Swal.fire('Made Visible!', 'All students are now visible to the recruiter.', 'success');
         } catch (err) {
           console.error(err);
-          Swal.fire('Error!', 'There was an error making the student visible.', 'error');
+          Swal.fire('Error!', 'There was an error making the students visible.', 'error');
         }
       }
     });
@@ -133,6 +131,12 @@ const AppliedStudentp = ({ jobId }) => {
         onClick={handleRemoveAll}
       >
         Remove All Students
+      </button>
+      <button
+        className="bg-blue-500 text-white py-2 px-4 rounded-lg mb-4 hover:bg-blue-600 ml-4"
+        onClick={handleMakeVisibleToAll}
+      >
+        Make All Visible to Recruiter
       </button>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border-collapse border border-gray-300">
@@ -157,14 +161,6 @@ const AppliedStudentp = ({ jobId }) => {
                   >
                     Remove
                   </button>
-                  {!submission.isVisible && (
-                    <button
-                      className="bg-blue-500 text-white py-2 px-4 rounded-lg ml-2 hover:bg-blue-600"
-                      onClick={() => handleMakeVisible(submission._id)}
-                    >
-                      Make Visible
-                    </button>
-                  )}
                 </td>
               </tr>
             ))}
