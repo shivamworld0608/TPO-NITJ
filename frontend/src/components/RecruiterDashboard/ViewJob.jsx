@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import ShortlistStudents from './shortliststudent';
 import AppliedStudents from './appliedstudent';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import Swal from 'sweetalert2';
 
 const ViewJobDetails = ({ job, onClose }) => {
   const [viewingShortlist, setViewingShortlist] = useState(null);
   const [viewingAppliedStudents, setViewingAppliedStudents] = useState(false);
-  // Render hiring workflow
   const renderHiringWorkflow = () => {
     if (!job.Hiring_Workflow || job.Hiring_Workflow.length === 0) {
       return <p className="mt-4 text-gray-500">No hiring workflow defined.</p>;
