@@ -184,7 +184,7 @@ const Insights = () => {
 
       console.log(queryParams);
 
-      const apiUrl = `http://localhost:5000/placements/filter?${queryParams}`;
+      const apiUrl = `${import.meta.env.REACT_APP_BASE_URL}/placements/filter?${queryParams}`;
 
       const response = await axios.get(apiUrl);
       // console.log(response.data);
