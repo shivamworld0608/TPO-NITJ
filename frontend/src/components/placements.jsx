@@ -1,169 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-// const PlacementCard = ({ placement = {} }) => {
-//   const [isExpanded, setIsExpanded] = useState(false);
-//   const [showAllStudents, setShowAllStudents] = useState(false);
-
-//   const {
-//     company_name = "",
-//     placement_type = "",
-//     year = "",
-//     degree = "",
-//     ctc = 0,
-//     shortlisted_students = [],
-//   } = placement;
-
-//   if (!placement || Object.keys(placement).length === 0) {
-//     return null;
-//   }
-
-//   const displayedStudents = showAllStudents
-//     ? shortlisted_students
-//     : shortlisted_students.slice(0, 3);
-
-//     const formattedCTC =
-//     ctc
-//       ? ctc >= 10000000
-//         ? `${(ctc / 10000000).toFixed(2)} Cr`
-//         : `${(ctc / 100000).toFixed(2)} LPA`
-//       : "N/A";
-
-//   return (
-//     <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
-//       {/* Header Section */}
-//       <div className="p-5 border-b border-gray-100">
-//         <div className="flex justify-between items-start">
-//           <div className="flex gap-4">
-//             <div className="w-12 h-12 bg-gray-50 border border-gray-200 rounded-lg flex items-center justify-center text-gray-700 text-lg font-semibold">
-//               {company_name.charAt(0)}
-//             </div>
-//             <div>
-//               <h3 className="text-xl font-semibold text-gray-700">
-//                 {company_name}
-//               </h3>
-//               <div className="flex flex-wrap items-center mt-1 gap-2 text-gray-600 text-sm">
-//                 <svg
-//                   xmlns="http://www.w3.org/2000/svg"
-//                   className="h-5 w-5 text-blue-500"
-//                   viewBox="0 0 24 24"
-//                   fill="none"
-//                   stroke="currentColor"
-//                   strokeWidth="2"
-//                 >
-//                   <path d="M10 16l-4-4 4-4" />
-//                   <path d="M14 8l4 4-4 4" />
-//                 </svg>
-
-//                 <span>{placement_type}</span>
-//                 <span className="text-gray-300">|</span>
-//                 <svg
-//                   xmlns="http://www.w3.org/2000/svg"
-//                   className="h-5 w-5 text-blue-500"
-//                   viewBox="0 0 24 24"
-//                   fill="none"
-//                   stroke="currentColor"
-//                   strokeWidth="2"
-//                 >
-//                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-//                   <line x1="16" y1="2" x2="16" y2="6" />
-//                   <line x1="8" y1="2" x2="8" y2="6" />
-//                   <line x1="3" y1="10" x2="21" y2="10" />
-//                 </svg>
-
-//                 <span>{year}</span>
-//                 <span className="text-gray-300">|</span>
-//                 <svg
-//                   xmlns="http://www.w3.org/2000/svg"
-//                   className="h-5 w-5 text-blue-500"
-//                   viewBox="0 0 24 24"
-//                   fill="none"
-//                   stroke="currentColor"
-//                   strokeWidth="2"
-//                 >
-//                   <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-//                   <path d="M6 12v5c3 3 9 3 12 0v-5" />
-//                 </svg>
-
-//                 <span>{degree}</span>
-//               </div>
-//             </div>
-//           </div>
-//           <div className="bg-blue-500 text-white text-sm font-semibold px-3 py-1 rounded-full shadow">
-//             {formattedCTC}
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Students Section */}
-//       <div className="p-4">
-//         <div
-//           onClick={() => setIsExpanded(!isExpanded)}
-//           className="flex items-center justify-between py-2 px-3 cursor-pointer hover:bg-gray-50 rounded-md"
-//         >
-//           <span className="font-medium text-gray-700">
-//             Shortlisted Students ({shortlisted_students.length})
-//           </span>
-//           <span
-//             className="text-gray-400 transition-transform duration-200"
-//             style={{
-//               transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
-//             }}
-//           >
-//             ▼
-//           </span>
-//         </div>
-
-//         {isExpanded && (
-//           <div className="mt-3 space-y-3">
-//             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-//               {displayedStudents.map((student, index) => (
-//                 <div
-//                   key={index}
-//                   className="flex items-center gap-3 p-2.5 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors"
-//                 >
-//                   <div className="w-9 h-9 rounded-md bg-white border border-gray-200 flex items-center justify-center text-gray-600 font-medium">
-//                     {student?.name?.charAt(0) || "?"}
-//                   </div>
-//                   <div className="flex-1 min-w-0">
-//                     <div className="font-medium text-gray-800 truncate">
-//                       {student?.name || "Unknown"}
-//                     </div>
-//                     <div className="text-sm text-gray-500">
-//                       {student?.department || "N/A"}
-//                     </div>
-//                   </div>
-//                 </div>
-//               ))}
-//             </div>
-
-//             {shortlisted_students.length > 3 && (
-//               <button
-//                 onClick={() => setShowAllStudents(!showAllStudents)}
-//                 className="w-full mt-3 py-2 text-sm font-medium text-gray-600 
-//                          bg-gray-50 hover:bg-gray-100 rounded-md transition-colors
-//                          border border-gray-200"
-//               >
-//                 {showAllStudents
-//                   ? "Show Less"
-//                   : `Show ${shortlisted_students.length - 3} More Students`}
-//               </button>
-//             )}
-//           </div>
-//         )}
-//       </div>
-//     </div>
-//   );
-// };
-
-const PlacementCard = ({ placement = {} }) => {
+const PlacementCard = ({ placement = {placement} }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showAllStudents, setShowAllStudents] = useState(false);
 
   const {
     company_name = "",
     placement_type = "",
-    year = "",
+    batch = "",
     degree = "",
     ctc = 0,
     shortlisted_students = [],
@@ -226,7 +71,7 @@ const PlacementCard = ({ placement = {} }) => {
                   <line x1="3" y1="10" x2="21" y2="10" />
                 </svg>
 
-                <span>{year}</span>
+                <span>{batch}</span>
                 <span className="text-gray-300">|</span>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -316,7 +161,7 @@ const Insights = () => {
     company_name: "",
     student_name: "",
     placement_type: "",
-    year: "",
+    batch: "",
     degree: "",
     gender: "",
     department: "",
@@ -330,7 +175,6 @@ const Insights = () => {
     placementPercentage: 0,
   });
 
-  // Function to fetch placements (fallback to dummyData if API fails)
   const fetchPlacements = async (updatedFilters) => {
     try {
       // Construct query parameters from filters
@@ -388,7 +232,7 @@ const Insights = () => {
       company_name: "",
       student_name: "",
       placement_type: "",
-      year: "",
+      batch: "",
       degree: "",
       gender: "",
       department: "",
@@ -437,14 +281,14 @@ const Insights = () => {
             />
           </div>
 
-          {/* Year Filter */}
+          {/* Batch Filter */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Year
+              Batch
             </label>
             <select
-              name="year"
-              value={filters.year}
+              name="batch"
+              value={filters.batch}
               onChange={handleFilterChange}
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
@@ -532,8 +376,8 @@ const Insights = () => {
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
             >
               <option value="">All</option>
-              <option value="BTECH">BTECH</option>
-              <option value="MTECH">MTECH</option>
+              <option value="B.Tech">B.Tech</option>
+              <option value="M.Tech">M.Tech</option>
               <option value="MBA">MBA</option>
             </select>
           </div>
