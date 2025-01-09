@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Gdcard from "./Gdcard";
 import axios from "axios";
+import BouncingLoader from "../BouncingLoader";
 
 const GD= () => {
     const [upcomingJobs, setUpcomingJobs] = useState([]);
@@ -33,13 +34,7 @@ const GD= () => {
         fetchAssessments();
     }, []);
 
-    if (loading) {
-        return (
-            <div className="container mx-auto text-center py-10">
-                <h2>Loading assessments...</h2>
-            </div>
-        );
-    }
+    if (loading) return <BouncingLoader size="medium" text="Loading..." />;
 
     if (visibleDetailId) {
         return (

@@ -5,6 +5,7 @@ import Editor from "./ckeditor";
 import parse from "html-react-parser";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
+import BouncingLoader from "../BouncingLoader";
 
 const SharedExperience = () => {
   const [showEditor, setShowEditor] = useState(false);
@@ -71,13 +72,7 @@ const SharedExperience = () => {
     setSelectedExperience(null);
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-xl text-gray-600">Loading experiences...</p>
-      </div>
-    );
-  }
+  if (loading) return <BouncingLoader size="medium" text="Loading..." />;
 
   if (error) {
     return (

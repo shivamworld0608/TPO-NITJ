@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import ApplicationForm from "./applicationform";
+import BouncingLoader from "../BouncingLoader";
 
 const Jobdetail = ({ job_id, onBack,onShow }) => {
     const [activeInfo, setActiveInfo] = useState("jobDescription");
@@ -48,9 +49,7 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
         fetchEligibility();
     }, [job_id]);
 
-    if (loading) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-    }
+    if (loading) return <BouncingLoader size="medium" text="Loading..." />;
 
     if (error) {
         return <div className="min-h-screen flex items-center justify-center text-red-600">{error}</div>;
@@ -88,12 +87,12 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
                 <div key={index} className="relative flex items-start space-x-6 group">
                     {/* Dot Container */}
                     <div className="relative flex flex-col items-center">
-                        <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center text-white shadow-lg group-hover:bg-blue-500 transition-colors">
+                        <div className="w-6 h-6 bg-custom-blue rounded-full flex items-center justify-center text-white shadow-lg group-hover:bg-blue-500 transition-colors">
                             <span className="text-sm">{index + 1}</span>
                         </div>
                         {/* Vertical Line */}
                         {index !== jobDetails.Hiring_Workflow.length  && (
-                            <div className="absolute top-7 left-1/2 transform -translate-x-1/2 w-1 bg-gray-300 group-hover:bg-blue-500 transition-all" style={{
+                            <div className="absolute top-7 left-1/2 transform -translate-x-1/2 w-1 bg-custom-blue group-hover:bg-blue-500 transition-all" style={{
                                 height: index === jobDetails.Hiring_Workflow.length - 1 ? '140px' : '170px',
                             }}></div>
                         )}
