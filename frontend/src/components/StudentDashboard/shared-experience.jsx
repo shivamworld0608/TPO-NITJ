@@ -87,6 +87,7 @@ const SharedExperience = () => {
     return (
       <Editor
         experience={selectedExperience}
+        editing={true}
         onClose={() => {
           setIsEditing(false);
           setSelectedExperience(null);
@@ -133,16 +134,13 @@ const SharedExperience = () => {
 
   return (
     <div className="p-6 bg-white min-h-screen">
-      {/* Header */}
       <h1 className="text-3xl sm:text-4xl font-bold text-center mb-8 text-gray-800">
         Shared Interview Experiences
       </h1>
 
-      {/* Current User Experiences Section */}
       <section className="mb-12">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">My Experiences</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {/* Add Experience Card */}
           {eligible && (
             <div
               onClick={() => setShowEditor(true)}
@@ -151,8 +149,6 @@ const SharedExperience = () => {
               +
             </div>
           )}
-
-          {/* Render Current User Experiences */}
           {currentUserExperiences.map((experience) => (
             <div
               key={experience._id}
@@ -195,7 +191,6 @@ const SharedExperience = () => {
         </div>
       </section>
 
-      {/* Other Users' Experiences Section */}
       <section>
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Others Experiences</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
