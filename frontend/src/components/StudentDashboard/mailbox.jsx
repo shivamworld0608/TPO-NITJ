@@ -210,13 +210,16 @@ const MailboxComponent = () => {
 {isComposing && (
   <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
     <div className="p-6 bg-white shadow-md rounded-md w-1/3">
+    <div className="flex justify-between">
+
+      <h3 className="text-xl font-semibold mb-4">Compose Message</h3>
       <button
         onClick={() => setIsComposing(false)}
         className="text-gray-500 mb-4"
-      >
+        >
         <FaTimes className="text-custom-blue "/>
       </button>
-      <h3 className="text-xl font-semibold mb-4">Compose Message</h3>
+        </div>
       <input
         type="text"
         name="sender"
