@@ -1,22 +1,28 @@
 import React, { useEffect, useState } from "react";
-import Oacard from "../../components/Oacard";
+import Oacard from "./Oacard";
 import axios from "axios";
 
 const OnlineAssessment = () => {
     const [upcomingJobs, setUpcomingJobs] = useState([]);
     const [previousJobs, setPreviousJobs] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [visibleDetailId, setVisibleDetailId] = useState(null); // State to manage visible details
+    const [visibleDetailId, setVisibleDetailId] = useState(null);
+    const [activeTab, setActiveTab] = useState("upcoming"); // 'upcoming' or 'past'
 
     useEffect(() => {
         const fetchAssessments = async () => {
             try {
                 setLoading(true);
-                const upcomingResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-upcoming`,{withCredentials: true});
-/*                 const pastResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-past`,{useCredentials: true}); */
+                const upcomingResponse = await axios.get(
+                    `${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-upcoming`,
+                    { withCredentials: true }
+                );
                 setUpcomingJobs(upcomingResponse.data.upcomingOAs || []);
-                console.log("upcoming",upcomingJobs);
-               /*  setPreviousJobs(pastResponse.data.oas || []); */
+                const pastResponse = await axios.get(
+                    `${import.meta.env.REACT_APP_BASE_URL}/oa/eligible-past`,
+                    { withCredentials: true }
+                );
+                setPreviousJobs(pastResponse.data.pastOAs || []);
             } catch (error) {
                 console.error("Error fetching assessments:", error);
             } finally {
@@ -36,7 +42,6 @@ const OnlineAssessment = () => {
     }
 
     if (visibleDetailId) {
-        // Render only the details of the visible card
         return (
             <div className="container mx-auto px-4 py-6">
                 <Oacard
@@ -48,50 +53,82 @@ const OnlineAssessment = () => {
         );
     }
 
+    const renderTabContent = () => {
+        if (activeTab === "upcoming") {
+            return (
+                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {upcomingJobs.map((oa, index) => (
+                        <Oacard
+                            key={index}
+                            company_name={oa.company_name}
+                            company_logo={oa.company_logo}
+                            oa_date={oa.oa_date}
+                            oa_login_time={oa.oa_login_time}
+                            oa_duration={oa.oa_duration}
+                            oa_info={oa.oa_info}
+                            oa_link={oa.oa_link}
+                        />
+                    ))}
+                </div>
+            );
+        }
+
+        if (activeTab === "past") {
+            return (
+                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {previousJobs.map((oa, index) => (
+                        <Oacard
+                            key={index}
+                            company_name={oa.company_name}
+                            company_logo={oa.company_logo}
+                            oa_date={oa.oa_date}
+                            oa_login_time={oa.oa_login_time}
+                            oa_duration={oa.oa_duration}
+                            oa_info={oa.oa_info}
+                            oa_link={oa.oa_link}
+                            was_shortlisted={oa.was_shortlisted}
+                        />
+                    ))}
+                </div>
+            );
+        }
+
+        return null;
+    };
+
     return (
         <>
-            <div>
-            <h1 className="container text-center font-medium text-custom-blue text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mx-auto p-6 sm:p-8 md:p-10 underline underline-offset-8">
-            UPCOMING OA's
-</h1>
-
-            </div>
-            <div className="container mx-auto px-4 py-6">
-                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {upcomingJobs.map((oa) => (
-                        <Oacard
-                        company_name={oa.company_name}
-                        company_logo={oa.company_logo}
-                        oa_date={oa.oa_date}
-                        oa_login_time={oa.oa_login_time}
-                        oa_duration={oa.oa_duration}
-                        oa_info={oa.oa_info}
-                        oa_link={oa.oa_link}
-                        />
-                    ))}
+            {/* Tabs */}
+            <div className="flex justify-between items-center bg-white p-4 rounded-t-lg ">
+                <h2 className="text-3xl font-semibold text-custom-blue capitalize underline underline-offset-8">
+                    {activeTab === "upcoming" ? "Upcoming OA's" : "Past OA's"}
+                </h2>
+                <div className="flex border border-gray-300 rounded-3xl bg-white">
+                    <button
+                        className={`px-4 py-2 rounded-3xl ${
+                            activeTab === "upcoming"
+                                ? "bg-custom-blue text-white"
+                                : "bg-white"
+                        }`}
+                        onClick={() => setActiveTab("upcoming")}
+                    >
+                        Upcoming
+                    </button>
+                    <button
+                        className={`px-4 py-2 rounded-3xl ${
+                            activeTab === "past"
+                                ? "bg-custom-blue text-white"
+                                : "bg-white"
+                        }`}
+                        onClick={() => setActiveTab("past")}
+                    >
+                        Previous
+                    </button>
                 </div>
             </div>
 
-            <div>
-                <h1 className="container text-center font-medium text-custom-blue text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mx-auto p-6 sm:p-8 md:p-10 underline underline-offset-8">
-                    Past OA's
-                </h1>
-            </div>
-            <div className="container mx-auto px-4 py-6">
-                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {previousJobs.map((oa) => (
-                        <Oacard
-                        company_name={oa.company_name}
-                        company_logo={oa.company_logo}
-                        oa_date={oa.oa_date}
-                        oa_login_time={oa.oa_login_time}
-                        oa_duration={oa.oa_duration}
-                        oa_info={oa.oa_info}
-                        oa_link={oa.oa_link}
-                        />
-                    ))}
-                </div>
-            </div>
+            {/* Tab Content */}
+            <div className="container mx-auto px-4 py-6">{renderTabContent()}</div>
         </>
     );
 };

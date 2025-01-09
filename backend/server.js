@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import authroutes from "./routes/auth.js";
 import interviewroutes from "./routes/interview.js";
 import oaroutes from "./routes/oa.js";
+import gdroutes from "./routes/gd.js";
 import profileroutes from "./routes/profile.js";
 import devteamroutes from "./routes/devteam.js";
 import jobprofileroutes from "./routes/jobprofile.js";
@@ -56,7 +57,7 @@ app.get('/check-auth', authenticate, (req, res) => {
 });
 
 app.use('/auth', authroutes);
-app.use('/interview', interviewroutes);
+app.use('/interview',authenticate, interviewroutes);
 app.use('/oa',authenticate,oaroutes);
 app.use('/profile',authenticate, profileroutes);
 app.use('/devteam',devteamroutes);

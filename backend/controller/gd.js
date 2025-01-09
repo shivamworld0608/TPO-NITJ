@@ -1,62 +1,6 @@
-import Student from "../models/user_model/student.js";
 import JobProfile from "../models/jobprofile.js";
 
-/* export const getTodayShortlistsGroupedByCompany = async (req, res) => {
-    try {
-      const startOfDay = moment().startOf('day');
-      const endOfDay = moment().endOf('day');
-      const oas = await OA.find({
-        $expr: {
-          $and: [
-            {
-              $gte: [
-                { $dateFromString: { dateString: "$result_date" } },
-                new Date(startOfDay.toISOString())
-              ]
-            },
-            {
-              $lte: [
-                { $dateFromString: { dateString: "$result_date" } },
-                new Date(endOfDay.toISOString())
-              ]
-            }
-          ]
-        }
-      });
-  
-      if (oas.length === 0) {
-        return res.status(200).json({ 
-          message: 'No oas with results today',
-          data: [] 
-        });
-      }
-  
-      const result = oas.map((oa) => ({
-        company_name: oa.company_name,
-        company_logo: oa.company_logo,
-        shortlisted_students: oa.shortlisted_students?.map((student) => ({
-          name: student.name,
-          email: student.email,
-          rollno: student.rollno,
-        })) || [],
-      }));
-  
-      return res.status(200).json({
-        message: 'Today\'s shortlisted students grouped by company',
-        data: result,
-      });
-  
-    } catch (error) {
-      console.error('Error fetching today\'s shortlists:', error);
-      console.error('Error details:', error.stack);
-      res.status(500).json({ 
-        message: 'Internal server error',
-        error: error.message 
-      });
-    }
-  };
- */
-  export const getEligibleUpcomingOAs = async (req, res) => {
+  export const getEligibleUpcomingGDs = async (req, res) => {
     try {
       const studentId = req.user.userId;
       const jobsWithOAs = await JobProfile.find({
@@ -96,7 +40,7 @@ import JobProfile from "../models/jobprofile.js";
   
   
 
-  export const getEligiblePastOAs = async (req, res) => {
+  export const getEligiblePastGDs = async (req, res) => {
     try {
       const studentId = req.user.userId;
       const jobsWithOAs = await JobProfile.find({
@@ -141,7 +85,4 @@ import JobProfile from "../models/jobprofile.js";
       });
     }
   };
-
-
-
 

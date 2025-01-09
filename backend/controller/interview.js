@@ -68,6 +68,7 @@ import JobProfile from "../models/jobprofile.js";
   export const getEligibleUpcomingInterviews = async (req, res) => {
     try {
       const studentId = req.user.userId;
+      console.log("studentId:", studentId);
       const jobsWithInterviews = await JobProfile.find({
         "Hiring_Workflow.eligible_students": studentId,
         "Hiring_Workflow.step_type": "Interview",
@@ -96,10 +97,7 @@ import JobProfile from "../models/jobprofile.js";
             interview_link: step.details.interview_link,
           }));
       });
-      
-      if (upcomingInterviews.length === 0) {
-        return res.status(404).json({ message: "No upcoming Interviews found for the student." });
-      }
+      console.log("upcomingInterviews:", upcomingInterviews);
       res.status(200).json({ upcomingInterviews });
     } catch (error) {
       console.error("Error fetching upcoming Interviews:", error);
@@ -110,6 +108,8 @@ import JobProfile from "../models/jobprofile.js";
   export const getEligiblePastInterviews = async (req, res) => {
     try {
       const studentId = req.user.userId;
+      console.log("studentId:", studentId);
+      console.log("studentId in getEligiblePastInterviews:", studentId);
       const jobsWithInterviews = await JobProfile.find({
         "Hiring_Workflow.eligible_students": studentId,
         "Hiring_Workflow.step_type": "Interview",
@@ -142,9 +142,6 @@ import JobProfile from "../models/jobprofile.js";
           }));
       });
       pastInterviews.sort((a, b) => new Date(b.interview_date) - new Date(a.interview_date));
-      if (pastInterviews.length === 0) {
-        return res.status(404).json({ message: "No Past Interview found for the student." });
-      }
       res.status(200).json({ pastInterviews });
     } catch (error) {
       console.error("Error fetching past Interviews:", error);
