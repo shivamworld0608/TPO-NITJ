@@ -92,7 +92,6 @@ export const updateExperience = async (req, res) => {
             req.body,
             { new: true}
         );
-
         if (!experience) {
             return res.status(404).json({
                 success: false,

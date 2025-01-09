@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Oacard from "./Oacard";
 import axios from "axios";
 import BouncingLoader from "../BouncingLoader";
+import NoDataFound from "../NoData";
 
 const OnlineAssessment = () => {
     const [upcomingJobs, setUpcomingJobs] = useState([]);
@@ -50,7 +51,7 @@ const OnlineAssessment = () => {
 
     const renderTabContent = () => {
         if (activeTab === "upcoming") {
-            return (
+            return upcomingJobs.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {upcomingJobs.map((oa, index) => (
                         <Oacard
@@ -65,11 +66,13 @@ const OnlineAssessment = () => {
                         />
                     ))}
                 </div>
+            ) : (
+                <NoDataFound mg="OA" smg="till you will be eligible for any OA 🤗" />
             );
         }
 
         if (activeTab === "past") {
-            return (
+            return previousJobs.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {previousJobs.map((oa, index) => (
                         <Oacard
@@ -85,6 +88,8 @@ const OnlineAssessment = () => {
                         />
                     ))}
                 </div>
+            ) : (
+                <NoDataFound mg="OA" smg="you have not any Past OA 😌" />
             );
         }
 
@@ -93,6 +98,7 @@ const OnlineAssessment = () => {
 
     return (
         <>
+            {/* Tabs */}
             <div className="flex justify-between items-center bg-white p-4 rounded-t-lg ">
                 <h2 className="text-3xl font-semibold text-custom-blue capitalize underline underline-offset-8">
                     {activeTab === "upcoming" ? "Upcoming OA's" : "Past OA's"}
@@ -121,6 +127,7 @@ const OnlineAssessment = () => {
                 </div>
             </div>
 
+            {/* Tab Content */}
             <div className="container mx-auto px-4 py-6">{renderTabContent()}</div>
         </>
     );

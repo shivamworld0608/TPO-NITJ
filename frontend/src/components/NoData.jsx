@@ -1,13 +1,12 @@
 import React from 'react';
 import { Cloud, Box, AlertCircle } from 'lucide-react';
-import Header from "../components/header";
 
 const illustrations = {
   box: (
     <div className="relative">
       <Cloud className="w-12 h-12 text-gray-300 absolute -top-6 -right-4 animate-bounce-slow" />
       <Cloud className="w-8 h-8 text-gray-300 absolute -top-2 -left-6 animate-bounce-slower" />
-      <Box className="w-20 h-20 text-indigo-400" />
+      <Box className="w-20 h-20 text-custom-blue" />
     </div>
   ),
   error: <AlertCircle className="w-20 h-20 text-yellow-400" />,
@@ -15,15 +14,18 @@ const illustrations = {
 
 const NoDataFound = ({
   type = 'box',
-  message = 'No Data to show',
-  subMessage = 'Sit back and relax till new data is added !',
+  mg,
+  smg,
   className = '',
   customIllustration = null,
   accentColor = 'indigo',
 }) => {
+
+  const message = `No ${mg} to show`;
+  const subMessage = `Sit back and relax ${smg}`;
+  
   return (
     <>
-    <Header/>
     <div 
       className={`
         flex flex-col items-center justify-center p-8 w-full
