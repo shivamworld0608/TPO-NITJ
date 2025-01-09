@@ -6,6 +6,7 @@ export default {
         'custom-blue': '#0369A0',
       },
       animation: {
+        'card-scroll': 'card-scroll 7s linear infinite',
         'bounce-slow': 'bounce 3s infinite',
         'bounce-slower': 'bounce 3.5s infinite',
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
@@ -13,6 +14,10 @@ export default {
         'fade-in': 'fadeIn 0.5s ease-out',
       },
       keyframes: {
+        'card-scroll': {
+          '0%': { transform: 'translateY(0%)' },
+          '100%': { transform: 'translateY(-100%)' },
+        },
         blob: {
           '0%': {
             transform: 'scale(1)',
