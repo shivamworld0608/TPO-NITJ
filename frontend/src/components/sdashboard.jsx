@@ -13,7 +13,6 @@ import {
   faHandsHelping,
   faShareSquare,
   faBars,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import Home from "./StudentDashboard/home";
@@ -48,9 +47,7 @@ const StudentDashboards = () => {
     };
   }, []);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   const handleLogout = async () => {
     try {
@@ -89,15 +86,14 @@ const StudentDashboards = () => {
       label: "Shared Experience",
       icon: faShareSquare,
     },
-    { path: "/sdashboard/profile", label: "Profile", icon: faUser },
   ];
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <header className="bg-white z-10 border-b border-gray-200 fixed top-0 left-0 right-0 text-white p-4 text-center">
-        <div className="mr-0">
-          <span className="text-gray-800 text-md mr-2">
+      <header className="bg-white z-10 border-b border-gray-200 fixed top-0 left-0 right-0 p-4">
+        <div className="flex items-center justify-end space-x-4">
+          <span className="text-gray-800 text-md">
             👋 Hi, {userData?.name || "User"}
           </span>
           <button
@@ -135,10 +131,7 @@ const StudentDashboards = () => {
             <nav className="mt-4">
               <ul className="space-y-2">
                 {menuItems.map((item) => (
-                  <li
-                    key={item.path}
-                    className={`sm:flex ${isOpen ? "flex" : "hidden"}`}
-                  >
+                  <li key={item.path}>
                     <button
                       onClick={() => {
                         navigate(item.path);
@@ -157,34 +150,36 @@ const StudentDashboards = () => {
                     </button>
                   </li>
                 ))}
+                {!isOpen && (
+                  <img
+                    onClick={() => navigate("/sdashboard/profile")}
+                    src={userData?.image || ProfileImage}
+                    alt="Profile"
+                    className="w-10 h-10 rounded-full object-cover cursor-pointer hover:shadow-lg"
+                  />
+                )}
               </ul>
             </nav>
           </div>
           {/* Profile Section */}
-          <div
-            className={`p-4 mb-0 mt-16 sm:flex ${isOpen ? "flex" : "hidden"}`}
-          >
-            <button
-              onClick={() => navigate("/sdashboard/profile")}
-              className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 border"
-            >
-              {isOpen && (
-                <div className="flex items-center justify-center">
-                  <img
-                    src={userData?.image || ProfileImage}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <div className="ml-3">
-                    <p className="text-gray-900 font-medium">
-                      {userData?.name}
-                    </p>
-                    <p className="text-gray-500 text-sm">{userData?.email}</p>
-                  </div>
+          {isOpen && (
+            <div className="p-4 mt-16">
+              <button
+                onClick={() => navigate("/sdashboard/profile")}
+                className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 border"
+              >
+                <img
+                  src={userData?.image || ProfileImage}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="ml-3">
+                  <p className="text-gray-900 font-medium">{userData?.name}</p>
+                  <p className="text-gray-500 text-sm">{userData?.email}</p>
                 </div>
-              )}
-            </button>
-          </div>
+              </button>
+            </div>
+          )}
         </aside>
 
         {/* Main Content */}
@@ -215,7 +210,12 @@ const StudentDashboards = () => {
             </div>
             <div className="mt-2 text-sm lg:text-base">
               Developed By{" "}
-              <a href="/team" className="text-yellow-300 hover:text-yellow-400">
+              <a
+                href="/team"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-yellow-300 hover:text-yellow-400"
+              >
                 Placement Portal Dev Team
               </a>
             </div>
