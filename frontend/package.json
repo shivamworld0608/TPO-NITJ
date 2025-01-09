@@ -16,9 +16,12 @@
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
     "@headlessui/react": "^2.2.0",
+    "@radix-ui/react-progress": "^1.1.1",
+    "@radix-ui/react-tabs": "^1.1.2",
     "@reduxjs/toolkit": "^2.5.0",
     "axios": "^1.7.9",
     "chart.js": "^4.4.7",
+    "class-variance-authority": "^0.7.1",
     "file-saver": "^2.0.5",
     "framer-motion": "^11.16.0",
     "html-react-parser": "^5.2.2",
@@ -36,7 +39,12 @@
     "react-router-dom": "^7.1.0",
     "react-select": "^5.9.0",
     "redux-persist": "^6.0.0",
+<<<<<<< HEAD
+    "sweetalert2": "^11.6.13",
+    "tailwind-merge": "^2.6.0",
+=======
     "sweetalert2": "^11.15.10",
+>>>>>>> upstream/main
     "vite-plugin-env-compatible": "^2.0.1",
     "xlsx": "^0.18.5"
   },
