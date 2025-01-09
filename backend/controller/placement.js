@@ -39,7 +39,7 @@ export const getFilteredPlacements = async (req, res) => {
       department,
       ctc,
     } = req.query;
-    
+
     // Build dynamic filters for placements
     const filters = {};
     if (company_name) filters.company_name = { $regex: company_name, $options: "i" };
@@ -59,20 +59,17 @@ export const getFilteredPlacements = async (req, res) => {
     }
 
     console.log(filters);
-    
 
-    // Query the database for placements matching filters
     const placements = await Placement.find(filters);
-    // console.log(placements);
-    
 
-    // Further filter shortlisted students based on gender and department
     const filteredPlacements = placements.map((placement) => {
       const filteredStudents = placement.shortlisted_students.filter((student) => {
         const matchesGender = !gender || student.gender.toLowerCase() === gender.toLowerCase();
         const matchesDepartment =
           !department || student.department.toLowerCase() === department.toLowerCase();
-        return matchesGender && matchesDepartment;
+        const matchesStudentName =
+          !student_name || student.name.toLowerCase().includes(student_name.toLowerCase());
+        return matchesGender && matchesDepartment && matchesStudentName;
       });
 
       return { ...placement.toObject(), shortlisted_students: filteredStudents };
@@ -90,6 +87,7 @@ export const getFilteredPlacements = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
 
 
 export const getLastSevenDaysPlacements = async(req,res) => {

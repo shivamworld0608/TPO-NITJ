@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import Gdcard from "./Gdcard";
 import axios from "axios";
 import BouncingLoader from "../BouncingLoader";
+import NoDataFound from "../NoData";
 
-const GD= () => {
+const GD = () => {
     const [upcomingJobs, setUpcomingJobs] = useState([]);
     const [previousJobs, setPreviousJobs] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -39,7 +40,7 @@ const GD= () => {
     if (visibleDetailId) {
         return (
             <div className="container mx-auto px-4 py-6">
-                <Oacard
+                <Gdcard
                     job_id={visibleDetailId}
                     isVisible={true}
                     onHideDetails={() => setVisibleDetailId(null)}
@@ -50,7 +51,7 @@ const GD= () => {
 
     const renderTabContent = () => {
         if (activeTab === "upcoming") {
-            return (
+            return upcomingJobs.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {upcomingJobs.map((gd, index) => (
                         <Gdcard
@@ -64,11 +65,13 @@ const GD= () => {
                         />
                     ))}
                 </div>
+            ) : (
+                <NoDataFound mg="GD" smg="till you will be eligible for any GD 🤗" />
             );
         }
 
         if (activeTab === "past") {
-            return (
+            return previousJobs.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {previousJobs.map((gd, index) => (
                         <Gdcard
@@ -83,6 +86,8 @@ const GD= () => {
                         />
                     ))}
                 </div>
+            ) : (
+                <NoDataFound mg="GD" smg="you have not any Past GD 😌" />
             );
         }
 
