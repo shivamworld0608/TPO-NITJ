@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import InterviewCard from "./InterviewCard";
+import BouncingLoader from "../BouncingLoader";
 
 const InterviewsData = () => {
     const [upcomingInterviews, setUpcomingInterviews] = useState([]);
@@ -32,13 +33,7 @@ const InterviewsData = () => {
         fetchInterviews();
     }, []);
 
-    if (loading) {
-        return (
-            <div className="container mx-auto text-center py-10">
-                <h2>Loading interviews...</h2>
-            </div>
-        );
-    }
+    if (loading) return <BouncingLoader size="medium" text="Loading..." />;
 
 
     const renderTabContent = () => {

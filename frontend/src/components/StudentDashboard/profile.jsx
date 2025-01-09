@@ -4,6 +4,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "../../Redux/authSlice";
 import toast from "react-hot-toast";
+import BouncingLoader from "../BouncingLoader";
 
 function Profile() {
   const [user, setUser] = useState(null);
@@ -142,7 +143,7 @@ function Profile() {
   }
 
   if (!user) {
-    return <div>Loading...</div>;
+    return <BouncingLoader size="medium" text="Loading..." />;
   }
 
   return (
