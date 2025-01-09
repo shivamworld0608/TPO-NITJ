@@ -267,7 +267,7 @@ export default function Editor({experience}) {
                         'resizeImage'
                     ]
                 },
-                initialData: '<h2>Write Title Here..</h2>',
+                initialData: editorData ? `<h1>${editorData.title}</h1>${editorData.content}` : '<h2>Write Title Here..</h2>',
                 licenseKey: LICENSE_KEY,
                 link: {
                     addTargetToExternalLinks: true,
@@ -358,11 +358,21 @@ export default function Editor({experience}) {
             if (titleElement) {
                 titleElement.remove();
             }
-            const content = tempDiv.innerHTML; 
-            const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/sharedexperience/submit`, { title, content }, { withCredentials: true });
-            toast.success('Experience submitted successfully!');
+            const content = tempDiv.innerHTML;
+
+            const endpoint = editorData
+                ? `${import.meta.env.REACT_APP_BASE_URL}/sharedexperience/${editorData?._id}`
+                : `${import.meta.env.REACT_APP_BASE_URL}/sharedexperience/submit`;
+
+            const response = await axios.post(
+                endpoint,
+                { title, content },
+                { withCredentials: true }
+            );
+            toast.success(editorData ? 'Experience updated successfully!' : 'Experience submitted successfully!');
         } catch (error) {
             console.error('Error:', error);
+            toast.error('Something went wrong!');
         }
     };
 
@@ -406,7 +416,7 @@ export default function Editor({experience}) {
                 <div className="editor-container__menu-bar" ref={editorMenuBarRef}></div>
             </div>
             <button onClick={handleSave} className="bg-custom-blue text-white px-4 py-2 rounded">
-                Save
+                {editorData ? 'Update' : 'Save'}
             </button>
         </div>
     );
