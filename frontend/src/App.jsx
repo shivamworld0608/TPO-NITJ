@@ -12,14 +12,14 @@ import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
 import TeamPage from "./Pages/TeamPage";
 import FAQ from "./Pages/Faqs";
+import ErrorPage from "./Pages/ErrorPage"; // Add this import
 
 const App = () => {
-
   const dispatch = useDispatch();
   const { authUser } = useSelector((state) => state.auth);
 
   useEffect(() => {
-         dispatch(checkAuth());
+    dispatch(checkAuth());
   }, [dispatch]);
 
   return (
@@ -34,6 +34,8 @@ const App = () => {
         <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/" />}/>         
         <Route path="/rdashboard/*" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
         <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
+        <Route path="/error" element={<ErrorPage />} />
+        <Route path="*" element={<ErrorPage />} /> {/* This will catch all unmatched routes */}
       </Routes>
       <Toaster />
     </Router>
