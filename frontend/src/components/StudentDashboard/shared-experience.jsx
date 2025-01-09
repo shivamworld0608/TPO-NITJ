@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 import axios from "axios";
-import Editor from "../ckeditor";
+import Editor from "./ckeditor";
 import parse from "html-react-parser";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 import BouncingLoader from "../BouncingLoader";
 
 const SharedExperience = () => {
@@ -10,6 +12,7 @@ const SharedExperience = () => {
   const [currentUserExperiences, setCurrentUserExperiences] = useState([]);
   const [otherExperiences, setOtherExperiences] = useState([]);
   const [selectedExperience, setSelectedExperience] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
   const [eligible, setEligible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,13 +37,31 @@ const SharedExperience = () => {
     fetchExperiences();
   }, []);
 
-  const handleEdit = (experience) => {
-    setSelectedExperience(experience);
-    setShowEditor(true);
-  };
-  const handleDelete = async(experience) => {
-    await axios.delete(
-      `${import.meta.env.REACT_APP_BASE_URL}/sharedexperience/delete/${experience._id}`,)
+  const handleDelete = async (experience) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(
+            `${import.meta.env.REACT_APP_BASE_URL}/sharedexperience/${experience._id}`,
+            { withCredentials: true }
+          );
+          setCurrentUserExperiences((prev) =>
+            prev.filter((exp) => exp._id !== experience._id)
+          );
+          toast.success("Experience deleted successfully!");
+        } catch (err) {
+          toast.error(err.message || "Failed to delete experience.");
+        }
+      }
+    });
   };
 
   const handleViewDetails = (experience) => {
@@ -60,6 +81,20 @@ const SharedExperience = () => {
       </div>
     );
   }
+
+
+  if(isEditing){
+    return (
+      <Editor
+        experience={selectedExperience}
+        onClose={() => {
+          setIsEditing(false);
+          setSelectedExperience(null);
+        }}
+      />
+    );
+  }
+
 
   if (showEditor) {
     return (
@@ -135,8 +170,25 @@ const SharedExperience = () => {
                     day: "numeric",
                   })}
                 </p>
-                <span className="text-blue-500 font-medium hover:text-green-500 mx-4" onClick={() => handleEdit(experience)}>Edit</span>
-                <span className="text-blue-500 font-medium hover:text-red-500" onClick={() => handleDelete(experience)}>Delete</span>
+                <span
+                  className="text-blue-500 font-medium hover:text-green-500 mx-4"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedExperience(experience);
+                    setIsEditing(true);
+                  }}
+                >
+                  Edit
+                </span>
+                <span
+                  className="text-blue-500 font-medium hover:text-red-500"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete(experience);
+                  }}
+                >
+                  Delete
+                </span>
               </div>
             </div>
           ))}
