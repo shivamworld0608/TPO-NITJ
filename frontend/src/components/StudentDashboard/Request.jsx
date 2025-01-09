@@ -14,6 +14,7 @@ const Request = () => {
   ];
 
   const [selectedIssueId, setSelectedIssueId] = useState("");
+  const [issueDescription, setIssueDescription] = useState(""); // New state for issue description
   const [raisedIssues, setRaisedIssues] = useState([]);
   const [alertMessage, setAlertMessage] = useState("");
   const [loadingStatus, setLoadingStatus] = useState(false);
@@ -41,18 +42,23 @@ const Request = () => {
     setSelectedIssueId(e.target.value);
   };
 
+  const handleDescriptionChange = (e) => {
+    setIssueDescription(e.target.value);
+  };
+
   const raiseIssue = () => {
-    if (!selectedIssueId) {
-      alert("Please select an issue before raising it.");
+    if (!selectedIssueId || !issueDescription) {
+      alert("Please select an issue and provide a description before raising it.");
       return;
     }
 
     const issue = backendIssues.find((item) => item.id === parseInt(selectedIssueId));
     if (issue && !raisedIssues.find((i) => i.id === issue.id)) {
-      setRaisedIssues([...raisedIssues, { ...issue, resolved: null }]);
+      setRaisedIssues([...raisedIssues, { ...issue, description: issueDescription, resolved: null }]);
       setAlertMessage("Your issue has been raised and sent to the team.");
 
       checkIssueStatus(issue.id);
+      setIssueDescription(""); 
     }
   };
 
@@ -70,11 +76,19 @@ const Request = () => {
   };
 
   return (
-    <div className="p-6  min-h-screen">
-      <header className=" text-custom-blue py-6 ">
+    <div className="p-6 min-h-screen">
+      <header className="text-custom-blue py-6">
         <div className="max-w-lg mx-auto text-center">
-          <h1 className="text-3xl font-bold tracking-tight">Request Help</h1>
-          <p className="text-base mt-2">Easily raise and track your issues</p>
+        <h1 className="font-bold text-black text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
+        Request {" "}
+        <span className="bg-custom-blue text-transparent bg-clip-text">
+          Help
+        </span>
+      </h1>
+          <span className="text-base text-black mt-2">Easily raise and </span>
+          <span className="bg-custom-blue text-transparent bg-clip-text">
+          track your issues
+        </span>
         </div>
       </header>
 
@@ -103,6 +117,17 @@ const Request = () => {
           ))}
         </select>
 
+        <label className="block text-gray-700 font-medium mb-2">
+          Issue Description
+        </label>
+        <textarea
+          onChange={handleDescriptionChange}
+          value={issueDescription}
+          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+          rows="4"
+          placeholder="Describe your issue here..."
+        />
+
         <button
           onClick={raiseIssue}
           className="w-full bg-custom-blue text-white py-2 rounded-md hover:bg-blue-700 transition-shadow shadow-md"
@@ -123,7 +148,10 @@ const Request = () => {
                   key={issue.id}
                   className="flex justify-between items-center p-4 bg-gray-50 border rounded-md shadow-sm"
                 >
-                  <span className="font-medium text-gray-800">{issue.title}</span>
+                  <div>
+                    <span className="font-medium text-gray-800">{issue.title}</span>
+                    <p className="text-sm text-gray-600">{issue.description}</p>
+                  </div>
 
                   {issue.resolved === null ? (
                     <span className="flex items-center text-sm font-semibold py-1 px-3 bg-gray-200 text-gray-700 rounded">
