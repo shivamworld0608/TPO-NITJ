@@ -1,105 +1,124 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import InterviewCard from "../../components/InterviewCard";
+import InterviewCard from "./InterviewCard";
 
-const interviewsData = () => {
+const InterviewsData = () => {
     const [upcomingInterviews, setUpcomingInterviews] = useState([]);
     const [previousInterviews, setPreviousInterviews] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [visibleDetailId, setVisibleDetailId] = useState(null); // State to manage visible details
+    const [activeTab, setActiveTab] = useState("upcoming");
 
     useEffect(() => {
-        const fetchAssessments = async () => {
+        const fetchInterviews = async () => {
             try {
                 setLoading(true);
-                const userId = "6769a8e96891a0b319d033a8";
-
-                const upcomingResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/interview/eligible-upcoming/${userId}/`);
-                const pastResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/interview/eligible-past/${userId}/`);
-
-                setUpcomingInterviews(upcomingResponse.data.interviews || []);
-                setPreviousInterviews(pastResponse.data.interviews || []);
+                const upcomingResponse = await axios.get(
+                    `${import.meta.env.REACT_APP_BASE_URL}/interview/eligible-upcoming`,{withCredentials: true}
+                );
+                setUpcomingInterviews(upcomingResponse.data.upcomingInterviews || []);
+                console.log(upcomingInterviews);
+                const pastResponse = await axios.get(
+                    `${import.meta.env.REACT_APP_BASE_URL}/interview/eligible-past`,{withCredentials: true}
+                );
+                
+                setPreviousInterviews(pastResponse.data.pastInterviews || []);
             } catch (error) {
-                console.error("Error fetching assessments:", error);
+                console.error("Error fetching interviews:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchAssessments();
+        fetchInterviews();
     }, []);
 
     if (loading) {
         return (
             <div className="container mx-auto text-center py-10">
-                <h2>Loading assessments...</h2>
+                <h2>Loading interviews...</h2>
             </div>
         );
     }
 
-    if (visibleDetailId) {
-        // Render only the details of the visible card
-        return (
-            <div className="container mx-auto px-4 py-6">
-                <InterviewCard
-                    job_id={visibleDetailId}
-                    isVisible={true}
-                    onHideDetails={() => setVisibleDetailId(null)}
-                />
-            </div>
-        );
-    }
 
-    return (
-        <>
-            <div>
-            <h1 className="container text-center font-medium text-custom-blue text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mx-auto p-6 sm:p-8 md:p-10">
-            UPCOMING INTERVIEWS
-</h1>
-
-            </div>
-            <div className="container mx-auto px-4 py-6">
+    const renderTabContent = () => {
+        if (activeTab === "upcoming") {
+            return (
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {upcomingInterviews.map((job) => (
                         <InterviewCard
                             key={job.job_id}
-                            job_id={job.job_id}
-                            interview_code={job.interview_code}
                             company_name={job.company_name}
                             interview_date={job.interview_date}
                             interview_time={job.interview_time}
                             interview_type={job.interview_type}
-                            isVisible={false}
-                            onShowDetails={() => setVisibleDetailId(job.job_id)}
+                            interview_info={job.interview_info}
+                            interview_link={job.interview_link}
                         />
                     ))}
                 </div>
-            </div>
+            );
+        }
 
-            <div>
-                <h1 className="container text-center font-medium text-custom-blue text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl mx-auto p-6 sm:p-8 md:p-10">
-                    PREVIOUS INTERVIEWS
-                </h1>
-            </div>
-            <div className="container mx-auto px-4 py-6">
+        if (activeTab === "past") {
+            return (
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {previousInterviews.map((job) => (
                         <InterviewCard
-                        key={job.job_id}
-                        job_id={job.job_id}
-                        interview_code={job.interview_code}
-                        company_name={job.company_name}
-                        interview_date={job.interview_date}
-                        interview_time={job.interview_time}
-                        interview_type={job.interview_type}
-                            isVisible={false}
-                            onShowDetails={() => setVisibleDetailId(job.job_id)}
+                            key={job.job_id}
+                            company_name={job.company_name}
+                            interview_date={job.interview_date}
+                            interview_time={job.interview_time}
+                            interview_type={job.interview_type}
+                            interview_info={job.interview_info}
+                            interview_link={job.interview_link}
+                            was_selected={job.was_selected}
                         />
                     ))}
                 </div>
+            );
+        }
+
+        return null;
+    };
+
+    return (
+        <>
+            {/* Tabs */}
+            <div className="flex justify-between items-center bg-white p-4 rounded-t-lg">
+                <h2 className="text-3xl underline underline-offset-8 font-semibold text-custom-blue capitalize">
+                    {activeTab === "upcoming"
+                        ? "Upcoming Interviews"
+                        : "Previous Interviews"}
+                </h2>
+                <div className="flex border border-gray-300 rounded-3xl bg-white">
+                    <button
+                        className={`px-4 py-2 rounded-3xl ${
+                            activeTab === "upcoming"
+                                ? "bg-custom-blue text-white"
+                                : "bg-white"
+                        }`}
+                        onClick={() => setActiveTab("upcoming")}
+                    >
+                        Upcoming
+                    </button>
+                    <button
+                        className={`px-4 py-2 rounded-3xl ${
+                            activeTab === "past"
+                                ? "bg-custom-blue text-white"
+                                : "bg-white"
+                        }`}
+                        onClick={() => setActiveTab("past")}
+                    >
+                        Previous
+                    </button>
+                </div>
             </div>
+
+            {/* Tab Content */}
+            <div className="container mx-auto px-4 py-6">{renderTabContent()}</div>
         </>
     );
 };
 
-export default interviewsData;
+export default InterviewsData;

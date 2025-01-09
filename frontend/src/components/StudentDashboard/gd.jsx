@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Oacard from "../../components/Oacard";
+import Oacard from "./Oacard";
 import axios from "axios";
 
 const GD = () => {
