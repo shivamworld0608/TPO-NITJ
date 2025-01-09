@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import JobCard from './JobCard';
-import Jobdetail from './Jobdetail';
-import BouncingLoader from '../BouncingLoader';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import JobCard from "./JobCard";
+import Jobdetail from "./Jobdetail";
+import BouncingLoader from "../BouncingLoader";
+import NoDataFound from "../NoData";
 
 const JobApplications = () => {
   const [appliedJobs, setAppliedJobs] = useState([]);
@@ -11,7 +12,7 @@ const JobApplications = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [visibleDetailId, setVisibleDetailId] = useState(null);
-  const [activeTab, setActiveTab] = useState('upcoming');
+  const [activeTab, setActiveTab] = useState("upcoming");
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -24,11 +25,11 @@ const JobApplications = () => {
 
         const { applied, notApplied, liveButNotApplied } = response.data;
 
-        setAppliedJobs(applied);
-        setNotAppliedJobs(notApplied);
-        setLiveNotAppliedJobs(liveButNotApplied);
+        setAppliedJobs(applied || []);
+        setNotAppliedJobs(notApplied || []);
+        setLiveNotAppliedJobs(liveButNotApplied || []);
       } catch (err) {
-        setError('Failed to fetch job data. Please try again later.');
+        setError("Failed to fetch job data. Please try again later.");
         console.error(err);
       } finally {
         setLoading(false);
@@ -54,8 +55,8 @@ const JobApplications = () => {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case 'upcoming':
-        return (
+      case "upcoming":
+        return liveNotAppliedJobs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {liveNotAppliedJobs.map((job) => (
               <JobCard
@@ -71,9 +72,12 @@ const JobApplications = () => {
               />
             ))}
           </div>
+        ) : (
+          <NoDataFound mg="Live Job Profile" smg="till any Job Posted 😊" />
         );
-      case 'applied':
-        return (
+
+      case "applied":
+        return appliedJobs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {appliedJobs.map((job) => (
               <JobCard
@@ -89,9 +93,12 @@ const JobApplications = () => {
               />
             ))}
           </div>
+        ) : (
+          <NoDataFound mg="Job Profile" smg="you have not applied for any Job 😌" />
         );
-      case 'notApplied':
-        return (
+
+      case "notApplied":
+        return notAppliedJobs.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {notAppliedJobs.map((job) => (
               <JobCard
@@ -107,7 +114,10 @@ const JobApplications = () => {
               />
             ))}
           </div>
+        ) : (
+          <NoDataFound mg="Job Profile" smg="you have applied for all Job👌" />
         );
+
       default:
         return null;
     }
@@ -122,25 +132,25 @@ const JobApplications = () => {
         <div className="flex border border-gray-300 rounded-3xl bg-white">
           <button
             className={`px-4 py-2 rounded-3xl ${
-              activeTab === 'upcoming' ? 'bg-custom-blue text-white' : 'bg-white'
+              activeTab === "upcoming" ? "bg-custom-blue text-white" : "bg-white"
             }`}
-            onClick={() => setActiveTab('upcoming')}
+            onClick={() => setActiveTab("upcoming")}
           >
             Upcoming
           </button>
           <button
             className={`px-4 py-2 rounded-3xl ${
-              activeTab === 'applied' ? 'bg-custom-blue text-white' : 'bg-white'
+              activeTab === "applied" ? "bg-custom-blue text-white" : "bg-white"
             }`}
-            onClick={() => setActiveTab('applied')}
+            onClick={() => setActiveTab("applied")}
           >
             Applied
           </button>
           <button
             className={`px-4 py-2 rounded-3xl ${
-              activeTab === 'notApplied' ? 'bg-custom-blue text-white' : 'bg-white'
+              activeTab === "notApplied" ? "bg-custom-blue text-white" : "bg-white"
             }`}
-            onClick={() => setActiveTab('notApplied')}
+            onClick={() => setActiveTab("notApplied")}
           >
             Not Applied
           </button>

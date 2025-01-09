@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react'
+import { FaArrowLeft } from "react-icons/fa";;
 import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -7,7 +8,7 @@ import '../../App.css';
 
 const LICENSE_KEY = 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3Mzc1OTAzOTksImp0aSI6Ijk5MjY4NWNkLTA2ZGItNDkyMy1iZDZkLTEyZjQ3YjI3MjEyYiIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImJiZjVjM2RiIn0.Ic-PhYPV8pkHd9XJRnfEpMT8k0M2PeS2oJ1kTIv0qULSCpWgXgUJI4U3zc5hiAQHB2bUm0P6v3r0xWX0lbhC5Q';
 
-export default function Editor({experience}) {
+export default function Editor({experience,onClose}) {
     const editorContainerRef = useRef(null);
     const editorRef = useRef(null);
     const editorWordCountRef = useRef(null);
@@ -369,6 +370,7 @@ export default function Editor({experience}) {
                 { title, content },
                 { withCredentials: true }
             );
+            onClose();
             toast.success(editorData ? 'Experience updated successfully!' : 'Experience submitted successfully!');
         } catch (error) {
             console.error('Error:', error);
@@ -387,6 +389,12 @@ export default function Editor({experience}) {
 
     return (
         <div className="main-container">
+             <button
+          onClick={onClose}
+          className="flex items-center space-x-2 text-custom-blue hover:text-blue-700 mb-4"
+        >
+          <FaArrowLeft />
+        </button>
             <div
                 className="editor-container editor-container_classic-editor editor-container_include-style editor-container_include-word-count"
                 ref={editorContainerRef}

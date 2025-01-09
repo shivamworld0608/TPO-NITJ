@@ -14,7 +14,7 @@ router.get('/', getAllExperiences);
 router.get('/:id', getExperience);
 
 router.post('/submit', submitExperience);
-router.put('/:id', updateExperience);
+router.post('/:id', updateExperience);
 router.delete('/:id', deleteExperience);
 
 export default router;
