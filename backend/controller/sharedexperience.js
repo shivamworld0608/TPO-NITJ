@@ -84,6 +84,7 @@ export const getExperience = async (req, res) => {
 
 export const updateExperience = async (req, res) => {
     try {
+        console.log("hello");
         const experience = await SharedExperience.findOneAndUpdate(
             { 
                 _id: req.params.id,
@@ -92,6 +93,7 @@ export const updateExperience = async (req, res) => {
             req.body,
             { new: true}
         );
+        console.log("experience in updation ", experience);
 
         if (!experience) {
             return res.status(404).json({
