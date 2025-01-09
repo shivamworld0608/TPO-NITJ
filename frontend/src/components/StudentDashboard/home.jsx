@@ -1,268 +1,160 @@
 import React from "react";
-import PInsights from "../ProfessorDashboard/pinsights.jsx";
 
-let notifications = [
-  { id: 1, message: "TPO meeting scheduled for 2023-11-10 at 10:00 AM" },
-  { id: 2, message: "New internship opportunities available at Company X" },
-  { id: 3, message: "New internship opportunities available at Company Y" },
-  { id: 4, message: "New internship opportunities available at Company Z" },
-];
+const StudentDashboard = () => {
+  const notifications = [
+    "TPO meeting scheduled for 2023-11-10 at 10:00 AM",
+    "New internship opportunities at Company X",
+    "New internship opportunities at Company Y",
+    "New internship opportunities at Company Z",
+  ];
 
-let placements = [
-  {
-    id: 1,
-    company: "Microsoft",
-    position: "Software Engineer",
-    pdf: "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
-    date: new Date("2024-01-12"),
-  },
-  {
-    id: 2,
-    company: "Google",
-    position: "Software Engineer",
-    pdf: "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
-    date: new Date("2024-01-13"),
-  },
-];
+  const departmentData = [
+    { name: "CSE", offers: 150 },
+    { name: "IT", offers: 110 },
+    { name: "ECE", offers: 95 },
+    { name: "EE", offers: 75 },
+    { name: "ICE", offers: 65 },
+    { name: "ME", offers: 45 },
+    { name: "IPE", offers: 35 },
+    { name: "Chemical", offers: 30 },
+    { name: "TT", offers: 20 },
+    { name: "BT", offers: 15 },
+  ];
 
-let internships = [
-  {
-    id: 1,
-    company: "Accenture",
-    position: "Software Engineer",
-    pdf: "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
-    date: new Date("2024-01-12"),
-  },
-  {
-    id: 2,
-    company: "Expedia",
-    position: "Software Engineer",
-    pdf: "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
-    date: new Date("2024-01-13"),
-  },
-];
+  const getBarColor = (index) => {
+    const colors = [
+      "bg-blue-500",
+      "bg-blue-400",
+      "bg-blue-300",
+      "bg-blue-200",
+      "bg-blue-100",
+    ];
+    return colors[index % colors.length];
+  };
 
-const options = { year: "numeric", month: "long", day: "numeric" };
-placements = [...placements].sort((a, b) => b.date - a.date);
-internships = [...internships].sort((a, b) => b.date - a.date);
-const Home = () => {
   return (
-    <div className="p-6 min-h-screen">
-      {/* Header */}
-      <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide mb-8">
-        Welcome to{" "}
-        <span className="bg-custom-blue text-transparent bg-clip-text">
-          Student Dashboard
-        </span>
-      </h1>
-      <br />
+    <div className="min-h-screen  p-8">
+      <div className="max-w-7xl mx-auto font-sans">
+        <header className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-800">
+            Welcome to <span className="text-blue-500">Student Dashboard</span>
+          </h1>
+        </header>
 
-      {/* Grid Layout for Sections */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Notifications Card */}
-        <div className="flex flex-col overflow-hidden rounded-xl bg-light-purple shadow-xl border-t-4 border-b-4 border-accent border-custom-blue h-full w-full transition-transform transform hover:scale-105 hover:shadow-[0_10px_20px_rgba(59,130,246,0.5)]">
-          <div className="flex flex-col p-4">
-            <h3 className="text-xl font-semibold mb-4">Notifications</h3>
-            <ul className="space-y-2">
-              {notifications.map((notification) => (
-                <li key={notification.id} className="text-gray-900">
-                  {notification.message}
-                </li>
-              ))}
-            </ul>
+        {/* Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div className="bg-[#ffead6] border-2 border-[#e4bca0] rounded-lg p-6 text-[#b87748] shadow-md">
+            <div className="text-2xl font-bold">642</div>
+            <div className="text-[#b87748]/90 text-sm">Total Placements</div>
+          </div>
+          <div className="bg-[#f3e5fa] border-2 border-[#d3b8e3] rounded-lg p-6 text-[#a578c0] shadow-md">
+            <div className="text-2xl font-bold">89</div>
+            <div className="text-[#a578c0]/90 text-sm">Companies Visited</div>
+          </div>
+          <div className="bg-[#d7f7e5] border-2 border-[#b3d4c2] rounded-lg p-6 text-[#6a987b] shadow-md">
+            <div className="text-2xl font-bold">12.8 LPA</div>
+            <div className="text-[#6a987b]/90 text-sm">Average Package</div>
           </div>
         </div>
 
-        {/* Placements Card */}
-        <div className="flex flex-col overflow-hidden rounded-xl bg-light-purple shadow-xl-shadow-custom-blue border-t-4 border-b-4 border-accent border-custom-blue h-full w-full transition-transform transform hover:scale-105 hover:shadow-[0_10px_20px_rgba(59,130,246,0.5)]">
-          <div className="flex flex-col p-4">
-            <h3 className="text-xl font-semibold mb-4">Recent Placements</h3>
-            <ul className="space-y-2">
-              {placements.map((placement) => (
-                <li key={placement.id} className="text-gray-900">
-                  <a
-                    href={placement.pdf}
-                    download={`${placement.company}_placement_shortlist`}
-                    className="text-sky-500 hover:text-sky-600 hover:underline underline-offset-4 decoration-2 decoration-sky-400 transition-all"
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+          {/* Notifications Card */}
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+            {/* Header */}
+            <div className="px-4 py-3 bg-blue-500 text-white">
+              <h2 className="text-lg font-medium">Notifications</h2>
+            </div>
+
+            {/* Scrolling Notifications */}
+            <div className="h-32 overflow-hidden relative">
+              <ul className="absolute top-0 animate-card-scroll space-y-3 px-4">
+                {notifications.map((notification, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 text-sm text-gray-800 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 transition-colors"
                   >
-                    {placement.company} - {placement.position} (
-                    {placement.date.toLocaleDateString("en-US", options)})
-                  </a>
-                </li>
-              ))}
-            </ul>
+                    {notification}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* Recent Placements Card */}
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+            <div className="px-4 py-3 bg-blue-500 text-white">
+              <h2 className="text-lg font-medium">Recent Placements</h2>
+            </div>
+            <div className="p-4">
+              <div className="space-y-4">
+                <div className="p-3 hover:bg-gray-100 rounded transition-colors">
+                  <div className="text-gray-800 font-medium mb-1">Google</div>
+                  <div className="text-sm text-gray-600">Software Engineer</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    January 13, 2024
+                  </div>
+                </div>
+                <div className="p-3 hover:bg-gray-100 rounded transition-colors">
+                  <div className="text-gray-800 font-medium mb-1">
+                    Microsoft
+                  </div>
+                  <div className="text-sm text-gray-600">Software Engineer</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    January 12, 2024
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Internships Card */}
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200">
+            <div className="px-4 py-3 bg-blue-500 text-white">
+              <h2 className="text-lg font-medium">Recent Internships</h2>
+            </div>
+            <div className="p-4 h-48 overflow-y-auto">
+              <div className="space-y-4">
+                <div className="p-3 hover:bg-gray-100 rounded transition-colors">
+                  <div className="text-gray-800 font-medium mb-1">Expedia</div>
+                  <div className="text-sm text-gray-600">Software Engineer</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    January 13, 2024
+                  </div>
+                </div>
+                <div className="p-3 hover:bg-gray-100 rounded transition-colors">
+                  <div className="text-gray-800 font-medium mb-1">
+                    Accenture
+                  </div>
+                  <div className="text-sm text-gray-600">Software Engineer</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    January 12, 2024
+                  </div>
+                </div>
+                <div className="p-3 hover:bg-gray-100 rounded transition-colors">
+                  <div className="text-gray-800 font-medium mb-1">
+                    Company A
+                  </div>
+                  <div className="text-sm text-gray-600">Data Analyst</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    January 10, 2024
+                  </div>
+                </div>
+                <div className="p-3 hover:bg-gray-100 rounded transition-colors">
+                  <div className="text-gray-800 font-medium mb-1">
+                    Company B
+                  </div>
+                  <div className="text-sm text-gray-600">Backend Developer</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    January 9, 2024
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Internships Card */}
-        <div className="flex flex-col overflow-hidden rounded-xl bg-light-purple shadow-xl border-t-4 border-b-4 border-accent border-custom-blue h-full w-full transition-transform transform hover:scale-105 hover:shadow-[0_10px_20px_rgba(59,130,246,0.5)]">
-          <div className="flex flex-col p-4">
-            <h3 className="text-xl font-semibold mb-4">Recent Internships</h3>
-            <ul className="space-y-2">
-              {internships.map((internship) => (
-                <li key={internship.id} className="text-gray-900">
-                  <a
-                    href={internship.pdf}
-                    download={`${internship.company}_intern_shortlist`}
-                    className="text-sky-500 hover:text-sky-600 hover:underline underline-offset-4 decoration-2 decoration-sky-400 transition-all"
-                  >
-                    {internship.company} - {internship.position} (
-                    {internship.date.toLocaleDateString("en-US", options)})
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      {/* Insights Section */}
-      <div className="mt-8">
-        <PInsights />
       </div>
     </div>
   );
 };
 
-export default Home;
-
-// import React, { useEffect, useState } from "react";
-// import axios from "axios"; // To make API calls
-// import PInsights from "../ProfessorDashboard/pinsights.jsx";
-
-// let notifications = [
-//   { id: 1, message: "TPO meeting scheduled for 2023-11-10 at 10:00 AM" },
-//   { id: 2, message: "New internship opportunities available at Company X" },
-//   { id: 3, message: "New internship opportunities available at Company Y" },
-//   { id: 4, message: "New internship opportunities available at Company Z" },
-// ];
-
-// let internships = [
-//   {
-//     id: 1,
-//     company: "Accenture",
-//     position: "Software Engineer",
-//     pdf: "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
-//     date: new Date("2024-01-12"),
-//   },
-//   {
-//     id: 2,
-//     company: "Expedia",
-//     position: "Software Engineer",
-//     pdf: "https://www.learningcontainer.com/wp-content/uploads/2019/09/sample-pdf-download-10-mb.pdf",
-//     date: new Date("2024-01-13"),
-//   },
-// ];
-
-// const Home = () => {
-//   const [placements, setPlacements] = useState([]); // State to store placements
-//   const [loading, setLoading] = useState(true); // Loading state for API call
-//   const [error, setError] = useState(null); // State to store errors
-
-//   useEffect(() => {
-//     // Fetch placements from the API
-//     const fetchPlacements = async () => {
-//       try {
-//         setLoading(true); // Set loading state to true when API call starts
-//         const response = await axios.get("/placements/last-seven-days");
-//         setPlacements(response.data); // Set the fetched data to the placements state
-//       } catch (err) {
-//         setError("Failed to fetch placements."); // Set error state if API fails
-//       } finally {
-//         setLoading(false); // Set loading state to false once API call is complete
-//       }
-//     };
-
-//     fetchPlacements();
-//   }, []); // Empty dependency array to run this effect only once
-
-//   const options = { year: "numeric", month: "long", day: "numeric" };
-
-//   return (
-//     <div className="p-6 min-h-screen">
-//       {/* Header */}
-//       <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide mb-8">
-//         Welcome to{" "}
-//         <span className="bg-custom-blue text-transparent bg-clip-text">
-//           Student Dashboard
-//         </span>
-//       </h1>
-//       <br />
-
-//       {/* Grid Layout for Sections */}
-//       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-//         {/* Notifications Card */}
-//         <div className="flex flex-col overflow-hidden rounded-xl bg-light-purple shadow-xl border-t-4 border-b-4 border-accent border-custom-blue h-full w-full transition-transform transform hover:scale-105 hover:shadow-[0_10px_20px_rgba(59,130,246,0.5)]">
-//           <div className="flex flex-col p-4">
-//             <h3 className="text-xl font-semibold mb-4">Notifications</h3>
-//             <ul className="space-y-2">
-//               {notifications.map((notification) => (
-//                 <li key={notification.id} className="text-gray-900">
-//                   {notification.message}
-//                 </li>
-//               ))}
-//             </ul>
-//           </div>
-//         </div>
-
-//         {/* Placements Card */}
-//         <div className="flex flex-col overflow-hidden rounded-xl bg-light-purple shadow-xl-shadow-custom-blue border-t-4 border-b-4 border-accent border-custom-blue h-full w-full transition-transform transform hover:scale-105 hover:shadow-[0_10px_20px_rgba(59,130,246,0.5)]">
-//           <div className="flex flex-col p-4">
-//             <h3 className="text-xl font-semibold mb-4">Recent Placements</h3>
-//             {loading ? (
-//               <p>Loading...</p>
-//             ) : error ? (
-//               <p>{error}</p>
-//             ) : (
-//               <ul className="space-y-2">
-//                 {placements.map((placement) => (
-//                   <li key={placement._id} className="text-gray-900">
-//                     <a
-//                       href={placement.pdf}
-//                       download={`${placement.company_name}_placement_shortlist`}
-//                       className="text-sky-500 hover:text-sky-600 hover:underline underline-offset-4 decoration-2 decoration-sky-400 transition-all"
-//                     >
-//                       {placement.company_name} - {placement.position} (
-//                       {new Date(placement.createdAt).toLocaleDateString(
-//                         "en-US",
-//                         options
-//                       )})
-//                     </a>
-//                   </li>
-//                 ))}
-//               </ul>
-//             )}
-//           </div>
-//         </div>
-
-//         {/* Internships Card */}
-//         <div className="flex flex-col overflow-hidden rounded-xl bg-light-purple shadow-xl border-t-4 border-b-4 border-accent border-custom-blue h-full w-full transition-transform transform hover:scale-105 hover:shadow-[0_10px_20px_rgba(59,130,246,0.5)]">
-//           <div className="flex flex-col p-4">
-//             <h3 className="text-xl font-semibold mb-4">Recent Internships</h3>
-//             <ul className="space-y-2">
-//               {internships.map((internship) => (
-//                 <li key={internship.id} className="text-gray-900">
-//                   <a
-//                     href={internship.pdf}
-//                     download={`${internship.company}_intern_shortlist`}
-//                     className="text-sky-500 hover:text-sky-600 hover:underline underline-offset-4 decoration-2 decoration-sky-400 transition-all"
-//                   >
-//                     {internship.company} - {internship.position} (
-//                     {internship.date.toLocaleDateString("en-US", options)})
-//                   </a>
-//                 </li>
-//               ))}
-//             </ul>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Insights Section */}
-//       <div className="mt-8">
-//         <PInsights />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Home;
+export default StudentDashboard;
