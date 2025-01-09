@@ -8,7 +8,7 @@ const OnlineAssessment = () => {
     const [previousJobs, setPreviousJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [visibleDetailId, setVisibleDetailId] = useState(null);
-    const [activeTab, setActiveTab] = useState("upcoming"); // 'upcoming' or 'past'
+    const [activeTab, setActiveTab] = useState("upcoming");
 
     useEffect(() => {
         const fetchAssessments = async () => {
@@ -93,7 +93,6 @@ const OnlineAssessment = () => {
 
     return (
         <>
-            {/* Tabs */}
             <div className="flex justify-between items-center bg-white p-4 rounded-t-lg ">
                 <h2 className="text-3xl font-semibold text-custom-blue capitalize underline underline-offset-8">
                     {activeTab === "upcoming" ? "Upcoming OA's" : "Past OA's"}
@@ -122,7 +121,6 @@ const OnlineAssessment = () => {
                 </div>
             </div>
 
-            {/* Tab Content */}
             <div className="container mx-auto px-4 py-6">{renderTabContent()}</div>
         </>
     );

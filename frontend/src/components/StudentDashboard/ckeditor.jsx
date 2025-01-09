@@ -3,11 +3,11 @@ import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-import '../App.css';
+import '../../App.css';
 
 const LICENSE_KEY = 'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3Mzc1OTAzOTksImp0aSI6Ijk5MjY4NWNkLTA2ZGItNDkyMy1iZDZkLTEyZjQ3YjI3MjEyYiIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6ImJiZjVjM2RiIn0.Ic-PhYPV8pkHd9XJRnfEpMT8k0M2PeS2oJ1kTIv0qULSCpWgXgUJI4U3zc5hiAQHB2bUm0P6v3r0xWX0lbhC5Q';
 
-export default function Editor() {
+export default function Editor({experience}) {
     const editorContainerRef = useRef(null);
     const editorRef = useRef(null);
     const editorWordCountRef = useRef(null);
@@ -15,6 +15,7 @@ export default function Editor() {
     const [editorInstance, setEditorInstance] = useState(null);
     const [isLayoutReady, setIsLayoutReady] = useState(false);
     const cloud = useCKEditorCloud({ version: '44.1.0' });
+    const [editorData, setEditorData] = useState(experience);
 
     useEffect(() => {
         setIsLayoutReady(true);

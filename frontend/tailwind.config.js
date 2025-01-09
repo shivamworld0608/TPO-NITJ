@@ -6,7 +6,7 @@ export default {
         'custom-blue': '#0369A0',
       },
       animation: {
-        'card-scroll': 'card-scroll 10s linear infinite',
+        'card-scroll': 'card-scroll 7s linear infinite',
       },
       keyframes: {
         'card-scroll': {

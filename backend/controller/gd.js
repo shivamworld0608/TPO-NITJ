@@ -3,38 +3,36 @@ import JobProfile from "../models/jobprofile.js";
   export const getEligibleUpcomingGDs = async (req, res) => {
     try {
       const studentId = req.user.userId;
-      const jobsWithOAs = await JobProfile.find({
+      const jobsWithGDs = await JobProfile.find({
         "Hiring_Workflow.eligible_students": studentId,
-        "Hiring_Workflow.step_type": "OA",
+        "Hiring_Workflow.step_type": "GD",
       })
         .select(
           "company_name company_logo Hiring_Workflow"
         )
         .lean();
-      console.log("jobswithoa",jobsWithOAs);
-      const upcomingOAs = jobsWithOAs.flatMap((job) => {
+      const upcomingGDs = jobsWithGDs.flatMap((job) => {
       const workflow = Array.isArray(job.Hiring_Workflow) ? job.Hiring_Workflow : [];
         
         return workflow
           .filter(
             (step) => 
-              step.step_type === "OA" && 
-              new Date(step.details.oa_date) > new Date()
+              step.step_type === "GD" && 
+              new Date(step.details.gd_date) > new Date()
           )
           .map((step) => ({
             company_name: job.company_name,
             company_logo: job.company_logo,
-            oa_date: step.details.oa_date,
-            oa_login_time: step.details.oa_login_time || step.details.login_time, // Handle both field names
-            oa_duration: step.details.oa_duration,
-            oa_info: step.details.oa_info,
-            oa_link: step.details.oa_link,
+            gd_date: step.details.gd_date,
+            gd_time: step.details.gd_time,
+            gd_info: step.details.gd_info,
+            gd_link: step.details.gd_link,
           }));
       });
-      res.status(200).json({ upcomingOAs });
+      res.status(200).json({ upcomingGDs });
     } catch (error) {
-      console.error("Error fetching upcoming OAs:", error);
-      res.status(500).json({ message: "Server error while fetching upcoming OAs." });
+      console.error("Error fetching upcoming GDs:", error);
+      res.status(500).json({ message: "Server error while fetching upcoming gds." });
     }
   };
   
@@ -43,45 +41,44 @@ import JobProfile from "../models/jobprofile.js";
   export const getEligiblePastGDs = async (req, res) => {
     try {
       const studentId = req.user.userId;
-      const jobsWithOAs = await JobProfile.find({
+      const jobsWithGDs = await JobProfile.find({
         "Hiring_Workflow.eligible_students": studentId,
-        "Hiring_Workflow.step_type": "OA"
+        "Hiring_Workflow.step_type": "GD"
       })
         .select("company_name company_logo Hiring_Workflow")
         .lean();
   
-      const pastOAs = jobsWithOAs.flatMap((job) => {
+      const pastGDs = jobsWithGDs.flatMap((job) => {
         const workflow = Array.isArray(job.Hiring_Workflow) ? job.Hiring_Workflow : [];
         
         return workflow
           .filter(
             (step) => 
-              step.step_type === "OA" && 
-              new Date(step.details.oa_date) < new Date()
+              step.step_type === "GD" && 
+              new Date(step.details.gd_date) < new Date()
           )
           .map((step) => ({
             company_name: job.company_name,
             company_logo: job.company_logo,
-            oa_date: step.details.oa_date,
-            oa_login_time: step.details.oa_login_time || step.details.login_time,
-            oa_duration: step.details.oa_duration,
-            oa_info: step.details.oa_info,
-            oa_link: step.details.oa_link,
+            gd_date: step.details.gd_date,
+            gd_time: step.details.gd_time,
+            gd_info: step.details.gd_info,
+            gd_link: step.details.gd_link,
             was_shortlisted: step.shortlisted_students?.length === 0 
             ? "Result yet to be declared"
             : step.shortlisted_students?.includes(studentId) || false
           }));
       });
   
-      pastOAs.sort((a, b) => new Date(b.oa_date) - new Date(a.oa_date));
+      pastGDs.sort((a, b) => new Date(b.gd_date) - new Date(a.gd_date));
       res.status(200).json({ 
-        pastOAs 
+        pastGDs 
       });
   
     } catch (error) {
-      console.error("Error fetching past OAs:", error);
+      console.error("Error fetching past GDs:", error);
       res.status(500).json({ 
-        message: "Server error while fetching past OAs."
+        message: "Server error while fetching past GDs."
       });
     }
   };
