@@ -7,7 +7,15 @@ const JobCard = ({ job_id, jobtype, jobtitle, company, deadline, onShowDetails }
       <div className="mt-4 text-sm text-gray-500">
           <p><strong>Job Type:</strong> {jobtype}</p>
           <p><strong>Job ID:</strong> {job_id}</p>
-          <p><strong>Deadline:</strong> {deadline}</p>
+          <p><strong>Deadline:</strong> <span>
+              {deadline
+                ? new Date(deadline).toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })
+                : "Not Provided"}
+            </span></p>
       </div>
       <button
           className="mt-4 w-full bg-custom-blue text-white py-2 px-4 rounded-md hover:bg-blue-600"

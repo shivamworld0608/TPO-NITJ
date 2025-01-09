@@ -127,7 +127,7 @@ const LoginSignup = () => {
         )
         .then((response) => {
           dispatch(setAuthUser({ authUser: true, userData: response.data.user, }));
-          navigate("/sdashboard");
+          userType === "Student" ? navigate("/sdashboard") : userType === "Recruiter" ? navigate("/rdashboard") : navigate("/pdashboard")
           setIsLogin(true);
         });
     } catch (error) {

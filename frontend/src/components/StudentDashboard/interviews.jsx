@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import InterviewCard from "./InterviewCard";
 import BouncingLoader from "../BouncingLoader";
+import NoDataFound from "../NoData";
 
 const InterviewsData = () => {
     const [upcomingInterviews, setUpcomingInterviews] = useState([]);
@@ -14,14 +15,15 @@ const InterviewsData = () => {
             try {
                 setLoading(true);
                 const upcomingResponse = await axios.get(
-                    `${import.meta.env.REACT_APP_BASE_URL}/interview/eligible-upcoming`,{withCredentials: true}
+                    `${import.meta.env.REACT_APP_BASE_URL}/interview/eligible-upcoming`, 
+                    { withCredentials: true }
                 );
                 setUpcomingInterviews(upcomingResponse.data.upcomingInterviews || []);
-                console.log(upcomingInterviews);
-                const pastResponse = await axios.get(
-                    `${import.meta.env.REACT_APP_BASE_URL}/interview/eligible-past`,{withCredentials: true}
-                );
                 
+                const pastResponse = await axios.get(
+                    `${import.meta.env.REACT_APP_BASE_URL}/interview/eligible-past`, 
+                    { withCredentials: true }
+                );
                 setPreviousInterviews(pastResponse.data.pastInterviews || []);
             } catch (error) {
                 console.error("Error fetching interviews:", error);
@@ -35,10 +37,9 @@ const InterviewsData = () => {
 
     if (loading) return <BouncingLoader size="medium" text="Loading..." />;
 
-
     const renderTabContent = () => {
         if (activeTab === "upcoming") {
-            return (
+            return upcomingInterviews.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {upcomingInterviews.map((job) => (
                         <InterviewCard
@@ -52,11 +53,13 @@ const InterviewsData = () => {
                         />
                     ))}
                 </div>
+            ) : (
+                <NoDataFound mg="Interview" smg="till you will be eligible for Interview 🤗" />
             );
         }
 
         if (activeTab === "past") {
-            return (
+            return previousInterviews.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {previousInterviews.map((job) => (
                         <InterviewCard
@@ -71,6 +74,8 @@ const InterviewsData = () => {
                         />
                     ))}
                 </div>
+            ) : (
+                <NoDataFound mg="OA" smg="you have not any Past Interview 😌" />
             );
         }
 
