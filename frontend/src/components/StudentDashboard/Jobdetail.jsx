@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import ApplicationForm from "./applicationform";
+import BouncingLoader from "../BouncingLoader";
 
 const Jobdetail = ({ job_id, onBack,onShow }) => {
     const [activeInfo, setActiveInfo] = useState("jobDescription");
@@ -48,9 +49,7 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
         fetchEligibility();
     }, [job_id]);
 
-    if (loading) {
-        return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
-    }
+    if (loading) return <BouncingLoader size="medium" text="Loading..." />;
 
     if (error) {
         return <div className="min-h-screen flex items-center justify-center text-red-600">{error}</div>;
