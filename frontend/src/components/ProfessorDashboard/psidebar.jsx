@@ -14,7 +14,7 @@ import {
 
 const Sidebar = ({ onNavigate }) => {
   const [isOpen, setIsOpen] = useState(true);
-
+  const [activeComponentNav, setActiveComponentNav] = useState("dashboard")
   // Set default state based on screen size
   useEffect(() => {
     const handleResize = () => {
@@ -40,7 +40,7 @@ const Sidebar = ({ onNavigate }) => {
 
   const handleNavigation = (id) => {
     onNavigate(id); // Trigger navigation
-
+    setActiveComponentNav(id)
     // Close sidebar for small devices
     if (window.innerWidth < 640) {
       setIsOpen(false);
@@ -50,7 +50,7 @@ const Sidebar = ({ onNavigate }) => {
   const menuItems = [
     { name: "Dashboard", icon: <FaHome />, id: "dashboard" },
     { name: "Job Management", icon: <FaBriefcase />, id: "job-management" },
-    { name: "Job Profile Management", icon: <FaBriefcase />, id: "job-management" },
+    { name: "Job Profile Management", icon: <FaBriefcase />, id: "job-profile-management" },
     { name: "OA Management", icon: <FaClipboardList />, id: "oa-management" },
     { name: "Interview Management", icon: <FaClipboardList />, id: "interview-management" },
     { name: "Notifications", icon: <FaBell />, id: "notifications" },
@@ -63,7 +63,7 @@ const Sidebar = ({ onNavigate }) => {
 
   return (
     <div
-      className={`bg-gray-800 text-white ${
+      className={`text-gray-600 ${
         isOpen ? "sm:w-64" : "sm:w-16"
       } sm:h-[1731.6px] flex flex-col transition-all duration-300 w-full ${
         isOpen ? "h-[700px]" : "h-10"
@@ -71,15 +71,15 @@ const Sidebar = ({ onNavigate }) => {
     >
       <button
         onClick={toggleSidebar}
-        className="bg-gray-700 p-3 focus:outline-none hover:bg-gray-600"
+        className="p-3 focus:outline-none"
       >
         <FaBars />
       </button>
-      <nav className="mt-4 flex flex-col space-y-4 flex-grow">
+      <nav className="mt-4 flex flex-col space-y-4 flex-grow p-1">
         {menuItems.map((item) => (
           <button
             key={item.id}
-            className="flex items-center space-x-4 p-3 hover:bg-gray-700 focus:outline-none"
+            className={`flex items-center space-x-4 p-3 focus:outline-none rounded-lg ${activeComponentNav === item.id? "bg-custom-blue text-white": "text-gray-600 hover:bg-blue-50"}`}
             onClick={() => handleNavigation(item.id)}
           >
             {item.icon}
