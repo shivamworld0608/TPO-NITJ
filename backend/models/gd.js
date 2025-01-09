@@ -5,9 +5,6 @@ const GDSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "JobProfile",
   },
-  interview_name: {
-      type: String,
-  },
   company_name: {
     type: String,
     required: true,
