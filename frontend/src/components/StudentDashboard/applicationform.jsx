@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { FaArrowLeft } from "react-icons/fa";
+import BouncingLoader from "../BouncingLoader";
 
 const ApplicationForm = ({ jobId ,onHide}) => {
   const [fields, setFields] = useState([]);
@@ -61,7 +62,7 @@ const ApplicationForm = ({ jobId ,onHide}) => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <BouncingLoader size="medium" text="Loading..." />;
   if (error) return <p>{error}</p>;
 
   return (
