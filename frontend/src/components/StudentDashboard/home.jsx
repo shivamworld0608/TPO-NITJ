@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Graph from "./homeInsightsGraph";
 
@@ -90,10 +90,13 @@ const StudentDashboard = () => {
   const [loading, setLoading] = useState(true);
 
   const notifications = [
-    "TPO meeting scheduled for 2023-11-10 at 10:00 AM",
-    "New internship opportunities at Company X",
-    "New internship opportunities at Company Y",
-    "New internship opportunities at Company Z",
+    "TPO meeting scheduled for 2023-11-10 at 10:00 AM ",
+    "New internship opportunities at Company Google",
+    "New internship opportunities at Company Amazon",
+    "New internship opportunities at Company Microsoft",
+    "New Placement opportunities at Company Expedia",
+    "New Placement opportunities at Company Apple",
+    "New Placement opportunities at Company GS",
   ];
 
   const placements = [
@@ -102,6 +105,11 @@ const StudentDashboard = () => {
       company: "Microsoft",
       role: "Software Engineer",
       date: "January 12, 2024",
+    },
+    {
+      company: "Amazon",
+      role: "Software Engineer",
+      date: "January 11, 2024",
     },
   ];
 
@@ -140,6 +148,88 @@ const StudentDashboard = () => {
     fetchPlacements();
   }, []);
 
+  const NotificationCard = ({ isLoading }) => {
+    const listRef = useRef(null);
+    const [isHovered, setIsHovered] = useState(false);
+    const [startScroll, setStartScroll] = useState(false);
+
+    // Initial pause before starting scroll
+    useEffect(() => {
+      if (!isLoading) {
+        const timer = setTimeout(() => {
+          setStartScroll(true);
+        }, 1000); // 2 second initial pause
+
+        return () => clearTimeout(timer);
+      }
+    }, [isLoading]);
+
+    // Scrolling effect with hover pause
+    useEffect(() => {
+      if (!isLoading && startScroll && !isHovered) {
+        const interval = setInterval(() => {
+          if (listRef.current) {
+            const { scrollTop, scrollHeight, clientHeight } = listRef.current;
+
+            if (scrollTop + clientHeight >= scrollHeight) {
+              // Reset to top after reaching bottom
+              setTimeout(() => {
+                if (listRef.current) {
+                  listRef.current.scrollTop = 0;
+                }
+              }, 20);
+            } else {
+              listRef.current.scrollTop += 1;
+            }
+          }
+        }, 50);
+
+        return () => clearInterval(interval);
+      }
+    }, [isLoading, startScroll, isHovered]);
+
+
+
+    const items =
+      notifications;
+
+    return (
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px] w-full max-w-3xl">
+        <div className="px-4 py-3 bg-blue-500 text-white">
+          <h2 className="text-lg font-medium">Notifications</h2>
+        </div>
+
+        <div
+          ref={listRef}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+          className={`h-[calc(100%-48px)] ${
+            items.length > 2
+              ? "scrollbar-thin scrollbar-thumb-[#3b82f6] scrollbar-track-transparent hover:scrollbar-track-gray-100"
+              : ""
+          } overflow-y-auto [&::-webkit-scrollbar]{width:4px} [&::-webkit-scrollbar-thumb]{min-height:40px}`}
+        >
+          <div className="space-y-0.5">
+            {isLoading ? (
+              <CardSkeleton />
+            ) : (
+              items.map((notification, index) => (
+                <div
+                  key={index}
+                  className="px-4 py-3 hover:bg-blue-50 transition-colors duration-200 border-l-2 border-transparent hover:border-blue-500"
+                >
+                  <p className="text-sm text-gray-800 leading-relaxed">
+                    {notification}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen p-8 bg-gray-50">
       <div className="max-w-7xl mx-auto font-sans">
@@ -162,10 +252,13 @@ const StudentDashboard = () => {
             isLoading={loading}
           />
           <StatCard
-            value={stats.averagePackage != 0 ? stats.averagePackage >= 10000000
-              ? `${(stats.averagePackage / 10000000).toFixed(2)} Cr`
-              : `${(stats.averagePackage / 100000).toFixed(2)} LPA`
-            :'N/A'}
+            value={
+              stats.averagePackage != 0
+                ? stats.averagePackage >= 10000000
+                  ? `${(stats.averagePackage / 10000000).toFixed(2)} Cr`
+                  : `${(stats.averagePackage / 100000).toFixed(2)} LPA`
+                : "N/A"
+            }
             label="Average Package"
             bgColor="bg-[#d7f7e5]"
             borderColor="border-2 border-[#b3d4c2]"
@@ -176,34 +269,38 @@ const StudentDashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           {/* Notifications Card */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl">
+          {/* <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px] group">
             <div className="px-4 py-3 bg-blue-500 text-white">
               <h2 className="text-lg font-medium">Notifications</h2>
             </div>
-            <div className="h-32 overflow-hidden relative">
-              {loading ? (
-                <CardSkeleton />
-              ) : (
-                <ul className="absolute top-0 animate-card-scroll space-y-3 px-4">
-                  {notifications.map((notification, index) => (
-                    <li
-                      key={index}
-                      className="px-4 py-2 text-sm text-gray-800 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 transition-colors"
-                    >
-                      {notification}
-                    </li>
-                  ))}
-                </ul>
-              )}
+            <div className="h-[calc(100%-48px)] relative overflow-hidden">
+              <ul className="absolute w-full space-y-3 animate-verticalScroll group-hover:pause">
+                {notifications.map((notification, index) => (
+                  <li
+                    key={index}
+                    className="px-4 py-2 mx-4 text-sm text-gray-800 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 transition-colors"
+                  >
+                    {notification}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          </div> */}
+          {/* News/Notifications Card */}
+          <NotificationCard isLoading={loading} />
 
           {/* Recent Placements Card */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl">
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
             <div className="px-4 py-3 bg-blue-500 text-white">
               <h2 className="text-lg font-medium">Recent Placements</h2>
             </div>
-            <div className="p-4">
+            <div
+              className={`p-4 h-[calc(100%-48px)] ${
+                placements.length > 2
+                  ? "overflow-y-auto scrollbar-thin scrollbar-thumb-[#3b82f6] scrollbar-track-gray-200 scrollbar-thumb-height-10"
+                  : "overflow-y-hidden"
+              }`}
+            >
               {loading ? (
                 <CardSkeleton />
               ) : (
@@ -230,11 +327,17 @@ const StudentDashboard = () => {
           </div>
 
           {/* Recent Internships Card */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl">
+          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
             <div className="px-4 py-3 bg-blue-500 text-white">
               <h2 className="text-lg font-medium">Recent Internships</h2>
             </div>
-            <div className="p-4 h-48 overflow-y-auto">
+            <div
+              className={`p-4 h-[calc(100%-48px)] ${
+                internships.length > 2
+                  ? "overflow-y-auto scrollbar-thin scrollbar-thumb-[#3b82f6] scrollbar-track-gray-200"
+                  : "overflow-y-hidden"
+              }`}
+            >
               {loading ? (
                 <CardSkeleton />
               ) : (
@@ -260,10 +363,9 @@ const StudentDashboard = () => {
             </div>
           </div>
         </div>
-      </div>
 
-      <Graph />
-      
+        <Graph />
+      </div>
     </div>
   );
 };
