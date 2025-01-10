@@ -165,7 +165,7 @@ const PlacementHighlights = () => {
 return (
     <section className="bg-white py-16 px-6 lg:px-20 relative">
         <div className="max-w-6xl mx-auto text-center">
-            <h2 className="text-4xl font-extrabold mb-8 text-gray-800">
+            <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl mb-8">
                 Placement <span className="text-custom-blue">Highlights</span>
             </h2>
             <p className="text-gray-600 text-lg mb-12">
@@ -201,8 +201,8 @@ return (
             {/* Insights Section with Testimonials */}
             <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
                 {insightsData.map((item, index) => (
-                    <div key={index} className="bg-gradient-to-br from-purple-50 to-pink-50 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                        <h3 className="text-xl font-semibold text-gray-800 mb-4">{item.title}</h3>
+                    <div key={index} className="bg-gradient-to-br from-white to-blue-300 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
+                        <h3 className="text-xl font-semibold  mb-4">{item.title}</h3>
                         <p className="text-gray-700">{item.content}</p>
                     </div>
                 ))}
