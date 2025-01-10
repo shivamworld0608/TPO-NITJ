@@ -21,7 +21,6 @@ const Home = () => {
       <div className=" max-w-7xl mx-auto "><AboutUs /></div>
       <div className="max-w-7xl mx-auto "><TpoMessage /></div>
       <div className="max-w-7xl mx-auto mt-24"><RecruitmentProcess /></div>
-      <div className=" mt-24 pt-15 "><WhyRecruit /></div>
       <div className="max-w-7xl mx-auto  "><WhyRecruit /></div>
       <div className="max-w-7xl mx-auto "><PlacementHighlights /></div> 
       <div className="max-w-7xl mx-auto mt-24 mb-40 pt-15 px-6"><ImageSlider/></div>   
