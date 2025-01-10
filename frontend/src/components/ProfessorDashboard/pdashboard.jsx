@@ -13,6 +13,7 @@ import HelpRequests from "./phelprequests";
 import ExperienceSharing from "./pexperiencesharing";
 import PlacementInsights from "./pplacementinsights";
 import PlacementPolicy from "./pplacementpolicy";
+import RequestHelpManager from "./Request";
 
 const Pdashboard = () => {
   const [activeComponent, setActiveComponent] = useState("dashboard");
@@ -145,7 +146,7 @@ const Pdashboard = () => {
       case "mailbox":
         return <Mailbox/>
       case "help-requests":
-        return <HelpRequests/>
+        return <RequestHelpManager/>
       case "experience-sharing":
         return <ExperienceSharing/>
       case "placement-insights":

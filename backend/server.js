@@ -15,6 +15,7 @@ import jobprofileroutes from "./routes/jobprofile.js";
 import formTemplateroutes from "./routes/formTemplate.js";
 import sharedexperienceroutes from "./routes/sharedexperience.js";
 import placementroutes from "./routes/placement.js";
+import reqhelproutes from "./routes/reqhelp.js";
 
 
 const app = express();
@@ -65,6 +66,7 @@ app.use('/devteam',devteamroutes);
 app.use('/jobprofile',authenticate,jobprofileroutes);
 app.use('/sharedexperience',authenticate,sharedexperienceroutes);
 app.use("/placements",placementroutes);
+app.use("/reqhelp",authenticate,reqhelproutes);
 
 
 app.use('/api',authenticate, formTemplateroutes);
@@ -73,4 +75,4 @@ app.use('/api',authenticate, formTemplateroutes);
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-});
+}); 

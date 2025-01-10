@@ -25,6 +25,8 @@ const companies = [
 
 const ImageSlider = () => {
     return (
+        <>
+        <h1 className='text-4xl font-semibold text-center mb-8'>Top{' '}<span className='text-custom-blue'>Recruiter</span></h1>
         <div className="w-full h-24 overflow-hidden bg-gray-50 flex items-center">
             <div
                 className="flex w-max"
@@ -72,6 +74,7 @@ const ImageSlider = () => {
                 `}
             </style>
         </div>
+        </>
     );
 };
 
