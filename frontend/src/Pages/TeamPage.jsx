@@ -9,6 +9,7 @@ const TeamPage = () => {
     const [teamData, setTeamData] = useState({ coordinator: [], devTeam: [], developers: [] });
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [activeTab, setActiveTab] = useState(false);
 
     useEffect(() => {
         const fetchTeamData = async () => {
@@ -51,16 +52,58 @@ const TeamPage = () => {
             <Header />
             <div className="container mx-auto mt-32 px-4 py-12 max-w-7xl">
                 <div className="text-center mb-16">
-                    <h1 className="text-4xl font-bold text-custom-blue mb-4">Team Members</h1>
-                    <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Meet the talented individuals who make our team exceptional
+                    <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
+                        Team{" "}
+                        <span className="bg-custom-blue text-transparent bg-clip-text">
+                            Members
+                        </span>
+                    </h1>
+                    <p className="font-bold text-2xl sm:text-sm lg:text-lg text-center tracking-wide">
+                        Meet the talented individuals{" "}
+                        <span className="bg-custom-blue text-transparent bg-clip-text">
+                            who make our team exceptional
+                        </span>
                     </p>
+
                 </div>
+                <div className='flex justify-end'>
+
+                <div className="flex border-2 border-gray-300 rounded-3xl bg-white ">
+
+                <button
+                        className={`px-4 py-2 rounded-3xl ${
+                            activeTab === false
+                            ? "bg-custom-blue text-white"
+                            : "bg-white"
+                        }`}
+                        onClick={() => setActiveTab(false)}
+                        >
+                        Dev Team
+                    </button>
+                    <button
+                        className={`px-4 py-2 rounded-3xl ${
+                            activeTab === true
+                            ? "bg-custom-blue text-white"
+                            : "bg-white"
+                        }`}
+                        onClick={() => setActiveTab(true)}
+                        >   
+                        Coordinators
+                    </button>
+                        </div>
+                        </div>
 
                 <div className="space-y-16">
-                    <TeamSection title="Coordinator" members={teamData.coordinator} />
-                    <TeamSection title="Development Team Leads" members={teamData.devTeam} />
-                    <TeamSection title="Developers" members={teamData.developers} />
+                    {
+                        activeTab ? (
+                            <TeamSection title="Coordinator" members={teamData.coordinator} />
+                        ):(
+                            <div>
+                                <TeamSection title="Development Team Leads" members={teamData.devTeam} />
+                                <TeamSection title="Developers" members={teamData.developers} />                               
+                            </div>
+                        )
+                    }
                 </div>
             </div>
             <Footer />

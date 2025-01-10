@@ -242,9 +242,12 @@ const Insights = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen p-8">
-      <h1 className="text-4xl font-bold text-center text-gray-900 mb-10">
-        Placement Insights
+    <div className="bg-white min-h-screen p-8">
+      <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide mb-2">
+        Placement{" "}
+        <span className="bg-custom-blue text-transparent bg-clip-text">
+          Insights
+        </span>
       </h1>
 
       {/* Filters Section */}

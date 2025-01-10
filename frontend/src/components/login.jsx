@@ -75,9 +75,9 @@ const LoginSignup = () => {
         .then((response) => {
           dispatch(setAuthUser({ authUser: true, userData: response.data.user, }));
           if (response.data.userType === "Student") {
-            navigate("/sdashboard");
+            navigate("/sdashboard/home");
           } else if (response.data.userType === "Recuiter") {
-            navigate("/rdashboard");
+            navigate("/rdashboard/createdjob");
           } else if (response.data.userType === "Professor") {
             navigate("/pdashboard");
           }
@@ -127,7 +127,7 @@ const LoginSignup = () => {
         )
         .then((response) => {
           dispatch(setAuthUser({ authUser: true, userData: response.data.user, }));
-          navigate("/sdashboard");
+          userType === "Student" ? navigate("/sdashboard/home") : userType === "Recruiter" ? navigate("/rdashboard/createdjob") : navigate("/pdashboard")
           setIsLogin(true);
         });
     } catch (error) {
