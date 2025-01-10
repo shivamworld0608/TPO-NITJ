@@ -5,6 +5,7 @@ import { logout } from "../Redux/authSlice";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
+import NITJlogo from "../assets/nitj-logo.png";
 import {
   faBriefcase,
   faEnvelope,
@@ -83,29 +84,38 @@ const RecruiterDashboards = () => {
             <span className="bg-custom-blue text-transparent bg-clip-text">
               NITJ
             </span>
+            {/* <hr className="mt-3" /> */}
           </h1>
+        )}
+        {!isOpen && (
+          <img
+            onClick={() => navigate("/rdashboard/home")}
+            src={userData?.image || NITJlogo}
+            alt="Profile"
+            className="absolute left-8 transform -translate-x-1/2  w-9 h-9 rounded-full object-cover cursor-pointer hover:shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
+          />
         )}
         <div className="flex items-center justify-between">
           <button
             onClick={toggleSidebar}
             className={`p-2 rounded text-black focus:outline-none transition-all duration-300 ${
-              isOpen ? "sm:ml-56" : "sm:ml-0"
+              isOpen ? "sm:ml-56" : "sm:ml-10"
             }`}
           >
-            <div className="relative w-8 h-4">
+            <div className="relative w-6 h-3">
               <div
                 className={`absolute inset-0 transform transition-transform duration-300 ${
                   isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
                 }`}
               >
-                <RiMenuFold3Fill size={30} />
+                <RiMenuFold3Fill size={25} />
               </div>
               <div
                 className={`absolute inset-0 transform transition-transform duration-300 ${
                   !isOpen ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
                 }`}
               >
-                <RiMenuFold4Fill size={30} />
+                <RiMenuFold4Fill size={25} />
               </div>
             </div>
           </button>
@@ -126,77 +136,80 @@ const RecruiterDashboards = () => {
       <div className="flex flex-1 mt-16">
         {/* Sidebar */}
         <aside
-  className={`fixed z-20 bg-white border-gray-200 transition-all duration-300 sm:top-0 sm:left-0 sm:bottom-0 ${
-    isOpen ? "w-64" : "w-16"
-  } border-r sm:border-b-0 border-b shadow-lg flex flex-col`}
->
-  {/* Menu Items */}
-  <div className={`p-3 ${isOpen ? "mt-12" : "mt-12"} flex-grow`}>
-    <nav className="mt-4">
-      <ul className="space-y-2">
-        {menuItems.map((item) => (
-          <li key={item.path} className="h-10 flex items-center justify-center">
-            <button
-              onClick={() => {
-                navigate(item.path);
-                if (window.innerWidth < 640) setIsOpen(false);
-              }}
-              className={`flex items-center ${
-                isOpen ? "w-full justify-start" : "w-10"
-              } h-10 text-left rounded-lg transition-all duration-200 ${
-                location.pathname === item.path
-                  ? "bg-custom-blue text-white hover:bg-custom-blue-dark"
-                  : "text-gray-600 hover:bg-blue-50 hover:text-blue-700"
-              } ${!isOpen && "justify-center"}`}
-            >
-              <FontAwesomeIcon
-                icon={item.icon}
-                className={isOpen ? "ml-3" : ""}
-                style={{ fontSize: isOpen ? "1rem" : "1.25rem" }}
-              />
-              {isOpen && (
-                <span className="text-sm font-medium ml-3">{item.label}</span>
-              )}
-            </button>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  </div>
-
-  {/* Profile Section */}
-  <div className="border-t border-gray-200 p-4 mt-auto">
-    {!isOpen ? (
-      <button
-        onClick={() => navigate("/rdashboard/profile")}
-        className="w-10 h-10 flex items-center justify-start rounded-lg hover:bg-blue-50 transition-colors duration-200"
-      >
-        <img
-          src={userData?.image || ProfileImage}
-          alt="Profile"
-          className="w-8 h-8 rounded-full object-cover"
-        />
-      </button>
-    ) : (
-      <button
-        onClick={() => navigate("/rdashboard/profile")}
-        className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors duration-200"
-      >
-        <div className="flex items-center">
-          <img
-            src={userData?.image || ProfileImage}
-            alt="Profile"
-            className="w-10 h-10 rounded-full object-cover"
-          />
-          <div className="ml-3">
-            <p className="text-gray-900 font-medium">{userData?.name}</p>
-            <p className="text-gray-500 text-sm">{userData?.email}</p>
+          className={`fixed z-20 bg-white border-gray-200 transition-all duration-300 sm:top-0 sm:left-0 sm:bottom-0 ${
+            isOpen ? "w-64" : "w-16"
+          } border-r sm:border-b-0 border-b shadow-lg flex flex-col`}
+        >
+          {/* Menu Items */}
+          <div className={`p-3 ${isOpen ? "mt-12" : "mt-12"} flex-grow`}>
+            <nav className="mt-4">
+              <ul className="space-y-2">
+                {menuItems.map((item) => (
+                  <li
+                    key={item.path}
+                    className="h-10 flex items-center justify-center"
+                  >
+                    <button
+                      onClick={() => {
+                        navigate(item.path);
+                        if (window.innerWidth < 640) setIsOpen(false);
+                      }}
+                      className={`flex items-center ${
+                        isOpen ? "w-full justify-start" : "w-10"
+                      } h-10 text-left rounded-lg transition-all duration-200 ${
+                        location.pathname === item.path
+                          ? "bg-custom-blue text-white hover:bg-custom-blue-dark"
+                          : "text-gray-600 hover:bg-blue-50 hover:text-blue-700"
+                      } ${!isOpen && "justify-center"}`}
+                    >
+                      <FontAwesomeIcon
+                        icon={item.icon}
+                        className={isOpen ? "ml-3" : ""}
+                        style={{ fontSize: isOpen ? "1rem" : "1.25rem" }}
+                      />
+                      {isOpen && (
+                        <span className="text-sm font-medium ml-3">
+                          {item.label}
+                        </span>
+                      )}
+                    </button>
+                  </li>
+                ))}
+                {!isOpen && (
+                  <li className="h-9 transition-all duration-300 ease-in-out">
+                    {" "}
+                    {/* Consistent height for profile image */}
+                    <img
+                      onClick={() => navigate("/rdashboard/profile")}
+                      src={userData?.image || ProfileImage}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full object-cover cursor-pointer hover:shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
+                    />
+                  </li>
+                )}
+              </ul>
+            </nav>
           </div>
-        </div>
-      </button>
-    )}
-  </div>
-</aside>
+          {/* Profile Section */}
+          {isOpen && (
+            <div className="p-4 mt-16">
+              <button
+                onClick={() => navigate("/rdashboard/profile")}
+                className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 border"
+              >
+                <img
+                  src={userData?.image || ProfileImage}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="ml-3">
+                  <p className="text-gray-900 font-medium">{userData?.name}</p>
+                  <p className="text-gray-500 text-sm">{userData?.email}</p>
+                </div>
+              </button>
+            </div>
+          )}
+        </aside>
 
         {/* Main Content */}
         <main
