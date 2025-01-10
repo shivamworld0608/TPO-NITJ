@@ -94,7 +94,6 @@ const StudentDashboards = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-
       <header className="bg-white z-30 border-b border-gray-200 fixed top-0 left-0 right-0 p-4">
         {isOpen && (
           <h1 className="absolute ml-9 left-4 top-1/2 transform -translate-y-1/2 font-bold text-2xl sm:text-1xl lg:text-2xl tracking-wide w-max">
@@ -102,7 +101,6 @@ const StudentDashboards = () => {
             <span className="bg-custom-blue text-transparent bg-clip-text">
               NITJ
             </span>
-            {/* <hr className="mt-3" /> */}
           </h1>
         )}
         {!isOpen && (
@@ -110,10 +108,10 @@ const StudentDashboards = () => {
             onClick={() => navigate("/sdashboard/home")}
             src={userData?.image || NITJlogo}
             alt="Profile"
-            className="absolute left-8 transform -translate-x-1/2  w-9 h-9 rounded-full object-cover cursor-pointer hover:shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
+            className="absolute left-8 transform -translate-x-1/2 w-9 h-9 rounded-full object-cover cursor-pointer hover:shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
           />
         )}
-        <div className={`flex items-center justify-between `}>
+        <div className={`flex items-center justify-between`}>
           <button
             onClick={toggleSidebar}
             className={`p-2 rounded text-black focus:outline-none transition-all duration-300 ${
@@ -158,20 +156,18 @@ const StudentDashboards = () => {
             isOpen ? "sm:w-60 h-full" : "sm:w-16 h-0"
           } border-r sm:border-b-0 border-b`}
         >
-          <div className={` p-4  ${isOpen ? "mt-12" : "mt-12"}`}>
+          <div className={`p-4 ${isOpen ? "mt-12" : "mt-12"}`}>
             <nav className="mt-4">
               <ul className="space-y-2">
                 {menuItems.map((item) => (
                   <li key={item.path} className="h-10 flex items-center">
-                    {" "}
-                    {/* Fixed height container */}
                     <button
                       onClick={() => {
                         navigate(item.path);
-                        if (innerWidth < 625) setIsOpen(false);
+                        if (window.innerWidth < 625) setIsOpen(false);
                       }}
                       className={`flex items-center sm:w-full ${
-                        isOpen ? "w-full" : "w-10" // Fixed width when closed
+                        isOpen ? "w-full" : "w-10"
                       } h-full text-left px-2 rounded-lg ${
                         location.pathname === item.path
                           ? "bg-custom-blue text-white"
@@ -190,8 +186,6 @@ const StudentDashboards = () => {
                 ))}
                 {!isOpen && (
                   <li className="h-9 transition-all duration-300 ease-in-out">
-                    {" "}
-                    {/* Consistent height for profile image */}
                     <img
                       onClick={() => navigate("/sdashboard/profile")}
                       src={userData?.image || ProfileImage}
@@ -230,38 +224,44 @@ const StudentDashboards = () => {
             isOpen ? "sm:ml-60" : "sm:ml-16"
           }`}
         >
-          <div className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="home" element={<Home />} />
-              <Route path="job-application" element={<JobApplications />} />
-              <Route path="oa" element={<OnlineAssessment />} />
-              <Route path="interviews" element={<Interviews />} />
-              <Route path="gd" element={<GD />} />
-              <Route path="mailbox" element={<MailboxComponent />} />
-              <Route path="shared-experience" element={<SharedExperience />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="request-help" element={<Request />} />
-            </Routes>
-          </div>
+          {/* Content wrapper with minimum height */}
+          <div className="flex-1 flex flex-col min-h-[calc(100vh-4rem)]">
+            {/* Routes container with minimum height to push footer down */}
+            <div className="flex-1 min-h-[550px]">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="home" element={<Home />} />
+                <Route path="job-application" element={<JobApplications />} />
+                <Route path="oa" element={<OnlineAssessment />} />
+                <Route path="interviews" element={<Interviews />} />
+                <Route path="gd" element={<GD />} />
+                <Route path="mailbox" element={<MailboxComponent />} />
+                <Route path="shared-experience" element={<SharedExperience />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="request-help" element={<Request />} />
+              </Routes>
+            </div>
 
-          {/* Footer */}
-          <footer className="bg-slate-800 text-white text-center border-t border-zinc-400 p-4">
-            <div className="text-sm lg:text-base">
-              © Copyright 2022, All Rights Reserved NIT Jalandhar
-            </div>
-            <div className="mt-2 text-sm lg:text-base">
-              Developed By{" "}
-              <a
-                href="/team"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-yellow-300 hover:text-yellow-400"
-              >
-                Placement Portal Dev Team
-              </a>
-            </div>
-          </footer>
+            {/* Footer */}
+            <footer className="bg-slate-800 text-white w-full text-center p-2 border-t border-zinc-400 mt-auto">
+  <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 lg:gap-16 xl:gap-24">
+    <span className="text-xs lg:text-base whitespace-nowrap">
+      © Copyright 2022, All Rights Reserved NIT Jalandhar
+    </span>
+    <span className="text-xs lg:text-base whitespace-nowrap">
+      Developed By{" "}
+      <a
+        href="/team"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-yellow-300 hover:text-yellow-400"
+      >
+        Placement Portal Dev Team
+      </a>
+    </span>
+  </div>
+</footer>
+          </div>
         </main>
       </div>
     </div>
