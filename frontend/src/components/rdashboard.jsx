@@ -4,14 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../Redux/authSlice";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { RiMenuFold3Fill } from "react-icons/ri";
-import { RiMenuFold4Fill } from "react-icons/ri";
+import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
 import {
   faBriefcase,
   faEnvelope,
   faHandsHelping,
-  faShareSquare,
-  faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import Home from "./StudentDashboard/home";
@@ -21,6 +18,7 @@ import OnlineAssessment from "./StudentDashboard/oa";
 import Profile from "./StudentDashboard/profile";
 import ProfileImage from "../assets/chillguy.png";
 import CopycreateJob from "./RecruiterDashboard/createjob.jsx";
+
 const RecruiterDashboards = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,10 +72,10 @@ const RecruiterDashboards = () => {
       icon: faHandsHelping,
     },
   ];
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-
       <header className="bg-white z-30 border-b border-gray-200 fixed top-0 left-0 right-0 p-4">
         {isOpen && (
           <h1 className="absolute ml-9 left-4 top-1/2 transform -translate-y-1/2 font-bold text-2xl sm:text-1xl lg:text-2xl tracking-wide w-max">
@@ -85,25 +83,27 @@ const RecruiterDashboards = () => {
             <span className="bg-custom-blue text-transparent bg-clip-text">
               NITJ
             </span>
-            {/* <hr className="mt-3" /> */}
           </h1>
         )}
         <div className="flex items-center justify-between">
           <button
             onClick={toggleSidebar}
-            className={`p-2 rounded text-black focus:outline-none transition-all duration-300 ${isOpen ? "sm:ml-56" : "sm:ml-0"
-              }`}
+            className={`p-2 rounded text-black focus:outline-none transition-all duration-300 ${
+              isOpen ? "sm:ml-56" : "sm:ml-0"
+            }`}
           >
             <div className="relative w-8 h-4">
               <div
-                className={`absolute inset-0 transform transition-transform duration-300 ${isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
-                  }`}
+                className={`absolute inset-0 transform transition-transform duration-300 ${
+                  isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
+                }`}
               >
                 <RiMenuFold3Fill size={30} />
               </div>
               <div
-                className={`absolute inset-0 transform transition-transform duration-300 ${!isOpen ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
-                  }`}
+                className={`absolute inset-0 transform transition-transform duration-300 ${
+                  !isOpen ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
+                }`}
               >
                 <RiMenuFold4Fill size={30} />
               </div>
@@ -126,8 +126,8 @@ const RecruiterDashboards = () => {
       <div className="flex flex-1 mt-16">
         {/* Sidebar */}
         <aside
-  className={`fixed z-20 bg-white border-gray-200 transition-all duration-300 sm:top-0 sm:left-0 sm:bottom-0 w-full top-0 sm:h-screen ${
-    isOpen ? "sm:w-64 h-full" : "sm:w-16 h-0"
+  className={`fixed z-20 bg-white border-gray-200 transition-all duration-300 sm:top-0 sm:left-0 sm:bottom-0 ${
+    isOpen ? "w-64" : "w-16"
   } border-r sm:border-b-0 border-b shadow-lg flex flex-col`}
 >
   {/* Menu Items */}
@@ -165,11 +165,11 @@ const RecruiterDashboards = () => {
   </div>
 
   {/* Profile Section */}
-  <div className="border-t border-gray-200 flex justify-center p-4">
+  <div className="border-t border-gray-200 p-4 mt-auto">
     {!isOpen ? (
-      <button 
+      <button
         onClick={() => navigate("/rdashboard/profile")}
-        className="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-blue-50 transition-colors duration-200"
+        className="w-10 h-10 flex items-center justify-start rounded-lg hover:bg-blue-50 transition-colors duration-200"
       >
         <img
           src={userData?.image || ProfileImage}
@@ -200,8 +200,9 @@ const RecruiterDashboards = () => {
 
         {/* Main Content */}
         <main
-          className={`flex-1 flex flex-col transition-all duration-300 ${isOpen ? "ml-60" : "ml-16"
-            }`}
+          className={`flex-1 flex flex-col transition-all duration-300 ${
+            isOpen ? "ml-60" : "ml-16"
+          }`}
         >
           <div className="flex-grow">
             <Routes>
@@ -211,7 +212,6 @@ const RecruiterDashboards = () => {
               <Route path="oa" element={<OnlineAssessment />} />
               <Route path="mailbox" element={<MailboxComponent />} />
               <Route path="profile" element={<Profile />} />
-
             </Routes>
           </div>
 
@@ -232,4 +232,5 @@ const RecruiterDashboards = () => {
     </div>
   );
 };
+
 export default RecruiterDashboards;
