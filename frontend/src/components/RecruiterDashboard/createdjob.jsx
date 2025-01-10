@@ -68,7 +68,6 @@ const CreatedJobs = () => {
   if (viewingJobDetails) {
     return (
       <div className="container mx-auto px-4 py-6">
-        <h1 className="text-center text-3xl font-semibold mb-6">Job Details</h1>
         <ViewJobDetails
           job={viewingJobDetails}
           onClose={() => setViewingJobDetails(null)}
@@ -80,7 +79,6 @@ const CreatedJobs = () => {
   if (isCreatingJob) {
     return (
       <div className="container mx-auto px-4 py-6">
-        <h1 className="text-center text-3xl font-semibold mb-6">Create a Job</h1>
         <CreateJob
           onJobCreated={(newJob) => {
             setJobs((prevJobs) => [...prevJobs, newJob]);
