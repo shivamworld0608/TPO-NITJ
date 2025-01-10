@@ -6,6 +6,8 @@ import TpoMessage from "../components/TpoMessage";
 import WhyRecruit from "../components/WhyRecruit";
 import RecruitmentProcess from "../components/rprocess";
 import NoDataFound from "../components/NoData";
+import AboutUs from "../components/AboutUs";
+
 
 const Home = () => {
   return (
@@ -13,6 +15,7 @@ const Home = () => {
       <Header />
       <div className="mt-56"><HeroSection /></div>
       <div className="max-w-7xl mx-auto mt-24 mb-40 pt-15 px-6"><Login /></div> 
+      <AboutUs/>
       <div className="max-w-full mx-auto mt-24 mb-40 pt-15 px-6"><TpoMessage /></div>
       <div className="max-w-7xl mx-auto mt-24"><RecruitmentProcess /></div>
       <div className="max-w-7xl mx-auto mt-24 mb-40"><NoDataFound/></div>
