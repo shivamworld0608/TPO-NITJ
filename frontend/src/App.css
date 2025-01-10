@@ -175,3 +175,25 @@
 .editor-container_include-word-count.editor-container_classic-editor .editor-container__editor .ck-editor .ck-editor__editable {
 	border-radius: 0;
 }
+
+/* Customizing the scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 14px; /* Set width for vertical scrollbar */
+    
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #0369A0, #2563eb); /* Gradient color for the scrollbar thumb */
+    border-radius: 6px; /* Round the edges */
+    border: 3px solid #f1f1f1; /* Border around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #ff6f61, #f97d7d); /* Darker gradient on hover */
+}
+
+::-webkit-scrollbar-track {
+    background: linear-gradient(to bottom, #f1f1f1, #93c5fd); /* Gradient color for the scrollbar track */
+    border-radius: 6px;
+}
+
