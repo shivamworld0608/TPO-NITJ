@@ -42,7 +42,7 @@ const TestimonialTPC = () => {
 
   return (
     <div className="testimonial-section py-16 px-4 bg-white">
-      <h2 className="text-4xl font-bold text-center  mb-10">
+      <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl text-center mb-8">
     What Our <span className='text-custom-blue'>Students Say!</span>
       </h2>
 
