@@ -26,6 +26,7 @@ import OnlineAssessment from "./StudentDashboard/oa";
 import SharedExperience from "./StudentDashboard/shared-experience";
 import Profile from "./StudentDashboard/profile";
 import ProfileImage from "../assets/chillguy.png";
+import NITJlogo from "../assets/nitj-logo.png";
 import Request from "./StudentDashboard/Request";
 
 const StudentDashboards = () => {
@@ -93,39 +94,46 @@ const StudentDashboards = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      
+
       <header className="bg-white z-30 border-b border-gray-200 fixed top-0 left-0 right-0 p-4">
-      {isOpen && (
-            <h1 className="absolute ml-9 left-4 top-1/2 transform -translate-y-1/2 font-bold text-2xl sm:text-1xl lg:text-2xl tracking-wide w-max">
-              TPO-
-              <span className="bg-custom-blue text-transparent bg-clip-text">
-                NITJ
-              </span>
-              {/* <hr className="mt-3" /> */}
-            </h1>
-          )}
-        <div className="flex items-center justify-between">
-        
+        {isOpen && (
+          <h1 className="absolute ml-9 left-4 top-1/2 transform -translate-y-1/2 font-bold text-2xl sm:text-1xl lg:text-2xl tracking-wide w-max">
+            TPO-
+            <span className="bg-custom-blue text-transparent bg-clip-text">
+              NITJ
+            </span>
+            {/* <hr className="mt-3" /> */}
+          </h1>
+        )}
+        {!isOpen && (
+          <img
+            onClick={() => navigate("/sdashboard/home")}
+            src={userData?.image || NITJlogo}
+            alt="Profile"
+            className="absolute left-8 transform -translate-x-1/2  w-9 h-9 rounded-full object-cover cursor-pointer hover:shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
+          />
+        )}
+        <div className={`flex items-center justify-between `}>
           <button
             onClick={toggleSidebar}
             className={`p-2 rounded text-black focus:outline-none transition-all duration-300 ${
-              isOpen ? "sm:ml-56" : "sm:ml-0"
+              isOpen ? "sm:ml-56" : "sm:ml-10"
             }`}
           >
-            <div className="relative w-8 h-4">
+            <div className="relative w-6 h-3">
               <div
                 className={`absolute inset-0 transform transition-transform duration-300 ${
                   isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
                 }`}
               >
-                <RiMenuFold3Fill size={30} />
+                <RiMenuFold3Fill size={25} />
               </div>
               <div
                 className={`absolute inset-0 transform transition-transform duration-300 ${
                   !isOpen ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
                 }`}
               >
-                <RiMenuFold4Fill size={30} />
+                <RiMenuFold4Fill size={25} />
               </div>
             </div>
           </button>
@@ -150,7 +158,6 @@ const StudentDashboards = () => {
             isOpen ? "sm:w-60 h-full" : "sm:w-16 h-0"
           } border-r sm:border-b-0 border-b`}
         >
-          
           <div className={` p-4  ${isOpen ? "mt-12" : "mt-12"}`}>
             <nav className="mt-4">
               <ul className="space-y-2">
@@ -174,7 +181,7 @@ const StudentDashboards = () => {
                       <FontAwesomeIcon
                         icon={item.icon}
                         className={`min-w-[20px] ${
-                          isOpen ? "mr-3" : "mx-auto"
+                          isOpen ? "mr-3" : "mx-auto mr-10"
                         }`}
                       />
                       {isOpen && <span>{item.label}</span>}
@@ -182,14 +189,14 @@ const StudentDashboards = () => {
                   </li>
                 ))}
                 {!isOpen && (
-                  <li className="h-10">
+                  <li className="h-9 transition-all duration-300 ease-in-out">
                     {" "}
                     {/* Consistent height for profile image */}
                     <img
                       onClick={() => navigate("/sdashboard/profile")}
                       src={userData?.image || ProfileImage}
                       alt="Profile"
-                      className="w-10 h-10 rounded-full object-cover cursor-pointer hover:shadow-lg"
+                      className="w-8 h-8 rounded-full object-cover cursor-pointer hover:shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
                     />
                   </li>
                 )}
