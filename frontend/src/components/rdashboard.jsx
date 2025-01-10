@@ -91,22 +91,19 @@ const RecruiterDashboards = () => {
         <div className="flex items-center justify-between">
           <button
             onClick={toggleSidebar}
-            className={`p-2 rounded text-black focus:outline-none transition-all duration-300 ${
-              isOpen ? "sm:ml-56" : "sm:ml-0"
-            }`}
+            className={`p-2 rounded text-black focus:outline-none transition-all duration-300 ${isOpen ? "sm:ml-56" : "sm:ml-0"
+              }`}
           >
             <div className="relative w-8 h-4">
               <div
-                className={`absolute inset-0 transform transition-transform duration-300 ${
-                  isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
-                }`}
+                className={`absolute inset-0 transform transition-transform duration-300 ${isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
+                  }`}
               >
                 <RiMenuFold3Fill size={30} />
               </div>
               <div
-                className={`absolute inset-0 transform transition-transform duration-300 ${
-                  !isOpen ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
-                }`}
+                className={`absolute inset-0 transform transition-transform duration-300 ${!isOpen ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
+                  }`}
               >
                 <RiMenuFold4Fill size={30} />
               </div>
@@ -129,85 +126,83 @@ const RecruiterDashboards = () => {
       <div className="flex flex-1 mt-16">
         {/* Sidebar */}
         <aside
-          className={`fixed z-20 bg-white border-gray-200 transition-all duration-300 sm:top-0 sm:left-0 sm:bottom-0 w-full top-0 sm:h-screen ${
-            isOpen ? "sm:w-60 h-full" : "sm:w-16 h-0"
-          } border-r sm:border-b-0 border-b`}
+          className={`fixed z-20 bg-white border-gray-200 transition-all duration-300 sm:top-0 sm:left-0 sm:bottom-0 w-full top-0 sm:h-screen ${isOpen ? "sm:w-64 h-full" : "sm:w-16 h-0"
+            } border-r sm:border-b-0 border-b shadow-lg`}
         >
-          <div className={` p-4  ${isOpen ? "mt-12" : "mt-12"}`}>
+          {/* Menu Items */}
+          <div className={`p-4 ${isOpen ? "mt-12" : "mt-12"}`}>
             <nav className="mt-4">
               <ul className="space-y-2">
                 {menuItems.map((item) => (
-                  <li key={item.path} className="h-10 flex items-center">
-                    {" "}
-                    {/* Fixed height container */}
+                  <li key={item.path} className="h-10 flex items-center justify-center">
                     <button
                       onClick={() => {
                         navigate(item.path);
-                        if (innerWidth < 625) setIsOpen(false);
+                        if (window.innerWidth < 640) setIsOpen(false);
                       }}
-                      className={`flex items-center sm:w-full ${
-                        isOpen ? "w-full" : "w-10" // Fixed width when closed
-                      } h-full text-left px-2 rounded-lg ${
-                        location.pathname === item.path
-                          ? "bg-custom-blue text-white"
-                          : "text-gray-600 hover:bg-blue-50"
-                      }`}
+                      className={`flex items-center ${isOpen ? "w-full justify-start px-3" : "w-12 justify-center"
+                        } h-full text-left rounded-lg transition-all duration-200 ${location.pathname === item.path
+                          ? "bg-custom-blue text-white hover:bg-custom-blue-dark"
+                          : "text-gray-600 hover:bg-blue-50 hover:text-blue-700"
+                        }`}
                     >
                       <FontAwesomeIcon
                         icon={item.icon}
-                        className={`min-w-[20px] ${
-                          isOpen ? "mr-3" : "mx-auto"
-                        }`}
+                        className={isOpen ? "mr-3" : ""}
+                        style={{ fontSize: isOpen ? "1rem" : "1.25rem" }}
                       />
-                      {isOpen && <span>{item.label}</span>}
+                      {isOpen && (
+                        <span className="text-sm font-medium">{item.label}</span>
+                      )}
                     </button>
                   </li>
                 ))}
+                {/* Profile Image (Collapsed State) */}
                 {!isOpen && (
-                  <li className="h-10">
-                    {" "}
-                    {/* Consistent height for profile image */}
-                    <img
+                  <li className="h-10 flex items-center justify-center">
+                    <button
                       onClick={() => navigate("/rdashboard/profile")}
-                      src={userData?.image || ProfileImage}
-                      alt="Profile"
-                      className="w-10 h-10 rounded-full object-cover cursor-pointer hover:shadow-lg"
-                    />
+                      className="w-12 h-full flex items-center justify-center rounded-lg hover:bg-blue-50 transition-colors duration-200"
+                    >
+                      <img
+                        src={userData?.image || ProfileImage}
+                        alt="Profile"
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
+                    </button>
                   </li>
                 )}
               </ul>
             </nav>
           </div>
-          {/* Profile Section */}
-          <div className="p-4 mb-0 mt-16">
-            <button
-              onClick={() => navigate("/rdashboard/profile")}
-              className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 border"
-            >
-              {isOpen && (
-                <div className="flex items-center justify-center">
+
+          {/* Profile Section (Expanded State) */}
+          {isOpen && (
+            <div className="p-4 mt-auto border-t border-gray-200">
+              <button
+                onClick={() => navigate("/rdashboard/profile")}
+                className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors duration-200"
+              >
+                <div className="flex items-center">
                   <img
                     src={userData?.image || ProfileImage}
                     alt="Profile"
-                    className="w-10 h-10 rounded-full"
+                    className="w-10 h-10 rounded-full object-cover"
                   />
                   <div className="ml-3">
-                    <p className="text-gray-900 font-medium">
-                      {userData?.name}
-                    </p>
+                    <p className="text-gray-900 font-medium">{userData?.name}</p>
                     <p className="text-gray-500 text-sm">{userData?.email}</p>
                   </div>
                 </div>
-              )}
-            </button>
-          </div>
+              </button>
+            </div>
+          )}
         </aside>
 
         {/* Main Content */}
         <main
-          className={`flex-1 flex flex-col transition-all duration-300 ${
-            isOpen ? "ml-60" : "ml-16"
-          }`}
+          className={`flex-1 flex flex-col transition-all duration-300 ${isOpen ? "ml-60" : "ml-16"
+            }`}
         >
           <div className="flex-grow">
             <Routes>
@@ -217,7 +212,7 @@ const RecruiterDashboards = () => {
               <Route path="oa" element={<OnlineAssessment />} />
               <Route path="mailbox" element={<MailboxComponent />} />
               <Route path="profile" element={<Profile />} />
-                     
+
             </Routes>
           </div>
 
