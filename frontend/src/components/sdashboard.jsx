@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../Redux/authSlice";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { RiMenuFold3Fill } from "react-icons/ri";
+import { RiMenuFold4Fill } from "react-icons/ri";
 import {
   faHome,
   faBriefcase,
@@ -13,7 +15,6 @@ import {
   faHandsHelping,
   faShareSquare,
   faBars,
-  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import Home from "./StudentDashboard/home";
@@ -25,6 +26,7 @@ import OnlineAssessment from "./StudentDashboard/oa";
 import SharedExperience from "./StudentDashboard/shared-experience";
 import Profile from "./StudentDashboard/profile";
 import ProfileImage from "../assets/chillguy.png";
+import NITJlogo from "../assets/nitj-logo.png";
 import Request from "./StudentDashboard/Request";
 
 const StudentDashboards = () => {
@@ -48,9 +50,7 @@ const StudentDashboards = () => {
     };
   }, []);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleSidebar = () => setIsOpen(!isOpen);
 
   const handleLogout = async () => {
     try {
@@ -89,23 +89,65 @@ const StudentDashboards = () => {
       label: "Shared Experience",
       icon: faShareSquare,
     },
-    { path: "/sdashboard/profile", label: "Profile", icon: faUser },
   ];
 
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <header className="bg-white z-10 border-b border-gray-200 fixed top-0 left-0 right-0 text-white p-4 text-center">
-        <div className="mr-0">
-          <span className="text-gray-800 text-md mr-2">
-            👋 Hi, {userData?.name || "User"}
-          </span>
+
+      <header className="bg-white z-30 border-b border-gray-200 fixed top-0 left-0 right-0 p-4">
+        {isOpen && (
+          <h1 className="absolute ml-9 left-4 top-1/2 transform -translate-y-1/2 font-bold text-2xl sm:text-1xl lg:text-2xl tracking-wide w-max">
+            TPO-
+            <span className="bg-custom-blue text-transparent bg-clip-text">
+              NITJ
+            </span>
+            {/* <hr className="mt-3" /> */}
+          </h1>
+        )}
+        {!isOpen && (
+          <img
+            onClick={() => navigate("/sdashboard/home")}
+            src={userData?.image || NITJlogo}
+            alt="Profile"
+            className="absolute left-8 transform -translate-x-1/2  w-9 h-9 rounded-full object-cover cursor-pointer hover:shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
+          />
+        )}
+        <div className={`flex items-center justify-between `}>
           <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 p-1"
+            onClick={toggleSidebar}
+            className={`p-2 rounded text-black focus:outline-none transition-all duration-300 ${
+              isOpen ? "sm:ml-56" : "sm:ml-10"
+            }`}
           >
-            Logout
+            <div className="relative w-6 h-3">
+              <div
+                className={`absolute inset-0 transform transition-transform duration-300 ${
+                  isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
+                }`}
+              >
+                <RiMenuFold3Fill size={25} />
+              </div>
+              <div
+                className={`absolute inset-0 transform transition-transform duration-300 ${
+                  !isOpen ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
+                }`}
+              >
+                <RiMenuFold4Fill size={25} />
+              </div>
+            </div>
           </button>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-800 text-md">
+              👋 Hi, {userData?.name || "User"}
+            </span>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 p-1"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </header>
 
@@ -116,75 +158,70 @@ const StudentDashboards = () => {
             isOpen ? "sm:w-60 h-full" : "sm:w-16 h-0"
           } border-r sm:border-b-0 border-b`}
         >
-          {isOpen && (
-            <h1 className="font-bold text-2xl sm:text-1xl lg:text-2xl text-center tracking-wide mt-4">
-              TPO-
-              <span className="bg-custom-blue text-transparent bg-clip-text">
-                NITJ
-              </span>
-              <hr className="mt-3" />
-            </h1>
-          )}
-          <div className="p-4">
-            <button
-              onClick={toggleSidebar}
-              className="p-2 rounded text-black hover:bg-gray-600 focus:outline-none"
-            >
-              <FontAwesomeIcon icon={faBars} />
-            </button>
+          <div className={` p-4  ${isOpen ? "mt-12" : "mt-12"}`}>
             <nav className="mt-4">
               <ul className="space-y-2">
                 {menuItems.map((item) => (
-                  <li
-                    key={item.path}
-                    className={`sm:flex ${isOpen ? "flex" : "hidden"}`}
-                  >
+                  <li key={item.path} className="h-10 flex items-center">
+                    {" "}
+                    {/* Fixed height container */}
                     <button
                       onClick={() => {
                         navigate(item.path);
                         if (innerWidth < 625) setIsOpen(false);
                       }}
                       className={`flex items-center sm:w-full ${
-                        isOpen ? "w-full" : "w-fit"
-                      } text-left px-2 py-2 rounded-lg ${
+                        isOpen ? "w-full" : "w-10" // Fixed width when closed
+                      } h-full text-left px-2 rounded-lg ${
                         location.pathname === item.path
                           ? "bg-custom-blue text-white"
                           : "text-gray-600 hover:bg-blue-50"
                       }`}
                     >
-                      <FontAwesomeIcon icon={item.icon} className="mr-3" />
+                      <FontAwesomeIcon
+                        icon={item.icon}
+                        className={`min-w-[20px] ${
+                          isOpen ? "mr-3" : "mx-auto mr-10"
+                        }`}
+                      />
                       {isOpen && <span>{item.label}</span>}
                     </button>
                   </li>
                 ))}
+                {!isOpen && (
+                  <li className="h-9 transition-all duration-300 ease-in-out">
+                    {" "}
+                    {/* Consistent height for profile image */}
+                    <img
+                      onClick={() => navigate("/sdashboard/profile")}
+                      src={userData?.image || ProfileImage}
+                      alt="Profile"
+                      className="w-8 h-8 rounded-full object-cover cursor-pointer hover:shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
+                    />
+                  </li>
+                )}
               </ul>
             </nav>
           </div>
           {/* Profile Section */}
-          <div
-            className={`p-4 mb-0 mt-16 sm:flex ${isOpen ? "flex" : "hidden"}`}
-          >
-            <button
-              onClick={() => navigate("/sdashboard/profile")}
-              className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 border"
-            >
-              {isOpen && (
-                <div className="flex items-center justify-center">
-                  <img
-                    src={userData?.image || ProfileImage}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full"
-                  />
-                  <div className="ml-3">
-                    <p className="text-gray-900 font-medium">
-                      {userData?.name}
-                    </p>
-                    <p className="text-gray-500 text-sm">{userData?.email}</p>
-                  </div>
+          {isOpen && (
+            <div className="p-4 mt-16">
+              <button
+                onClick={() => navigate("/sdashboard/profile")}
+                className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 border"
+              >
+                <img
+                  src={userData?.image || ProfileImage}
+                  alt="Profile"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div className="ml-3">
+                  <p className="text-gray-900 font-medium">{userData?.name}</p>
+                  <p className="text-gray-500 text-sm">{userData?.email}</p>
                 </div>
-              )}
-            </button>
-          </div>
+              </button>
+            </div>
+          )}
         </aside>
 
         {/* Main Content */}
@@ -215,7 +252,12 @@ const StudentDashboards = () => {
             </div>
             <div className="mt-2 text-sm lg:text-base">
               Developed By{" "}
-              <a href="/team" className="text-yellow-300 hover:text-yellow-400">
+              <a
+                href="/team"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-yellow-300 hover:text-yellow-400"
+              >
                 Placement Portal Dev Team
               </a>
             </div>
