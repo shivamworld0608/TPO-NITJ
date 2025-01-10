@@ -90,15 +90,43 @@ export const getFilteredPlacements = async (req, res) => {
 
 
 
-export const getLastSevenDaysPlacements = async(req,res) => {
+/* export const getLastSevenDaysPlacements = async(req,res) => {
   try {
+    console.log("hello");
     const startOfLastSevenDays = moment().subtract(7, "days").startOf("day").toDate();
     const endOfToday = moment().endOf("day").toDate();
 
     const placements = await Placement.find({
       createdAt: { $gte: startOfLastSevenDays, $lte: endOfToday },
     });
+   console.log(placements);
+    res.status(200).json(placements);
+  } catch (error) {
+    console.error("Error fetching placements from the last seven days:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+}; */
 
+export const getLastSevenDaysPlacements = async(req,res) => {
+  try {
+    const startOfLastSevenDays = moment().subtract(7, "days").startOf("day").toDate();
+    const endOfToday = moment().endOf("day").toDate();
+    
+    console.log("Date range:", {
+      start: startOfLastSevenDays,
+      end: endOfToday
+    });
+
+    const placements = await Placement.find({
+      createdAt: { $gte: startOfLastSevenDays, $lte: endOfToday },
+    });
+    
+    console.log("Query:", {
+      "createdAt": { $gte: startOfLastSevenDays, $lte: endOfToday }
+    });
+    
+    console.log("Found placements:", placements.length);
+    
     res.status(200).json(placements);
   } catch (error) {
     console.error("Error fetching placements from the last seven days:", error);

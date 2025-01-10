@@ -1,189 +1,211 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { FaCheckCircle, FaSpinner, FaExclamationCircle } from "react-icons/fa";
 
 const Request = () => {
-  const backendIssues = [
-    { id: 1, title: "Login Issue" },
-    { id: 2, title: "Payment Failure" },
-    { id: 3, title: "Feature Request" },
-    { id: 4, title: "UI Bug" },
-    { id: 5, title: "Performance Issue" },
-    { id: 6, title: "OA Issue" },
-    { id: 7, title: "Interview Issue" },
-    { id: 8, title: "Job application Issue" },
+  const [activeTab, setActiveTab] = useState("request"); // request, resolved, unresolved
+  const [selectedIssuetitle, setSelectedIssuetitle] = useState("");
+  const [issueDescription, setIssueDescription] = useState("");
+  const [resolvedIssues, setResolvedIssues] = useState([]);
+  const [unresolvedIssues, setUnresolvedIssues] = useState([]);
+  const [alertMessage, setAlertMessage] = useState("");
+  
+  const availableIssues = [
+    "Job Profile",
+    "Eligibility Issue",
+    "Application Form Issue",
+    "OA Issue",
+    "Interview Issue",
+    "GD Issue",
+    "Login/Signup Issue",
+    "Profile Issue",
+    "Other"
   ];
 
-  const [selectedIssueId, setSelectedIssueId] = useState("");
-  const [issueDescription, setIssueDescription] = useState(""); // New state for issue description
-  const [raisedIssues, setRaisedIssues] = useState([]);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [loadingStatus, setLoadingStatus] = useState(false);
+  useEffect(() => {
+    fetchUserIssues();
+  }, []);
 
-  const fetchResolvedStatus = (issueId) => {
-    const resolvedStatuses = {
-      1: false,
-      2: false,
-      3: false,
-      4: false,
-      5: false,
-      6: false,
-      7: false,
-      8: false,
-    };
-
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(resolvedStatuses[issueId]);
-      }, 2000);
-    });
+  const fetchUserIssues = async () => {
+    try {
+ /*     const response = await axios.get(
+        `${import.meta.env.REACT_APP_BASE_URL}/reqhelp/get-own-issue`,
+        { withCredentials: true }
+      ); */
+      console.log(response);
+      setResolvedIssues(response.data.resolved || []);
+      setUnresolvedIssues(response.data.unresolved || []);
+    } catch (error) {
+      console.error("Error fetching issues:", error);
+    }
   };
 
-  const handleSelectChange = (e) => {
-    setSelectedIssueId(e.target.value);
-  };
-
-  const handleDescriptionChange = (e) => {
-    setIssueDescription(e.target.value);
-  };
-
-  const raiseIssue = () => {
-    if (!selectedIssueId || !issueDescription) {
+  const raiseIssue = async () => {
+    if (!selectedIssuetitle || !issueDescription) {
       alert("Please select an issue and provide a description before raising it.");
       return;
     }
 
-    const issue = backendIssues.find((item) => item.id === parseInt(selectedIssueId));
-    if (issue && !raisedIssues.find((i) => i.id === issue.id)) {
-      setRaisedIssues([...raisedIssues, { ...issue, description: issueDescription, resolved: null }]);
+    try {
+      console.log("hello");
+      const response = await axios.get(
+        `${import.meta.env.REACT_APP_BASE_URL}/placements/last-seven-days`,
+        { withCredentials: true }
+      );
+   /*    const response = await axios.post(
+        `${import.meta.env.REACT_APP_BASE_URL}/reqhelp/create`,
+        {
+          title: selectedIssuetitle,
+          description: issueDescription,
+        },
+        { withCredentials: true }
+      );
+ */
+      setUnresolvedIssues([...unresolvedIssues, response.data.data]);
       setAlertMessage("Your issue has been raised and sent to the team.");
-
-      checkIssueStatus(issue.id);
-      setIssueDescription(""); 
+      setIssueDescription("");
+      setSelectedIssuetitle("");
+      setTimeout(() => setAlertMessage(""), 3000);
+    } catch (error) {
+      console.error("Error raising issue:", error);
     }
   };
 
-  const checkIssueStatus = async (issueId) => {
-    setLoadingStatus(true);
+  const renderIssueList = (issues) => {
+    return issues.length === 0 ? (
+      <p className="text-sm text-gray-500">No issues found.</p>
+    ) : (
+      <ul className="space-y-3">
+        {issues.map((issue) => (
+          <li
+            key={issue._id}
+            className="flex justify-between items-center p-4 bg-gray-50 border rounded-md shadow-sm"
+          >
+            <div>
+              <span className="font-medium text-gray-800">{issue.title}</span>
+              <p className="text-sm text-gray-600">{issue.details[0].description}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Raised on: {new Date(issue.details[0].raisedAt).toLocaleDateString()}
+              </p>
+            </div>
 
-    const resolvedStatus = await fetchResolvedStatus(issueId);
-    setRaisedIssues((prevIssues) =>
-      prevIssues.map((item) =>
-        item.id === issueId ? { ...item, resolved: resolvedStatus } : item
-      )
+            <span
+              className={`flex items-center text-sm font-semibold py-1 px-3 rounded ${
+                issue.details[0].status === "Resolved"
+                  ? "bg-green-100 text-green-700"
+                  : "bg-yellow-100 text-yellow-700"
+              }`}
+            >
+              {issue.details[0].status === "Resolved" ? (
+                <>
+                  <FaCheckCircle className="mr-2" />
+                  Resolved
+                </>
+              ) : (
+                <>
+                  <FaExclamationCircle className="mr-2" />
+                  Pending
+                </>
+              )}
+            </span>
+          </li>
+        ))}
+      </ul>
     );
-
-    setLoadingStatus(false);
   };
 
   return (
     <div className="p-6 min-h-screen">
       <header className="text-custom-blue py-6">
-        <div className="max-w-lg mx-auto text-center">
-        <h1 className="font-bold text-black text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
-        Request {" "}
-        <span className="bg-custom-blue text-transparent bg-clip-text">
-          Help
-        </span>
-      </h1>
+        <div className="max-w-lg mx-auto text-center relative">
+          <div className="absolute right-0 top-0 space-x-2">
+            <button
+              onClick={() => setActiveTab("request")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                activeTab === "request"
+                  ? "bg-custom-blue text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              Request Help
+            </button>
+            <button
+              onClick={() => setActiveTab("unresolved")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                activeTab === "unresolved"
+                  ? "bg-custom-blue text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              Unresolved
+            </button>
+            <button
+              onClick={() => setActiveTab("resolved")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                activeTab === "resolved"
+                  ? "bg-custom-blue text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}
+            >
+              Resolved
+            </button>
+          </div>
+          <h1 className="font-bold text-black text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
+            Request{" "}
+            <span className="bg-custom-blue text-transparent bg-clip-text">Help</span>
+          </h1>
           <span className="text-base text-black mt-2">Easily raise and </span>
-          <span className="bg-custom-blue text-transparent bg-clip-text">
-          track your issues
-        </span>
+          <span className="bg-custom-blue text-transparent bg-clip-text">track your issues</span>
         </div>
       </header>
 
       <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-6 mt-6">
-        {alertMessage && (
-          <div className="p-4 mb-4 bg-green-100 text-green-800 rounded-md border-l-4 border-green-500">
-            {alertMessage}
+        {activeTab === "request" ? (
+          <>
+            {alertMessage && (
+              <div className="p-4 mb-4 bg-green-100 text-green-800 rounded-md border-l-4 border-green-500">
+                {alertMessage}
+              </div>
+            )}
+
+            <label className="block text-gray-700 font-medium mb-2">Select an Issue</label>
+            <select
+              value={selectedIssuetitle}
+              onChange={(e) => setSelectedIssuetitle(e.target.value)}
+              className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+            >
+              <option value="">Select an issue</option>
+              {availableIssues.map((issue) => (
+                <option key={issue} value={issue}>
+                  {issue}
+                </option>
+              ))}
+            </select>
+
+            <label className="block text-gray-700 font-medium mb-2">Issue Description</label>
+            <textarea
+              onChange={(e) => setIssueDescription(e.target.value)}
+              value={issueDescription}
+              className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
+              rows="4"
+              placeholder="Describe your issue here..."
+            />
+
+            <button
+              onClick={raiseIssue}
+              className="w-full bg-custom-blue text-white py-2 rounded-md hover:bg-blue-700 transition-shadow shadow-md"
+            >
+              Raise Issue
+            </button>
+          </>
+        ) : (
+          <div className="mt-2">
+            <h3 className="text-xl font-semibold mb-4 text-gray-800">
+              {activeTab === "resolved" ? "Resolved Issues" : "Unresolved Issues"}
+            </h3>
+            {renderIssueList(activeTab === "resolved" ? resolvedIssues : unresolvedIssues)}
           </div>
         )}
-
-        <label className="block text-gray-700 font-medium mb-2">
-          Select an Issue
-        </label>
-        <select
-          onChange={handleSelectChange}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-          defaultValue=""
-        >
-          <option value="" disabled>
-            Select an issue
-          </option>
-          {backendIssues.map((issue) => (
-            <option key={issue.id} value={issue.id}>
-              {issue.title}
-            </option>
-          ))}
-        </select>
-
-        <label className="block text-gray-700 font-medium mb-2">
-          Issue Description
-        </label>
-        <textarea
-          onChange={handleDescriptionChange}
-          value={issueDescription}
-          className="w-full p-3 mb-4 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-          rows="4"
-          placeholder="Describe your issue here..."
-        />
-
-        <button
-          onClick={raiseIssue}
-          className="w-full bg-custom-blue text-white py-2 rounded-md hover:bg-blue-700 transition-shadow shadow-md"
-        >
-          Raise Issue
-        </button>
-
-        <div className="mt-6">
-          <h3 className="text-xl font-semibold mb-4 text-gray-800">
-            Raised Issues
-          </h3>
-          {raisedIssues.length === 0 ? (
-            <p className="text-sm text-gray-500">No issues raised yet.</p>
-          ) : (
-            <ul className="space-y-3">
-              {raisedIssues.map((issue) => (
-                <li
-                  key={issue.id}
-                  className="flex justify-between items-center p-4 bg-gray-50 border rounded-md shadow-sm"
-                >
-                  <div>
-                    <span className="font-medium text-gray-800">{issue.title}</span>
-                    <p className="text-sm text-gray-600">{issue.description}</p>
-                  </div>
-
-                  {issue.resolved === null ? (
-                    <span className="flex items-center text-sm font-semibold py-1 px-3 bg-gray-200 text-gray-700 rounded">
-                      <FaSpinner className="mr-2 animate-spin" />
-                      Checking...
-                    </span>
-                  ) : (
-                    <span
-                      className={`flex items-center text-sm font-semibold py-1 px-3 rounded ${
-                        issue.resolved
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
-                      }`}
-                    >
-                      {issue.resolved ? (
-                        <>
-                          <FaCheckCircle className="mr-2" />
-                          Resolved
-                        </>
-                      ) : (
-                        <>
-                          <FaExclamationCircle className="mr-2" />
-                          Resolving
-                        </>
-                      )}
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
       </div>
     </div>
   );
