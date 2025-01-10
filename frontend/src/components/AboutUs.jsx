@@ -24,7 +24,7 @@ const AboutUs = () => {
             <div className="flex items-center justify-center mb-4 text-blue-500">
               <FaRocket className="text-4xl sm:text-5xl" />
             </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2 sm:text-2xl">
+            <h3 className="text-xl font-bold text-center text-gray-800 mb-2 sm:text-2xl">
               Our Mission
             </h3>
             <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
@@ -38,7 +38,7 @@ const AboutUs = () => {
             <div className="flex items-center justify-center mb-4 text-green-500">
               <FaEye className="text-4xl sm:text-5xl" />
             </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2 sm:text-2xl">
+            <h3 className="text-xl font-bold text-center text-gray-800 mb-2 sm:text-2xl">
               Our Vision
             </h3>
             <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
@@ -52,7 +52,7 @@ const AboutUs = () => {
             <div className="flex items-center justify-center mb-4 text-yellow-500">
               <FaHandshake className="text-4xl sm:text-5xl" />
             </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2 sm:text-2xl">
+            <h3 className="text-xl font-bold text-center text-gray-800 mb-2 sm:text-2xl">
               Our Values
             </h3>
             <p className="text-gray-600 text-sm sm:text-base lg:text-lg">
