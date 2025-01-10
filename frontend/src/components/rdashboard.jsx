@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../Redux/authSlice";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { RiMenuFold3Fill } from "react-icons/ri";
+import { RiMenuFold4Fill } from "react-icons/ri";
 import {
   faBriefcase,
   faEnvelope,
@@ -73,67 +77,103 @@ const RecruiterDashboards = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
-      <header className="bg-white z-10 border-b border-gray-200 fixed top-0 left-0 right-0 p-4">
-        <div className="flex items-center justify-end space-x-4">
-          <span className="text-gray-800 text-md">
-            👋 Hi, {userData?.name || "User"}
-          </span>
+
+      <header className="bg-white z-30 border-b border-gray-200 fixed top-0 left-0 right-0 p-4">
+        {isOpen && (
+          <h1 className="absolute ml-9 left-4 top-1/2 transform -translate-y-1/2 font-bold text-2xl sm:text-1xl lg:text-2xl tracking-wide w-max">
+            TPO-
+            <span className="bg-custom-blue text-transparent bg-clip-text">
+              NITJ
+            </span>
+            {/* <hr className="mt-3" /> */}
+          </h1>
+        )}
+        <div className="flex items-center justify-between">
           <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 p-1"
+            onClick={toggleSidebar}
+            className={`p-2 rounded text-black focus:outline-none transition-all duration-300 ${
+              isOpen ? "sm:ml-56" : "sm:ml-0"
+            }`}
           >
-            Logout
+            <div className="relative w-8 h-4">
+              <div
+                className={`absolute inset-0 transform transition-transform duration-300 ${
+                  isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
+                }`}
+              >
+                <RiMenuFold3Fill size={30} />
+              </div>
+              <div
+                className={`absolute inset-0 transform transition-transform duration-300 ${
+                  !isOpen ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
+                }`}
+              >
+                <RiMenuFold4Fill size={30} />
+              </div>
+            </div>
           </button>
+          <div className="flex items-center space-x-4">
+            <span className="text-gray-800 text-md">
+              👋 Hi, {userData?.name || "User"}
+            </span>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 p-1"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       </header>
 
       <div className="flex flex-1 mt-16">
         {/* Sidebar */}
         <aside
-          className={`fixed top-0 left-0 bottom-0 z-20 bg-white border-r border-gray-200 transition-all duration-300 ${
-            isOpen ? "w-60" : "w-16"
-          }`}
+          className={`fixed z-20 bg-white border-gray-200 transition-all duration-300 sm:top-0 sm:left-0 sm:bottom-0 w-full top-0 sm:h-screen ${
+            isOpen ? "sm:w-60 h-full" : "sm:w-16 h-0"
+          } border-r sm:border-b-0 border-b`}
         >
-          {isOpen && (
-            <h1 className="font-bold text-2xl sm:text-1xl lg:text-2xl text-center tracking-wide mt-4">
-              TPO-
-              <span className="bg-custom-blue text-transparent bg-clip-text">
-                NITJ
-              </span>
-              <hr className="mt-3" />
-            </h1>
-          )}
-          <div className="p-4">
-            <button
-              onClick={toggleSidebar}
-              className="p-2 rounded text-black hover:bg-gray-600 focus:outline-none"
-            >
-              <FontAwesomeIcon icon={faBars} />
-            </button>
+          <div className={` p-4  ${isOpen ? "mt-12" : "mt-12"}`}>
             <nav className="mt-4">
               <ul className="space-y-2">
                 {menuItems.map((item) => (
-                  <li key={item.path}>
+                  <li key={item.path} className="h-10 flex items-center">
+                    {" "}
+                    {/* Fixed height container */}
                     <button
-                      onClick={() => navigate(item.path)}
-                      className={`flex items-center w-full text-left px-2 py-2 rounded-lg ${
+                      onClick={() => {
+                        navigate(item.path);
+                        if (innerWidth < 625) setIsOpen(false);
+                      }}
+                      className={`flex items-center sm:w-full ${
+                        isOpen ? "w-full" : "w-10" // Fixed width when closed
+                      } h-full text-left px-2 rounded-lg ${
                         location.pathname === item.path
                           ? "bg-custom-blue text-white"
                           : "text-gray-600 hover:bg-blue-50"
                       }`}
                     >
-                      <FontAwesomeIcon icon={item.icon} className="mr-3" />
+                      <FontAwesomeIcon
+                        icon={item.icon}
+                        className={`min-w-[20px] ${
+                          isOpen ? "mr-3" : "mx-auto"
+                        }`}
+                      />
                       {isOpen && <span>{item.label}</span>}
                     </button>
                   </li>
                 ))}
                 {!isOpen && (
-                  <img
-                    onClick={() => navigate("/rdashboard/profile")}
-                    src={userData?.image || ProfileImage}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full object-cover cursor-pointer hover:shadow-lg"
-                  />
+                  <li className="h-10">
+                    {" "}
+                    {/* Consistent height for profile image */}
+                    <img
+                      onClick={() => navigate("/rdashboard/profile")}
+                      src={userData?.image || ProfileImage}
+                      alt="Profile"
+                      className="w-10 h-10 rounded-full object-cover cursor-pointer hover:shadow-lg"
+                    />
+                  </li>
                 )}
               </ul>
             </nav>
@@ -141,7 +181,7 @@ const RecruiterDashboards = () => {
           {/* Profile Section */}
           <div className="p-4 mb-0 mt-16">
             <button
-              onClick={() => navigate("/sdashboard/profile")}
+              onClick={() => navigate("/rdashboard/profile")}
               className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 border"
             >
               {isOpen && (
