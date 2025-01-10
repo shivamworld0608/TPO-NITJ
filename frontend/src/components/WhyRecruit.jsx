@@ -80,17 +80,17 @@ const WhyRecruit = () => {
         </motion.div>
 
         {/* Tabs Section */}
-        <Tabs defaultValue="stats" className="mb-16">
+        <Tabs defaultValue="stats" className="mb-16 ">
           <TabsList className="grid w-full grid-cols-2 ">
             <TabsTrigger
               value="stats"
-              className="data-[state=active]:bg-custom-blue data-[state=active]:text-white transition rounded-lg border-b-custom-blue border-b-4"
+              className="data-[state=active]:bg-custom-blue lg:text-lg text-md data-[state=active]:text-white transition rounded-lg border-b-custom-blue border-b-4"
             >
               Key Statistics
             </TabsTrigger>
             <TabsTrigger
               value="achievements"
-              className="data-[state=active]:bg-custom-blue data-[state=active]:text-white transition rounded-lg border-b-custom-blue border-b-4"
+              className="data-[state=active]:bg-custom-blue lg:text-lg text-md data-[state=active]:text-white transition rounded-lg border-b-custom-blue border-b-4"
             >
               Our Achievements
             </TabsTrigger>
