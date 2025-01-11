@@ -99,7 +99,7 @@ const RecruitmentProcess = () => {
           <h1 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
             Recruitment <span className="text-custom-blue">Process</span>
           </h1>
-          <p className="text-md text-gray-600 leading-relaxed">
+          <p className="text-md text-gray-600 leading-relaxed text-base sm:text-sm lg:text-lg">
             Follow our structured and transparent recruitment process designed
             to ensure mutual success for students and hiring organizations.
           </p>
