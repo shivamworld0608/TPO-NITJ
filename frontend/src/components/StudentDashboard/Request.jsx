@@ -28,10 +28,10 @@ const Request = () => {
 
   const fetchUserIssues = async () => {
     try {
- /*     const response = await axios.get(
+      const response = await axios.get(
         `${import.meta.env.REACT_APP_BASE_URL}/reqhelp/get-own-issue`,
         { withCredentials: true }
-      ); */
+      );
       console.log(response);
       setResolvedIssues(response.data.resolved || []);
       setUnresolvedIssues(response.data.unresolved || []);
@@ -47,12 +47,7 @@ const Request = () => {
     }
 
     try {
-      console.log("hello");
-      const response = await axios.get(
-        `${import.meta.env.REACT_APP_BASE_URL}/placements/last-seven-days`,
-        { withCredentials: true }
-      );
-   /*    const response = await axios.post(
+      const response = await axios.post(
         `${import.meta.env.REACT_APP_BASE_URL}/reqhelp/create`,
         {
           title: selectedIssuetitle,
@@ -60,7 +55,7 @@ const Request = () => {
         },
         { withCredentials: true }
       );
- */
+
       setUnresolvedIssues([...unresolvedIssues, response.data.data]);
       setAlertMessage("Your issue has been raised and sent to the team.");
       setIssueDescription("");
