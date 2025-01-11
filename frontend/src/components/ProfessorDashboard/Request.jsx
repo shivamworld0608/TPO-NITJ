@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 
 const RequestHelpManager = () => {
@@ -26,12 +27,13 @@ const RequestHelpManager = () => {
 
   const resolveIssueDetail = async (issueId, detailId) => {
     try {
+    console.log(issueId,detailId);
       await axios.put(
         `${import.meta.env.REACT_APP_BASE_URL}/reqhelp/resolve/${issueId}/${detailId}`,
         {},
         { withCredentials: true }
       );
-
+       toast.success("Issue Resolved");
       setIssues((prevIssues) =>
         prevIssues.map((issue) => {
           if (issue._id === issueId) {

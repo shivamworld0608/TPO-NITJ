@@ -298,10 +298,10 @@ const CreateJob = ({onJobCreated,onCancel}) => {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-semibold mb-2">CTC<span className='text-red-500'> *</span></label>
+            <label className="block text-gray-700 font-semibold mb-2">CTC<span className='text-red-500 text-sm'> * (in Lakhs)</span></label>
             <input
               required
-              type="text"
+              type="number"
               name="ctc"
               value={formData.ctc}
               onChange={handleChange}
@@ -309,7 +309,7 @@ const CreateJob = ({onJobCreated,onCancel}) => {
             />
           </div>
           <div>
-            <label className="block text-gray-700 font-semibold mb-2">Base Salary</label>
+            <label className="block text-gray-700 font-semibold mb-2">Base Salary<span className='text-red-500 text-sm'> (in Lakhs)</span></label>
             <input
               type="text"
               name="base_salary"

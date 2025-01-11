@@ -52,7 +52,8 @@ const studentSchema = new mongoose.Schema({
     },
   placementstatus: {
         type: String,
-        enum: ['notplaced','Below Dream', 'Dream', 'Super Dream'  ],
+        enum: ['Not Placed','Below Dream', 'Dream', 'Super Dream'  ],
+        default:'Not Placed',
     }
 }, { timestamps: true });
 
