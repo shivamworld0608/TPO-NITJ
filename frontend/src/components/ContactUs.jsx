@@ -37,7 +37,7 @@ const ContactUs = () => {
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl text-center">
             Contact <span className="text-custom-blue">Us</span>
           </h2>
-          <p className="mt-4 text-gray-700 text-base sm:text-lg lg:text-xl">
+          <p className="mt-4 text-gray-700 text-base sm:text-sm lg:text-lg">
             We would love to hear from you! Reach out to us through any of the channels below.
           </p>
         </div>

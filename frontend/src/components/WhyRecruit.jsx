@@ -73,7 +73,7 @@ const WhyRecruit = () => {
           <h1 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
             Why Recruit From <span className="text-custom-blue">NIT Jalandhar?</span>
           </h1>
-          <p className="text-md mt-8 font-semibold text-gray-600 mx-auto leading-relaxed">
+          <p className="text-md mt-8 font-semibold text-gray-600 mx-auto leading-relaxed text-base sm:text-sm lg:text-lg">
             Since 1987, NIT Jalandhar has been shaping the future of technology and innovation.
             Our alumni are driving advancements globally.
           </p>
