@@ -6,7 +6,10 @@
 		margin: 0 !important;
 	}
 }
-
+#root
+{
+	overflow-x: hidden;
+}
 .main-container {
 	font-family: 'Lato';
 	width: fit-content;
