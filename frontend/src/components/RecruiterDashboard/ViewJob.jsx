@@ -6,6 +6,31 @@ import toast from "react-hot-toast";
 import ShortlistStudents from './shortliststudent';
 import AppliedStudents from './appliedstudent';
 
+// Helper function to format dates
+const formatDate = (dateString) => {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric'
+  });
+};
+
+// Helper function to format datetime
+const formatDateTime = (dateString) => {
+  if (!dateString) return 'N/A';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  });
+};
+
 const ViewJobDetails = ({ job, onClose }) => {
   const [viewingShortlist, setViewingShortlist] = useState(null);
   const [viewingAppliedStudents, setViewingAppliedStudents] = useState(false);
@@ -160,7 +185,7 @@ const ViewJobDetails = ({ job, onClose }) => {
   const renderBasicDetails = () => {
     return (
       <div className="space-y-4 text-gray-700">
-        <div className="flex items-center">
+       <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Job Role:</strong>
           {editingSection === 'basic' ? (
             <input
@@ -235,18 +260,18 @@ const ViewJobDetails = ({ job, onClose }) => {
             <span className="flex-1">{editedJob.jobdescription}</span>
           )}
         </div>
-
+        
         <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Deadline:</strong>
           {editingSection === 'basic' ? (
             <input
               type="datetime-local"
-              value={editedJob.deadline || ''}
+              value={editedJob.deadline ? new Date(editedJob.deadline).toISOString().slice(0, 16) : ''}
               onChange={(e) => handleInputChange('basic', 'deadline', e.target.value)}
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           ) : (
-            <span className="flex-1">{editedJob.deadline}</span>
+            <span className="flex-1">{formatDateTime(editedJob.deadline)}</span>
           )}
         </div>
       </div>
@@ -408,6 +433,7 @@ const ViewJobDetails = ({ job, onClose }) => {
     );
   };
 
+
   const renderHiringWorkflow = () => {
     if (!job.Hiring_Workflow || job.Hiring_Workflow.length === 0) {
       return <p className="mt-4 text-gray-500">No hiring workflow defined.</p>;
@@ -438,14 +464,25 @@ const ViewJobDetails = ({ job, onClose }) => {
                     {key.replace(/_/g, ' ')}:
                   </strong>
                   {editingStepIndex === index && editingSection === 'hiring_workflow' ? (
-                    <input
-                      type="text"
-                      value={editedWorkflow[index].details[key] || ''}
-                      onChange={(e) => handleInputChange('hiring_workflow', `details.${key}`, e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
+                    key.toLowerCase().includes('date') ? (
+                      <input
+                        type="date"
+                        value={editedWorkflow[index].details[key] ? new Date(editedWorkflow[index].details[key]).toISOString().slice(0, 10) : ''}
+                        onChange={(e) => handleInputChange('hiring_workflow', `details.${key}`, e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    ) : (
+                      <input
+                        type="text"
+                        value={editedWorkflow[index].details[key] || ''}
+                        onChange={(e) => handleInputChange('hiring_workflow', `details.${key}`, e.target.value)}
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      />
+                    )
                   ) : (
-                    <span className="flex-1">{value || 'N/A'}</span>
+                    <span className="flex-1">
+                      {key.toLowerCase().includes('date') ? formatDate(value) : (value || 'N/A')}
+                    </span>
                   )}
                 </li>
               ))}
@@ -500,11 +537,16 @@ const ViewJobDetails = ({ job, onClose }) => {
       />
     );
   }
-
   return (
     <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
+     <div className="flex justify-between items-center mb-8">
         <h2 className="text-4xl font-bold text-blue-800">Job Details</h2>
+        <button
+        className="mt-8 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+        onClick={() => setViewingAppliedStudents(true)}
+      >
+        View Applied Students
+      </button>
         <button
           className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
           onClick={onClose}
@@ -530,13 +572,6 @@ const ViewJobDetails = ({ job, onClose }) => {
         renderEligibilityCriteria(),
         "eligibility"
       )}
-
-      <button
-        className="mt-8 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-        onClick={() => setViewingAppliedStudents(true)}
-      >
-        View Applied Students
-      </button>
 
       <h3 className="text-3xl font-bold text-blue-800 mt-10 mb-8">
         Hiring Workflow
