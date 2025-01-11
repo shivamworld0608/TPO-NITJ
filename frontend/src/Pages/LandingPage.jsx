@@ -16,7 +16,7 @@ const Home = () => {
   return (
     <>
       <Header />
-      <div className="mt-56"><HeroSection /></div>
+      <div className="mt-36"><HeroSection /></div>
       <div className="max-w-7xl mx-auto"><Login /></div> 
       <div className=" max-w-full mx-auto "><AboutUs /></div>
       <div className="max-w-full mx-auto "><TpoMessage /></div>
