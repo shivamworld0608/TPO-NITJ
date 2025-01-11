@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Pencil } from 'lucide-react';
 import axios from "axios";
-import toast from "react-hot-toast"
+import Select from 'react-select';
+import toast from "react-hot-toast";
 import ShortlistStudents from './shortliststudent';
 import AppliedStudents from './appliedstudent';
 
@@ -12,6 +13,33 @@ const ViewJobDetails = ({ job, onClose }) => {
   const [editingSection, setEditingSection] = useState(null);
   const [editedWorkflow, setEditedWorkflow] = useState(job.Hiring_Workflow);
   const [editedJob, setEditedJob] = useState(job);
+
+  const departmentOptions = [
+    { value: 'CSE', label: 'CSE' },
+    { value: 'ECE', label: 'ECE' },
+    { value: 'EE', label: 'EE' },
+    { value: 'ME', label: 'ME' },
+    { value: 'CE', label: 'CE' },
+    { value: 'IT', label: 'IT' },
+    { value: 'CH', label: 'CH' },
+    { value: 'ICE', label: 'ICE' },
+    { value: 'BT', label: 'BT' },
+    { value: 'TT', label: 'TT' },
+    { value: 'IPE', label: 'IPE' },
+  ];
+
+  const jobTypeOptions = [
+    { value: '', label: 'Select Job Type' },
+    { value: 'FTE', label: 'Full-Time Employment (FTE)' },
+    { value: 'Intern', label: 'Internship' },
+    { value: '6m Intern', label: '6-Month Internship' },
+  ];
+
+  const jobCategoryOptions = [
+    { value: '', label: 'Select Job Category' },
+    { value: 'Tech', label: 'Tech' },
+    { value: 'Non-Tech', label: 'Non-Tech' },
+  ];
 
   const handleEdit = (section, index = null) => {
     setEditingSection(section);
@@ -64,6 +92,11 @@ const ViewJobDetails = ({ job, onClose }) => {
     }
   };
 
+  const handleDepartmentChange = (event) => {
+    const value = Array.from(event.target.selectedOptions, option => option.value);
+    handleInputChange('eligibility', 'eligibility_criteria.department_allowed', value);
+  };
+
   const handleInputChange = (section, field, value) => {
     if (section === 'hiring_workflow') {
       const updatedWorkflow = [...editedWorkflow];
@@ -82,6 +115,9 @@ const ViewJobDetails = ({ job, onClose }) => {
       let current = updatedJob;
       
       for (let i = 0; i < fieldPath.length - 1; i++) {
+        if (!current[fieldPath[i]]) {
+          current[fieldPath[i]] = {};
+        }
         current = current[fieldPath[i]];
       }
       current[fieldPath[fieldPath.length - 1]] = value;
@@ -122,115 +158,252 @@ const ViewJobDetails = ({ job, onClose }) => {
   );
 
   const renderBasicDetails = () => {
-    const fields = [
-      { label: 'Job Role', key: 'job_role' },
-      { label: 'Job Type', key: 'job_type' },
-      { label: 'Job Category', key: 'job_category' },
-      { label: 'Job Class', key: 'job_class' },
-      { label: 'Location', key: 'joblocation' },
-      { label: 'Description', key: 'jobdescription' },
-      { label: 'Deadline', key: 'deadline' }
-    ];
-
     return (
       <div className="space-y-4 text-gray-700">
-        {fields.map(({ label, key }) => (
-          <div key={key} className="flex items-center">
-            <strong className="w-1/3 text-gray-800">{label}:</strong>
-            {editingSection === 'basic' ? (
-              <input
-                type={key === 'deadline' ? 'datetime-local' : 'text'}
-                value={editedJob[key] || ''}
-                onChange={(e) => handleInputChange('basic', key, e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            ) : (
-              <span className="flex-1">{editedJob[key]}</span>
-            )}
-          </div>
-        ))}
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Job Role:</strong>
+          {editingSection === 'basic' ? (
+            <input
+              type="text"
+              value={editedJob.job_role || ''}
+              onChange={(e) => handleInputChange('basic', 'job_role', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          ) : (
+            <span className="flex-1">{editedJob.job_role}</span>
+          )}
+        </div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Job Type:</strong>
+          {editingSection === 'basic' ? (
+            <select
+              value={editedJob.job_type || ''}
+              onChange={(e) => handleInputChange('basic', 'job_type', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              {jobTypeOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          ) : (
+            <span className="flex-1">{editedJob.job_type}</span>
+          )}
+        </div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Job Category:</strong>
+          {editingSection === 'basic' ? (
+            <select
+              value={editedJob.job_category || ''}
+              onChange={(e) => handleInputChange('basic', 'job_category', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              {jobCategoryOptions.map(option => (
+                <option key={option.value} value={option.value}>{option.label}</option>
+              ))}
+            </select>
+          ) : (
+            <span className="flex-1">{editedJob.job_category}</span>
+          )}
+        </div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Location:</strong>
+          {editingSection === 'basic' ? (
+            <input
+              type="text"
+              value={editedJob.joblocation || ''}
+              onChange={(e) => handleInputChange('basic', 'joblocation', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          ) : (
+            <span className="flex-1">{editedJob.joblocation}</span>
+          )}
+        </div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Description:</strong>
+          {editingSection === 'basic' ? (
+            <textarea
+              value={editedJob.jobdescription || ''}
+              onChange={(e) => handleInputChange('basic', 'jobdescription', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              rows={4}
+            />
+          ) : (
+            <span className="flex-1">{editedJob.jobdescription}</span>
+          )}
+        </div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Deadline:</strong>
+          {editingSection === 'basic' ? (
+            <input
+              type="datetime-local"
+              value={editedJob.deadline || ''}
+              onChange={(e) => handleInputChange('basic', 'deadline', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          ) : (
+            <span className="flex-1">{editedJob.deadline}</span>
+          )}
+        </div>
       </div>
     );
   };
 
   const renderSalaryDetails = () => {
-    const fields = [
-      { label: 'CTC', key: 'job_salary.ctc' },
-      { label: 'Base Salary', key: 'job_salary.base_salary' }
-    ];
-
     return (
       <div className="space-y-4 text-gray-700">
-        {fields.map(({ label, key }) => (
-          <div key={key} className="flex items-center">
-            <strong className="w-1/3 text-gray-800">{label}:</strong>
-            {editingSection === 'salary' ? (
-              <input
-                type="text"
-                value={key.split('.').reduce((obj, k) => obj?.[k], editedJob) || ''}
-                onChange={(e) => handleInputChange('salary', key, e.target.value)}
-                className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            ) : (
-              <span className="flex-1">
-                {key.split('.').reduce((obj, k) => obj?.[k], job) || 'N/A'}
-              </span>
-            )}
-          </div>
-        ))}
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">CTC:</strong>
+          {editingSection === 'salary' ? (
+            <input
+              type="text"
+              value={editedJob.job_salary?.ctc || ''}
+              onChange={(e) => handleInputChange('salary', 'job_salary.ctc', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          ) : (
+            <span className="flex-1">{editedJob.job_salary?.ctc || 'N/A'}</span>
+          )}
+        </div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Base Salary:</strong>
+          {editingSection === 'salary' ? (
+            <input
+              type="text"
+              value={editedJob.job_salary?.base_salary || ''}
+              onChange={(e) => handleInputChange('salary', 'job_salary.base_salary', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          ) : (
+            <span className="flex-1">{editedJob.job_salary?.base_salary || 'N/A'}</span>
+          )}
+        </div>
       </div>
     );
   };
 
   const renderEligibilityCriteria = () => {
-    const fields = [
-      { label: 'Departments Allowed', key: 'eligibility_criteria.department_allowed', type: 'array' },
-      { label: 'Gender Allowed', key: 'eligibility_criteria.gender_allowed' },
-      { label: 'Eligible Batch', key: 'eligibility_criteria.eligible_batch' },
-      { label: 'Minimum CGPA', key: 'eligibility_criteria.minimum_cgpa' },
-      { label: 'Active Backlogs Allowed', key: 'eligibility_criteria.active_backlogs', type: 'boolean' },
-      { label: 'Course Allowed', key: 'eligibility_criteria.course_allowed' }
-    ];
-
     return (
       <div className="space-y-4 text-gray-700">
-        {fields.map(({ label, key, type }) => (
-          <div key={key} className="flex items-center">
-            <strong className="w-1/3 text-gray-800">{label}:</strong>
-            {editingSection === 'eligibility' ? (
-              type === 'array' ? (
-                <input
-                  type="text"
-                  value={key.split('.').reduce((obj, k) => obj?.[k], editedJob)?.join(', ') || ''}
-                  onChange={(e) => handleInputChange('eligibility', key, e.target.value.split(', '))}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              ) : type === 'boolean' ? (
-                <select
-                  value={key.split('.').reduce((obj, k) => obj?.[k], editedJob) ? 'true' : 'false'}
-                  onChange={(e) => handleInputChange('eligibility', key, e.target.value === 'true')}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="true">Yes</option>
-                  <option value="false">No</option>
-                </select>
-              ) : (
-                <input
-                  type={key.includes('cgpa') ? 'number' : 'text'}
-                  value={key.split('.').reduce((obj, k) => obj?.[k], editedJob) || ''}
-                  onChange={(e) => handleInputChange('eligibility', key, e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              )
-            ) : (
-              <span className="flex-1">
-                {type === 'array'
-                  ? key.split('.').reduce((obj, k) => obj?.[k], job)?.join(', ')
-                  : key.split('.').reduce((obj, k) => obj?.[k], job)?.toString() || 'N/A'}
-              </span>
-            )}
-          </div>
-        ))}
+      <div className="flex items-center">
+  <strong className="w-1/3 text-gray-800">Departments Allowed:</strong>
+  {editingSection === 'eligibility' ? (
+    <div className="flex-1">
+      <Select
+        isMulti
+        options={departmentOptions}
+        value={departmentOptions.filter(option => 
+          editedJob.eligibility_criteria?.department_allowed?.includes(option.value)
+        )}
+        onChange={(selectedOptions) => {
+          const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
+          handleInputChange('eligibility', 'eligibility_criteria.department_allowed', selectedValues);
+        }}
+        className="rounded-xl"
+        classNamePrefix="select"
+      />
+    </div>
+  ) : (
+    <span className="flex-1">
+      {editedJob.eligibility_criteria?.department_allowed?.join(', ') || 'N/A'}
+    </span>
+  )}
+</div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Gender Allowed:</strong>
+          {editingSection === 'eligibility' ? (
+            <select
+              value={editedJob.eligibility_criteria?.gender_allowed || ''}
+              onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.gender_allowed', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Any">Any</option>
+              <option value="Other">Other</option>
+            </select>
+          ) : (
+            <span className="flex-1">{editedJob.eligibility_criteria?.gender_allowed || 'N/A'}</span>
+          )}
+        </div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Course Allowed:</strong>
+          {editingSection === 'eligibility' ? (
+            <select
+              value={editedJob.eligibility_criteria?.course_allowed || ''}
+              onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.course_allowed', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Select Course</option>
+              <option value="B.Tech">B.Tech</option>
+              <option value="M.Tech">M.Tech</option>
+              <option value="MBA">MBA</option>
+            </select>
+          ) : (
+            <span className="flex-1">{editedJob.eligibility_criteria?.course_allowed || 'N/A'}</span>
+          )}
+        </div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Eligible Batch:</strong>
+          {editingSection === 'eligibility' ? (
+            <select
+              value={editedJob.eligibility_criteria?.eligible_batch || ''}
+              onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.eligible_batch', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">Select Batch</option>
+              <option value="2025">2025</option>
+              <option value="2026">2026</option>
+              <option value="2027">2027</option>
+              <option value="2028">2028</option>
+              <option value="2029">2029</option>
+              <option value="2030">2030</option>
+            </select>
+          ) : (
+            <span className="flex-1">{editedJob.eligibility_criteria?.eligible_batch || 'N/A'}</span>
+          )}
+        </div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Active Backlogs Allowed:</strong>
+          {editingSection === 'eligibility' ? (
+            <input
+              type="checkbox"
+              checked={editedJob.eligibility_criteria?.active_backlogs || false}
+              onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.active_backlogs', e.target.checked)}
+              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+          ) : (
+            <span className="flex-1">
+              {editedJob.eligibility_criteria?.active_backlogs ? 'Yes' : 'No'}
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Minimum CGPA:</strong>
+          {editingSection === 'eligibility' ? (
+            <input
+              type="number"
+              min="0"
+              max="10"
+              value={editedJob.eligibility_criteria?.minimum_cgpa || ''}
+              onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.minimum_cgpa', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          ) : (
+            <span className="flex-1">{editedJob.eligibility_criteria?.minimum_cgpa || 'N/A'}</span>
+          )}
+        </div>
       </div>
     );
   };
@@ -305,78 +478,72 @@ const ViewJobDetails = ({ job, onClose }) => {
             </div>
           </div>
         ))}
-        </div>
-      );
-    };
-  
-    if (viewingShortlist) {
-      return (
-        <ShortlistStudents
-          jobId={job._id}
-          stepIndex={viewingShortlist.stepIndex}
-          onClose={() => setViewingShortlist(null)}
-        />
-      );
-    }
-  
-    if (viewingAppliedStudents) {
-      return (
-        <AppliedStudents
-          jobId={job._id}
-          onBack={() => setViewingAppliedStudents(false)}
-        />
-      );
-    }
-  
-    return (
-      <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-4xl font-bold text-blue-800">Job Details</h2>
-          <button
-            className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
-  
-        {/* Basic Details Card */}
-        {renderEditableCard(
-          "Basic Details",
-          renderBasicDetails(),
-          "basic"
-        )}
-  
-        {/* Salary Details Card */}
-        {renderEditableCard(
-          "Salary Details",
-          renderSalaryDetails(),
-          "salary"
-        )}
-  
-        {/* Eligibility Criteria Card */}
-        {renderEditableCard(
-          "Eligibility Criteria",
-          renderEligibilityCriteria(),
-          "eligibility"
-        )}
-  
-        {/* View Applied Students Button */}
-        <button
-          className="mt-8 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-          onClick={() => setViewingAppliedStudents(true)}
-        >
-          View Applied Students
-        </button>
-  
-        {/* Hiring Workflow Section */}
-        <h3 className="text-3xl font-bold text-blue-800 mt-10 mb-8">
-          Hiring Workflow
-        </h3>
-        {renderHiringWorkflow()}
       </div>
     );
   };
-  
-  export default ViewJobDetails;
+
+  if (viewingShortlist) {
+    return (
+      <ShortlistStudents
+        jobId={job._id}
+        stepIndex={viewingShortlist.stepIndex}
+        onClose={() => setViewingShortlist(null)}
+      />
+    );
+  }
+
+  if (viewingAppliedStudents) {
+    return (
+      <AppliedStudents
+        jobId={job._id}
+        onBack={() => setViewingAppliedStudents(false)}
+      />
+    );
+  }
+
+  return (
+    <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-6xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-4xl font-bold text-blue-800">Job Details</h2>
+        <button
+          className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+          onClick={onClose}
+        >
+          Close
+        </button>
+      </div>
+
+      {renderEditableCard(
+        "Basic Details",
+        renderBasicDetails(),
+        "basic"
+      )}
+
+      {renderEditableCard(
+        "Salary Details",
+        renderSalaryDetails(),
+        "salary"
+      )}
+
+      {renderEditableCard(
+        "Eligibility Criteria",
+        renderEligibilityCriteria(),
+        "eligibility"
+      )}
+
+      <button
+        className="mt-8 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+        onClick={() => setViewingAppliedStudents(true)}
+      >
+        View Applied Students
+      </button>
+
+      <h3 className="text-3xl font-bold text-blue-800 mt-10 mb-8">
+        Hiring Workflow
+      </h3>
+      {renderHiringWorkflow()}
+    </div>
+  );
+};
+
+export default ViewJobDetails;
