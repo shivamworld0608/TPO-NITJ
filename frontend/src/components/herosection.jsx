@@ -51,11 +51,11 @@ function HeroSection() {
         <div className="absolute inset-0 bg-black opacity-70 backdrop-blur-lg"></div>
         <div className="absolute text flex flex-col gap-3 items-center justify-center p-10 text-white">
           <div>
-            <span className="font-extrabold text-4xl ">Welcome to TPO-</span>
-            <span className="text-sky-600 font-extrabold text-4xl">NITJ</span>
+            <span className="font-extrabold sm:text-4xl text-3xl">Welcome to TPO-</span>
+            <span className="text-sky-600 font-extrabold sm:text-4xl text-3xl">NITJ</span>
           </div>
-          <div className="text-lg">Empowering Your Career Journey!</div>
-          <div className="text-lg">
+          <div className="sm:text-lg text-sm text-center">Empowering Your Career Journey!</div>
+          <div className="sm:text-lg text-sm text-center">
             "Your bridge to internships, training programs, and dream jobs."
           </div>
           <div className="buttons flex gap-5">
