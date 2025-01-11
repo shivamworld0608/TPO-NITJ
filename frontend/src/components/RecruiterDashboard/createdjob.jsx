@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-import EditJobModal from './editcreatedjob';
 import CreateJob from './createjob';
 import ViewJobDetails from './ViewJob';
 
@@ -10,7 +9,6 @@ const CreatedJobs = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingJob, setEditingJob] = useState(null);
   const [isCreatingJob, setIsCreatingJob] = useState(false);
   const [viewingJobDetails, setViewingJobDetails] = useState(null);
 
@@ -58,9 +56,6 @@ const CreatedJobs = () => {
     }
   };
 
-  const editJob = (job) => {
-    setEditingJob(job);
-  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -132,12 +127,6 @@ const CreatedJobs = () => {
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
               <button
-                className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-                onClick={() => editJob(job)}
-              >
-                Edit
-              </button>
-              <button
                 className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 onClick={() => deleteJob(job._id)}
               >
@@ -155,19 +144,6 @@ const CreatedJobs = () => {
       </div>
     )}
   </div>
-
-  {/* Edit Job Modal */}
-  {editingJob && (
-    <EditJobModal
-      job={editingJob}
-      onClose={() => setEditingJob(null)}
-      onJobUpdated={(updatedJob) =>
-        setJobs((prevJobs) =>
-          prevJobs.map((job) => (job._id === updatedJob._id ? updatedJob : job))
-        )
-      }
-    />
-  )}
 </div>
   );
 };
