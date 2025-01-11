@@ -28,7 +28,6 @@ export const createJobProfilecopy = async (req, res) => {
 
     console.log(recruiter_id);
 
-    // Process and validate Hiring_Workflow
     const processedWorkflow = Hiring_Workflow.map(step => {
       const processedStep = {
         step_type: step.step_type,
@@ -37,7 +36,6 @@ export const createJobProfilecopy = async (req, res) => {
         shortlisted_students: step.shortlisted_students || []
       };
 
-      // Initialize details based on step type
       switch (step.step_type) {
         case 'OA':
           processedStep.details = {
@@ -71,11 +69,20 @@ export const createJobProfilecopy = async (req, res) => {
         default:
           throw new Error(`Invalid step type: ${step.step_type}`);
       }
-
       return processedStep;
     });
 
-    // Create job profile with processed workflow
+    let job_class;
+    if (ctc < 10) {
+      job_class = "Below Dream";
+    } else if (ctc >= 10 && ctc < 20) {
+      job_class = "Dream";
+    } else if (ctc >= 20) {
+      job_class = "Super Dream";
+    } else {
+      throw new Error("Invalid CTC value");
+    }
+
     const jobProfile = new JobProfile({
       recruiter_id,
       job_id,
@@ -99,10 +106,10 @@ export const createJobProfilecopy = async (req, res) => {
         active_backlogs,
         course_allowed
       },
+      job_class,
       deadline,
     });
 
-    // Save the job profile
     const savedProfile = await jobProfile.save();
     console.log(savedProfile);
     
@@ -211,10 +218,6 @@ export const deleteJob = async (req, res) => {
   }
 };
 
-// Student Controllers
-
-// Get Job Applications
-
 export const getJobProfiletostudent = async (req, res) => {
   try {
     const studentId = req.user.userId;
@@ -276,7 +279,6 @@ export const getJobProfilesForProfessors = async (req, res) => {
   }
 };
 
-// Approve Job Application
 export const approveJobProfile = async (req, res) => {
   try {
     console.log("Approving job...");
@@ -295,7 +297,6 @@ export const approveJobProfile = async (req, res) => {
 };
 
 
-// Reject Job Application
 export const rejectJobProfile = async (req, res) => {
   try {
     const {_id } = req.params;
@@ -345,7 +346,7 @@ export const checkEligibility = async (req, res) => {
       return res.json({ eligible: false, reason: "Batch not eligible" });
     }
 
-    if (student.cgpa < minimum_cgpa) {
+    if (minimum_cgpa && student.cgpa < minimum_cgpa) {
       return res.json({ eligible: false, reason: "CGPA below required minimum" });
     }
 
@@ -353,14 +354,14 @@ export const checkEligibility = async (req, res) => {
       return res.json({ eligible: false, reason: "Active backlogs do not meet criteria" });
     }
 
-    const jobCategoryOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
-    const studentCategoryIndex = jobCategoryOrder.indexOf(student.placementstatus);
-    const jobCategoryIndex = jobCategoryOrder.indexOf(job.job_category);
+    const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
+    const studentClassIndex = jobClassOrder.indexOf(student.placementstatus);
+    const jobClassIndex = jobClassOrder.indexOf(job.job_class);
 
     if (
-      studentCategoryIndex !== -1 &&
+      studentClassIndex !== -1 &&
       student.placementstatus !== "notplaced" &&
-      jobCategoryIndex <= studentCategoryIndex
+      jobClassIndex <= studentClassIndex
     ) {
       return res.json({
         eligible: false,
@@ -378,8 +379,6 @@ export const checkEligibility = async (req, res) => {
 export const addshortlistStudents = async (req, res) => {
   try {
     const { jobId, stepIndex, students } = req.body;
-
-    // Find the job by ID
     const job = await JobProfile.findById(jobId);
     if (!job) {
       return res.status(404).json({ error: 'Job not found' });
@@ -390,7 +389,6 @@ export const addshortlistStudents = async (req, res) => {
       return res.status(400).json({ error: 'Invalid step index' });
     }
 
-    // Find student IDs from FormSubmission using email
     const studentIds = [];
     for (const student of students) {
       const formSubmission = await FormSubmission.findOne({
@@ -405,18 +403,17 @@ export const addshortlistStudents = async (req, res) => {
       }
     }
 
-    // Add student IDs to the current step's shortlisted_students array
     step.shortlisted_students.push(...studentIds);
 
     if (job.Hiring_Workflow[stepIndex + 1]) {
-      // Add student IDs to the next step's eligible_students array
       job.Hiring_Workflow[stepIndex + 1].eligible_students.push(...studentIds);
     } else {
-      // If no next step, prepare data for Placement model
       const placementData = [];
       for (const studentId of studentIds) {
         const student = await Student.findById(studentId);
         if (student) {
+          student.placementstatus = job.job_class;
+          await student.save();
           placementData.push({
             studentId: studentId,
             name: student.name,
@@ -429,8 +426,6 @@ export const addshortlistStudents = async (req, res) => {
           console.error(`Student not found for ID: ${studentId}`);
         }
       }
-
-      // Create a new placement entry
       const placement = new Placement({
         company_name: job.company_name,
         company_logo: job.company_logo,
@@ -438,13 +433,12 @@ export const addshortlistStudents = async (req, res) => {
         batch: job.eligibility_criteria?.eligible_batch,
         degree: job.eligibility_criteria?.course_allowed,
         shortlisted_students: placementData,
-        ctc: job.job_salary?.ctc || 'N/A', // Include CTC
+        ctc: job.job_salary?.ctc || 'N/A',
       });
 
       await placement.save();
     }
 
-    // Save the updated job
     await job.save();
 
     res.status(200).json({ message: 'Students shortlisted successfully.' });

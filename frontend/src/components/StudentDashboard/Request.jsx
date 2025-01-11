@@ -74,40 +74,57 @@ const Request = () => {
         {issues.map((issue) => (
           <li
             key={issue._id}
-            className="flex justify-between items-center p-4 bg-gray-50 border rounded-md shadow-sm"
+            className="p-4 bg-gray-50 border rounded-md shadow-sm"
           >
             <div>
               <span className="font-medium text-gray-800">{issue.title}</span>
-              <p className="text-sm text-gray-600">{issue.details[0].description}</p>
-              <p className="text-xs text-gray-500 mt-1">
-                Raised on: {new Date(issue.details[0].raisedAt).toLocaleDateString()}
-              </p>
+  
+              {/* Iterate over the details array */}
+              <ul className="mt-2 space-y-2">
+                {issue.details.map((detail, index) => (
+                  <li
+                    key={`${issue._id}-${index}`}
+                    className="flex justify-between items-center bg-white p-3 border rounded-md shadow-sm"
+                  >
+                    <div>
+                      <p className="text-sm text-gray-600">
+                        {detail.description || "No description provided."}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Raised on:{" "}
+                        {new Date(detail.raisedAt).toLocaleDateString()}
+                      </p>
+                    </div>
+  
+                    <span
+                      className={`flex items-center text-sm font-semibold py-1 px-3 rounded ${
+                        detail.status === "Resolved"
+                          ? "bg-green-100 text-green-700"
+                          : "bg-yellow-100 text-yellow-700"
+                      }`}
+                    >
+                      {detail.status === "Resolved" ? (
+                        <>
+                          <FaCheckCircle className="mr-2" />
+                          Resolved
+                        </>
+                      ) : (
+                        <>
+                          <FaExclamationCircle className="mr-2" />
+                          Pending
+                        </>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
-
-            <span
-              className={`flex items-center text-sm font-semibold py-1 px-3 rounded ${
-                issue.details[0].status === "Resolved"
-                  ? "bg-green-100 text-green-700"
-                  : "bg-yellow-100 text-yellow-700"
-              }`}
-            >
-              {issue.details[0].status === "Resolved" ? (
-                <>
-                  <FaCheckCircle className="mr-2" />
-                  Resolved
-                </>
-              ) : (
-                <>
-                  <FaExclamationCircle className="mr-2" />
-                  Pending
-                </>
-              )}
-            </span>
           </li>
         ))}
       </ul>
     );
   };
+  
 
   return (
     <div className="p-6 min-h-screen">
@@ -145,19 +162,21 @@ const Request = () => {
               Resolved
             </button>
           </div>
-          <h1 className="font-bold text-black text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
-            Request{" "}
-            <span className="bg-custom-blue text-transparent bg-clip-text">Help</span>
-          </h1>
-          <span className="text-base text-black mt-2">Easily raise and </span>
-          <span className="bg-custom-blue text-transparent bg-clip-text">track your issues</span>
         </div>
       </header>
 
       <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-6 mt-6">
         {activeTab === "request" ? (
           <>
-            {alertMessage && (
+          <div>
+           <h1 className="font-bold text-black text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
+            Request{" "}
+            <span className="bg-custom-blue text-transparent bg-clip-text">Help</span>
+          </h1>
+          <span className="text-base text-black mt-2">Easily raise and </span>
+          <span className="bg-custom-blue text-transparent bg-clip-text text-center">track your issues</span>
+           </div> 
+           {alertMessage && (
               <div className="p-4 mb-4 bg-green-100 text-green-800 rounded-md border-l-4 border-green-500">
                 {alertMessage}
               </div>

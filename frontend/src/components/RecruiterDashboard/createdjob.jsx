@@ -136,7 +136,7 @@ const CreatedJobs = () => {
                 className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
                 onClick={() => setViewingJobDetails(job)}
               >
-                View Applications
+                View Job Profile
               </button>
             </div>
           </div>

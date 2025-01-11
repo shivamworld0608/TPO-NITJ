@@ -1,4 +1,5 @@
 import Issue from "../models/reqhelp.js";
+import mongoose from "mongoose";
 
 export const createIssue = async (req, res) => {
   try {
@@ -30,35 +31,46 @@ export const createIssue = async (req, res) => {
 
 export const getUserIssues = async (req, res) => {
     try {
-        console.log("yha aagye");
       const userId = req.user.userId;
-      try{
+  
       const unresolvedIssues = await Issue.find({
         "details.userId": userId,
         "details.status": "Pending",
-      }).populate({
-        path: "details.userId",
-        select: "name email",
-        model: "details.onModel",
-      });}
-      catch(error){
-        console.log(error);
-      }
-      console.log("yha aagye",unresolvedIssues);
+      });
+  
       const resolvedIssues = await Issue.find({
         "details.userId": userId,
         "details.status": "Resolved",
-      }).populate({
-        path: "details.userId",
-        select: "name email",
-        model: "details.onModel",
       });
+  
+/*       const populateDetails = async (issues) => {
+        return Promise.all(
+          issues.map(async (issue) => {
+            const populatedDetails = await Promise.all(
+              issue.details.map(async (detail) => {
+                if (detail.userId && detail.onModel) {
+                  const model = mongoose.model(detail.onModel);
+                  const populatedUser = await model.findById(detail.userId, "name email");
+                  return { ...detail.toObject(), userId: populatedUser };
+                }
+                return detail;
+              })
+            );
+            return { ...issue.toObject(), details: populatedDetails };
+          })
+        );
+      };
+  
+      const populatedUnresolvedIssues = await populateDetails(unresolvedIssues);
+      const populatedResolvedIssues = await populateDetails(resolvedIssues); */
+  
       res.status(200).json({
         success: true,
         unresolved: unresolvedIssues,
-        resolved: resolvedIssues,
+        resolved:  resolvedIssues,
       });
     } catch (error) {
+      console.error("Error:", error);
       res.status(500).json({ success: false, message: "Server Error", error });
     }
   };
@@ -79,12 +91,7 @@ export const resolveIssue = async (req, res) => {
         },
       },
       { new: true }
-    ).populate({
-      path: "details.userId",
-      select: "name email",
-      model: "details.onModel",
-    });
-
+    )
     if (!issue) {
       return res.status(404).json({ success: false, message: "Issue or Detail not found" });
     }
@@ -112,16 +119,31 @@ export const getAllIssues = async (req, res) => {
     }
   };
 
-export const getUnresolvedIssues = async (req, res) => {
-  try {
-    const issues = await Issue.find({ "details.status": "Pending" }).populate({
-      path: "details.userId",
-      select: "name email",
-      model: "details.onModel",
-    });
-
-    res.status(200).json({ success: true, data: issues });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Server Error", error });
-  }
-};
+  export const getUnresolvedIssues = async (req, res) => {
+    try {
+      const issues = await Issue.find({ "details.status": "Pending" });
+      const populateDetails = async (issueList) => {
+        return Promise.all(
+          issueList.map(async (issue) => {
+            const populatedDetails = await Promise.all(
+              issue.details.map(async (detail) => {
+                if (detail.userId && detail.onModel) {
+                  const model = mongoose.model(detail.onModel); // Dynamically determine model
+                  const populatedUser = await model.findById(detail.userId, "name email");
+                  return { ...detail.toObject(), userId: populatedUser };
+                }
+                return detail;
+              })
+            );
+            return { ...issue.toObject(), details: populatedDetails };
+          })
+        );
+      };
+      const populatedIssues = await populateDetails(issues);
+      res.status(200).json({ success: true, data: populatedIssues });
+    } catch (error) {
+      console.error("Error:", error);
+      res.status(500).json({ success: false, message: "Server Error", error });
+    }
+  };
+  
