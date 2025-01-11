@@ -11,6 +11,7 @@ import TestimonialTPC from "../components/testimonials";
 import FAQ from "../components/faq";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
+import EventsSection from "../components/EventsSection";
 
 const Home = () => {
   return (
@@ -23,9 +24,10 @@ const Home = () => {
       <div className="max-w-7xl mx-auto mt-24"><RecruitmentProcess /></div>
       <div className="max-w-full mx-auto  "><WhyRecruit /></div>
       <div className="max-w-7xl mx-auto "><PlacementHighlights /></div> 
+      <div><EventsSection/></div>
       <div className="max-w-7xl mx-auto mt-24 mb-40 pt-15 px-6"><ImageSlider/></div>   
       <div className="max-w-7xl mx-auto"><TestimonialTPC /></div>
-      <div className=" max-w-7xl mx-auto "><FAQ /></div>
+      <div className=" max-w-7xl mx-auto mt-24"><FAQ /></div>
       <div className=" max-w-full mx-auto"><ContactUs /></div>
       <Footer/>
 
