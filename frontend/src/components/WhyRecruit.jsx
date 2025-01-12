@@ -84,13 +84,13 @@ const WhyRecruit = () => {
           <TabsList className="grid w-full grid-cols-2 ">
             <TabsTrigger
               value="stats"
-              className="data-[state=active]:bg-custom-blue lg:text-lg text-md data-[state=active]:text-white transition rounded-lg border-b-custom-blue border-b-4"
+              className="z-10 data-[state=active]:bg-custom-blue lg:text-lg text-md data-[state=active]:text-white transition rounded-lg border-b-custom-blue border-b-4"
             >
               Key Statistics
             </TabsTrigger>
             <TabsTrigger
               value="achievements"
-              className="data-[state=active]:bg-custom-blue lg:text-lg text-md data-[state=active]:text-white transition rounded-lg border-b-custom-blue border-b-4"
+              className="z-10 data-[state=active]:bg-custom-blue lg:text-lg text-md data-[state=active]:text-white transition rounded-lg border-b-custom-blue border-b-4"
             >
               Our Achievements
             </TabsTrigger>
@@ -133,7 +133,7 @@ const WhyRecruit = () => {
             </AnimatePresence>
             <Button
               variant="ghost"
-              className="mt-4 w-full justify-between"
+              className="z-10 mt-4 w-full justify-between"
               onClick={() => setExpandedSection(expandedSection === index ? null : index)}
             >
               {expandedSection === index ? "Show Less" : "Learn More"}
@@ -199,7 +199,7 @@ const WhyRecruit = () => {
           </p>
           <Button
             size="lg"
-            className="bg-gradient-to-r from-custom-blue to-blue-600 hover:from-blue-600 hover:to-custom-blue text-white px-8 py-4 rounded-lg"
+            className="bg-gradient-to-r from-custom-blue to-blue-600 hover:from-blue-600 hover:to-custom-blue text-white px-8 py-4 rounded-lg z-10"
           >
             Get in Touch <ArrowRight className="ml-2 w-6 h-6" />
           </Button>

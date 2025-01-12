@@ -1,6 +1,5 @@
 import Header from "../components/header";
 import Footer from "../components/footer";
-import Login from "../components/login";
 import HeroSection from "../components/herosection";
 import TpoMessage from "../components/TpoMessage";
 import WhyRecruit from "../components/WhyRecruit";
@@ -18,7 +17,6 @@ const Home = () => {
     <>
       <Header />
       <div className="mt-36"><HeroSection /></div>
-      <div className="max-w-7xl mx-auto"><Login /></div> 
       <div className=" max-w-full mx-auto "><AboutUs /></div>
       <div className="max-w-full mx-auto "><TpoMessage /></div>
       <div className="max-w-7xl mx-auto mt-24"><RecruitmentProcess /></div>

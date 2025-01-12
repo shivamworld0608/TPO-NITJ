@@ -6,14 +6,14 @@ import { useDispatch } from "react-redux";
 import { setAuthUser } from "../Redux/authSlice";
 import { Eye, EyeOff, User } from "lucide-react";
 
-const LoginSignup = () => {
+const LoginSignup = ({Login}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(Login);
   const [userType, setUserType] = useState("Student");
   const [rollno, setRollno] = useState("");
   const [department, setDepartment] = useState("");
@@ -184,7 +184,7 @@ const LoginSignup = () => {
 
             <button
               type="submit"
-              className="w-full py-3 rounded-md bg-custom-blue text-white font-semibold hover:bg-blue-500 transition duration-300"
+              className="w-full py-3 rounded-md bg-custom-blue text-white font-semibold hover:bg-blue-500 transition duration-300 z-10"
             >
               Login
             </button>

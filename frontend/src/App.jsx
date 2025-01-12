@@ -12,7 +12,8 @@ import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
 import TeamPage from "./Pages/TeamPage";
 import FAQ from "./Pages/Faqs";
-import ErrorPage from "./Pages/ErrorPage"; // Add this import
+import ErrorPage from "./Pages/ErrorPage";
+import Signup from "./Pages/Signup";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -27,13 +28,14 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<Signup/>} />
         <Route path="/placements" element={<Placement/>} />
         <Route path="/recruiter" element={<Recruiter/>} />
         <Route path="/faq" element={<FAQ/>} />
         <Route path="/team" element={<TeamPage/>} />
         <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/" />}/>         
         <Route path="/rdashboard/*" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
-        <Route path="/pdashboard" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
+        <Route path="/pdashboard/*" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} /> {/* This will catch all unmatched routes */}
       </Routes>

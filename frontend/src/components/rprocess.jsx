@@ -120,7 +120,7 @@ const RecruitmentProcess = () => {
         <div className="text-center mt-8">
         <button
   onClick={() => setShowMore(!showMore)}
-  className="px-6 py-3 text-white bg-gradient-to-r from-custom-blue to-blue-500 hover:from-blue-400 hover:to-blue-800 rounded-lg font-semibold transition-all duration-300"
+  className="px-6 py-3 z-10 text-white bg-gradient-to-r from-custom-blue to-blue-500 hover:from-blue-400 hover:to-blue-800 rounded-lg font-semibold transition-all duration-300"
 >
   {showMore ? "Less Steps" : "More Steps"}
 </button>

@@ -130,13 +130,13 @@ const ContactUs = () => {
               <button
                 type="reset"
                 onClick={() => setFormData({ name: "", email: "", phone: "", department: "", message: "" })}
-                className="py-3 px-8 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-full shadow-md hover:bg-gradient-to-l transition-all duration-300 focus:outline-none focus:ring-red-200 "
+                className="z-10 py-3 px-8 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-full shadow-md hover:bg-gradient-to-l transition-all duration-300 focus:outline-none focus:ring-red-200 "
               >
                 Clear
               </button>
               <button
                 type="submit"
-                className="flex items-center justify-center gap-2 py-3 px-8 bg-gradient-to-r from-custom-blue to-blue-700 text-white font-semibold rounded-full shadow-md hover:bg-gradient-to-l transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className="z-10 flex items-center justify-center gap-2 py-3 px-8 bg-gradient-to-r from-custom-blue to-blue-700 text-white font-semibold rounded-full shadow-md hover:bg-gradient-to-l transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
               >
                 Submit <FaChevronRight />
               </button>
