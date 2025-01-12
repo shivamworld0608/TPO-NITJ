@@ -168,7 +168,7 @@ return (
             <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl mb-8">
                 Placement <span className="text-custom-blue">Highlights</span>
             </h2>
-            <p className="text-gray-600 text-lg mb-12">
+            <p className="text-gray-600 mb-12 text-base sm:text-sm lg:text-lg">
                 Discover our exceptional placement journey and success stories that define excellence.
             </p>
 
