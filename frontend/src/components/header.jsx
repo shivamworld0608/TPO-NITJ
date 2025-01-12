@@ -39,7 +39,7 @@ const Header = () => {
 
       </button>
       {/* <!-- Menu for mobile ends--> */}
-      <header className="fixed top-0 right-0 left-0 z-40 bg-white ">
+      <header className="fixed top-0 right-0 left-0 z-20 bg-white ">
         {/* <!-- TOP NAV BAR stats --> */}
         <div id="top_bar"
           className="absolute top-0 right-0 left-0 transition-transform delay-200 h-7 bg-[#0369a0] py-0.5 px-2 sm:px-12 text-xs uppercase text-white shadow-md">
@@ -356,7 +356,7 @@ const Header = () => {
                         <div id="Alumni" className="p-1.5 font-medium uppercase"><a href="/faq">FAQs</a></div>
                       </div>
                       <div id="menu-6" className="group relative cursor-default hover:bg-blue-800">
-                        <div id="Life at NITJ" className="p-1.5 font-medium uppercase">{authUser?(<button onClick={handleLogout}>Logout</button>):(<a href="/">Login</a>)}</div>
+                        <div id="Life at NITJ" className="p-1.5 font-medium uppercase"><a href="/login">Login</a></div>
                       </div>
                     </div>
                   </div>

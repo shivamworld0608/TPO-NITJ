@@ -60,7 +60,7 @@ function HeroSection() {
           </div>
           <div className="buttons flex gap-5">
             <button className="bg-sky-700 text-white font-medium p-3 rounded-xl z-0">
-              Register Now
+              <a href="/signup">Register Now</a>
             </button>
             <button className="bg-sky-700 text-white font-medium p-3 rounded-xl z-0">
               Job Openings

@@ -210,19 +210,19 @@ return (
 
             {/* Social Media Share and Download Section */}
             <div className="flex flex-col sm:flex-row justify-center mt-12 gap-4 sm:gap-10">
-                <button onClick={() => handleSocialMediaShare("linkedin")} className="flex items-center bg-gradient-to-r from-custom-blue to-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700">
+                <button onClick={() => handleSocialMediaShare("linkedin")} className="z-10 flex items-center bg-gradient-to-r from-custom-blue to-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700">
                     <FaLinkedin className="mr-2" />
                     View on LinkedIn
                 </button>
-                <button onClick={() => handleSocialMediaShare("twitter")} className="flex items-center bg-gradient-to-r from-custom-blue to-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700">
+                <button onClick={() => handleSocialMediaShare("twitter")} className="z-10 flex items-center bg-gradient-to-r from-custom-blue to-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700">
                     <FaTwitter className="mr-2" />
                     View on Twitter
                 </button>
-                <button onClick={handleCopyLink} className="flex items-center bg-gradient-to-r from-custom-blue to-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700">
+                <button onClick={handleCopyLink} className="z-10 flex items-center bg-gradient-to-r from-custom-blue to-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700">
                     <FaShareAlt className="mr-2" />
                     Copy Link
                 </button>
-                <button onClick={handleDownloadPDF} className="flex items-center bg-gradient-to-r from-custom-blue to-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700">
+                <button onClick={handleDownloadPDF} className="z-10 flex items-center bg-gradient-to-r from-custom-blue to-blue-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700">
                     <FaDownload className="mr-2" />
                     Download Placement Report
                 </button>

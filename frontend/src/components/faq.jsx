@@ -162,7 +162,7 @@ const FAQ = () => {
 
         {currentPage < Math.ceil(filteredFaqData.length / questionsPerPage) && (
           <button
-            className="pagination-button bg-gradient-to-r from-custom-blue to-blue-700 text-white p-3 rounded-full hover:bg-gradient-to-l transition duration-300"
+            className="z-10 pagination-button bg-gradient-to-r from-custom-blue to-blue-700 text-white p-3 rounded-full hover:bg-gradient-to-l transition duration-300"
             onClick={() => paginate(currentPage + 1)}
           >
             Next
