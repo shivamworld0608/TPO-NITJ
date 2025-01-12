@@ -10,7 +10,7 @@ const AboutUs = () => {
           <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
             About <span className="text-custom-blue">Us</span>
           </h2>
-          <p className="mt-4 text-gray-600 text-base sm:text-lg lg:text-xl">
+          <p className="mt-4 text-gray-600 text-base sm:text-sm lg:text-lg">
             The Training and Placement Office (TPO) at our institute is dedicated to providing students with 
             the skills, resources, and opportunities to successfully enter the professional world. Our team works 
             tirelessly to build strong connections with industry leaders and guide students towards fulfilling career paths.
@@ -27,7 +27,7 @@ const AboutUs = () => {
             <h3 className="text-2xl font-bold text-center text-gray-800 mb-3 sm:text-3xl">
               Our Mission
             </h3>
-            <p className="text-gray-600 text-base sm:text-lg lg:text-xl">
+            <p className="text-gray-600 text-base sm:text-md lg:text-md">
               To bridge the gap between academia and industry by providing our students with the resources 
               to excel in professional environments. We aim to create a nurturing ecosystem for career growth, 
               skill development, and successful placements.
@@ -42,7 +42,7 @@ const AboutUs = () => {
             <h3 className="text-2xl font-bold text-center text-gray-800 mb-3 sm:text-3xl">
               Our Vision
             </h3>
-            <p className="text-gray-600 text-base sm:text-lg lg:text-xl">
+            <p className="text-gray-600 text-base sm:text-md lg:text-md">
               To be the leading catalyst for student placements, known for our strong collaborations with top companies 
               and our commitment to creating a sustainable career ecosystem that empowers students to thrive in any industry.
             </p>
@@ -56,7 +56,7 @@ const AboutUs = () => {
             <h3 className="text-2xl font-bold text-center text-gray-800 mb-3 sm:text-3xl">
               Our Values
             </h3>
-            <p className="text-gray-600 text-base sm:text-lg lg:text-xl">
+            <p className="text-gray-600 text-base sm:text-md lg:text-md">
               We believe in fostering a culture of integrity, excellence, and collaboration. Our values emphasize 
               the importance of personal and professional growth, ensuring that every student is equipped with 
               the necessary skills to succeed in the global workforce.
@@ -74,7 +74,7 @@ const AboutUs = () => {
             <h3 className="text-2xl font-bold text-center text-gray-800 mb-3 sm:text-3xl">
               Our Guidance
             </h3>
-            <p className="text-gray-600 text-base sm:text-lg lg:text-xl">
+            <p className="text-gray-600 text-base sm:text-md lg:text-md">
               The TPO provides continuous support, helping students with career counseling, resume building, interview preparation, 
               and networking opportunities. We guide students through the entire recruitment process, ensuring they are prepared 
               for the competitive job market.
@@ -89,7 +89,7 @@ const AboutUs = () => {
             <h3 className="text-2xl font-bold text-center text-gray-800 mb-3 sm:text-3xl">
               Our Collaborations
             </h3>
-            <p className="text-gray-600 text-base sm:text-lg lg:text-xl">
+            <p className="text-gray-600 text-base sm:text-md lg:text-md">
               We have established strong partnerships with top-tier companies and industry leaders across diverse sectors. 
               These collaborations open up a world of opportunities for our students, from internships to full-time job placements.
             </p>
