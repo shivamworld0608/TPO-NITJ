@@ -4,8 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../Redux/authSlice";
 import toast from "react-hot-toast";
 import axios from "axios";
-import { RiMenuFold3Fill } from "react-icons/ri";
-import { RiMenuFold4Fill } from "react-icons/ri";
+import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
 import {
   faHome,
   faBriefcase,
@@ -14,8 +13,10 @@ import {
   faEnvelope,
   faHandsHelping,
   faShareSquare,
-  faBars,
 } from "@fortawesome/free-solid-svg-icons";
+
+import { Menu, X, LogOut } from "lucide-react";
+
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import Home from "./StudentDashboard/home";
 import JobApplications from "./StudentDashboard/jobprofile";
@@ -29,28 +30,31 @@ import ProfileImage from "../assets/chillguy.png";
 import NITJlogo from "../assets/nitj-logo.png";
 import Request from "./StudentDashboard/Request";
 
-const StudentDashboards = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const dispatch = useDispatch();
+const StudentDashboard = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const { userData } = useSelector((state) => state.auth);
-  const [isOpen, setIsOpen] = useState(true);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [currentPath, setCurrentPath] = useState("/home");
 
-  // Handle sidebar toggle based on screen size
   useEffect(() => {
     const handleResize = () => {
-      setIsOpen(window.innerWidth >= 640);
+      const isMobileView = window.innerWidth < 768;
+      setIsMobile(isMobileView);
+      if (isMobileView) {
+        setIsSidebarExpanded(false);
+        setIsMenuOpen(false);
+      } else {
+        setIsSidebarExpanded(true);
+      }
     };
 
     handleResize();
     window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  const toggleSidebar = () => setIsOpen(!isOpen);
 
   const handleLogout = async () => {
     try {
@@ -91,181 +95,210 @@ const StudentDashboards = () => {
     },
   ];
 
-  return (
-    <div className="flex flex-col min-h-screen">
-      {/* Header */}
-      <header className="bg-white z-30 border-b border-gray-200 fixed top-0 left-0 right-0 p-4">
-        {isOpen && (
-          <h1 className="absolute ml-9 left-4 top-1/2 transform -translate-y-1/2 font-bold text-2xl sm:text-1xl lg:text-2xl tracking-wide w-max">
-            TPO-
-            <span className="bg-custom-blue text-transparent bg-clip-text">
-              NITJ
-            </span>
-          </h1>
-        )}
-        {!isOpen && (
-          <img
-            onClick={() => navigate("/sdashboard/home")}
-            src={userData?.image || NITJlogo}
-            alt="Profile"
-            className="absolute left-8 transform -translate-x-1/2 w-9 h-9 rounded-full object-cover cursor-pointer hover:shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
-          />
-        )}
-        <div className={`flex items-center justify-between`}>
-          <button
-            onClick={toggleSidebar}
-            className={`p-2 rounded text-black focus:outline-none transition-all duration-300 ${
-              isOpen ? "sm:ml-56" : "sm:ml-10"
-            }`}
-          >
-            <div className="relative w-6 h-3">
-              <div
-                className={`absolute inset-0 transform transition-transform duration-300 ${
-                  isOpen ? "rotate-0 opacity-100" : "-rotate-90 opacity-0"
-                }`}
-              >
-                <RiMenuFold3Fill size={25} />
-              </div>
-              <div
-                className={`absolute inset-0 transform transition-transform duration-300 ${
-                  !isOpen ? "rotate-0 opacity-100" : "rotate-90 opacity-0"
-                }`}
-              >
-                <RiMenuFold4Fill size={25} />
-              </div>
-            </div>
-          </button>
-          <div className="flex items-center space-x-4">
-            <span className="text-gray-800 text-md">
-              👋 Hi, {userData?.name || "User"}
-            </span>
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 p-1"
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-      </header>
+  const MenuItem = ({ item, onClick, isSidebarExpanded }) => {
+    const isMobileView = window.innerWidth < 768; // Check for mobile view
 
-      <div className="flex flex-1 mt-16">
-        {/* Sidebar */}
-        <aside
-          className={`fixed z-20 bg-white border-gray-200 transition-all duration-300 sm:top-0 sm:left-0 sm:bottom-0 w-full top-0 sm:h-screen ${
-            isOpen ? "sm:w-60 h-full" : "sm:w-16 h-0"
-          } border-r sm:border-b-0 border-b`}
-        >
-          <div className={`p-4 ${isOpen ? "mt-12" : "mt-12"}`}>
-            <nav className="mt-4">
-              <ul className="space-y-2">
-                {menuItems.map((item) => (
-                  <li key={item.path} className="h-10 flex items-center">
-                    <button
-                      onClick={() => {
-                        navigate(item.path);
-                        if (window.innerWidth < 625) setIsOpen(false);
-                      }}
-                      className={`flex items-center sm:w-full ${
-                        isOpen ? "w-full" : "w-10"
-                      } h-full text-left px-2 rounded-lg ${
-                        location.pathname === item.path
-                          ? "bg-custom-blue text-white"
-                          : "text-gray-600 hover:bg-blue-50"
-                      }`}
-                    >
-                      <FontAwesomeIcon
-                        icon={item.icon}
-                        className={`min-w-[20px] ${
-                          isOpen ? "mr-3" : "mx-auto mr-10"
-                        }`}
-                      />
-                      {isOpen && <span>{item.label}</span>}
-                    </button>
-                  </li>
-                ))}
-                {!isOpen && (
-                  <li className="h-9 transition-all duration-300 ease-in-out">
-                    <img
-                      onClick={() => navigate("/sdashboard/profile")}
-                      src={userData?.image || ProfileImage}
-                      alt="Profile"
-                      className="w-8 h-8 rounded-full object-cover cursor-pointer hover:shadow-lg transition-transform duration-300 ease-in-out hover:scale-110"
-                    />
-                  </li>
-                )}
-              </ul>
-            </nav>
+    return (
+      <button
+        onClick={() => {
+          navigate(item.path);
+          onClick?.();
+        }}
+        className={`flex items-center ${
+          !isMobileView && !isSidebarExpanded ? "justify-center " : ""
+        } w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
+          location.pathname === item.path
+            ? "bg-custom-blue text-white"
+            : "text-gray-600 hover:bg-blue-50"
+        }`}
+      >
+        {/* Always show icon */}
+        <FontAwesomeIcon icon={item.icon} className="w-5 h-5" />
+
+        {/* Show label if it's mobile view OR sidebar is expanded */}
+        {(isMobileView || isSidebarExpanded) && (
+          <span className="ml-3">{item.label}</span>
+        )}
+      </button>
+    );
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarExpanded(!isSidebarExpanded);
+  };
+
+  return (
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 bg-white shadow-sm z-50">
+        <div className="flex items-center justify-between px-4 h-16">
+          <div className="flex items-center">
+            <img
+              onClick={() => navigate("/sdashboard/home")}
+              src={userData?.image || NITJlogo}
+              alt="Logo"
+              className="h-10 w-10 object-contain rounded"
+            />
+            {isSidebarExpanded && (
+              <h1 className="absolute ml-14 left-4 top-1/2 transform -translate-y-1/2 font-bold text-2xl sm:text-1xl lg:text-2xl tracking-wide w-max">
+                TPO-
+                <span className="bg-custom-blue text-transparent bg-clip-text">
+                  NITJ
+                </span>
+              </h1>
+            )}
           </div>
-          {/* Profile Section */}
-          {isOpen && (
-            <div className="p-4 mt-16">
-              <button
+
+          {isMobile ? (
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="p-2 rounded-lg hover:bg-gray-100"
+            >
+              {isMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <RiMenuFold3Fill size={20} className="w-6 h-6" />
+              )}
+            </button>
+          ) : (
+            <div className="flex items-center gap-4">
+              <span className="text-gray-600">👋 Hi, {userData.name}</span>
+              <img
                 onClick={() => navigate("/sdashboard/profile")}
-                className="flex items-center w-full text-left px-3 py-2 rounded-lg hover:bg-blue-50 border"
-              >
+                src={userData?.image || ProfileImage}
+                alt="Profile"
+                className="w-8 h-8 rounded-full object-cover cursor-pointer"
+              />
+            </div>
+          )}
+        </div>
+
+        {/* Mobile Menu */}
+        {isMobile && isMenuOpen && (
+          <div className="fixed inset-0 top-16 bg-white z-40">
+            <div className="flex flex-col h-full">
+              <div className="flex items-center p-4 border-b">
                 <img
                   src={userData?.image || ProfileImage}
                   alt="Profile"
-                  className="w-10 h-10 rounded-full object-cover"
+                  className="w-12 h-12 rounded-full object-cover"
                 />
-                <div className="ml-3">
-                  <p className="text-gray-900 font-medium">{userData?.name}</p>
-                  <p className="text-gray-500 text-sm">{userData?.email}</p>
+                <div
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    navigate("/sdashboard/profile");
+                  }}
+                  className="ml-3"
+                >
+                  <p className="font-medium">{userData.name}</p>
+                  <p className="text-sm text-gray-500">{userData.email}</p>
                 </div>
+              </div>
+              <nav className="flex-1 overflow-y-auto p-4">
+                {menuItems.map((item) => (
+                  <MenuItem
+                    key={item.path}
+                    item={item}
+                    isSidebarExpanded={true}
+                    onClick={() => setIsMenuOpen(false)}
+                  />
+                ))}
+              </nav>
+              <button
+                onClick={handleLogout}
+                className="flex items-center w-full p-4 text-red-500 hover:bg-red-50"
+              >
+                <LogOut className="w-5 h-5 mr-3" />
+                <span>Logout</span>
               </button>
             </div>
-          )}
-        </aside>
-
-        {/* Main Content */}
-        <main
-          className={`flex-1 flex flex-col transition-all duration-300 ${
-            isOpen ? "sm:ml-60" : "sm:ml-16"
-          }`}
-        >
-          {/* Content wrapper with minimum height */}
-          <div className="flex-1 flex flex-col min-h-[calc(100vh-4rem)]">
-            {/* Routes container with minimum height to push footer down */}
-            <div className="flex-1 min-h-[550px]">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="home" element={<Home />} />
-                <Route path="job-application" element={<JobApplications />} />
-                <Route path="oa" element={<OnlineAssessment />} />
-                <Route path="interviews" element={<Interviews />} />
-                <Route path="gd" element={<GD />} />
-                <Route path="mailbox" element={<MailboxComponent />} />
-                <Route path="shared-experience" element={<SharedExperience />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="request-help" element={<Request />} />
-              </Routes>
-            </div>
-
-            {/* Footer */}
-            <footer className="bg-slate-800 text-white w-full text-center p-2 border-t border-zinc-400 mt-auto">
-  <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 lg:gap-16 xl:gap-24">
-    <span className="text-xs lg:text-base whitespace-nowrap">
-      © Copyright 2022, All Rights Reserved NIT Jalandhar
-    </span>
-    <span className="text-xs lg:text-base whitespace-nowrap">
-      Developed By{" "}
-      <a
-        href="/team"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-yellow-300 hover:text-yellow-400"
-      >
-        Placement Portal Dev Team
-      </a>
-    </span>
-  </div>
-</footer>
           </div>
-        </main>
-      </div>
+        )}
+      </header>
+
+      {/* Desktop Sidebar */}
+      {!isMobile && (
+        <>
+          <aside
+            className={`fixed left-0 top-16 h-full bg-white border-r border-gray-200 overflow-y-auto transition-all duration-300 ${
+              isSidebarExpanded ? "w-64" : "w-16"
+            }`}
+          >
+            <nav className="p-4">
+              {menuItems.map((item) => (
+                <MenuItem
+                  key={item.path}
+                  item={item}
+                  isSidebarExpanded={isSidebarExpanded}
+                />
+              ))}
+              <button
+                onClick={handleLogout}
+                className={`flex items-center w-full px-4 py-2 mt-4 text-red-500 hover:bg-red-50 rounded-lg ${
+                  !isSidebarExpanded ? "justify-center" : ""
+                }`}
+              >
+                <LogOut className="w-5 h-5" />
+                {/* Conditionally render the label only when the sidebar is expanded */}
+                {isSidebarExpanded && <span className="ml-3">Logout</span>}
+              </button>
+            </nav>
+          </aside>
+
+          {/* Toggle Button */}
+          <button
+            onClick={toggleSidebar}
+            className={`fixed top-16 bg-white rounded-r p-2 shadow-md transition-all duration-300 hover:bg-gray-100 ${
+              isSidebarExpanded ? "left-64" : "left-16"
+            }`}
+          >
+            {isSidebarExpanded ? (
+              <RiMenuFold3Fill size={20} />
+            ) : (
+              <RiMenuFold4Fill size={20} />
+            )}
+          </button>
+        </>
+      )}
+
+      {/* Main Content */}
+      <main
+        className={`flex-1 mt-16 transition-all duration-300 ${
+          !isMobile ? (isSidebarExpanded ? "ml-64" : "ml-16") : ""
+        }`}
+      >
+        <div className="container mx-auto p-4 min-h-[calc(100vh-theme(spacing.16)-theme(spacing.16))]">
+          {/* Placeholder for route content */}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="home" element={<Home />} />
+            <Route path="job-application" element={<JobApplications />} />
+            <Route path="oa" element={<OnlineAssessment />} />
+            <Route path="interviews" element={<Interviews />} />
+            <Route path="gd" element={<GD />} />
+            <Route path="mailbox" element={<MailboxComponent />} />
+            <Route path="shared-experience" element={<SharedExperience />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="request-help" element={<Request />} />
+          </Routes>
+        </div>
+
+        {/* Footer */}
+        <footer className="bg-slate-800 text-white p-4">
+          <div className="container mx-auto text-center">
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4">
+              <span className="text-sm">
+                © Copyright 2022, All Rights Reserved NIT Jalandhar
+              </span>
+              <span className="text-sm">
+                Developed by Placement Portal Dev Team
+              </span>
+            </div>
+          </div>
+        </footer>
+      </main>
     </div>
   );
 };
 
-export default StudentDashboards;
+export default StudentDashboard;
