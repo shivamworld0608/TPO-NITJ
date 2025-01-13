@@ -15,7 +15,7 @@ import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import Home from "./StudentDashboard/home";
 import CreatedJobs from "./RecruiterDashboard/createdjob";
 import MailboxComponent from "./StudentDashboard/mailbox";
-import OnlineAssessment from "./StudentDashboard/oa";
+import Request from "./RecruiterDashboard/Request.jsx";
 import Profile from "./StudentDashboard/profile";
 import ProfileImage from "../assets/chillguy.png";
 import CopycreateJob from "./RecruiterDashboard/createjob.jsx";
@@ -222,7 +222,7 @@ const RecruiterDashboards = () => {
               <Route path="/" element={<Home />} />
               <Route path="home" element={<CopycreateJob />} />
               <Route path="createdjob" element={<CreatedJobs />} />
-              <Route path="oa" element={<OnlineAssessment />} />
+              <Route path="request-help" element={<Request />} />
               <Route path="mailbox" element={<MailboxComponent />} />
               <Route path="profile" element={<Profile />} />
             </Routes>
