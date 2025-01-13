@@ -52,6 +52,19 @@ const CalendarComponent = () => {
   };
 
 
+  const getDaysInMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (date) => {
+    return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+  };
+
+  const formatDate = (year, month, day) => {
+    return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  };
+
+
   const renderCalendar = () => {
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDay = getFirstDayOfMonth(currentDate);
@@ -89,6 +102,7 @@ const CalendarComponent = () => {
               }`}
             >
               <div className="font-semibold">{event.company}</div>
+              <div>{event.type}</div>
               <div>{event.role}</div>
               <div>{event.time}</div>
             </div>
