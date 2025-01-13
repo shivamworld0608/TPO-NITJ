@@ -88,7 +88,7 @@ const StudentDashboard = () => {
     { path: "/sdashboard/oa", label: "OA", icon: faClipboard },
     { path: "/sdashboard/interviews", label: "Interview", icon: faComments },
     { path: "/sdashboard/gd", label: "GD", icon: faComments },
-    { path: "/sdashboard/calendar", label: "Calender", icon: faCalendar },
+    { path: "/sdashboard/calendar", label: "Calendar", icon: faCalendar },
     { path: "/sdashboard/mailbox", label: "Mailbox", icon: faEnvelope },
     {
       path: "/sdashboard/request-help",
