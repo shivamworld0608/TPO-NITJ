@@ -8,10 +8,7 @@ import RequestHelpManager from "../components/ProfessorDashboard/Request";
 const PDashboard = () => {
   return (
     <>
-      <Header />
-      <div className="mt-36"><Pdashboard /></div>
-      <RequestHelpManager/>
-      <Footer/>
+      <div className="mt-3"><Pdashboard /></div>
     </>
   );
 };

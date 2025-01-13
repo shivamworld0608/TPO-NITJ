@@ -33,6 +33,8 @@ import Profile from "./StudentDashboard/profile";
 import ProfileImage from "../assets/chillguy.png";
 import NITJlogo from "../assets/nitj-logo.png";
 import Request from "./StudentDashboard/Request";
+import TeamSection from "./Developers/TeamSection.jsx";
+
 
 const StudentDashboard = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -112,7 +114,7 @@ const StudentDashboard = () => {
         }}
         className={`flex items-center ${
           !isMobileView && !isSidebarExpanded ? "justify-center " : ""
-        } w-full px-4 py-2 rounded-lg transition-colors duration-200 ${
+        } w-full mt-1 px-4 py-2 rounded-lg transition-colors duration-200 ${
           location.pathname === item.path
             ? "bg-custom-blue text-white"
             : "text-gray-600 hover:bg-blue-50"
@@ -282,13 +284,14 @@ const StudentDashboard = () => {
             <Route path="oa" element={<OnlineAssessment />} />
             <Route path="interviews" element={<Interviews />} />
             <Route path="gd" element={<GD />} />
-            <Route path="calender" element={<CalendarComponent />} />
+            <Route path="calendar" element={<CalendarComponent />} />
             <Route path="mailbox" element={<MailboxComponent />} />
             <Route path="shared-experience" element={<SharedExperience />} />
             <Route path="profile" element={<Profile />} />
             <Route path="request-help" element={<Request />} />
             <Route path="policy-guidlines" element={<Policy />} />
-          </Routes>
+            <Route path="team" element={<TeamSection />} />
+            </Routes>
         </div>
 
         {/* Footer */}
@@ -298,7 +301,12 @@ const StudentDashboard = () => {
               <span className="text-sm">
                 © Copyright 2022, All Rights Reserved NIT Jalandhar
               </span>
-              <span className="text-sm">
+              <span 
+                onClick={() => {
+                  navigate("/team")
+                  onClick?.();
+                }}
+                className="text-yellow-300 hover:text-yellow-400 cursor-pointer">
                 Developed by Placement Portal Dev Team
               </span>
             </div>
@@ -308,5 +316,6 @@ const StudentDashboard = () => {
     </div>
   );
 };
+
 
 export default StudentDashboard;
