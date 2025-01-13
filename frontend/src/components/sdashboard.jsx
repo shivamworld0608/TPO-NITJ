@@ -13,6 +13,8 @@ import {
   faEnvelope,
   faHandsHelping,
   faShareSquare,
+  faCalendar,
+  faNoteSticky
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -24,6 +26,8 @@ import Interviews from "./StudentDashboard/interviews";
 import GD from "./StudentDashboard/gd";
 import MailboxComponent from "./StudentDashboard/mailbox";
 import OnlineAssessment from "./StudentDashboard/oa";
+import Policy from "./StudentDashboard/policy";
+import CalendarComponent from "./StudentDashboard/calender";
 import SharedExperience from "./StudentDashboard/shared-experience";
 import Profile from "./StudentDashboard/profile";
 import ProfileImage from "../assets/chillguy.png";
@@ -82,6 +86,7 @@ const StudentDashboard = () => {
     { path: "/sdashboard/oa", label: "OA", icon: faClipboard },
     { path: "/sdashboard/interviews", label: "Interview", icon: faComments },
     { path: "/sdashboard/gd", label: "GD", icon: faComments },
+    { path: "/sdashboard/calendar", label: "Calender", icon: faCalendar },
     { path: "/sdashboard/mailbox", label: "Mailbox", icon: faEnvelope },
     {
       path: "/sdashboard/request-help",
@@ -93,6 +98,7 @@ const StudentDashboard = () => {
       label: "Shared Experience",
       icon: faShareSquare,
     },
+    { path: "/sdashboard/policy-guidlines", label: "Policy & Guidlines", icon: faNoteSticky },
   ];
 
   const MenuItem = ({ item, onClick, isSidebarExpanded }) => {
@@ -276,10 +282,12 @@ const StudentDashboard = () => {
             <Route path="oa" element={<OnlineAssessment />} />
             <Route path="interviews" element={<Interviews />} />
             <Route path="gd" element={<GD />} />
+            <Route path="calender" element={<CalendarComponent />} />
             <Route path="mailbox" element={<MailboxComponent />} />
             <Route path="shared-experience" element={<SharedExperience />} />
             <Route path="profile" element={<Profile />} />
             <Route path="request-help" element={<Request />} />
+            <Route path="policy-guidlines" element={<Policy />} />
           </Routes>
         </div>
 
