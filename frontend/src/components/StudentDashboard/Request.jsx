@@ -9,7 +9,7 @@ const Request = () => {
   const [resolvedIssues, setResolvedIssues] = useState([]);
   const [unresolvedIssues, setUnresolvedIssues] = useState([]);
   const [alertMessage, setAlertMessage] = useState("");
-  
+
   const availableIssues = [
     "Job Profile",
     "Eligibility Issue",
@@ -78,7 +78,7 @@ const Request = () => {
           >
             <div>
               <span className="font-medium text-gray-800">{issue.title}</span>
-  
+
               {/* Iterate over the details array */}
               <ul className="mt-2 space-y-2">
                 {issue.details.map((detail, index) => (
@@ -95,13 +95,12 @@ const Request = () => {
                         {new Date(detail.raisedAt).toLocaleDateString()}
                       </p>
                     </div>
-  
+
                     <span
-                      className={`flex items-center text-sm font-semibold py-1 px-3 rounded ${
-                        detail.status === "Resolved"
+                      className={`flex items-center text-sm font-semibold py-1 px-3 rounded ${detail.status === "Resolved"
                           ? "bg-green-100 text-green-700"
                           : "bg-yellow-100 text-yellow-700"
-                      }`}
+                        }`}
                     >
                       {detail.status === "Resolved" ? (
                         <>
@@ -124,59 +123,63 @@ const Request = () => {
       </ul>
     );
   };
-  
+
 
   return (
     <div className="p-6 min-h-screen">
       <header className="text-custom-blue py-6">
-        <div className="max-w-lg mx-auto text-center relative">
-          <div className="absolute right-0 top-0 space-x-2">
-            <button
-              onClick={() => setActiveTab("request")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === "request"
-                  ? "bg-custom-blue text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-            >
-              Request Help
-            </button>
-            <button
-              onClick={() => setActiveTab("unresolved")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === "unresolved"
-                  ? "bg-custom-blue text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-            >
-              Unresolved
-            </button>
-            <button
-              onClick={() => setActiveTab("resolved")}
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                activeTab === "resolved"
-                  ? "bg-custom-blue text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-            >
-              Resolved
-            </button>
-          </div>
-        </div>
+      <div>
+      <div className=" justify-center items-center bg-gray-50 p-4 rounded-t-lg">
+              <h1 className="font-bold text-black text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
+                Request{" "}
+                <span className="bg-custom-blue text-transparent bg-clip-text">Help</span>
+              </h1>
+              <div className="flex justify-center">
+                <span className="text-base text-black">Easily raise and</span>
+                <span className="mx-1 bg-custom-blue text-transparent bg-clip-text text-center">track your issues</span>
+              </div>
+
+            </div>
+            <div className="inline-flex justify-end border border-gray-300 rounded-3xl bg-gray-50">
+                     
+                      <button
+                          className={`px-4 py-2 rounded-3xl ${
+                              activeTab === "request"
+                                  ? "bg-custom-blue text-white"
+                                  : "bg-white"
+                          }`}
+                          onClick={() => setActiveTab("request")}
+                      >
+                          Request
+                      </button>
+                      <button
+                          className={`px-4 py-2 rounded-3xl ${
+                              activeTab === "resolved"
+                                  ? "bg-custom-blue text-white"
+                                  : "bg-white"
+                          }`}
+                          onClick={() => setActiveTab("resolved")}
+                      >
+                          Resolved
+                      </button>
+                      <button
+                          className={`px-4 py-2 rounded-3xl ${
+                              activeTab === "unresolved"
+                                  ? "bg-custom-blue text-white"
+                                  : "bg-white"
+                          }`}
+                          onClick={() => setActiveTab("unresolved")}
+                      >
+                          Unresolved
+                      </button>
+                  </div>
+            </div>
       </header>
 
       <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-6 mt-6">
         {activeTab === "request" ? (
           <>
-          <div>
-           <h1 className="font-bold text-black text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
-            Request{" "}
-            <span className="bg-custom-blue text-transparent bg-clip-text">Help</span>
-          </h1>
-          <span className="text-base text-black mt-2">Easily raise and </span>
-          <span className="bg-custom-blue text-transparent bg-clip-text text-center">track your issues</span>
-           </div> 
-           {alertMessage && (
+            {alertMessage && (
               <div className="p-4 mb-4 bg-green-100 text-green-800 rounded-md border-l-4 border-green-500">
                 {alertMessage}
               </div>
