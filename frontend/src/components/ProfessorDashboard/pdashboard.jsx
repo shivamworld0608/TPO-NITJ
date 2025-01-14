@@ -9,7 +9,6 @@ import OAManagement from "./poamanagement"; // Import the OAManagement component
 import InterviewManagement from "./pinterviewmanagement";
 import PNotifications from "./pnotifications";
 import Mailbox from "./pmailbox";
-import HelpRequests from "./phelprequests";
 import ExperienceSharing from "./pexperiencesharing";
 import PlacementInsights from "./pplacementinsights";
 import PlacementPolicy from "./pplacementpolicy";
