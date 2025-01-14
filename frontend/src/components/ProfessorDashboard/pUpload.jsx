@@ -172,7 +172,40 @@ const PDFDownloadCards = () => {
 
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">PDF Documents</h1>
-        
+        <div className="relative">
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={handleFileUpload}
+            className="hidden"
+            id="pdf-upload"
+            disabled={uploadingFile}
+          />
+          <label
+            htmlFor="pdf-upload"
+            className="cursor-pointer bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {uploadingFile ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Uploading: {uploadProgress}%
+              </>
+            ) : (
+              <>
+                <Upload className="h-4 w-4" />
+                Upload PDF
+              </>
+            )}
+          </label>
+          {uploadingFile && (
+            <div className="mt-2 w-full bg-gray-200 rounded-full h-2.5">
+              <div 
+                className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+          )}
+        </div>
       </div>
 
       {error && (
@@ -194,8 +227,16 @@ const PDFDownloadCards = () => {
                     Uploaded by: {pdf.uploadedBy?.name || 'Unknown'}
                   </p>
                 </div>
+                {pdf.uploadedBy?._id === pdf.uploadedBy?._id && (
+                  <button
+                    onClick={() => handleDelete(pdf._id)}
+                    className="text-gray-400 hover:text-red-500 transition-colors"
+                    title="Delete PDF"
+                  >
+                    <Trash2 size={20} />
+                  </button>
+                )}
               </div>
-                
               <p className="text-sm text-gray-500">
                 {formatDate(pdf.uploadDate)}
               </p>
@@ -210,7 +251,9 @@ const PDFDownloadCards = () => {
               {pdf.description && (
                 <p className="text-sm text-gray-600 mb-2">{pdf.description}</p>
               )}
-              
+              <div className="text-sm text-gray-500">
+                Downloads: {pdf.downloads}
+              </div>
             </CardContent>
             <CardFooter className="p-4 bg-gray-50">
               <button
