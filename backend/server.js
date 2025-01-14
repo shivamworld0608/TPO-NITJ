@@ -16,6 +16,8 @@ import formTemplateroutes from "./routes/formTemplate.js";
 import sharedexperienceroutes from "./routes/sharedexperience.js";
 import placementroutes from "./routes/placement.js";
 import reqhelproutes from "./routes/reqhelp.js";
+import jobEventroutes from "./routes/jobEvents.js"
+
 
 
 const app = express();
@@ -67,6 +69,8 @@ app.use('/jobprofile',authenticate,jobprofileroutes);
 app.use('/sharedexperience',authenticate,sharedexperienceroutes);
 app.use("/placements",placementroutes);
 app.use("/reqhelp",authenticate,reqhelproutes);
+app.use("/job-events",jobEventroutes);
+
 
 
 app.use('/api',authenticate, formTemplateroutes);
