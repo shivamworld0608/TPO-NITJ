@@ -79,7 +79,7 @@ const LoginSignup = ({Login}) => {
           } else if (response.data.userType === "Recuiter") {
             navigate("/rdashboard/createdjob");
           } else if (response.data.userType === "Professor") {
-            navigate("/pdashboard");
+            navigate("/pdashboard/dashboard");
           }
         });
     } catch (error) {
