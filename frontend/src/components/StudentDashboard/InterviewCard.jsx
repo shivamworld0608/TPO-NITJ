@@ -16,7 +16,7 @@ export default function InterviewCard({
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto px-4 py-6 ">
       <div className="w-full max-w-lg mx-auto border border-custom-blue bg-white rounded-lg shadow-lg p-6 transition-all transform duration-300 hover:shadow-2xl hover:scale-105">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">
           {company_name}
@@ -50,7 +50,7 @@ export default function InterviewCard({
             <span>{interview_time || "Not Provided"}</span>
           </div>
 
-          {interview_link && (
+          {interview_link ? (
             <div className="text-sm text-gray-500 flex items-center">
               <span className="font-medium text-gray-800 mr-2">
                 Interview Link:
@@ -59,12 +59,23 @@ export default function InterviewCard({
                 href={interview_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+                className="border border-green-500 rounded-lg p-1 text-green-500 hover:bg-green-500 hover:text-white"
               >
                 Join
               </a>
             </div>
-          )}
+          )
+          :
+          <div className="text-sm text-gray-500 flex items-center">
+          <span className="font-medium text-gray-800 mr-2">Interview Link:</span>
+          <button
+            onClick={()=>alert("Interview link will be available soon")}
+            className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+          >
+            Soon
+          </button>
+        </div>
+        }
           <div className="text-sm text-gray-500 flex items-center">
             <span className="font-medium text-gray-800 mr-2">
               Selection Status:
