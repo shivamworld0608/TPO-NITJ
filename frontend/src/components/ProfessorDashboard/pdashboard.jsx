@@ -21,7 +21,8 @@ import {
   faQuestionCircle,
   faShareAlt,
   faChartBar,
-  faFileAlt
+  faFileAlt,
+  faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -43,6 +44,7 @@ import PlacementPolicy from "./pplacementpolicy";
 import RequestHelpManager from "./Request";
 import Profile from "../StudentDashboard/profile";
 import Home from "./home";
+import Upload from "./pUpload.jsx";
 import TeamSection from "../Developers/TeamSection.jsx";
 
 
@@ -99,6 +101,7 @@ const Pdashboard = () => {
     { label: "Experience Sharing", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
     { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
     { label: "Placement Policy", icon: faFileAlt, path: "/pdashboard/placement-policy" },
+    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
   ];
 
 
@@ -290,6 +293,7 @@ const Pdashboard = () => {
             <Route path="placement-policy" element={<PlacementPolicy />} />
             <Route path="profile" element={<Profile />} />
             <Route path="team" element={<TeamSection />} />
+            <Route path="uploads" element={<Upload />} />
             </Routes>
         </div>
 

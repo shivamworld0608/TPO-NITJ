@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import path from "path";
 
 import authroutes from "./routes/auth.js";
 import interviewroutes from "./routes/interview.js";
@@ -17,7 +18,14 @@ import sharedexperienceroutes from "./routes/sharedexperience.js";
 import placementroutes from "./routes/placement.js";
 import reqhelproutes from "./routes/reqhelp.js";
 import jobEventroutes from "./routes/jobEvents.js"
+import pdfroutes from "./routes/pdfRoutes.js";
 
+import { mkdir } from 'fs/promises';
+try {
+  await mkdir('uploads/pdfs', { recursive: true });
+} catch (err) {
+  console.error('Error creating uploads directory:', err);
+}
 
 
 const app = express();
@@ -72,6 +80,11 @@ app.use("/reqhelp",authenticate,reqhelproutes);
 app.use("/job-events",jobEventroutes);
 
 
+// Serve uploads directory statically
+app.use('/uploads', express.static('uploads'));
+
+// Add PDF routes
+app.use('/api/pdfs', authenticate, pdfroutes);
 
 app.use('/api',authenticate, formTemplateroutes);
 /* app.use('/applicationform',applicationformroutes); */
