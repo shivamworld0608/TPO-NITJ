@@ -127,20 +127,12 @@ const Request = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      <header className="text-custom-blue py-6">
-      <div>
-      <div className=" justify-center items-center bg-gray-50 p-4 rounded-t-lg">
-              <h1 className="font-bold text-black text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
-                Request{" "}
-                <span className="bg-custom-blue text-transparent bg-clip-text">Help</span>
-              </h1>
-              <div className="flex justify-center">
-                <span className="text-base text-black">Easily raise and</span>
-                <span className="mx-1 bg-custom-blue text-transparent bg-clip-text text-center">track your issues</span>
-              </div>
+       <div className="flex ">
+            <div className="w-9/12">
 
             </div>
-            <div className="inline-flex justify-end border border-gray-300 rounded-3xl bg-gray-50">
+           
+            <div className=" border border-gray-300 rounded-3xl bg-gray-50">
                      
                       <button
                           className={`px-4 py-2 rounded-3xl ${
@@ -173,12 +165,25 @@ const Request = () => {
                           Unresolved
                       </button>
                   </div>
-            </div>
-      </header>
+                  </div>
+    
+           
+          
 
-      <div className="max-w-lg mx-auto bg-white rounded-lg shadow-lg p-6 mt-6">
+      <div className="max-w-lg mx-auto mt-0 bg-white rounded-lg shadow-lg p-6">
         {activeTab === "request" ? (
           <>
+            <div className=" justify-center items-center  p-4 rounded-t-lg">
+              <h1 className="font-bold text-black text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
+                Request{" "}
+                <span className="bg-custom-blue text-transparent bg-clip-text">Help</span>
+              </h1>
+              <div className="flex justify-center">
+                <span className="text-base text-black">Easily raise and</span>
+                <span className="mx-1 bg-custom-blue text-transparent bg-clip-text text-center">track your issues</span>
+              </div>
+
+            </div>
             {alertMessage && (
               <div className="p-4 mb-4 bg-green-100 text-green-800 rounded-md border-l-4 border-green-500">
                 {alertMessage}
