@@ -3,7 +3,7 @@ import { Phone, Linkedin } from 'lucide-react';
 
 const TeamMemberCard = ({ image, name, linkedinUrl, mobile }) => (
     <div className="w-80 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 bg-white overflow-hidden transform hover:scale-105">
-        <div className="relative w-full h-2/3">
+        <div className="relative w-full h-lg">
             <img
                 src={image || "/api/placeholder/320/192"}
                 alt={name}
