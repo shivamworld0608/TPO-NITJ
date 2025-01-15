@@ -19,7 +19,7 @@ const CreatedJobs = () => {
           `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/recruiter/getjobs`,
           { withCredentials: true }
         );
-        setJobs(response.data.jobs);
+        setJobs(response.data.jobs||[]);
       } catch (error) {
         setError('Error fetching jobs');
       } finally {

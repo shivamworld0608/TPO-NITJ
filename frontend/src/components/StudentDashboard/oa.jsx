@@ -35,7 +35,7 @@ const OnlineAssessment = () => {
         fetchAssessments();
     }, []);
 
-    if (loading) return <BouncingLoader size="medium" text="Loading..." />;
+    if (loading) return <BouncingLoader  text="Loading..." />;
 
     if (visibleDetailId) {
         return (
@@ -99,7 +99,7 @@ const OnlineAssessment = () => {
     return (
         <>
             {/* Tabs */}
-            <div className="flex justify-between items-center bg-white p-4 rounded-t-lg ">
+            <div className="flex justify-between items-center p-4 rounded-t-lg ">
                 <h2 className="text-3xl font-semibold text-custom-blue capitalize underline underline-offset-8">
                     {activeTab === "upcoming" ? "Upcoming OA's" : "Past OA's"}
                 </h2>

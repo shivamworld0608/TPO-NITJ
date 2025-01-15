@@ -85,7 +85,7 @@ const InterviewsData = () => {
     return (
         <>
             {/* Tabs */}
-            <div className="flex justify-between items-center bg-white p-4 rounded-t-lg">
+            <div className="flex justify-between items-center p-4 rounded-t-lg">
                 <h2 className="text-3xl underline underline-offset-8 font-semibold text-custom-blue capitalize">
                     {activeTab === "upcoming"
                         ? "Upcoming Interviews"

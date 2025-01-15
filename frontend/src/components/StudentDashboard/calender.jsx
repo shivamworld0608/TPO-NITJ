@@ -73,7 +73,7 @@ const CalendarComponent = () => {
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       days.push(
-        <div key={`empty-${i}`} className="h-32 border border-gray-200"></div>
+        <div key={`empty-${i}`} className="h-32 border border-custom-blue"></div>
       );
     }
 
@@ -89,9 +89,9 @@ const CalendarComponent = () => {
       days.push(
         <div
           key={day}
-          className="h-32 border border-gray-200 p-2 overflow-y-auto"
+          className="h-32 border border-custom-blue p-2 overflow-y-auto"
         >
-          <div className="font-bold mb-1">{day}</div>
+          <div className="font-bold text-custom-blue mb-1">{day}</div>
           {dayEvents.map((event, idx) => (
             <div
               key={idx}
@@ -130,12 +130,12 @@ const CalendarComponent = () => {
   ];
 
   return (
-    <Card className="max-w-6xl mx-auto">
+    <Card className="max-w-6xl mx-auto border border-custom-blue">
       <CardHeader>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
-            <Calendar className="mr-2 h-5 w-5" />
-            <h2 className="text-2xl font-bold">
+            <Calendar className="mr-2 h-5 w-5 text-custom-blue" />
+            <h2 className="text-2xl text-custom-blue font-bold">
               {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
             </h2>
           </div>
@@ -143,6 +143,7 @@ const CalendarComponent = () => {
             <Button
               variant="outline"
               size="sm"
+              className="bg-custom-blue text-white"
               onClick={() => navigateMonth(-1)}
               disabled={loading}
             >
@@ -150,6 +151,7 @@ const CalendarComponent = () => {
             </Button>
             <Button
               variant="outline"
+              className="bg-custom-blue text-white"
               size="sm"
               onClick={() => navigateMonth(1)}
               disabled={loading}
@@ -169,7 +171,7 @@ const CalendarComponent = () => {
         {!loading && !error && (
           <>
             {/* Calendar Header */}
-            <div className="grid grid-cols-7 gap-1 mb-2">
+            <div className="grid grid-cols-7 gap-1 mb-2 text-custom-blue">
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                 <div key={day} className="text-center font-semibold p-2">
                   {day}

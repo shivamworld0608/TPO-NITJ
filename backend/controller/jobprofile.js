@@ -182,9 +182,6 @@ export const getJobsByRecruiter = async (req, res) => {
   try {
     const recruiterId = req.user.userId;
     const jobs = await JobProfile.find({ recruiter_id: recruiterId }); // Query to find jobs by recruiter
-    if (!jobs || jobs.length === 0) {
-      return res.status(404).json({ success: false, message: 'No jobs found for this recruiter' });
-    }
     res.status(200).json({ success: true, jobs });
   } catch (error) {
     console.error('Error fetching jobs:', error.message);
