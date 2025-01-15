@@ -368,7 +368,8 @@ export const checkEligibility = async (req, res) => {
         reason: "Student can only apply for higher job categories than their current placement status",
       });
     }
-    return res.json({ eligible: true, reason: "Eligible to apply" });
+    const hasApplied = job.Applied_Students.includes(studentId);
+    return res.json({ eligible: true, reason: "Eligible to apply", applied: hasApplied });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error" });
@@ -397,7 +398,11 @@ export const addshortlistStudents = async (req, res) => {
       });
 
       if (formSubmission) {
-        studentIds.push(formSubmission.studentId);
+        if (!step.shortlisted_students.includes(formSubmission.studentId)) {
+          studentIds.push(formSubmission.studentId);
+        } else {
+          console.log(`Student with ID ${formSubmission.studentId} is already shortlisted.`);
+        }
       } else {
         console.error(`FormSubmission not found for email: ${student.email}`);
       }
@@ -406,7 +411,12 @@ export const addshortlistStudents = async (req, res) => {
     step.shortlisted_students.push(...studentIds);
 
     if (job.Hiring_Workflow[stepIndex + 1]) {
-      job.Hiring_Workflow[stepIndex + 1].eligible_students.push(...studentIds);
+      const eligibleStudents = job.Hiring_Workflow[stepIndex + 1].eligible_students;
+      for (const studentId of studentIds) {
+        if (!eligibleStudents.includes(studentId)) {
+          eligibleStudents.push(studentId);
+        }
+      }
     } else {
       const placementData = [];
       for (const studentId of studentIds) {

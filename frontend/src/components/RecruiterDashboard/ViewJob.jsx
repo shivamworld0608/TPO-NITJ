@@ -31,7 +31,7 @@ const formatDateTime = (dateString) => {
   });
 };
 
-const ViewJobDetails = ({ job, onClose }) => {
+const ViewJobDetailsr = ({ job, onClose }) => {
   const [viewingShortlist, setViewingShortlist] = useState(null);
   const [viewingAppliedStudents, setViewingAppliedStudents] = useState(false);
   const [editingStepIndex, setEditingStepIndex] = useState(null);
@@ -454,7 +454,7 @@ const ViewJobDetails = ({ job, onClose }) => {
             </button>
 
             <h3 className="text-2xl font-semibold text-blue-800 mb-6">
-              {step.step_type} Step
+              {step.step_type}
             </h3>
 
             <ul className="space-y-4 text-gray-700">
@@ -533,7 +533,7 @@ const ViewJobDetails = ({ job, onClose }) => {
     return (
       <AppliedStudents
         jobId={job._id}
-        onBack={() => setViewingAppliedStudents(false)}
+        onClose={() => setViewingAppliedStudents(false)}
       />
     );
   }
@@ -581,4 +581,4 @@ const ViewJobDetails = ({ job, onClose }) => {
   );
 };
 
-export default ViewJobDetails;
+export default ViewJobDetailsr;

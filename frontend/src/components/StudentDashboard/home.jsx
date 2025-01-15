@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Graph from "./homeInsightsGraph";
+import RecentPlacements from "./recentplacements";
 
 const LoadingSkeleton = () => (
   <div className="h-full w-full animate-pulse space-y-2">
@@ -99,19 +100,7 @@ const StudentDashboard = () => {
     "New Placement opportunities at Company GS",
   ];
 
-  const placements = [
-    { company: "Google", role: "Software Engineer", date: "January 13, 2024" },
-    {
-      company: "Microsoft",
-      role: "Software Engineer",
-      date: "January 12, 2024",
-    },
-    {
-      company: "Amazon",
-      role: "Software Engineer",
-      date: "January 11, 2024",
-    },
-  ];
+  const [placements,setPlacements]=useState([]);
 
   const internships = [
     { company: "Expedia", role: "Software Engineer", date: "January 13, 2024" },
@@ -143,9 +132,24 @@ const StudentDashboard = () => {
       setTimeout(() => setLoading(false), 800);
     }
   };
+  const recentplacements=async()=>{
+    setLoading(true);
+    try {
+      const response=await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/placements/last-seven-days`,{withCredentials:true});
+      setPlacements(response.data);
+      console.log("recent response:",response);
+  }
+  catch(error){
+    console.log(error);
+  }
+}
 
   useEffect(() => {
     fetchPlacements();
+  }, []);
+
+  useEffect(() => {
+    recentplacements();
   }, []);
 
   const NotificationCard = ({ isLoading }) => {
@@ -195,7 +199,7 @@ const StudentDashboard = () => {
 
     return (
       <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px] w-full max-w-3xl">
-        <div className="px-4 py-3 bg-blue-500 text-white">
+        <div className="px-4 py-3 bg-custom-blue text-white">
           <h2 className="text-lg font-medium">Notifications</h2>
         </div>
 
@@ -269,66 +273,16 @@ const StudentDashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
           {/* Notifications Card */}
-          {/* <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px] group">
-            <div className="px-4 py-3 bg-blue-500 text-white">
-              <h2 className="text-lg font-medium">Notifications</h2>
-            </div>
-            <div className="h-[calc(100%-48px)] relative overflow-hidden">
-              <ul className="absolute w-full space-y-3 animate-verticalScroll group-hover:pause">
-                {notifications.map((notification, index) => (
-                  <li
-                    key={index}
-                    className="px-4 py-2 mx-4 text-sm text-gray-800 bg-gray-100 rounded-md shadow-sm hover:bg-gray-200 transition-colors"
-                  >
-                    {notification}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div> */}
-          {/* News/Notifications Card */}
           <NotificationCard isLoading={loading} />
 
           {/* Recent Placements Card */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
-            <div className="px-4 py-3 bg-blue-500 text-white">
-              <h2 className="text-lg font-medium">Recent Placements</h2>
-            </div>
-            <div
-              className={`p-4 h-[calc(100%-48px)] ${
-                placements.length > 2
-                  ? "overflow-y-auto scrollbar-thin scrollbar-thumb-[#3b82f6] scrollbar-track-gray-200 scrollbar-thumb-height-10"
-                  : "overflow-y-hidden"
-              }`}
-            >
-              {loading ? (
-                <CardSkeleton />
-              ) : (
-                <div className="space-y-4">
-                  {placements.map((placement, index) => (
-                    <div
-                      key={index}
-                      className="p-3 hover:bg-gray-100 rounded transition-all duration-200 hover:scale-[1.02]"
-                    >
-                      <div className="text-gray-800 font-medium mb-1">
-                        {placement.company}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {placement.role}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {placement.date}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
 
+         <RecentPlacements placements={placements} loading={loading} />
+
+         
           {/* Recent Internships Card */}
           <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
-            <div className="px-4 py-3 bg-blue-500 text-white">
+            <div className="px-4 py-3 bg-custom-blue text-white">
               <h2 className="text-lg font-medium">Recent Internships</h2>
             </div>
             <div

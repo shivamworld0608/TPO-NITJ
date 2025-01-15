@@ -148,29 +148,37 @@ export const getFilteredPlacements = async (req, res) => {
   }
 }; */
 
-export const getLastSevenDaysPlacements = async(req,res) => {
+export const getLastSevenDaysPlacements = async(req, res) => {
   try {
-    const startOfLastSevenDays = moment().subtract(7, "days").startOf("day").toDate();
-    const endOfToday = moment().endOf("day").toDate();
-    
-    console.log("Date range:", {
-      start: startOfLastSevenDays,
-      end: endOfToday
-    });
+    const allPlacements = await Placement.find({});
+    if (allPlacements.length > 0) {
+      console.log("Sample placement dates:", {
+        createdAt: allPlacements[0].createdAt,
+        dateType: typeof allPlacements[0].createdAt
+      });
+    }
+    const today = new Date();
+    const startOfLastSevenDays = new Date(today);
+    startOfLastSevenDays.setDate(today.getDate() - 7);
+    startOfLastSevenDays.setHours(0, 0, 0, 0);
+
+    const endOfToday = new Date(today);
+    endOfToday.setHours(23, 59, 59, 999);
 
     const placements = await Placement.find({
-      createdAt: { $gte: startOfLastSevenDays, $lte: endOfToday },
-    });
-    
-    console.log("Query:", {
-      "createdAt": { $gte: startOfLastSevenDays, $lte: endOfToday }
-    });
-    
-    console.log("Found placements:", placements.length);
-    
+      $expr: {
+        $and: [
+          { $gte: [{ $dateFromString: { dateString: "$createdAt" }}, startOfLastSevenDays] },
+          { $lte: [{ $dateFromString: { dateString: "$createdAt" }}, endOfToday] }
+        ]
+      }
+    }).sort({ createdAt: -1 });
     res.status(200).json(placements);
   } catch (error) {
-    console.error("Error fetching placements from the last seven days:", error);
+    console.error("Error with details:", {
+      message: error.message,
+      stack: error.stack
+    });
     res.status(500).json({ error: "Internal server error" });
   }
 };

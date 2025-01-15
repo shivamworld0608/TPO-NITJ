@@ -56,17 +56,17 @@ const RequestHelpManager = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Pending Issues</h1>
+      <h1 className="text-3xl font-bold text-custom-blue mb-4">Pending Issues</h1>
       {issues.length === 0 ? (
         <p className="text-gray-500">No pending issues to resolve.</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-4 p-8 bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative mt-8">
           {issues.map((issue) => (
             <li
               key={issue._id}
               className="p-4 bg-white shadow rounded-lg border space-y-4"
             >
-              <h3 className="font-bold text-gray-800">{issue.title}</h3>
+              <h3 className="font-bold text-custom-blue">{issue.title}</h3>
               {issue.details.map((detail) => (
                 <div
                   key={detail._id}

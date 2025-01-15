@@ -90,7 +90,6 @@ const Pdashboard = () => {
 
   const menuItems = [
     { label: "Dashboard", icon: faHome, path: "/pdashboard/dashboard" },
-    { label: "Job Management", icon: faBriefcase, path: "/pdashboard/job-management" },
     { label: "Job Profile Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
     { label: "OA Management", icon: faClipboard, path: "/pdashboard/oa-management" },
     { label: "Interview Management", icon: faClipboardUser, path: "/pdashboard/interview-management" },
@@ -280,7 +279,6 @@ const Pdashboard = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="dashboard" element={<Home />} />
-            <Route path="job-management" element={<JobManagement />} />
             <Route path="job-profile-management" element={<JobManagement />} />
             <Route path="oa-management" element={<OAManagement />} />
             <Route path="interview-management" element={<InterviewManagement />} />
