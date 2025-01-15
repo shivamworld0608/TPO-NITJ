@@ -5,11 +5,12 @@ import JobProfile from '../models/jobprofile.js';
 export const submitForm = async (req, res) => {
   try {
     const studentId = req.user.userId;
-    const { jobId, fields } = req.body;
+    const { jobId, fields, resumeUrl } = req.body;
     const formSubmission = new FormSubmission({
       jobId,
       studentId,
       fields,
+      resumeUrl
     });
     await formSubmission.save();
     await JobProfile.findOneAndUpdate(
