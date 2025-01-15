@@ -3,8 +3,10 @@ import axios from 'axios';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 import Swal from 'sweetalert2';
+import { UserX, X } from 'lucide-react';
+import { Button } from "../ui/button";
 
-const AppliedStudentp = ({ jobId }) => {
+const AppliedStudentp = ({ jobId,onClose }) => {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -80,7 +82,7 @@ const AppliedStudentp = ({ jobId }) => {
       if (result.isConfirmed) {
         try {
           await axios.delete(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/delete-all/${jobId}`, { withCredentials: true });
-          setSubmissions([]); // Clear submissions after removal
+          setSubmissions([]);
           Swal.fire('Removed!', 'All students have been removed.', 'success');
         } catch (err) {
           console.error(err);
@@ -104,7 +106,7 @@ const AppliedStudentp = ({ jobId }) => {
         try {
           const updatedSubmissions = submissions.map(submission => ({ ...submission, isVisible: true }));
           await axios.patch(`${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/make-visible/${jobId}`, { isVisible: true }, { withCredentials: true });
-          setSubmissions(updatedSubmissions); // Update state to reflect visibility change
+          setSubmissions(updatedSubmissions);
           Swal.fire('Made Visible!', 'All students are now visible to the recruiter.', 'success');
         } catch (err) {
           console.error(err);
@@ -114,49 +116,97 @@ const AppliedStudentp = ({ jobId }) => {
     });
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) {
+    return (
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
+        <div className="flex flex-col items-center justify-center h-64 text-red-500">
+          <svg className="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="mt-4 text-lg font-medium">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (submissions.length === 0) {
+    return (
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
+            <Button
+  variant="ghost"
+  size="icon"
+  onClick={onClose} // Corrected this line
+  className="rounded-full hover:bg-gray-100"
+>
+  <X className="h-5 w-5" />
+</Button>
+
+        <div className="flex flex-col items-center justify-center py-12">
+          <UserX className="w-24 h-24 text-gray-400 mb-4" />
+          <h2 className="text-2xl font-semibold text-gray-700 mb-2">No Applications Yet</h2>
+          <p className="text-gray-500 text-center mb-6">
+            No student applied yet for this position.
+            <br />
+            Check back later for new submissions.
+          </p>
+          <div className="w-32 h-1 bg-blue-500 rounded-full"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
-      <h1 className="text-2xl font-bold mb-6 text-center">Students applied</h1>
-      <button
-        className="bg-green-500 text-white py-2 px-4 rounded-lg mb-4 hover:bg-green-600"
-        onClick={handleExport}
-      >
-        Download Excel
-      </button>
-      <button
-        className="bg-red-500 text-white py-2 px-4 rounded-lg mb-4 hover:bg-red-600 ml-4"
-        onClick={handleRemoveAll}
-      >
-        Remove All Students
-      </button>
-      <button
-        className="bg-blue-500 text-white py-2 px-4 rounded-lg mb-4 hover:bg-blue-600 ml-4"
-        onClick={handleMakeVisibleToAll}
-      >
-        Make All Visible to Recruiter
-      </button>
+      <h1 className="text-2xl font-bold mb-6 text-center">Students Applied</h1>
+      <div className="flex flex-wrap gap-4 mb-6">
+        <button
+          className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
+          onClick={handleExport}
+        >
+          Download Excel
+        </button>
+        <button
+          className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
+          onClick={handleRemoveAll}
+        >
+          Remove All Students
+        </button>
+        <button
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
+          onClick={handleMakeVisibleToAll}
+        >
+          Make All Visible to Recruiter
+        </button>
+      </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border-collapse border border-gray-300">
           <thead>
             <tr>
               {submissions[0]?.fields.map((field, index) => (
-                <th key={index} className="border border-gray-300 px-4 py-2">{field.fieldName}</th>
+                <th key={index} className="border border-gray-300 px-4 py-2 bg-gray-50">{field.fieldName}</th>
               ))}
-              <th className="border border-gray-300 px-4 py-2">Actions</th>
+              <th className="border border-gray-300 px-4 py-2 bg-gray-50">Actions</th>
             </tr>
           </thead>
           <tbody>
             {submissions.map((submission, index) => (
-              <tr key={index}>
+              <tr key={index} className="hover:bg-gray-50">
                 {submission.fields.map((field, fieldIndex) => (
                   <td key={fieldIndex} className="border border-gray-300 px-4 py-2">{field.value}</td>
                 ))}
                 <td className="border border-gray-300 px-4 py-2">
                   <button
-                    className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600"
+                    className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
                     onClick={() => handleRemove(submission._id)}
                   >
                     Remove

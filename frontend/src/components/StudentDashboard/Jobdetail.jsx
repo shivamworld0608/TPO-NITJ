@@ -81,95 +81,136 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
         ),
         hiringFlow: (
             <div className="font-sans p-6">
-    <div className="relative max-w-2xl mx-auto">
-        <div className="flex flex-col space-y-8">
-            {jobDetails?.Hiring_Workflow?.map((step, index) => (
-                <div key={index} className="relative flex items-start space-x-6 group">
-                    {/* Dot Container */}
-                    <div className="relative flex flex-col items-center">
-                        <div className="w-6 h-6 bg-custom-blue rounded-full flex items-center justify-center text-white shadow-lg group-hover:bg-blue-500 transition-colors">
-                            <span className="text-sm">{index + 1}</span>
-                        </div>
-                        {/* Vertical Line */}
-                        {index !== jobDetails.Hiring_Workflow.length  && (
-                            <div className="absolute top-7 left-1/2 transform -translate-x-1/2 w-1 bg-custom-blue group-hover:bg-blue-500 transition-all" style={{
-                                height: index === jobDetails.Hiring_Workflow.length - 1 ? '140px' : '170px',
-                            }}></div>
-                        )}
-                    </div>
-
-                    {/* Step Details */}
-                    <div className="ml-10 p-4 w-2/5 h-44 border border-blue-500 rounded-lg bg-white shadow-md group-hover:shadow-lg transition-shadow">
-                        <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-500 transition-colors">
-                            {step.step_type || "To be announced"}
-                        </h3>
-                        <p className="text-gray-600 mt-2 group-hover:text-blue-500 transition-colors">
-                            {step.step_name || "To be announced"}
-                        </p>
-                        <p className="text-sm text-gray-500 mt-2 group-hover:text-blue-500 transition-colors">
-                            {step.description || "To be announced"}
-                        </p>
-                        <p className="text-sm text-gray-500 mt-2 group-hover:text-blue-500 transition-colors">
-                            <strong>Date: </strong> {step.tentative_date || "To be announced"}
-                        </p>
+                <div className="relative max-w-2xl mx-auto">
+                    <div className="flex flex-col space-y-8">
+                        {jobDetails?.Hiring_Workflow?.map((step, index) => (
+                            <div key={index} className="relative flex items-start space-x-6 group">
+                                {/* Dot Container */}
+                                <div className="relative flex flex-col items-center">
+                                    <div className="w-6 h-6 bg-custom-blue rounded-full flex items-center justify-center text-white shadow-lg group-hover:bg-blue-500 transition-colors">
+                                        <span className="text-sm">{index + 1}</span>
+                                    </div>
+                                    {/* Vertical Line */}
+                                    {index !== jobDetails.Hiring_Workflow.length - 1 && (
+                                        <div
+                                            className="absolute top-7 left-1/2 transform -translate-x-1/2 w-1 bg-custom-blue group-hover:bg-blue-500 transition-all"
+                                            style={{
+                                                height: '170px',
+                                            }}
+                                        ></div>
+                                    )}
+                                </div>
+        
+                                {/* Step Details */}
+                                <div className="ml-10 p-4 w-2/5 h-auto border border-blue-500 rounded-lg bg-white shadow-md group-hover:shadow-lg transition-shadow">
+                                    <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-500 transition-colors">
+                                        {step.step_type || "To be announced"}
+                                    </h3>
+                                    <p className="text-gray-600 mt-2 group-hover:text-blue-500 transition-colors">
+                                        {step.step_type === "OA" ? (
+                                            <>
+                                                <span>
+                                                    Date: {step.details.oa_date || "To be announced"}
+                                                </span>
+                                                <br />
+                                                <span>
+                                                    Login Time: {step.details.oa_login_time || "N/A"}
+                                                </span>
+                                                <br />
+                                                <span>
+                                                    Duration: {step.details.oa_duration || "N/A"}
+                                                </span>
+                                            </>
+                                        ) : step.step_type === "Interview" ? (
+                                            <>
+                                                <span>
+                                                    Type: {step.details.interview_type || "N/A"}
+                                                </span>
+                                                <br />
+                                                <span>
+                                                    Date: {step.details.interview_date || "To be announced"}
+                                                </span>
+                                                <br />
+                                                <span>
+                                                    Time: {step.details.interview_time || "N/A"}
+                                                </span>
+                                            </>
+                                        ) : (
+                                            "To be announced"
+                                        )}
+                                    </p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
-            ))}
-        </div>
-    </div>
-</div>
-
+            </div>
         ),
-eligibilityCriteria: (
-    <div className="bg-gray-100 p-4 rounded-md shadow-md">
-        <h3 className="text-lg font-bold mb-4 text-gray-700">Eligibility Criteria</h3>
-        <div className="space-y-2">
-            <p>
-                <strong className="text-gray-600">Branch Allowed:</strong> 
-                <span className="text-gray-800"> {jobDetails.eligibility_criteria?.department_allowed?.join(', ') || "N/A"}</span>
-            </p>
-            <p>
-                <strong className="text-gray-600">Gender Allowed:</strong> 
-                <span className="text-gray-800"> {jobDetails.eligibility_criteria?.gender_allowed || "N/A"}</span>
-            </p>
-            <p>
-                <strong className="text-gray-600">Eligible Batch:</strong> 
-                <span className="text-gray-800"> {jobDetails.eligibility_criteria?.eligible_batch || "N/A"}</span>
-            </p>
-            <p>
-                <strong className="text-gray-600">Minimum CGPA:</strong> 
-                <span className="text-gray-800"> {jobDetails.eligibility_criteria?.minimum_cgpa || "N/A"}</span>
-            </p>
-            <p>
-                <strong className="text-gray-600">Active Backlogs:</strong> 
-                <span className="text-gray-800">
-                    {jobDetails.eligibility_criteria?.active_backlogs === false ? "No active backlogs allowed" : "N/A"}
-                </span>
-            </p>
-            <p>
-                <strong className="text-gray-600">Student Status:</strong> 
-                <span className={status.eligible ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold'}>
-                    {status.eligible ? "Eligible" : "Not Eligible"}
-                    {status.reason ? ` (${status.reason})` : ""}
-                </span>
-            </p>
-        </div>
-        <div className="mt-4">
-            <button 
-                className={`px-4 py-2 rounded-md font-semibold text-white ${
-                    status.eligible 
-                        ? "bg-green-500 hover:bg-green-600" 
-                        : "bg-gray-300 cursor-not-allowed"
-                }`}
-                disabled={!status.eligible}
-                onClick={() => setapplication(true)}
-            >
-                {status.eligible ? "Apply Now" : "Not Eligible"}
-            </button>
-        </div>
-    </div>
-),
-
+        
+        eligibilityCriteria: (
+            <div className="bg-gray-100 p-4 rounded-md shadow-md">
+                <h3 className="text-lg font-bold mb-4 text-gray-700">Eligibility Criteria</h3>
+                <div className="space-y-2">
+                    <p>
+                        <strong className="text-gray-600">Branch Allowed:</strong> 
+                        <span className="text-gray-800">
+                            {jobDetails.eligibility_criteria?.department_allowed?.join(', ') || "N/A"}
+                        </span>
+                    </p>
+                    <p>
+                        <strong className="text-gray-600">Gender Allowed:</strong> 
+                        <span className="text-gray-800">
+                            {jobDetails.eligibility_criteria?.gender_allowed || "N/A"}
+                        </span>
+                    </p>
+                    <p>
+                        <strong className="text-gray-600">Eligible Batch:</strong> 
+                        <span className="text-gray-800">
+                            {jobDetails.eligibility_criteria?.eligible_batch || "N/A"}
+                        </span>
+                    </p>
+                    <p>
+                        <strong className="text-gray-600">Minimum CGPA:</strong> 
+                        <span className="text-gray-800">
+                            {jobDetails.eligibility_criteria?.minimum_cgpa || "N/A"}
+                        </span>
+                    </p>
+                    <p>
+                        <strong className="text-gray-600">Active Backlogs:</strong> 
+                        <span className="text-gray-800">
+                            {jobDetails.eligibility_criteria?.active_backlogs === false 
+                                ? "No active backlogs allowed" 
+                                : "N/A"}
+                        </span>
+                    </p>
+                    <p>
+                        <strong className="text-gray-600">Student Status:</strong> 
+                        <span className={status.eligible ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold'}>
+                            {status.eligible ? "Eligible" : "Not Eligible"}
+                            {status.reason ? ` (${status.reason})` : ""}
+                        </span>
+                    </p>
+                </div>
+                <div className="mt-4">
+                    <button 
+                        className={`px-4 py-2 rounded-md font-semibold text-white ${
+                            status.eligible 
+                                ? (status.applied 
+                                    ? "bg-blue-500 cursor-not-allowed" 
+                                    : "bg-green-500 hover:bg-green-600") 
+                                : "bg-gray-300 cursor-not-allowed"
+                        }`}
+                        disabled={!status.eligible || status.applied}
+                        onClick={() => !status.applied && setapplication(true)}
+                    >
+                        {status.eligible 
+                            ? (status.applied ? "Applied" : "Apply Now") 
+                            : "Not Eligible"}
+                    </button>
+                </div>
+            </div>
+        ),
+        
         deadline: (
             <p className="text-center"><strong>Please Apply before: {jobDetails.deadline || "N/A"}</strong></p>
         ),

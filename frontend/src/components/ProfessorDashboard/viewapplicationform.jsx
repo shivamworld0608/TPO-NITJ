@@ -6,7 +6,7 @@ const ViewApplicationForm = ({ jobId, onHide }) => {
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [dropdownVisible, setDropdownVisible] = useState(null); // State to manage dropdown visibility
+  const [dropdownVisible, setDropdownVisible] = useState(null);
 
   useEffect(() => {
     const fetchFormTemplate = async () => {
@@ -53,7 +53,10 @@ const ViewApplicationForm = ({ jobId, onHide }) => {
 
       {fields.map((field, index) => (
         <div key={index} className="mb-6">
-          <label className="block text-gray-700 font-medium mb-2">{field.fieldName}</label>
+          <label className="block text-gray-700 font-medium mb-2">
+            {field.fieldName}
+            {field.isRequired && <span className="text-red-500 ml-1">*</span>}
+          </label>
           {field.fieldType === 'select' ? (
             <div className="relative">
               <div
@@ -85,7 +88,7 @@ const ViewApplicationForm = ({ jobId, onHide }) => {
             />
           )}
           {field.isAutoFill && (
-            <p className="text-red-500 text-sm mt-1">Auto-fill field</p>
+            <p className="text-sm mt-1 text-blue-600">Auto-fill field</p>
           )}
         </div>
       ))}

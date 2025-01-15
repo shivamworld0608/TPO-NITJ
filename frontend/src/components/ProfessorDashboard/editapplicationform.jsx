@@ -1,29 +1,35 @@
 import React, { useState, useEffect } from 'react';
+import { Card, CardHeader, CardContent, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Select } from "../ui/select";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
+import { ArrowLeft, Plus, Save } from 'lucide-react';
+import { Alert, AlertDescription } from "../ui/alert";
 import axios from 'axios';
-import toast from 'react-hot-toast';
-import { FaArrowLeft } from 'react-icons/fa';
 
 const EditApplicationForm = ({ jobId, onClose }) => {
   const [title, setTitle] = useState('');
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Student properties for auto-fill
-  const studentProperties = ['gender', 'department', 'cgpa'];
+  const studentProperties = ['gender', 'department', 'cgpa', 'name'];
 
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        const { data } = await axios.get(
+        const response = await axios.get(
           `${import.meta.env.REACT_APP_BASE_URL}/api/form-templates/${jobId}`,
-          { withCredentials: true }
+           {withCredentials:true}
         );
+        const data = response.data;
         setTitle(data.title);
         setFields(data.fields || []);
-        setLoading(false);
       } catch (error) {
-        console.error('Failed to fetch form data:', error);
-        toast.error('Failed to load the form template.');
+        setError(error.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -32,161 +38,234 @@ const EditApplicationForm = ({ jobId, onClose }) => {
   }, [jobId]);
 
   const handleFieldChange = (index, key, value) => {
-    const updatedFields = fields.map((field, i) =>
+    setFields(fields.map((field, i) => 
       i === index ? { ...field, [key]: value } : field
-    );
-    setFields(updatedFields);
+    ));
   };
 
   const handleOptionChange = (index, optionIndex, value) => {
-    const updatedFields = fields.map((field, i) => {
-      if (i === index) {
-        const updatedOptions = [...field.options];
-        updatedOptions[optionIndex] = value;
-        return { ...field, options: updatedOptions };
-      }
-      return field;
-    });
-    setFields(updatedFields);
+    setFields(fields.map((field, i) => 
+      i === index 
+        ? {
+            ...field,
+            options: field.options.map((opt, j) => 
+              j === optionIndex ? value : opt
+            )
+          }
+        : field
+    ));
   };
 
   const addOption = (index) => {
-    const updatedFields = fields.map((field, i) => {
-      if (i === index) {
-        return { ...field, options: [...field.options, ''] };
+    setFields(fields.map((field, i) => 
+      i === index 
+        ? { ...field, options: [...(field.options || []), ''] }
+        : field
+    ));
+  };
+
+  const addField = () => {
+    setFields([
+      ...fields,
+      {
+        fieldName: '',
+        fieldType: 'text',
+        isRequired: false,
+        isAutoFill: false,
+        options: []
       }
-      return field;
-    });
-    setFields(updatedFields);
+    ]);
+  };
+
+  const removeField = (index) => {
+    setFields(fields.filter((_, i) => i !== index));
   };
 
   const saveForm = async () => {
     try {
-      console.log('Form data:', { title, fields });
-      await axios.put(`${import.meta.env.REACT_APP_BASE_URL}/api/form-templates/${jobId}`,{
-        title,
-        fields,
-      },{withCredentials: true});
-      toast.success('Form template updated successfully!');
+      const response = await axios.put(
+        `${import.meta.env.REACT_APP_BASE_URL}/api/form-templates/${jobId}`,
+        { title, fields },
+        {withCredentials:true}
+      );
+      
       onClose();
     } catch (error) {
-      console.error('Failed to save form:', error);
-      toast.error('Failed to update the form template.');
+      setError(error.message);
     }
   };
 
-  if (loading) return <p className="text-center text-gray-500">Loading...</p>;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
-      <div className="mb-6">
-        <button
-          className="flex items-center text-blue-600 hover:text-blue-800"
+    <Card className="max-w-4xl mx-auto bg-white shadow-xl">
+      <CardHeader>
+        <Button 
+          variant="ghost" 
+          className="mb-4" 
           onClick={onClose}
         >
-          <FaArrowLeft className="mr-2" />
-        </button>
-      </div>
-      <h1 className="text-2xl font-bold mb-6 text-center">Edit Application Form Template</h1>
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          Back
+        </Button>
+        <CardTitle className="text-2xl font-bold text-center">
+          Edit Application Form Template
+        </CardTitle>
+      </CardHeader>
+      
+      <CardContent className="space-y-6">
+        {error && (
+          <Alert variant="destructive">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-2">Form Title</label>
-        <input
-          type="text"
-          className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter form title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-      </div>
-
-      {fields.map((field, index) => (
-        <div key={index} className="flex flex-wrap items-center gap-4 mt-4">
-          <input
-            type="text"
-            className="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Field Name"
-            value={field.fieldName}
-            onChange={(e) => handleFieldChange(index, 'fieldName', e.target.value)}
+        <div className="space-y-2">
+          <Label htmlFor="title">Form Title</Label>
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Enter form title"
+            className="w-full"
           />
-          <select
-            className="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={field.fieldType}
-            onChange={(e) => handleFieldChange(index, 'fieldType', e.target.value)}
-          >
-            <option value="text">Text</option>
-            <option value="number">Number</option>
-            <option value="email">Email</option>
-            <option value="date">Date</option>
-            <option value="select">Select</option>
-            <option value="file">File</option>
-            <option value="checkbox">Checkbox</option>
-          </select>
-          {field.fieldType === 'select' && (
-            <div className="flex flex-col gap-2 mt-2">
-              <label className="text-gray-700 font-medium">Options:</label>
-              {field.options.map((option, optionIndex) => (
-                <input
-                  key={optionIndex}
-                  type="text"
-                  className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder={`Option ${optionIndex + 1}`}
-                  value={option}
-                  onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
-                />
-              ))}
-              <button
-                className="bg-gray-500 text-white py-1 px-3 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 mt-2"
-                onClick={() => addOption(index)}
-              >
-                Add Option
-              </button>
-            </div>
-          )}
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              className="h-5 w-5 text-blue-500 focus:ring-blue-500 border-gray-300 rounded"
-              checked={field.isRequired}
-              onChange={(e) => handleFieldChange(index, 'isRequired', e.target.checked)}
-            />
-            <span className="text-gray-700">Required</span>
-          </label>
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              className="h-5 w-5 text-blue-500 focus:ring-blue-500 border-gray-300 rounded"
-              checked={field.isAutoFill || false}
-              onChange={(e) => handleFieldChange(index, 'isAutoFill', e.target.checked)}
-            />
-            <span className="text-gray-700">Auto-Fill</span>
-          </label>
-          {field.isAutoFill && (
-            <select
-              className="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={field.studentPropertyPath || ''}
-              onChange={(e) => handleFieldChange(index, 'studentPropertyPath', e.target.value)}
-            >
-              <option value="" disabled>
-                Select Student Property
-              </option>
-              {studentProperties.map((property, i) => (
-                <option key={i} value={property}>
-                  {property}
-                </option>
-              ))}
-            </select>
-          )}
         </div>
-      ))}
 
-      <button
-        className="mt-6 w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
-        onClick={saveForm}
-      >
-        Save Changes
-      </button>
-    </div>
+        {fields.map((field, index) => (
+          <Card key={index} className="p-4 space-y-4 border border-gray-400" >
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium">Field {index + 1}</h3>
+              <Button
+                variant="destructive"
+                className='text-red-500'
+                size="sm"
+                onClick={() => removeField(index)}
+              >
+                Remove
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Field Name</Label>
+                <Input
+                  value={field.fieldName}
+                  onChange={(e) => handleFieldChange(index, 'fieldName', e.target.value)}
+                  placeholder="Enter field name"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label>Field Type</Label>
+                <Select
+                  value={field.fieldType}
+                  onValueChange={(value) => handleFieldChange(index, 'fieldType', value)}
+                  options={[
+                    { value: "text", label: "Text" },
+                    { value: "number", label: "Number" },
+                    { value: "email", label: "Email" },
+                    { value: "date", label: "Date" },
+                    { value: "select", label: "Select" },
+                    { value: "file", label: "File" },
+                    { value: "checkbox", label: "Checkbox" },
+                  ]}
+                />
+              </div>
+            </div>
+
+            <div className="flex space-x-4">
+              <div className="flex items-center space-x-2">
+              <Checkbox
+  id={`required-${index}`}
+  checked={field.isRequired}
+  onChange={(e) =>
+    handleFieldChange(index, 'isRequired', e.target.checked)
+  }
+/>
+<Label htmlFor={`required-${index}`}>Required</Label>
+
+<Checkbox
+  id={`autofill-${index}`}
+  checked={field.isAutoFill}
+  onChange={(e) =>
+    handleFieldChange(index, 'isAutoFill', e.target.checked)
+  }
+/>
+<Label htmlFor={`autofill-${index}`}>Auto-Fill</Label>
+
+              </div>
+            </div>
+
+            {field.isAutoFill && (
+              <div className="space-y-2">
+                <Label>Student Property</Label>
+                <Select
+                  value={field.studentPropertyPath || ''}
+                  onValueChange={(value) => 
+                    handleFieldChange(index, 'studentPropertyPath', value)
+                  }
+                  options={studentProperties.map((property) => ({
+                    value: property,
+                    label: property,
+                  }))}
+                />
+              </div>
+            )}
+
+            {field.fieldType === 'select' && (
+              <div className="space-y-4">
+                <Label>Options</Label>
+                {field.options.map((option, optionIndex) => (
+                  <Input
+                    key={optionIndex}
+                    value={option}
+                    onChange={(e) => 
+                      handleOptionChange(index, optionIndex, e.target.value)
+                    }
+                    placeholder={`Option ${optionIndex + 1}`}
+                  />
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => addOption(index)}
+                  className="w-full"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Option
+                </Button>
+              </div>
+            )}
+          </Card>
+        ))}
+
+        <div className="flex flex-col space-y-4">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={addField}
+            className="w-full bg-custom-blue text-white"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add New Field
+          </Button>
+
+          <Button
+            onClick={saveForm}
+            className="w-full bg-green-500 text-white"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            Save Changes
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
