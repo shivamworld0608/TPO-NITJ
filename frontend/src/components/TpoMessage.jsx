@@ -12,7 +12,7 @@ const TpoMessage = () => {
             {/* Left side with image and name */}
             <div className="md:w-1/3 relative group">
               <img
-                src="src"
+                src="/headPhoto2.png"
                 alt="Director portrait"
                 className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-in-out"
               />
