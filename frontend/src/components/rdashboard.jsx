@@ -9,7 +9,8 @@ import {
   faHome,
   faBriefcase,
   faClipboard,
-  faComments,
+  faNewspaper,
+  faHouse,
   faEnvelope,
   faHandsHelping,
   faShareSquare,
@@ -21,6 +22,8 @@ import { Menu, X, LogOut } from "lucide-react";
 
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import Home from "./StudentDashboard/home";
+import RHome from "./RecruiterDashboard/rhome.jsx"
+import Sidebar from "./sidebar.jsx";
 import CreatedJobs from "./RecruiterDashboard/createdjob";
 import MailboxComponent from "./StudentDashboard/mailbox";
 import Request from "./RecruiterDashboard/Request.jsx";
@@ -74,11 +77,29 @@ const RecruiterDashboards = () => {
 
   const menuItems = [
     {
+      path: "/rdashboard/home",
+      label: "Home",
+      icon: faHouse,
+    },
+    {
       path: "/rdashboard/createdjob",
       label: "Created Job Profile",
       icon: faBriefcase,
     },
-    { path: "/rdashboard/mailbox", label: "Mailbox", icon: faEnvelope },
+    { path: "/rdashboard/mailbox", 
+      label: "Mailbox", 
+      icon: faEnvelope 
+    },
+    {
+      path: "/rdashboard/calendar",
+      label: "Calendar",
+      icon: faCalendar,
+    },
+    {
+      path: "/rdashboard/guidelines",
+      label: "Policy Guidelines",
+      icon: faNewspaper,
+    },
     {
       path: "/rdashboard/request-help",
       label: "Request Help",
@@ -207,51 +228,17 @@ const RecruiterDashboards = () => {
         )}
       </header>
 
-      {/* Desktop Sidebar */}
-      {!isMobile && (
-        <>
-          <aside
-            className={`fixed left-0 top-16 h-full bg-white border-r border-gray-200 overflow-y-auto transition-all duration-300 ${
-              isSidebarExpanded ? "w-64" : "w-16"
-            }`}
-          >
-            <nav className="p-4">
-              {menuItems.map((item) => (
-                <MenuItem
-                  key={item.path}
-                  item={item}
-                  isSidebarExpanded={isSidebarExpanded}
-                />
-              ))}
-              <button
-                onClick={handleLogout}
-                className={`flex items-center w-full px-4 py-2 mt-4 text-red-500 hover:bg-red-50 rounded-lg ${
-                  !isSidebarExpanded ? "justify-center" : ""
-                }`}
-              >
-                <LogOut className="w-5 h-5" />
-                {/* Conditionally render the label only when the sidebar is expanded */}
-                {isSidebarExpanded && <span className="ml-3">Logout</span>}
-              </button>
-            </nav>
-          </aside>
-
-          {/* Toggle Button */}
-          <button
-            onClick={toggleSidebar}
-            className={`fixed top-16 bg-white rounded-r p-2 shadow-md transition-all duration-300 hover:bg-gray-100 ${
-              isSidebarExpanded ? "left-64" : "left-16"
-            }`}
-          >
-            {isSidebarExpanded ? (
-              <RiMenuFold3Fill size={20} />
-            ) : (
-              <RiMenuFold4Fill size={20} />
-            )}
-          </button>
-        </>
-      )}
-
+      {/* Sidebar */}
+      <Sidebar
+        isSidebarExpanded={isSidebarExpanded}
+        isMobile={isMobile}
+        menuItems={menuItems}
+        location={location}
+        navigate={navigate}
+        handleLogout={handleLogout}
+        toggleSidebar={toggleSidebar}
+      />
+      
       {/* Main Content */}
       <main
         className={`flex-1 mt-16 transition-all duration-300 ${
@@ -263,6 +250,7 @@ const RecruiterDashboards = () => {
            <Routes>
               <Route path="/" element={<Home />} />
               <Route path="home" element={<CopycreateJob />} />
+              <Route path="rhome" element={<RHome />} />
               <Route path="createdjob" element={<CreatedJobs />} />
               <Route path="request-help" element={<Request />} />
               <Route path="mailbox" element={<MailboxComponent />} />
