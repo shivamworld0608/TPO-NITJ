@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
 import {
+  faFileWaveform,
   faHome,
   faBriefcase,
   faClipboard,
@@ -27,11 +28,12 @@ import Sidebar from "./sidebar.jsx";
 import CreatedJobs from "./RecruiterDashboard/createdjob";
 import MailboxComponent from "./StudentDashboard/mailbox";
 import Request from "./RecruiterDashboard/Request.jsx";
-import Profile from "./StudentDashboard/profile";
+import Profile from "./RecruiterDashboard/profile.jsx";
 import ProfileImage from "../assets/chillguy.png";
 import NITJlogo from "../assets/nitj-logo.png";
 import CopycreateJob from "./RecruiterDashboard/createjob.jsx";
 import TeamSection from "./Developers/TeamSection.jsx";
+import JobAnnouncementForm from "./RecruiterDashboard/jaf.jsx";
 
 const RecruiterDashboards = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -80,6 +82,11 @@ const RecruiterDashboards = () => {
       path: "/rdashboard/home",
       label: "Home",
       icon: faHouse,
+    },
+    {
+      path: "/rdashboard/jaf",
+      label: "JAF",
+      icon: faFileWaveform,
     },
     {
       path: "/rdashboard/createdjob",
@@ -146,7 +153,7 @@ const RecruiterDashboards = () => {
         <div className="flex items-center justify-between px-4 h-16">
           <div className="flex items-center">
             <img
-              onClick={() => navigate("/sdashboard/home")}
+              onClick={() => navigate("/rdashboard/home")}
               src={userData?.image || NITJlogo}
               alt="Logo"
               className="h-10 w-10 object-contain rounded"
@@ -176,7 +183,7 @@ const RecruiterDashboards = () => {
             <div className="flex items-center gap-4">
               <span className="text-gray-600">👋 Hi, {userData.name}</span>
               <img
-                onClick={() => navigate("/sdashboard/profile")}
+                onClick={() => navigate("/rdashboard/profile")}
                 src={userData?.image || ProfileImage}
                 alt="Profile"
                 className="w-8 h-8 rounded-full object-cover cursor-pointer"
@@ -198,7 +205,7 @@ const RecruiterDashboards = () => {
                 <div
                   onClick={() => {
                     setIsMenuOpen(false);
-                    navigate("/sdashboard/profile");
+                    navigate("/rdashboard/profile");
                   }}
                   className="ml-3"
                 >
@@ -251,6 +258,7 @@ const RecruiterDashboards = () => {
               <Route path="/" element={<Home />} />
               <Route path="home" element={<CopycreateJob />} />
               <Route path="rhome" element={<RHome />} />
+              <Route path="jaf" element={<JobAnnouncementForm />} />
               <Route path="createdjob" element={<CreatedJobs />} />
               <Route path="request-help" element={<Request />} />
               <Route path="mailbox" element={<MailboxComponent />} />
