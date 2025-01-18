@@ -9,6 +9,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { FaClipboardList, FaEye, FaCheckCircle, FaCalendarAlt } from "react-icons/fa";
+
 
 const RHome = () => {
   const recruitmentMetrics = [
@@ -30,6 +32,13 @@ const RHome = () => {
     { company: "TeaGritty", Intern: 40, Placed: 25 },
   ];
 
+  const quickActions = [
+    { icon: <FaClipboardList size={24} />, label: "Create Job Posting", description: "Quickly create and publish job opportunities." },
+    { icon: <FaEye size={24} />, label: "View Applications", description: "Direct access to manage submitted applications." },
+    { icon: <FaCheckCircle size={24} />, label: "Shortlist Candidates", description: "Review and mark candidates as shortlisted." },
+    { icon: <FaCalendarAlt size={24} />, label: "Schedule Interviews", description: "Set interview slots and notify candidates." },
+  ];
+
   return (
     <div className="bg-gray-100 p-4 md:p-6 min-h-screen">
       <h1 className="text-lg font-bold mb-4 text-center md:text-left">
@@ -44,12 +53,16 @@ const RHome = () => {
             Quick Actions
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {[...Array(4)].map((_, idx) => (
+            {quickActions.map((action, idx) => (
               <div
                 key={idx}
-                className="flex items-center justify-center border rounded-lg p-6"
+                className="flex items-center p-4 border rounded-lg shadow-md hover:bg-gray-50 cursor-pointer transition"
               >
-                <p>Content</p>
+                <div className="mr-4 text-blue-600">{action.icon}</div>
+                <div>
+                  <p className="font-semibold text-gray-800">{action.label}</p>
+                  <p className="text-sm text-gray-500">{action.description}</p>
+                </div>
               </div>
             ))}
           </div>
