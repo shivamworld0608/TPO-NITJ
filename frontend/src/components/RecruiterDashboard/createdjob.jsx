@@ -111,32 +111,67 @@ const CreatedJobs = () => {
         {jobs.map((job) => (
           <div
             key={job._id}
-            className="relative bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100"
+            className="relative bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-200 hover:scale-105 transform"
           >
-            {/* Job Role */}
-            <h2 className="font-bold text-xl text-gray-800 mb-2">{job.job_role}</h2>
+            {/* Header Section */}
+            <div className="flex items-center gap-4 mb-6">
+              {/* Company Logo */}
+              <img
+                src={job.company_logo || "default-logo.png"}
+                alt={job.company_name}
+                className="w-16 h-16 rounded-full object-cover border border-gray-300 shadow-sm"
+              />
+              {/* Job Title and Company Name */}
+              <div>
+                <h2 className="font-semibold text-lg text-gray-900 truncate">{job.job_role}</h2>
+                <p className="text-sm text-gray-500">{job.company_name}</p>
+              </div>
+            </div>
 
-            {/* Company Name */}
-            <p className="text-gray-600 mb-2">{job.company_name}</p>
+            {/* Job Details */}
+            <div className="text-gray-600 text-sm space-y-2 mb-4">
+              <p>
+                <strong>Location:</strong> {job.joblocation || "Not specified"}
+              </p>
+              <p>
+                <strong>Salary:</strong> {job.job_salary.ctc || "Competitive"} LPA
+              </p>
+              <p>
+                <strong>Class:</strong> {job.job_class || "Not specified"}
+              </p>
+              <p>
+                <strong>Posted on:</strong> {new Date(job.createdAt).toLocaleDateString() || "N/A"}
+              </p>
+              <p>
+                <strong>Application Deadline:</strong> {new Date(job.deadline).toLocaleDateString() || "N/A"}
+              </p>
+            </div>
 
-            {/* Deadline */}
-            <p className="text-sm text-gray-500 mb-4">
-              Deadline: {new Date(job.deadline).toLocaleDateString()}
-            </p>
+            {/* Job Tags */}
+            <div className="flex gap-3 flex-wrap mb-6">
+              <span className="text-xs bg-blue-100 text-blue-800 py-1 px-4 rounded-full font-medium">
+                {job.job_type || "Full-time"}
+              </span>
+              {job.isRemote && (
+                <span className="text-xs bg-green-100 text-green-800 py-1 px-4 rounded-full font-medium">
+                  Remote
+                </span>
+              )}
+            </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
               <button
-                className="bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-transform duration-200 transform hover:scale-105 flex items-center gap-2"
                 onClick={() => deleteJob(job._id)}
               >
-                Delete
+                <i className="fas fa-trash-alt"></i> Delete
               </button>
               <button
-                className="bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-transform duration-200 transform hover:scale-105 flex items-center gap-2"
                 onClick={() => setViewingJobDetails(job)}
               >
-                View Job Profile
+                <i className="fas fa-eye"></i> View Job Profile
               </button>
             </div>
           </div>
