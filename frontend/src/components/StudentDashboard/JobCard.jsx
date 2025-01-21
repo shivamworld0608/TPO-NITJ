@@ -27,4 +27,3 @@ const JobCard = ({ job_id, jobtype, jobtitle, company, deadline, onShowDetails }
 );
 
 export default JobCard;
-
