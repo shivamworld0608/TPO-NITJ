@@ -143,7 +143,7 @@ const StudentDashboard = () => {
           <div className="flex items-center">
             <img
               onClick={() => navigate("/sdashboard/home")}
-              src={userData?.image || NITJlogo}
+              src={NITJlogo}
               alt="Logo"
               className="h-10 w-10 object-contain rounded"
             />
