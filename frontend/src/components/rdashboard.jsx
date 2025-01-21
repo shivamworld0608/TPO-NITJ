@@ -256,8 +256,8 @@ const RecruiterDashboards = () => {
           {/* Placeholder for route content */}
            <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="home" element={<CopycreateJob />} />
-              <Route path="rhome" element={<RHome />} />
+              {/* <Route path="home" element={<CopycreateJob />} /> */}
+              <Route path="home" element={<RHome />} />
               <Route path="jaf" element={<JobAnnouncementForm />} />
               <Route path="createdjob" element={<CreatedJobs />} />
               <Route path="request-help" element={<Request />} />
