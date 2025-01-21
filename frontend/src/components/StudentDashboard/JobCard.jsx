@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const JobCard = ({ job_id, jobtype, jobtitle, company, deadline, onShowDetails }) => (
   <div className="w-full max-w-lg mx-auto border border-custom-blue bg-white rounded-lg shadow-lg p-6 transition-all transform duration-300 hover:shadow-2xl hover:scale-105">
