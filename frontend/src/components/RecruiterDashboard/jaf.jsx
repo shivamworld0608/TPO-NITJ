@@ -162,6 +162,33 @@ const JobAnnouncementForm = () => {
     "Personal Interview"
   ];
 
+  const [designations, setDesignations] = useState([
+    { title: '', ctc: '' }
+  ]);
+
+  // Add functions to handle designations
+  const addDesignation = () => {
+    setDesignations([...designations, { title: '', ctc: '' }]);
+  };
+
+  const removeDesignation = (index) => {
+    if (designations.length > 1) {
+      const newDesignations = designations.filter((_, i) => i !== index);
+      setDesignations(newDesignations);
+    }
+  };
+
+  const updateDesignation = (index, field, value) => {
+    const newDesignations = designations.map((designation, i) => {
+      if (i === index) {
+        return { ...designation, [field]: value };
+      }
+      return designation;
+    });
+    setDesignations(newDesignations);
+  };
+
+
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-8">
       <Card className="border-t-4 border-t-blue-600">
@@ -372,23 +399,62 @@ const JobAnnouncementForm = () => {
           </section>
 
           {/* Job Details Section */}
-          <section className="space-y-6">
-            <div className="flex items-center gap-2 text-lg font-semibold text-blue-700 border-b pb-2">
-              <Briefcase className="w-6 h-6 text-custom-blue" />
-              <h3 className='text-custom-blue'>Job Details</h3>
-            </div>
+            <section className="space-y-6">
+        <div className="flex items-center justify-between text-lg font-semibold text-blue-700 border-b pb-2">
+          <div className="flex items-center gap-2">
+            <Briefcase className="w-6 h-6 text-custom-blue" />
+            <h3 className='text-custom-blue'>Job Details</h3>
+          </div>
+          <Button 
+            onClick={addDesignation}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2 text-custom-blue"
+          >
+            <Plus className="w-4 h-4" />
+            Add Designation
+          </Button>
+        </div>
 
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-6">
+          {designations.map((designation, index) => (
+            <div key={index} className="p-4 border rounded-lg bg-gray-50 space-y-4">
+              <div className="flex justify-between items-center">
+                <h4 className="font-medium">Designation {index + 1}</h4>
+                {index > 0 && (
+                  <Button
+                    onClick={() => removeDesignation(index)}
+                    variant="ghost"
+                    size="sm"
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium">Designation*</label>
-                  <Input placeholder="Enter job designation" className="border-gray-300" />
+                  <label className="block text-sm font-medium">Designation Title*</label>
+                  <Input
+                    value={designation.title}
+                    onChange={(e) => updateDesignation(index, 'title', e.target.value)}
+                    placeholder="Enter job designation"
+                    className="border-gray-300"
+                  />
                 </div>
                 <div className="space-y-2">
                   <label className="block text-sm font-medium">CTC (₹)*</label>
-                  <Input placeholder="Enter CTC details" className="border-gray-300" />
+                  <Input
+                    value={designation.ctc}
+                    onChange={(e) => updateDesignation(index, 'ctc', e.target.value)}
+                    placeholder="Enter CTC details"
+                    className="border-gray-300"
+                  />
                 </div>
               </div>
+            </div>
+          ))}
+
 
               <div className="space-y-2">
                 <label className="block text-sm font-medium">Job Location*</label>

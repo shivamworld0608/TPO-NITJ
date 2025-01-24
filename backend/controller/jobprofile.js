@@ -24,6 +24,7 @@ export const createJobProfilecopy = async (req, res) => {
       minimum_cgpa,
       course_allowed,
       active_backlogs,
+      history_backlogs,
     } = req.body;
 
     console.log(recruiter_id);
@@ -104,6 +105,7 @@ export const createJobProfilecopy = async (req, res) => {
         eligible_batch,
         minimum_cgpa,
         active_backlogs,
+        history_backlogs,
         course_allowed
       },
       job_class,
@@ -148,6 +150,7 @@ export const createJobProfile = async (req, res) => {
       eligible_batch,
       minimum_cgpa,
       active_backlogs,
+      history_backlogs,
     } = req.body;
 
     const newJob = new JobProfile({
@@ -163,7 +166,7 @@ export const createJobProfile = async (req, res) => {
       base_salary,
       deadline: new Date(deadline),
       Hiring_Workflow,
-      eligibility_criteria:{department_allowed, gender_allowed, eligible_batch, minimum_cgpa, active_backlogs},
+      eligibility_criteria:{department_allowed, gender_allowed, eligible_batch, minimum_cgpa, active_backlogs,history_backlogs},
     });
     await newJob.save();
     res.status(201).json({
@@ -454,3 +457,15 @@ export const addshortlistStudents = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
+export const eligibleinthis= async(req,res)=>{
+
+  try {
+    const { jobId, stepIndex } = req.body;
+
+}
+catch{
+  res.status(500).json({ error: 'Internal server error' });
+}
+}

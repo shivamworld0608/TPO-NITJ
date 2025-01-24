@@ -21,6 +21,10 @@ const recuiterSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  allowed: {
+    type: Boolean,
+    default: false
+  }
 }, { timestamps: true });
 
 const Recuiter = mongoose.model('Recuiter', recuiterSchema);

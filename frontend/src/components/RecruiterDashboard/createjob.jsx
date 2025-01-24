@@ -59,6 +59,7 @@ const CreateJob = ({onJobCreated,onCancel}) => {
     course_allowed: '',
     minimum_cgpa: 0.0,
     active_backlogs: false,
+    history_backlogs: false,
   });
 
   const [workflowStep, setWorkflowStep] = useState({
@@ -432,6 +433,16 @@ const CreateJob = ({onJobCreated,onCancel}) => {
                   type="checkbox"
                   name="active_backlogs"
                   checked={formData.active_backlogs}
+                  onChange={handleChange}
+                  className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 transition-all duration-300"
+                />
+              </div>
+              <div className="flex items-center">
+                <label className="block text-gray-700 font-semibold mb-2 mr-2">Backlogs History Allowed</label>
+                <input
+                  type="checkbox"
+                  name="history_backlogs"
+                  checked={formData.history_backlogs}
                   onChange={handleChange}
                   className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 transition-all duration-300"
                 />
