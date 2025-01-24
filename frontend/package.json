@@ -48,6 +48,7 @@
     "react-router-dom": "^7.1.0",
     "react-select": "^5.9.0",
     "react-toastify": "^11.0.2",
+    "recharts": "^2.15.0",
     "redux-persist": "^6.0.0",
     "sweetalert2": "^11.15.10",
     "tailwind-merge": "^2.6.0",
