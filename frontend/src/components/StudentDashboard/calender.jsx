@@ -5,26 +5,23 @@ import { Button } from "../ui/button";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
 import Jobdetail from "./Jobdetail";
-import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 
 const CalendarComponent = () => {
   const [currentDate, setCurrentDate] = useState(new Date(2025, 0));
   const [events, setEvents] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showJobDetail, setShowJobDetail] = useState(false);
   const [selectedJobId, setSelectedJobId] = useState(null);
-  const navigate = useNavigate();
+  const [isJobDetailVisible, setJobDetailVisible] = useState(false);
 
   const handleBack = () => {
-    setShowJobDetail(false); // Go back to calendar view
-    setSelectedJobId(null); // Clear the selected job ID
+    setJobDetailVisible(false);
+    setTimeout(() => setSelectedJobId(null), 300); // Delay unmounting for transition
   };
 
   const fetchEvents = async (year, month) => {
     try {
       setLoading(true);
-      // Calculate start and end dates for the current month
       const startDate = new Date(year, month, 1);
       const endDate = new Date(year, month + 1, 0);
 
@@ -41,7 +38,6 @@ const CalendarComponent = () => {
 
       if (response.data.success) {
         setEvents(response.data.events);
-        console.log(response.data.events);
       } else {
         setError("Failed to fetch events");
       }
@@ -82,19 +78,9 @@ const CalendarComponent = () => {
     const days = [];
 
     const onEventClick = (jobId) => {
-      console.log("Event clicked", jobId);
-      setSelectedJobId(jobId); // Update state to store selected job ID
-      setShowJobDetail(true); // Toggle to show job details
+      setSelectedJobId(jobId);
+      setJobDetailVisible(true);
     };
-
-
-    if (selectedJobId) {
-      return (
-        <div className="container mx-auto px-4 py-6">
-          <Jobdetail job_id={selectedJobId} onBack={handleBack} />
-        </div>
-      );
-    }
 
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
@@ -126,10 +112,7 @@ const CalendarComponent = () => {
                   ? "bg-blue-100 text-blue-800"
                   : "bg-green-100 text-green-800"
               }`}
-              onClick={() => {
-                onEventClick(event._id);
-                // navigate("/sdashboard/job-application");
-              }} // Handle event click
+              onClick={() => onEventClick(event._id)}
             >
               <div className="font-semibold">{event.company}</div>
               <div>{event.type}</div>
@@ -191,14 +174,11 @@ const CalendarComponent = () => {
       </CardHeader>
       <CardContent>
         {loading && <div className="text-center py-4">Loading events...</div>}
-
         {error && (
           <div className="text-red-500 text-center py-4">Error: {error}</div>
         )}
-
         {!loading && !error && (
           <>
-            {/* Calendar Header */}
             <div className="grid grid-cols-7 gap-1 mb-2">
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                 <div key={day} className="text-center font-semibold p-2">
@@ -206,11 +186,7 @@ const CalendarComponent = () => {
                 </div>
               ))}
             </div>
-
-            {/* Calendar Grid */}
             <div className="grid grid-cols-7 gap-1">{renderCalendar()}</div>
-
-            {/* Legend */}
             <div className="mt-4 flex gap-4">
               <div className="flex items-center">
                 <div className="w-4 h-4 rounded bg-blue-100 mr-2"></div>
@@ -224,6 +200,18 @@ const CalendarComponent = () => {
           </>
         )}
       </CardContent>
+
+      {selectedJobId && (
+        <div
+          className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-90 transition-opacity duration-300 ${
+            isJobDetailVisible ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <div className="mx-auto px-4 py-6 transform transition-transform duration-300 scale-95">
+            <Jobdetail job_id={selectedJobId} onBack={handleBack} />
+          </div>
+        </div>
+      )}
     </Card>
   );
 };
