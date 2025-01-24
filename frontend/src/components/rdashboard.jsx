@@ -22,7 +22,7 @@ import {
 import { Menu, X, LogOut } from "lucide-react";
 
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
-import Home from "./StudentDashboard/home";
+// import Home from "./StudentDashboard/home";
 import RHome from "./RecruiterDashboard/rhome.jsx"
 import Sidebar from "./sidebar.jsx";
 import CreatedJobs from "./RecruiterDashboard/createdjob";
@@ -31,7 +31,7 @@ import Request from "./RecruiterDashboard/Request.jsx";
 import Profile from "./RecruiterDashboard/profile.jsx";
 import ProfileImage from "../assets/chillguy.png";
 import NITJlogo from "../assets/nitj-logo.png";
-import CopycreateJob from "./RecruiterDashboard/createjob.jsx";
+// import CopycreateJob from "./RecruiterDashboard/createjob.jsx";
 import TeamSection from "./Developers/TeamSection.jsx";
 import JobAnnouncementForm from "./RecruiterDashboard/jaf.jsx";
 
@@ -42,7 +42,7 @@ const RecruiterDashboards = () => {
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [currentPath, setCurrentPath] = useState("/home");
+  // const [currentPath, setCurrentPath] = useState("/home");
 
   useEffect(() => {
     const handleResize = () => {
@@ -97,11 +97,11 @@ const RecruiterDashboards = () => {
       label: "Mailbox", 
       icon: faEnvelope 
     },
-    {
-      path: "/rdashboard/calendar",
-      label: "Calendar",
-      icon: faCalendar,
-    },
+    // {
+    //   path: "/rdashboard/calendar",
+    //   label: "Calendar",
+    //   icon: faCalendar,
+    // },
     {
       path: "/rdashboard/guidelines",
       label: "Policy Guidelines",
@@ -154,7 +154,7 @@ const RecruiterDashboards = () => {
           <div className="flex items-center">
             <img
               onClick={() => navigate("/rdashboard/home")}
-              src={userData?.image || NITJlogo}
+              src={NITJlogo}
               alt="Logo"
               className="h-10 w-10 object-contain rounded"
             />
@@ -255,7 +255,7 @@ const RecruiterDashboards = () => {
         <div className="container mx-auto p-4 min-h-[calc(100vh-theme(spacing.16)-theme(spacing.16))]">
           {/* Placeholder for route content */}
            <Routes>
-              <Route path="/" element={<Home />} />
+              {/* <Route path="/" element={<Home />} /> */}
               {/* <Route path="home" element={<CopycreateJob />} /> */}
               <Route path="home" element={<RHome />} />
               <Route path="jaf" element={<JobAnnouncementForm />} />

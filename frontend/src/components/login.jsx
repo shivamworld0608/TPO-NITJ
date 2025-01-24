@@ -77,7 +77,7 @@ const LoginSignup = ({Login}) => {
           if (response.data.userType === "Student") {
             navigate("/sdashboard/home");
           } else if (response.data.userType === "Recuiter") {
-            navigate("/rdashboard/createdjob");
+            navigate("/rdashboard/home");
           } else if (response.data.userType === "Professor") {
             navigate("/pdashboard/dashboard");
           }
