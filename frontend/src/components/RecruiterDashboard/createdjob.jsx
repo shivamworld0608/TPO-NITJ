@@ -88,9 +88,9 @@ const CreatedJobs = () => {
   return (
     <div className="flex-1 ml-0 transition-all duration-300">
   {/* Header Section */}
-  <div className="p-6 bg-white border-b border-gray-200">
+  <div className="p-6">
     <div className="flex flex-col sm:flex-row justify-between items-center">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4 sm:mb-0">Your Created Jobs</h1>
+      <h1 className="text-4xl font-bold text-custom-blue mb-4 sm:mb-0">Your Created Jobs</h1>
       <button
         className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
         onClick={() => setIsCreatingJob(true)}

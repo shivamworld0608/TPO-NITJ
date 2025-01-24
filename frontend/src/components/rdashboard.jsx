@@ -8,6 +8,8 @@ import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
 import {
   faFileWaveform,
   faHome,
+  faComment,
+  faPlane,
   faBriefcase,
   faClipboard,
   faComments,
@@ -31,6 +33,8 @@ import NITJlogo from "../assets/nitj-logo.png";
 import CopycreateJob from "./RecruiterDashboard/createjob.jsx";
 import TeamSection from "./Developers/TeamSection.jsx";
 import JobAnnouncementForm from "./RecruiterDashboard/jaf.jsx";
+import FeedbackForm from "./RecruiterDashboard/feedback.jsx";
+import { FaComment } from "react-icons/fa";
 
 const RecruiterDashboards = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -80,11 +84,13 @@ const RecruiterDashboards = () => {
       label: "JAF",
       icon: faFileWaveform,
     },
+    { path: "/rdashboard/travel", label: "Travel planner", icon: faPlane },
     {
       path: "/rdashboard/createdjob",
       label: "Created Job Profile",
       icon: faBriefcase,
     },
+    { path: "/rdashboard/feedback", label: "Feedback", icon: faComment },
     { path: "/rdashboard/mailbox", label: "Mailbox", icon: faEnvelope },
     {
       path: "/rdashboard/request-help",
@@ -273,6 +279,8 @@ const RecruiterDashboards = () => {
               <Route path="jaf" element={<JobAnnouncementForm />} />
               <Route path="createdjob" element={<CreatedJobs />} />
               <Route path="request-help" element={<Request />} />
+              <Route path="feedback" element={<FeedbackForm/>} />
+              <Route path="travel" element={<FeedbackForm/>} />
               <Route path="mailbox" element={<MailboxComponent />} />
               <Route path="profile" element={<Profile />} />
               <Route path="team" element={<TeamSection />} />

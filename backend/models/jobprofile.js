@@ -110,6 +110,9 @@ const JobProfileSchema = new mongoose.Schema(
         active_backlogs: {
           type: Boolean,
         },
+        history_backlogs:{
+          type:Boolean,
+        },
         course_allowed: {
           type: String,
           enum: ["B.Tech", "M.Tech", "MBA"],

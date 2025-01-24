@@ -351,8 +351,8 @@ const ViewJobDetailsr = ({ job, onClose }) => {
               <option value="">Select Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
-              <option value="Any">Any</option>
               <option value="Other">Other</option>
+              <option value="Any">All</option>
             </select>
           ) : (
             <span className="flex-1">{editedJob.eligibility_criteria?.gender_allowed || 'N/A'}</span>
@@ -410,6 +410,21 @@ const ViewJobDetailsr = ({ job, onClose }) => {
           ) : (
             <span className="flex-1">
               {editedJob.eligibility_criteria?.active_backlogs ? 'Yes' : 'No'}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Backlogs History Allowed:</strong>
+          {editingSection === 'eligibility' ? (
+            <input
+              type="checkbox"
+              checked={editedJob.eligibility_criteria?.history_backlogs || false}
+              onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.history_backlogs', e.target.checked)}
+              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+            />
+          ) : (
+            <span className="flex-1">
+              {editedJob.eligibility_criteria?.history_backlogs ? 'Yes' : 'No'}
             </span>
           )}
         </div>
