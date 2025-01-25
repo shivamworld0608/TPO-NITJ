@@ -125,11 +125,11 @@ const JobApplications = () => {
 
   return (
     <>
-      <div className="flex justify-between items-center bg-white p-4 rounded-t-lg">
-        <h2 className="text-3xl underline underline-offset-8 font-semibold text-custom-blue capitalize">
-          {activeTab} Jobs
+      <div className="flex sm:flex-row flex-col justify-between items-center p-4 rounded-t-lg">
+        <h2 className="text-3xl font-bold text-custom-blue capitalize">
+          <span className="text-black">{activeTab}</span> Jobs
         </h2>
-        <div className="flex border border-gray-300 rounded-3xl bg-white">
+        <div className="flex border border-gray-300 rounded-3xl bg-white sm:mt-0 mt-10">
           <button
             className={`px-4 py-2 rounded-3xl ${
               activeTab === "upcoming" ? "bg-custom-blue text-white" : "bg-white"
@@ -147,7 +147,7 @@ const JobApplications = () => {
             Applied
           </button>
           <button
-            className={`px-4 py-2 rounded-3xl ${
+            className={`lg:px-4 lg:py-2 p-2 rounded-3xl ${
               activeTab === "notApplied" ? "bg-custom-blue text-white" : "bg-white"
             }`}
             onClick={() => setActiveTab("notApplied")}

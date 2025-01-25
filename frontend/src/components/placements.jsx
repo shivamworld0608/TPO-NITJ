@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const PlacementCard = ({ placement = {placement} }) => {
+const PlacementCard = ({ placement = { placement } }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showAllStudents, setShowAllStudents] = useState(false);
 
@@ -22,12 +22,11 @@ const PlacementCard = ({ placement = {placement} }) => {
     ? shortlisted_students
     : shortlisted_students.slice(0, 3);
 
-  const formattedCTC =
-    ctc
-      ? ctc >= 10000000
-        ? `${(ctc / 10000000).toFixed(2)} Cr`
-        : `${(ctc / 100000).toFixed(2)} LPA`
-      : "N/A";
+  const formattedCTC = ctc
+    ? ctc >= 10000000
+      ? `${(ctc / 10000000).toFixed(2)} Cr`
+      : `${(ctc / 100000).toFixed(2)} LPA`
+    : "N/A";
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
@@ -43,49 +42,55 @@ const PlacementCard = ({ placement = {placement} }) => {
                 {company_name}
               </h3>
               <div className="flex flex-wrap items-center mt-1 gap-2 text-gray-600 text-base">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-blue-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M10 16l-4-4 4-4" />
-                  <path d="M14 8l4 4-4 4" />
-                </svg>
+                <div className="flex gap-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-blue-500"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M10 16l-4-4 4-4" />
+                    <path d="M14 8l4 4-4 4" />
+                  </svg>
 
-                <span>{placement_type}</span>
-                <span className="text-gray-300">|</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-blue-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
+                  <span>{placement_type}</span>
+                  <span className="text-gray-300">|</span>
+                </div>
+                <div className="flex gap-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-blue-500"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
 
-                <span>{batch}</span>
-                <span className="text-gray-300">|</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 text-blue-500"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
-                  <path d="M6 12v5c3 3 9 3 12 0v-5" />
-                </svg>
+                  <span>{batch}</span>
+                  <span className="text-gray-300">|</span>
+                </div>
+                <div className="flex gap-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 text-blue-500"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+                    <path d="M6 12v5c3 3 9 3 12 0v-5" />
+                  </svg>
 
-                <span>{degree}</span>
+                  <span>{degree}</span>
+                </div>
               </div>
             </div>
           </div>
@@ -184,7 +189,9 @@ const Insights = () => {
 
       console.log(queryParams);
 
-      const apiUrl = `${import.meta.env.REACT_APP_BASE_URL}/placements/filter?${queryParams}`;
+      const apiUrl = `${
+        import.meta.env.REACT_APP_BASE_URL
+      }/placements/filter?${queryParams}`;
 
       const response = await axios.get(apiUrl);
       // console.log(response.data);

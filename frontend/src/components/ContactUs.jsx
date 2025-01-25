@@ -42,15 +42,15 @@ const ContactUs = () => {
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {/* Contact options (Phone, Email, Address) */}
-          {/* Code omitted for brevity */}
-        </div>
+        {/* <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          Contact options (Phone, Email, Address)
+          Code omitted for brevity
+        </div> */}
 
         <div className="mt-12 bg-white rounded-xl shadow-lg p-8 sm:p-12">
-          <h3 className="text-3xl text-center font-bold mb-6 sm:text-4xl">
+          {/* <h3 className="text-3xl text-center font-bold mb-6 sm:text-4xl">
             Send Us <span className="text-custom-blue">Message</span>
-          </h3>
+          </h3> */}
           <form className="grid gap-6 sm:grid-cols-2" onSubmit={handleSubmit}>
             <div>
               <label className="block text-gray-700 text-sm font-medium">Your Name</label>
@@ -81,7 +81,7 @@ const ContactUs = () => {
             <div>
               <label className="block text-gray-700 text-sm font-medium">Your Phone (Optional)</label>
               <input
-        type="number"
+        type="tel"
         name="phone"
         value={formData.phone}
         onChange={handleChange}
@@ -92,7 +92,7 @@ const ContactUs = () => {
             </div>
 
             <div>
-              <label className="block text-gray-700 text-sm font-medium">Department</label>
+              <label className="block text-gray-700 text-sm font-medium">Designation</label>
               <select
                 name="department"
                 value={formData.department}
@@ -100,16 +100,11 @@ const ContactUs = () => {
                 className="w-full mt-2 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-sm transition duration-300"
                 required
               >
-                <option value="">Select your department</option>
-                <option value="CSE">CSE</option>
-                <option value="IT">IT</option>
-                <option value="ECE">ECE</option>
-                <option value="EE">EE</option>
-                <option value="ICE">ICE</option>
-                <option value="ME">ME</option>
-                <option value="IPE">IPE</option>
-                <option value="TT">TT</option>
-                <option value="BT">BT</option>
+                <option value="">Select your designation</option>
+                <option value="Student">Student</option>
+                <option value="Recruiter">Recruiter</option>
+                <option value="Professor">Professor</option>
+                <option value="Others">Others</option>
               </select>
             </div>
 
@@ -127,13 +122,13 @@ const ContactUs = () => {
             </div>
 
             <div className="flex justify-end items-center mt-6 space-x-4 sm:col-span-2">
-              <button
+              {/* <button
                 type="reset"
                 onClick={() => setFormData({ name: "", email: "", phone: "", department: "", message: "" })}
                 className="z-10 py-3 px-8 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-full shadow-md hover:bg-gradient-to-l transition-all duration-300 focus:outline-none focus:ring-red-200 "
               >
                 Clear
-              </button>
+              </button> */}
               <button
                 type="submit"
                 className="z-10 flex items-center justify-center gap-2 py-3 px-8 bg-gradient-to-r from-custom-blue to-blue-700 text-white font-semibold rounded-full shadow-md hover:bg-gradient-to-l transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"

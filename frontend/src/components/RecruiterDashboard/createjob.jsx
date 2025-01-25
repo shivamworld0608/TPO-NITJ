@@ -113,9 +113,12 @@ const jobCategoryOptions = [
 
 const workflowStepOptions = [
   { value: "", label: "Select Round Type" },
+  { value: "Resume Shortlisting", label: "Resume Shortlisting" },
   { value: "OA", label: "Online Assessment" },
   { value: "Interview", label: "Interview" },
   { value: "GD", label: "Group Discussion" },
+  
+  {value: "Others", label: "Others"},
 ];
 
 const CreateJob = ({ onJobCreated, onCancel }) => {
@@ -392,16 +395,74 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
-                CTC<span className="text-red-500 text-sm"> * (in Lakhs)</span>
+                Job Type<span className="text-red-500"> *</span>
+              </label>
+              <select
+                required
+                options={jobTypeOptions}
+                onChange={(option) => handleSelectChange("job_type", option)}
+                defaultValue={jobTypeOptions.find(
+                  (option) => option.value === formData.job_type
+                )}
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+              >
+                 <option value="">Select Job Type</option>
+                  <option value="2m Intern">2-Month Internship</option>
+                  <option value="6m Intern">6-Month Internship</option>
+                  <option value="Intern+PPO">Intern + Pre Placement Offer(PPO)</option>
+                  <option value="Intern+FTE">Intern + Full-Time Employment(FTE)</option>
+                  <option value="FTE">Full-Time Employment(FTE)</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Job Category<span className="text-red-500"> *</span>
+              </label>
+              <select
+                required
+                options={jobCategoryOptions}
+                onChange={(option) =>
+                  handleSelectChange("job_category", option)
+                }
+                defaultValue={jobCategoryOptions.find(
+                  (option) => option.value === formData.job_category
+                )}
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+              >
+                <option value="">Select Job Category</option>
+                  <option value="Tech">Tech</option>
+                  <option value="Non-Tech">Non-Tech</option>
+                
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">
+                CTC
               </label>
               <input
-                required
+                
                 type="number"
                 name="ctc"
                 value={formData.ctc}
                 onChange={handleChange}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
+
+            </div>
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Stipend
+              </label>
+              <input
+                
+                type="number"
+                name="stipend"
+                value={formData.stipend} //baceknd me ctc ko stipend me change krna h
+                onChange={handleChange}
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+              />
+
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -429,36 +490,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
-            <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Job Type<span className="text-red-500"> *</span>
-              </label>
-              <Select
-                required
-                options={jobTypeOptions}
-                onChange={(option) => handleSelectChange("job_type", option)}
-                defaultValue={jobTypeOptions.find(
-                  (option) => option.value === formData.job_type
-                )}
-                className="rounded-xl"
-              />
-            </div>
-            <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Job Category<span className="text-red-500"> *</span>
-              </label>
-              <Select
-                required
-                options={jobCategoryOptions}
-                onChange={(option) =>
-                  handleSelectChange("job_category", option)
-                }
-                defaultValue={jobCategoryOptions.find(
-                  (option) => option.value === formData.job_category
-                )}
-                className="rounded-xl"
-              />
-            </div>
+            
           </div>
 
           {/* Eligibility Criteria */}
@@ -508,7 +540,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   isMulti
                   onChange={handleDepartmentChange}
                   isDisabled={!formData.course_allowed}
-                  className="rounded-xl"
+                  className="w-full border-2 p-1.5 border-gray-200 rounded-xl  focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300 "
                 />
                 {!formData.course_allowed && ( // Check if no course is selected
                   <p className="text-red-500 text-sm mt-2">
@@ -615,11 +647,15 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 value={workflowStepOptions.find(
                   (option) => option.value === workflowStep.step_type
                 )}
-                className="rounded-xl"
+                className="w-full border-2 border-gray-200 rounded-xl p-1.5 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
 
             {/* Dynamic Step Details Form */}
+            {workflowStep.step_type === "Resume Shortlisting" && (
+              <></>
+            )}
+
             {workflowStep.step_type === "OA" && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                 <input
@@ -754,6 +790,65 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 />
               </div>
             )}
+
+
+
+            {workflowStep.step_type === "Others" && (
+              <>
+              
+                <input
+                  type="text"
+                  name="Name of Round"
+                  placeholder="Name of Round"
+                  value={workflowStep.details.round_name || ""}
+                  onChange={handleStepDetailsChange}
+                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300 mt-4"
+                />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                <input
+                  type="date"
+                  name="oa_date"
+                  placeholder="Round Date"
+                  value={workflowStep.details.oa_date || ""}
+                  onChange={handleStepDetailsChange}
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                />
+                <input
+                  type="string"
+                  name="oa_login_time"
+                  placeholder="Login Time"
+                  value={workflowStep.details.oa_login_time || ""}
+                  onChange={handleStepDetailsChange}
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                />
+                <input
+                  type="string"
+                  name="oa_duration"
+                  placeholder="Round Duration"
+                  value={workflowStep.details.oa_duration || ""}
+                  onChange={handleStepDetailsChange}
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                />
+                <textarea
+                  name="oa_link"
+                  placeholder="Round Link"
+                  value={workflowStep.details.oa_link || ""}
+                  onChange={handleStepDetailsChange}
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                />
+                <textarea
+                  name="oa_info"
+                  placeholder="Round Info"
+                  value={workflowStep.details.oa_info || ""}
+                  onChange={handleStepDetailsChange}
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                />
+              </div>
+              
+              
+            </>
+          )}
 
             {/* Add/Update Workflow Step Button */}
             <button
