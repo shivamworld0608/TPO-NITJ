@@ -72,7 +72,7 @@ function HeroSection() {
         ></div>
         <div className="absolute inset-0 bg-black opacity-70 backdrop-blur-lg "></div>
         <div className="absolute text flex flex-col gap-8 items-center justify-center p-10 text-white">
-          <div className="flex sm:flex-row flex-col items-center sm:text-5xl text-4xl">
+          <div className="flex sm:flex-row flex-col items-center sm:text-5xl text-4xl gap-1">
             <span className="font-extrabold ">
               Welcome to{" "}
             </span>
