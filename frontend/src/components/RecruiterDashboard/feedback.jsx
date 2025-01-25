@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
+import axios from 'axios';
+
+            // ... your component code ...
 
 const FeedbackForm = () => {
   const [ratings, setRatings] = useState({
@@ -14,14 +17,33 @@ const FeedbackForm = () => {
     setRatings((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const feedbackData = { ...ratings, comment };
-    console.log("Feedback Submitted: ", feedbackData);
-    alert("Feedback submitted successfully!");
-    // You can replace the console.log with an API call to submit feedback
-  };
+    try {
+      const feedbackData = { 
+        ...ratings, 
+        comment 
+      };
 
+      // Send feedback data to backend
+      const response = await axios.post(
+        `${import.meta.env.REACT_APP_BASE_URL}/feedback`, feedbackData,{withCredentials:true} );
+      // Reset form after successful submission
+      setRatings({
+        technicalSkill: 0,
+        communicationSkill: 0,
+        overallExperience: 0
+      });
+      setComment("");
+      
+      // Show success message from backend
+      alert(response.data.message || "Feedback submitted successfully!");
+    } catch (error) {
+      // Handle submission error
+      alert(error.response?.data?.error || "Failed to submit feedback");
+      console.error("Submission error:", error);
+    }
+  };
   return (
     <form onSubmit={handleSubmit} className="max-w-xl mx-auto p-6 bg-white rounded-3xl shadow-2xl rounded-md">
       <h2 className="text-3xl font-bold mb-4 text-center text-custom-blue">Feedback Form</h2>
