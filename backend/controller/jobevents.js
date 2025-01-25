@@ -25,7 +25,7 @@ export const getJobEvents = async (req, res) => {
         $lte: end
       },
       Approved_Status: true // Only fetch approved jobs
-    }).select('company_name job_role job_type deadline company_logo');
+    }).select('job_id company_name job_role job_type deadline company_logo');
 
     console.log(`Found ${jobs.length} jobs`);
 
@@ -34,6 +34,7 @@ export const getJobEvents = async (req, res) => {
       const dateKey = job.deadline.toISOString().split('T')[0];
       
       const eventData = {
+        _id : job._id,
         type: job.job_type === 'Intern' ? 'internship' : 'placement',
         company: job.company_name,
         role: job.job_role,
