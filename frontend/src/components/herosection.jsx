@@ -1,17 +1,21 @@
 import React from "react";
-import { use } from "react";
 import { useEffect, useState } from "react";
 function HeroSection() {
   const images = ["/NITJ_Pic1.png", "/NITJ_Pic3.png"];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
-    const [slideIn, setSlideIn] = useState(false)
+  const [slideIn, setSlideIn] = useState(false);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
-    setInterval(() => {
-    setSlideIn(true)
+    const slideInTimer = setTimeout(() => {
+      setSlideIn(true);
+    }, 500);
 
-    },500)
-    const interval = setInterval(() => {
+    const visibilityInterval = setInterval(() => {
+      setVisible((prev) => !prev);
+    }, 3500);
+
+    const imageInterval = setInterval(() => {
       setFadeIn(false);
 
       setTimeout(() => {
@@ -19,26 +23,44 @@ function HeroSection() {
         setFadeIn(true);
       }, 500);
     }, 5000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearTimeout(slideInTimer);
+      clearInterval(visibilityInterval);
+      clearInterval(imageInterval);
+    };
   }, [images.length]);
+
 
   return (
     <>
-      <div className="relative overflow-x-hidden flex flex-col items-center justify-center">
+      <div className="relative overflow-hidden flex flex-col items-center justify-center lg:mt-0 -mt-10">
         <div className="absolute grid grid-cols-2 top-0 left-0 right-0 bottom-0">
-          <div className={`relative gate1 w-full h-screen bg-white z-[1000] transition-all duration-700 ${slideIn?"rounded-t-[100px] opacity-0 -translate-x-full":"rounded-none translate-x-0"}`}>
+          <div
+            className={`relative gate1 w-full h-screen bg-white z-[1000] transition-all duration-700 ${
+              slideIn
+                ? "rounded-t-[100px] opacity-0 -translate-x-full"
+                : "rounded-none translate-x-0"
+            }`}
+          >
             <p className="absolute right-0 top-1/2 text-5xl font-extrabold p-2">
               TPO
             </p>
           </div>
-          <div className={`relative gate2 w-full h-screen bg-white z-[1000] transition-all duration-700  ${slideIn?"rounded-t-[100px] opacity-0 translate-x-full":"rounded-none translate-x-0"}`}>
+          <div
+            className={`relative gate2 w-full h-screen bg-white z-[1000] transition-all duration-700  ${
+              slideIn
+                ? "rounded-t-[100px] opacity-0 translate-x-full"
+                : "rounded-none translate-x-0"
+            }`}
+          >
             <p className="absolute left-0 top-1/2 text-5xl font-extrabold text-sky-700 p-2">
               NITJ
             </p>
           </div>
         </div>
         <div
-          className={`w-full h-screen transition-opacity duration-1000 ${
+          className={`w-full sm:h-[90vh] h-[50vh] transition-opacity duration-1000 ${
             fadeIn ? "opacity-100" : "opacity-0"
           }`}
           style={{
@@ -48,21 +70,40 @@ function HeroSection() {
             backgroundPosition: "center",
           }}
         ></div>
-        <div className="absolute inset-0 bg-black opacity-70 backdrop-blur-lg"></div>
-        <div className="absolute text flex flex-col gap-3 items-center justify-center p-10 text-white">
-          <div>
-            <span className="font-extrabold sm:text-4xl text-3xl">Welcome to TPO-</span>
-            <span className="text-sky-600 font-extrabold sm:text-4xl text-3xl">NITJ</span>
+        <div className="absolute inset-0 bg-black opacity-70 backdrop-blur-lg "></div>
+        <div className="absolute text flex flex-col gap-8 items-center justify-center p-10 text-white">
+          <div className="flex sm:flex-row flex-col items-center sm:text-5xl text-4xl gap-1">
+            <span className="font-extrabold ">
+              Welcome to{" "}
+            </span>
+            <div className="flex">
+              <span className="font-extrabold ">TPO-</span>
+              <span className="text-sky-600 font-extrabold ">
+                NITJ
+              </span>
+            </div>
           </div>
-          <div className="sm:text-lg text-sm text-center">Empowering Your Career Journey!</div>
-          <div className="sm:text-lg text-sm text-center">
-            "Your bridge to internships, training programs, and dream jobs."
+          <div className={`message flex-col gap-2 ${visible? "flex":"hidden"}`}>
+            <div className="sm:text-xl text-sm text-center">
+              "Empowering Your Career Journey!"
+            </div>
+            <div className="sm:text-xl text-sm text-center">
+              "Your bridge to internships, training programs, and dream jobs."
+            </div>
+          </div>
+          <div className={`message flex-col gap-2 ${visible? "hidden":"flex"}`}>
+            <div className="sm:text-xl text-sm text-center">
+              "Unlocking Potential, Creating Success"
+            </div>
+            <div className="sm:text-xl text-sm text-center">
+            "Strong industry connections and professional growth."
+            </div>
           </div>
           <div className="buttons flex gap-5">
-            <button className="bg-sky-700 text-white font-medium p-3 rounded-xl z-0">
+            <button className="bg-sky-700 button text-white font-medium p-3 rounded-xl z-0">
               <a href="/signup">Register Now</a>
             </button>
-            <button className="bg-sky-700 text-white font-medium p-3 rounded-xl z-0">
+            <button className="bg-sky-700 button  text-white font-medium p-3 rounded-xl z-0">
               Job Openings
             </button>
           </div>
@@ -111,7 +152,8 @@ function HeroSection() {
                 0.98 95.45%,
                 0.99 97.73%,
                 1 100%
-              ) 0.55s;
+              )
+              0.55s;
           }
 
           @keyframes slider {
@@ -124,7 +166,27 @@ function HeroSection() {
             }
           }
 
-          button {
+          @keyframes animaeMsg {
+            0% {
+              transform: translateY(-10%);
+              opacity:0;
+            }
+
+            50% {
+              transform: translateY(0%);
+              opacity:1;
+            }
+
+            100% {
+              transform: translateY(10%);
+              opacity:0;
+            }
+          }
+          .message {
+            animation: animaeMsg 3.5s linear infinite;
+          }
+
+          .button {
             position: relative;
             cursor: pointer;
             overflow: hidden;
@@ -132,7 +194,7 @@ function HeroSection() {
             transition: color 0.5s ease;
           }
 
-          button::before {
+          .button::before {
             content: "";
             position: absolute;
             top: 0;
@@ -144,15 +206,13 @@ function HeroSection() {
             transition: left 0.5s ease;
           }
 
-          button:hover::before {
+          .button:hover::before {
             left: 0;
           }
 
-          button:hover {
+          .button:hover {
             color: #0369a1;
           }
-
-          
         `}
       </style>
     </>
