@@ -1,11 +1,13 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 function HeroSection() {
   const images = ["/NITJ_Pic1.png", "/NITJ_Pic3.png"];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
   const [slideIn, setSlideIn] = useState(false);
   const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     const slideInTimer = setTimeout(() => {
       setSlideIn(true);
@@ -30,7 +32,6 @@ function HeroSection() {
       clearInterval(imageInterval);
     };
   }, [images.length]);
-
 
   return (
     <>
@@ -73,17 +74,15 @@ function HeroSection() {
         <div className="absolute inset-0 bg-black opacity-70 backdrop-blur-lg "></div>
         <div className="absolute text flex flex-col gap-8 items-center justify-center p-10 text-white">
           <div className="flex sm:flex-row flex-col items-center sm:text-5xl text-4xl gap-1">
-            <span className="font-extrabold ">
-              Welcome to{" "}
-            </span>
+            <span className="font-extrabold ">Welcome to </span>
             <div className="flex">
               <span className="font-extrabold ">TPO-</span>
-              <span className="text-sky-600 font-extrabold ">
-                NITJ
-              </span>
+              <span className="text-sky-600 font-extrabold ">NITJ</span>
             </div>
           </div>
-          <div className={`message flex-col gap-2 ${visible? "flex":"hidden"}`}>
+          <div
+            className={`message flex-col gap-2 ${visible ? "flex" : "hidden"}`}
+          >
             <div className="sm:text-xl text-sm text-center">
               "Empowering Your Career Journey!"
             </div>
@@ -91,20 +90,22 @@ function HeroSection() {
               "Your bridge to internships, training programs, and dream jobs."
             </div>
           </div>
-          <div className={`message flex-col gap-2 ${visible? "hidden":"flex"}`}>
+          <div
+            className={`message flex-col gap-2 ${visible ? "hidden" : "flex"}`}
+          >
             <div className="sm:text-xl text-sm text-center">
               "Unlocking Potential, Creating Success"
             </div>
             <div className="sm:text-xl text-sm text-center">
-            "Strong industry connections and professional growth."
+              "Strong industry connections and professional growth."
             </div>
           </div>
           <div className="buttons flex gap-5">
-            <button className="bg-sky-700 button text-white font-medium p-3 rounded-xl z-0">
+            <button
+              className="bg-sky-700 button text-white font-medium p-3 rounded-xl z-0"
+              onClick={() => navigate("/Signup")}
+            >
               <a href="/signup">Register Now</a>
-            </button>
-            <button className="bg-sky-700 button  text-white font-medium p-3 rounded-xl z-0">
-              Job Openings
             </button>
           </div>
         </div>
@@ -169,17 +170,17 @@ function HeroSection() {
           @keyframes animaeMsg {
             0% {
               transform: translateY(-10%);
-              opacity:0;
+              opacity: 0;
             }
 
             50% {
               transform: translateY(0%);
-              opacity:1;
+              opacity: 1;
             }
 
             100% {
               transform: translateY(10%);
-              opacity:0;
+              opacity: 0;
             }
           }
           .message {
@@ -190,7 +191,7 @@ function HeroSection() {
             position: relative;
             cursor: pointer;
             overflow: hidden;
-            z-index: 100;
+            z-index: 1;
             transition: color 0.5s ease;
           }
 
