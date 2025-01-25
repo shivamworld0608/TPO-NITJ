@@ -35,8 +35,13 @@ const OnlineAssessment = () => {
         fetchAssessments();
     }, []);
 
-    if (loading) return <BouncingLoader  text="Loading..." />;
-
+    if (loading) {
+        return (
+            <div className="container mx-auto px-4 py-6">
+                <BouncingLoader text="Loading..." />
+            </div>
+        );
+    }
     if (visibleDetailId) {
         return (
             <div className="container mx-auto px-4 py-6">

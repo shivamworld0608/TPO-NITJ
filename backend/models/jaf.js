@@ -1,93 +1,113 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const hrContactSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  designation: { type: String, required: true },
-  email: { type: String, required: true },
-  phone: { type: String, required: true }
+const HrContactSchema = new mongoose.Schema({
+  name: {
+    type: String,
+  },
+  designation: {
+    type: String,
+  },
+  email: {
+    type: String,
+    lowercase: true,
+  },
+  phone: {
+    type: String,
+  }
 });
 
-const designationSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  ctc: { type: String, required: true }
+const DesignationSchema = new mongoose.Schema({
+  title: {
+    type: String,
+  },
+  stipend: {
+    type: String,
+  },
+  ctc: {
+    type: String,
+  },
 });
 
-const programSelectionSchema = new mongoose.Schema({
-  programName: { type: String, required: true },
-  isSelected: { type: Boolean, default: false },
-  specializations: [{
-    name: { type: String },
-    isSelected: { type: Boolean, default: false }
-  }]
-});
-
-const jobAnnouncementSchema = new mongoose.Schema({
-  organizationName: { type: String, required: true },
-  websiteUrl: { type: String, required: true },
-  category: { 
-    type: String, 
-    required: true,
+const JobAnnouncementFormSchema = new mongoose.Schema({
+  organizationName: {
+    type: String,
+  },
+  websiteUrl: {
+    type: String,
+  },
+  category: {
+    type: String,
     enum: ['Government', 'PSU', 'Private', 'MNC', 'Startup', 'NGO']
   },
-  sector: { 
-    type: String, 
-    required: true,
+  sector: {
+    type: String,
     enum: ['Core Engineering', 'IT', 'R&D', 'Analytics', 'Finance', 'Marketing', 'Networking', 'Educational']
   },
-  participationType: {
-    virtualPlacement: { type: Boolean, default: false },
-    campusPlacement: { type: Boolean, default: false }
+  placementType: {
+    type: [String],
+    enum: ['Virtual Placement', 'Campus Placement']
   },
 
-  selectedPrograms: {
-    btech: [programSelectionSchema],
-    mtech: [programSelectionSchema],
-    mba: [programSelectionSchema],
-    msc: [programSelectionSchema]
+  bTechPrograms: [{
+    type:[String],
+    enum:['Computer Science & Engineering','Electronics & Communication Engineering','Instrumentation and Control Engineering','Electrical Engineering','Information Technology','Biotechnology','Chemical Engineering','Civil Engineering','Industrial & Production Engineering','Mechanical Engineering','Textile Technology'],
+  }],
+  
+  mTechPrograms: {
+   type:[String],
+  /*  enum:['Computer Science & Engineering','Information Security','Data Science','Artificial Intelligence','Signal Processing and Machine Learning','VLSI Design','Electric Vehicle Design','Data Analytics','Biotechnology','Chemical Engineering','Structural and Construction Engineering','Geotechnical – GEO-Environmental Engineering','Industrial Engineering & Data Analytics',''] */
   },
-
-  skillSetRequired: { type: String, required: true },
-
-  designations: [designationSchema],
-  jobLocation: {
-    india: { type: Boolean, default: false },
-    abroad: { type: Boolean, default: false },
-    locations: [String]
+  
+  mbaProgramSpecializations: {
+    type: [String],
+    enum: ['Finance','Marketing','HR']
   },
-  bond: {
-    required: { type: Boolean, default: false },
-    details: String
+  
+  scienceStreamsSpecializations: {
+    type: [String],
+    enum:['Physics','Chemistry','Mathematics']
   },
-  selectionProcess: {
-    shortlisting: { type: Boolean, default: false },
-    cgpa: { type: Boolean, default: false },
-    aptitudeTest: { type: Boolean, default: false },
-    technicalTest: { type: Boolean, default: false },
-    groupDiscussion: { type: Boolean, default: false },
-    personalInterview: { type: Boolean, default: false },
-    additionalDetails: String
+  
+  phdProgramSpecializations:{
+    type: [String],
+  /*   enum:[] */
   },
-  summerInternshipOffered: { type: Boolean, default: false },
-
-  hrContacts: [hrContactSchema],
-
-  signature: { type: String },
-
-  academicYear: { type: String, required: true },
-  status: {
+  requiredSkills: {
     type: String,
-    enum: ['draft', 'submitted', 'approved', 'rejected'],
-    default: 'draft'
+    required: true
   },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
+
+  designations: [DesignationSchema],
+
+  jobLocation: {
+    type: [String],
+    enum: ['India', 'Abroad']
+  },
+  specificLocations: String,
+
+  bond: {
+    type:boolean
+  },
+
+  selectionProcess:{
+    type: [String],
+    enum: ['Written Test', 'Interview', 'Group Discussion']
+  },
+  additionalSelectionDetails:{
+    type:String
+  },
+  summerInternshipOpportunities:{
+    type:Boolean,
+  },
+  hrContacts: [HrContactSchema],
+
+  postalAddress:{
+    type:String
+  }
+}, {
+  timestamps: true
 });
 
-// Add pre-save middleware to update the updatedAt field
-jobAnnouncementSchema.pre('save', function(next) {
-  this.updatedAt = new Date();
-  next();
-});
+const JobAnnouncementForm = mongoose.model('JobAnnouncementForm', JobAnnouncementFormSchema);
 
-const JobAnnouncement = mongoose.model('JobAnnouncement', jobAnnouncementSchema);
-export default JobAnnouncement;
+export default JobAnnouncementForm;
