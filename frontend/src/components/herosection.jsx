@@ -100,10 +100,10 @@ function HeroSection() {
             </div>
           </div>
           <div className="buttons flex gap-5">
-            <button className="bg-sky-700 text-white font-medium p-3 rounded-xl z-0">
+            <button className="bg-sky-700 button text-white font-medium p-3 rounded-xl z-0">
               <a href="/signup">Register Now</a>
             </button>
-            <button className="bg-sky-700 text-white font-medium p-3 rounded-xl z-0">
+            <button className="bg-sky-700 button  text-white font-medium p-3 rounded-xl z-0">
               Job Openings
             </button>
           </div>
@@ -186,7 +186,7 @@ function HeroSection() {
             animation: animaeMsg 3.5s linear infinite;
           }
 
-          button {
+          .button {
             position: relative;
             cursor: pointer;
             overflow: hidden;
@@ -194,7 +194,7 @@ function HeroSection() {
             transition: color 0.5s ease;
           }
 
-          button::before {
+          .button::before {
             content: "";
             position: absolute;
             top: 0;
@@ -206,11 +206,11 @@ function HeroSection() {
             transition: left 0.5s ease;
           }
 
-          button:hover::before {
+          .button:hover::before {
             left: 0;
           }
 
-          button:hover {
+          .button:hover {
             color: #0369a1;
           }
         `}
