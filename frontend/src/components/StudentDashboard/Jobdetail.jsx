@@ -102,7 +102,7 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
                                 </div>
         
                                 {/* Step Details */}
-                                <div className="ml-10 p-4 w-2/5 h-auto border border-blue-500 rounded-lg bg-white shadow-md group-hover:shadow-lg transition-shadow">
+                                <div className="ml-10 p-4 sm:w-2/5 w-full h-auto border border-blue-500 rounded-lg bg-white shadow-md group-hover:shadow-lg transition-shadow">
                                     <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-500 transition-colors">
                                         {step.step_type || "To be announced"}
                                     </h3>
@@ -217,7 +217,7 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
     };
 
     return (
-        <div className="min-h-screen bg-white py-12 px-6">
+        <div className="min-h-screen bg-white py-12 px-6 border border-1 shadow-sm">
             {/* Back Button */}
             <div className="mb-8">
                 <button

@@ -1,9 +1,9 @@
 import React from 'react';
-import { FaLinkedin, FaGithub, FaEnvelope, FaPhone, FaGlobe, FaLinkedinIn, FaFilePdf } from 'react-icons/fa';
+import { FaLinkedin, FaGithub, FaEnvelope, FaPhone, FaGlobe, FaLinkedinIn, FaFileAlt } from 'react-icons/fa';
 
-const TeamMemberCard = ({ image, name, department,batch, linkedinUrl, githubUrl, email, mobile, website,resume }) => (
+const TeamMemberCard = ({ image, name, department,batch, linkedinUrl, githubUrl, email, mobile, website,resumeUrl }) => (
     <div className="w-96 h-auto rounded-2xl shadow-lg bg-white p-6 flex flex-col items-center space-y-4 transform hover:scale-105 transition-all duration-300">
-        <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-blue-600 shadow-md">
+         <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-transparent shadow-md bg-gradient-to-r from-purple-400  to-blue-400 animate-border">
             <img
                 src={image || "/api/placeholder/150/150"}
                 alt={name}
@@ -11,15 +11,15 @@ const TeamMemberCard = ({ image, name, department,batch, linkedinUrl, githubUrl,
             />
         </div>
         <h3 className="text-2xl font-bold text-gray-900 text-center">{name}</h3>
-        <p className="text-gray-600 text-lg text-center">{department}</p>
-        <p className="text-gray-600 text-lg text-center">{batch}</p>
-        <div className="flex space-x-1 mt-2">
+        <p className="text-gray-600 text-xl font-semibold text-center">{department}&apos;{batch}</p>
+        {/* <p className="text-gray-600 text-xl font-semibold text-center">{batch}</p> */}
+        <div className="flex  mt-2">
             {linkedinUrl && (
                 <a 
                     href={linkedinUrl} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="p-3  rounded-md text-blue-700 hover:bg-blue-700 hover:text-white transition-all"
+                    className="p-3  rounded-full text-blue-700 hover:bg-blue-700 hover:text-white transition-all"
                 >
                     <FaLinkedinIn size={20} />
                 </a>
@@ -29,17 +29,17 @@ const TeamMemberCard = ({ image, name, department,batch, linkedinUrl, githubUrl,
                     href={githubUrl} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="p-3 bg-gray-800 rounded-full text-white hover:bg-gray-900 transition-all"
+                    className="p-3 b rounded-full text-gray-900 hover:bg-gray-900 hover:text-white transition-all"
                 >
-                    <FaGithub size={24} />
+                    <FaGithub size={20} />
                 </a>
             )}
             {email && (
                 <a 
                     href={`mailto:${email}`} 
-                    className="p-3 bg-red-600 rounded-full text-white hover:bg-red-800 transition-all"
+                    className="p-3 rounded-full text-red-600 hover:bg-red-600 hover:text-white transition-all"
                 >
-                    <FaEnvelope size={24} />
+                    <FaEnvelope size={20} />
                 </a>
             )}
             {mobile && (
@@ -55,22 +55,23 @@ const TeamMemberCard = ({ image, name, department,batch, linkedinUrl, githubUrl,
                     href={website} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="p-3 bg-indigo-600 rounded-full text-white hover:bg-indigo-800 transition-all"
+                    className="p-3 rounded-full text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all"
                 >
-                    <FaGlobe size={24} />
+                    <FaGlobe size={20} />
                 </a>
             )}
-             {resume && (
-                <a 
-                    href={resume} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="p-3 bg-purple-600 rounded-full text-white hover:bg-purple-800 transition-all"
-                    download={true}
-                >
-                    <FaFilePdf size={24} />
-                </a>
-            )}
+             {resumeUrl && (
+    <a 
+        href={resumeUrl} 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="p-3  rounded-full text-orange-600 hover:bg-orange-600 hover:text-white transition-all"
+        
+    >
+        <FaFileAlt size={20} /> {/* You can replace this with any other icon */}
+    </a>
+)}
+
         </div>
     </div>
 );
