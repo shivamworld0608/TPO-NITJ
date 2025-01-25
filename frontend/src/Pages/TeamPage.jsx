@@ -16,7 +16,6 @@ const TeamPage = () => {
             try {
                 const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/devteam/get`);
                 const developers = response.data.developers;
-
                 const groupedData = developers.reduce(
                     (acc, member) => {
                         if (member.role === 'Coordinator') {
