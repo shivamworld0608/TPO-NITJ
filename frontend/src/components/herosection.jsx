@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect, useState } from "react";
 function HeroSection() {
-  const images = ["/NITJ_Pic1.png", "/NITJ_Pic3.png"];
+  const images = ["/_DSC0023.jpg", "_DSC0031.jpg","_DSC0092.jpg"];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
   const [slideIn, setSlideIn] = useState(false);
@@ -36,7 +36,7 @@ function HeroSection() {
       <div className="relative overflow-hidden flex flex-col items-center justify-center lg:mt-0 -mt-10">
         <div className="absolute grid grid-cols-2 top-0 left-0 right-0 bottom-0">
           <div
-            className={`relative gate1 w-full sm:h-[90vh] h-[50vh] bg-white z-[1000] transition-all duration-700 ${
+            className={`relative gate1 w-full sm:h-[80vh] h-[50vh] bg-white z-[1000] transition-all duration-700 ${
               slideIn
                 ? "rounded-t-[100px] opacity-0 -translate-x-full"
                 : "rounded-none translate-x-0"
@@ -47,7 +47,7 @@ function HeroSection() {
             </p>
           </div>
           <div
-            className={`relative gate2 sm:h-[90vh] h-[50vh] bg-white z-[1000] transition-all duration-700  ${
+            className={`relative gate2 sm:h-[80vh] h-[50vh] bg-white z-[1000] transition-all duration-700  ${
               slideIn
                 ? "rounded-t-[100px] opacity-0 translate-x-full"
                 : "rounded-none translate-x-0"
@@ -59,7 +59,7 @@ function HeroSection() {
           </div>
         </div>
         <div
-          className={`w-full sm:h-[90vh] h-[50vh] transition-opacity duration-1000 ${
+          className={`w-full sm:h-[80vh] h-[50vh] transition-opacity duration-1000 ${
             fadeIn ? "opacity-100" : "opacity-0"
           }`}
           style={{
