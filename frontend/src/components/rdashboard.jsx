@@ -28,7 +28,7 @@ import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import RHome from "./RecruiterDashboard/rhome.jsx"
 import Sidebar from "./sidebar.jsx";
 import CreatedJobs from "./RecruiterDashboard/createdjob";
-import MailboxComponent from "./StudentDashboard/mailbox";
+import MailboxComponent from "./RecruiterDashboard/rmailbox";
 import Request from "./RecruiterDashboard/Request.jsx";
 import Profile from "./RecruiterDashboard/profile.jsx";
 import ProfileImage from "../assets/chillguy.png";
@@ -100,7 +100,7 @@ const RecruiterDashboards = () => {
     },
     { path: "/rdashboard/feedback", label: "Feedback", icon: faComment },
 
-    { path: "/rdashboard/mailbox", 
+    { path: "/rdashboard/rmailbox", 
       label: "Mailbox", 
       icon: faEnvelope 
     },
@@ -265,7 +265,7 @@ const RecruiterDashboards = () => {
               <Route path="request-help" element={<Request />} />
               <Route path="feedback" element={<FeedbackForm/>} />
               <Route path="travel" element={<FeedbackForm/>} />
-              <Route path="mailbox" element={<MailboxComponent />} />
+              <Route path="rmailbox" element={<MailboxComponent />} />
               <Route path="profile" element={<Profile />} />
               <Route path="team" element={<TeamSection />} />
             </Routes>
