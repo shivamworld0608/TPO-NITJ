@@ -16,7 +16,7 @@ const TeamPage = () => {
             try {
                 const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/devteam/get`); // Replace with your backend URL
                 const developers = response.data.developers;
-
+                console.log(developers);
                 // Group the data by roles
                 const groupedData = developers.reduce(
                     (acc, member) => {
