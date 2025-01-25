@@ -96,7 +96,7 @@ const Pdashboard = () => {
     // { label: "OA Management", icon: faClipboard, path: "/pdashboard/oa-management" },
     // { label: "Interview Management", icon: faClipboardUser, path: "/pdashboard/interview-management" },
     // { label: "Notifications", icon: faBell, path: "/pdashboard/notifications" },
-    { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/mailbox" },
+    { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" },
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Experience Sharing", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
     { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
@@ -286,7 +286,7 @@ const Pdashboard = () => {
             <Route path="oa-management" element={<OAManagement />} />
             <Route path="interview-management" element={<InterviewManagement />} />
             <Route path="notifications" element={<PNotifications />} />
-            <Route path="mailbox" element={<Mailbox />} />
+            <Route path="pmailbox" element={<Mailbox />} />
             <Route path="help-requests" element={<RequestHelpManager />} />
             <Route path="experience-sharing" element={<ExperienceSharing />} />
             <Route path="placement-insights" element={<PlacementInsights />} />
