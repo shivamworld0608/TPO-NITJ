@@ -128,11 +128,11 @@ const Request = () => {
   return (
     <div className="p-6 min-h-screen">
        <div className="flex ">
-            <div className="w-9/12">
+            <div className="lg:w-9/12 hidden lg:block">
 
             </div>
            
-            <div className=" border border-gray-300 rounded-3xl bg-gray-50">
+            <div className=" border border-gray-300 flex flex-row items-center justify-center mb-4 rounded-3xl bg-gray-50">
                      
                       <button
                           className={`px-4 py-2 rounded-3xl ${
