@@ -93,7 +93,7 @@ const StudentTestimonials = () => {
   };
 
   return (
-    <section className="bg-white py-16 px-4 overflow-hidden">
+    <section className="bg-white py-5 px-4 overflow-hidden">
       <div className="max-w-5xl mx-auto text-center relative">
         {/* <motion.h2 
           initial={{ opacity: 0, y: -20 }}
@@ -182,7 +182,7 @@ const StudentTestimonials = () => {
                   <div className="max-w-2xl">
                     <Quote className="text-blue-500 mb-6 mx-auto" size={64} />
                     
-                    <p className="text-2xl font-medium text-gray-800 mb-8 italic">
+                    <p className="text-md font-medium text-gray-800 mb-8 italic">
                       "{testimonial.quote}"
                     </p>
                     

@@ -91,7 +91,7 @@ const FAQ = () => {
   const currentQuestions = filteredFaqData.slice(indexOfFirstQuestion, indexOfLastQuestion);
 
   return (
-    <div className="faq-container py-16 px-4 sm:px-6 md:px-8 lg:px-12 bg-white">
+    <div className="faq-container py-10 px-4 sm:px-6 md:px-8 lg:px-12 bg-white ">
       <h2 className="text-3xl font-bold text-center sm:text-4xl lg:text-5xl mb-8 ">Frequently<span className="text-custom-blue"> Asked Questions</span></h2>
 
       {/* Search Bar */}
