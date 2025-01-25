@@ -14,6 +14,18 @@ const CalendarComponent = () => {
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [isJobDetailVisible, setJobDetailVisible] = useState(false);
 
+  useEffect(() => {
+    if (isJobDetailVisible) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isJobDetailVisible]);
+
   const handleBack = () => {
     setJobDetailVisible(false);
     setTimeout(() => setSelectedJobId(null), 300); // Delay unmounting for transition
@@ -85,7 +97,10 @@ const CalendarComponent = () => {
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       days.push(
-        <div key={`empty-${i}`} className="h-32 border border-gray-200"></div>
+        <div
+          key={`empty-${i}`}
+          className="sm:h-32 h-20 border border-gray-200"
+        ></div>
       );
     }
 
@@ -101,23 +116,25 @@ const CalendarComponent = () => {
       days.push(
         <div
           key={day}
-          className="h-32 border border-gray-200 p-2 overflow-y-auto"
+          className="sm:h-32 h-20 border border-gray-200 sm:p-2 pl-1 pt-1 overflow-y-auto sm:overflow-x-auto overflow-x-hidden"
         >
           <div className="font-bold mb-1">{day}</div>
           {dayEvents.map((event, idx) => (
             <div
               key={idx}
-              className={`p-1 mb-1 rounded text-xs ${
+              className={`sm:h-full sm:w-full w-fit h-5 sm:p-1 mb-1 rounded text-xs ${
                 event.type === "internship"
                   ? "bg-blue-100 text-blue-800"
                   : "bg-green-100 text-green-800"
               }`}
               onClick={() => onEventClick(event._id)}
             >
-              <div className="font-semibold">{event.company}</div>
-              <div>{event.type}</div>
-              <div>{event.role}</div>
-              <div>{event.time}</div>
+              <div className="font-semibold flex">
+                {event.company}
+              </div>
+              <div className="sm:flex hidden">{event.type}</div>
+              <div className="sm:flex hidden">{event.role}</div>
+              <div className="sm:flex hidden">{event.time}</div>
             </div>
           ))}
         </div>
@@ -186,7 +203,7 @@ const CalendarComponent = () => {
                 </div>
               ))}
             </div>
-            <div className="grid grid-cols-7 gap-1">{renderCalendar()}</div>
+            <div className="grid grid-cols-7 sm:gap-1">{renderCalendar()}</div>
             <div className="mt-4 flex gap-4">
               <div className="flex items-center">
                 <div className="w-4 h-4 rounded bg-blue-100 mr-2"></div>
@@ -206,8 +223,9 @@ const CalendarComponent = () => {
           className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-90 transition-opacity duration-300 ${
             isJobDetailVisible ? "opacity-100" : "opacity-0"
           }`}
+          style={{ zIndex: 1000 }}
         >
-          <div className="mx-auto px-4 py-6 transform transition-transform duration-300 scale-95">
+          <div className="h-[90vh] p-5 bg-white shadow-lg rounded-lg overflow-y-auto">
             <Jobdetail job_id={selectedJobId} onBack={handleBack} />
           </div>
         </div>
