@@ -374,10 +374,38 @@ function showSearchPage(event) {
           <div id="menu-2" className="group cursor-default hover:bg-blue-800">
             <div id="Academics" className="p-1.5 font-medium uppercase"><a href="/internships">Internships</a></div>
           </div>
-          <div id="menu-3" className="group cursor-default hover:bg-blue-800">
-            <div id="Admissions" className="p-1.5 font-medium uppercase">Alumni</div>
-          </div>
-        </div>
+          <div
+                    id="menu-3"
+                    className="relative group cursor-default hover:bg-blue-800"
+                  >
+                    <div id="Alumni" className="p-1.5 font-medium uppercase">
+                      <a>Alumni</a>
+                    </div>
+                    <div className="absolute left-0 hidden mt-1 bg-white border border-gray-200 shadow-lg group-hover:block w-64">
+                      <ul className="py-2 text-sm">
+                        <li className="px-4 py-2 hover:bg-gray-100">
+                          <a
+                            href="https://www.nitj.ac.in/alumni/alumni.html"
+                            className="text-gray-700"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            NITJ Alumni Association (NITJAA)
+                          </a>
+                        </li>
+                        <li className="px-4 py-2 hover:bg-gray-100">
+                          <a href="/alogin" className="text-gray-700">
+                            Alumni Registration
+                          </a>
+                        </li>
+                        <li className="px-4 py-2 hover:bg-gray-100">
+                          <a href="https://v1.nitj.ac.in/alumni_fundraising/login" className="text-gray-700">
+                            Giving Back
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>        </div>
       </div>
 
       <div className="basis-2/5 hidden  md:hidden lg:block w-full top-0">
