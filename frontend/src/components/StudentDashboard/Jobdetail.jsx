@@ -235,12 +235,12 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
                 <h2 className="text-lg text-custom-blue mt-2">Role: {jobDetails.job_role || "No Job Title Provided"}</h2>
             </div>
 
-            <div className="flex justify-center space-x-4 mb-8">
+            <div className="flex justify-center sm:space-x-4 space-x-1 mb-8">
                 {Object.keys(info).map((key) => (
                     <button
                         key={key}
                         onClick={() => setActiveInfo(key)}
-                        className={`px-6 py-3 bg-custom-blue rounded-md transition duration-300 ${
+                        className={`sm:px-6 sm:py-3 p-2 bg-custom-blue rounded-md transition duration-300 sm:text-base text-sm ${
                             activeInfo === key ? 'bg-custom-blue text-white' : 'bg-blue-500 text-white hover:bg-blue-600'
                         }`}
                     >

@@ -1,11 +1,13 @@
 import React from "react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 function HeroSection() {
   const images = ["/_DSC0023.jpg", "_DSC0031.jpg","_DSC0092.jpg"];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [fadeIn, setFadeIn] = useState(true);
+  const [fadeIn, setFadeIn] = useState(images[0]);
   const [slideIn, setSlideIn] = useState(false);
   const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     const slideInTimer = setTimeout(() => {
       setSlideIn(true);
@@ -16,12 +18,11 @@ function HeroSection() {
     }, 3500);
 
     const imageInterval = setInterval(() => {
-      setFadeIn(false);
 
       setTimeout(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-        setFadeIn(true);
-      }, 500);
+        setFadeIn(images[currentImageIndex]);
+      }, 0);
     }, 5000);
 
     return () => {
@@ -58,19 +59,23 @@ function HeroSection() {
             </p>
           </div>
         </div>
-        <div
-          className={`heroSection w-full sm:h-[80vh] h-[50vh] transition-opacity duration-1000 ${
-            fadeIn ? "opacity-100" : "opacity-0"
+        <div className="relative w-full h-screen">
+        {
+          images.map((path) => <div
+          className={`heroSection absolute top-0 w-full sm:h-[80vh] h-[50vh] transition-opacity duration-1000 ${
+            fadeIn === path ? "opacity-100" : "opacity-0"
           }`}
           style={{
-            backgroundImage: `url(${images[currentImageIndex]})`,
+            backgroundImage: `url(${path})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
             animation: "scaling 6s linear infinite",
           }}
-        ></div>
-        <div className={`absolute inset-0 bg-black backdrop-blur-lg ${fadeIn ? "opacity-50" : "opacity-0"}`}></div>
+        ></div>)
+        }
+        </div>
+        <div className={`absolute inset-0 bg-black backdrop-blur-lg opacity-50}`}></div>
         <div className="absolute text flex flex-col gap-8 items-center justify-center p-10 text-white">
           <div className="flex sm:flex-row flex-col items-center sm:text-5xl text-4xl gap-1">
             <span className="font-extrabold ">Welcome to </span>
@@ -102,8 +107,11 @@ function HeroSection() {
           <div className="buttons flex gap-5">
             <button
               className="bg-sky-700 button text-white font-medium p-3 rounded-xl z-0"
+              onClick={() => {
+                navigate("/Signup")
+              }}
             >
-              <a href="/signup">Register Now</a>
+              Register Now
             </button>
           </div>
         </div>
