@@ -1,53 +1,61 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../Redux/authSlice";
+import { logout } from "../../Redux/authSlice.jsx";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
 import {
-  faFileWaveform,
   faHome,
-  faComment,
-  faPlane,
   faBriefcase,
   faClipboard,
-  faNewspaper,
-  faHouse,
+  faClipboardUser,
+  faComments,
   faEnvelope,
   faHandsHelping,
   faShareSquare,
   faCalendar,
-  faNoteSticky
+  faNoteSticky,
+  faBriefcaseClock,
+  faBell,
+  faQuestionCircle,
+  faShareAlt,
+  faChartBar,
+  faFileAlt,
+  faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
 
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
-// import Home from "./StudentDashboard/home";
-import RHome from "./RecruiterDashboard/rhome.jsx"
-import Sidebar from "./sidebar.jsx";
-import CreatedJobs from "./RecruiterDashboard/createdjob";
-import MailboxComponent from "./RecruiterDashboard/rmailbox";
-import Request from "./RecruiterDashboard/Request.jsx";
-import Profile from "./RecruiterDashboard/profile.jsx";
-import ProfileImage from "../assets/chillguy.png";
-import NITJlogo from "../assets/nitj-logo.png";
-// import CopycreateJob from "./RecruiterDashboard/createjob.jsx";
-import TeamSection from "./Developers/TeamSection.jsx";
-import JobAnnouncementForm from "./RecruiterDashboard/jaf.jsx";
-import FeedbackForm from "./RecruiterDashboard/feedback.jsx";
-import TravelPlanner from "./RecruiterDashboard/travelplanner.jsx";
-import { FaComment } from "react-icons/fa";
 
-const RecruiterDashboards = () => {
+import ProfileImage from "../../assets/chillguy.png";
+import NITJlogo from "../../assets/nitj-logo.png";
+
+
+import JobManagement from "./pjobmanagement.js"; // Import the JobManagement component
+import OAManagement from "./poamanagement.js"; // Import the OAManagement component
+import InterviewManagement from "./pinterviewmanagement.js";
+import PNotifications from "./pnotifications.js";
+import Mailbox from "./pmailbox.js";
+import ExperienceSharing from "./pexperiencesharing.js";
+import PlacementInsights from "./pplacementinsights.js";
+import PlacementPolicy from "./pplacementpolicy.js";
+import RequestHelpManager from "./Request.js";
+import Profile from "../StudentDashboard/profile.jsx";
+import Home from "./home.js";
+import Upload from "./pUpload.js";
+import TeamSection from "../Developers/TeamSection.jsx";
+
+
+const Pdashboard = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const [currentPath, setCurrentPath] = useState("/home");
+  const [currentPath, setCurrentPath] = useState("/home");
 
   useEffect(() => {
     const handleResize = () => {
@@ -83,39 +91,19 @@ const RecruiterDashboards = () => {
   };
 
   const menuItems = [
-    {
-      path: "/rdashboard/home",
-      label: "Home",
-      icon: faHouse,
-    },
-    {
-      path: "/rdashboard/jaf",
-      label: "JAF",
-      icon: faFileWaveform,
-    },
-    { path: "/rdashboard/travel", label: "Travel planner", icon: faPlane },
-    {
-      path: "/rdashboard/createdjob",
-      label: "Created Job Profile",
-      icon: faBriefcase,
-    },
-    { path: "/rdashboard/feedback", label: "Feedback", icon: faComment },
-
-    { path: "/rdashboard/rmailbox", 
-      label: "Mailbox", 
-      icon: faEnvelope 
-    },
-    {
-      path: "/rdashboard/guidelines",
-      label: "Policy Guidelines",
-      icon: faNewspaper,
-    },
-    {
-      path: "/rdashboard/request-help",
-      label: "Request Help",
-      icon: faHandsHelping,
-    },
+    { label: "Dashboard", icon: faHome, path: "/pdashboard/dashboard" },
+    { label: "Job Profile Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
+    // { label: "OA Management", icon: faClipboard, path: "/pdashboard/oa-management" },
+    // { label: "Interview Management", icon: faClipboardUser, path: "/pdashboard/interview-management" },
+    // { label: "Notifications", icon: faBell, path: "/pdashboard/notifications" },
+    { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/mailbox" },
+    { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
+    { label: "Experience Sharing", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
+    { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
+    // { label: "Placement Policy", icon: faFileAlt, path: "/pdashboard/placement-policy" },
+    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
   ];
+
 
   const MenuItem = ({ item, onClick, isSidebarExpanded }) => {
     const isMobileView = window.innerWidth < 768; // Check for mobile view
@@ -156,8 +144,8 @@ const RecruiterDashboards = () => {
         <div className="flex items-center justify-between px-4 h-16">
           <div className="flex items-center">
             <img
-              onClick={() => navigate("/rdashboard/home")}
-              src={NITJlogo}
+              onClick={() => navigate("/sdashboard/home")}
+              src={userData?.image || NITJlogo}
               alt="Logo"
               className="h-10 w-10 object-contain rounded"
             />
@@ -186,7 +174,7 @@ const RecruiterDashboards = () => {
             <div className="flex items-center gap-4">
               <span className="text-gray-600">👋 Hi, {userData.name}</span>
               <img
-                onClick={() => navigate("/rdashboard/profile")}
+                onClick={() => navigate("/sdashboard/profile")}
                 src={userData?.image || ProfileImage}
                 alt="Profile"
                 className="w-8 h-8 rounded-full object-cover cursor-pointer"
@@ -208,7 +196,7 @@ const RecruiterDashboards = () => {
                 <div
                   onClick={() => {
                     setIsMenuOpen(false);
-                    navigate("/rdashboard/profile");
+                    navigate("/sdashboard/profile");
                   }}
                   className="ml-3"
                 >
@@ -238,17 +226,51 @@ const RecruiterDashboards = () => {
         )}
       </header>
 
-      {/* Sidebar */}
-      <Sidebar
-        isSidebarExpanded={isSidebarExpanded}
-        isMobile={isMobile}
-        menuItems={menuItems}
-        location={location}
-        navigate={navigate}
-        handleLogout={handleLogout}
-        toggleSidebar={toggleSidebar}
-      />
-      
+      {/* Desktop Sidebar */}
+      {!isMobile && (
+        <>
+          <aside
+            className={`fixed left-0 top-16 h-full bg-white border-r border-gray-200 overflow-y-auto transition-all duration-300 ${
+              isSidebarExpanded ? "w-65" : "w-16"
+            }`}
+          >
+            <nav className="p-4">
+              {menuItems.map((item) => (
+                <MenuItem
+                  key={item.path}
+                  item={item}
+                  isSidebarExpanded={isSidebarExpanded}
+                />
+              ))}
+              <button
+                onClick={handleLogout}
+                className={`flex items-center w-full px-4 py-2 mt-4 text-red-500 hover:bg-red-50 rounded-lg ${
+                  !isSidebarExpanded ? "justify-center" : ""
+                }`}
+              >
+                <LogOut className="w-5 h-5" />
+                {/* Conditionally render the label only when the sidebar is expanded */}
+                {isSidebarExpanded && <span className="ml-3">Logout</span>}
+              </button>
+            </nav>
+          </aside>
+
+          {/* Toggle Button */}
+          <button
+            onClick={toggleSidebar}
+            className={`fixed top-16 bg-white rounded-r p-2 shadow-md transition-all duration-300 hover:bg-gray-100 ${
+              isSidebarExpanded ? "left-64" : "left-16"
+            }`}
+          >
+            {isSidebarExpanded ? (
+              <RiMenuFold3Fill size={20} />
+            ) : (
+              <RiMenuFold4Fill size={20} />
+            )}
+          </button>
+        </>
+      )}
+
       {/* Main Content */}
       <main
         className={`flex-1 mt-16 transition-all duration-300 ${
@@ -257,18 +279,21 @@ const RecruiterDashboards = () => {
       >
         <div className="container mx-auto p-4 min-h-[calc(100vh-theme(spacing.16)-theme(spacing.16))]">
           {/* Placeholder for route content */}
-           <Routes>
-              {/* <Route path="/" element={<Home />} /> */}
-              {/* <Route path="home" element={<CopycreateJob />} /> */}
-              <Route path="home" element={<RHome />} />
-              <Route path="jaf" element={<JobAnnouncementForm />} />
-              <Route path="createdjob" element={<CreatedJobs />} />
-              <Route path="request-help" element={<Request />} />
-              <Route path="feedback" element={<FeedbackForm/>} />
-              <Route path="travel" element={<TravelPlanner/>} />
-              <Route path="mailbox" element={<MailboxComponent />} />
-              <Route path="profile" element={<Profile />} />
-              <Route path="team" element={<TeamSection />} />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="dashboard" element={<Home />} />
+            <Route path="job-profile-management" element={<JobManagement />} />
+            <Route path="oa-management" element={<OAManagement />} />
+            <Route path="interview-management" element={<InterviewManagement />} />
+            <Route path="notifications" element={<PNotifications />} />
+            <Route path="mailbox" element={<Mailbox />} />
+            <Route path="help-requests" element={<RequestHelpManager />} />
+            <Route path="experience-sharing" element={<ExperienceSharing />} />
+            <Route path="placement-insights" element={<PlacementInsights />} />
+            <Route path="placement-policy" element={<PlacementPolicy />} />
+            <Route path="profile" element={<Profile />} />
+            <Route path="team" element={<TeamSection />} />
+            <Route path="uploads" element={<Upload />} />
             </Routes>
         </div>
 
@@ -295,4 +320,5 @@ const RecruiterDashboards = () => {
   );
 };
 
-export default RecruiterDashboards;
+
+export default Pdashboard;

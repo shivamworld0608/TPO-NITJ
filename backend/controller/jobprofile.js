@@ -376,7 +376,6 @@ export const checkEligibility = async (req, res) => {
   }
 };
 
-
 export const addshortlistStudents = async (req, res) => {
   try {
     const { jobId, stepIndex, students } = req.body;
@@ -391,6 +390,8 @@ export const addshortlistStudents = async (req, res) => {
     }
 
     const studentIds = [];
+    const absentIds = [];
+
     for (const student of students) {
       const formSubmission = await FormSubmission.findOne({
         jobId: jobId,
@@ -400,7 +401,11 @@ export const addshortlistStudents = async (req, res) => {
       if (formSubmission) {
         if (!step.shortlisted_students.includes(formSubmission.studentId)) {
           studentIds.push(formSubmission.studentId);
-        } else {
+        } 
+        if (!step.absent_students.includes(formSubmission.studentId) && student.absent) {
+          absentIds.push(formSubmission.studentId);
+        }
+        else {
           console.log(`Student with ID ${formSubmission.studentId} is already shortlisted.`);
         }
       } else {
@@ -459,13 +464,30 @@ export const addshortlistStudents = async (req, res) => {
 };
 
 
-export const eligibleinthis= async(req,res)=>{
-
+export const eligibleinthis = async (req, res) => {
   try {
     const { jobId, stepIndex } = req.body;
+    const jobProfile = await JobProfile.findById(jobId);
+    if (!jobProfile) {
+      return res.status(404).json({ error: 'Job profile not found' });
+    }
+    const eligible_studentsid = jobProfile.Hiring_Workflow[stepIndex]?.eligible_students;
+    const submissions = await FormSubmission.find({
+      studentId: { $in: eligible_studentsid },
+      jobId,
+    });
+    const eligibleStudents = submissions.map(submission => {
+      const nameField = submission.fields.find(field => field.fieldName === 'Name');
+      const emailField = submission.fields.find(field => field.fieldName === 'Email');
 
-}
-catch{
-  res.status(500).json({ error: 'Internal server error' });
-}
-}
+      return {
+        name: nameField ? nameField.value : submission.studentId.name,
+        email: emailField ? emailField.value : submission.studentId.email,
+      };
+    });
+    res.status(200).json({ eligibleStudents });
+  } catch (error) {
+    console.error('Error in eligibleinthis:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

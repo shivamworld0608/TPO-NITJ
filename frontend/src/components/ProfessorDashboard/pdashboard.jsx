@@ -93,14 +93,14 @@ const Pdashboard = () => {
   const menuItems = [
     { label: "Dashboard", icon: faHome, path: "/pdashboard/dashboard" },
     { label: "Job Profile Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
-    { label: "OA Management", icon: faClipboard, path: "/pdashboard/oa-management" },
-    { label: "Interview Management", icon: faClipboardUser, path: "/pdashboard/interview-management" },
-    { label: "Notifications", icon: faBell, path: "/pdashboard/notifications" },
-    { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/mailbox" },
+    // { label: "OA Management", icon: faClipboard, path: "/pdashboard/oa-management" },
+    // { label: "Interview Management", icon: faClipboardUser, path: "/pdashboard/interview-management" },
+    // { label: "Notifications", icon: faBell, path: "/pdashboard/notifications" },
+    { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" },
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Experience Sharing", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
     { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
-    { label: "Placement Policy", icon: faFileAlt, path: "/pdashboard/placement-policy" },
+    // { label: "Placement Policy", icon: faFileAlt, path: "/pdashboard/placement-policy" },
     { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
   ];
 
@@ -286,7 +286,7 @@ const Pdashboard = () => {
             <Route path="oa-management" element={<OAManagement />} />
             <Route path="interview-management" element={<InterviewManagement />} />
             <Route path="notifications" element={<PNotifications />} />
-            <Route path="mailbox" element={<Mailbox />} />
+            <Route path="pmailbox" element={<Mailbox />} />
             <Route path="help-requests" element={<RequestHelpManager />} />
             <Route path="experience-sharing" element={<ExperienceSharing />} />
             <Route path="placement-insights" element={<PlacementInsights />} />

@@ -14,6 +14,8 @@ import TeamPage from "./Pages/TeamPage";
 import FAQ from "./Pages/Faqs";
 import ErrorPage from "./Pages/ErrorPage";
 import Signup from "./Pages/Signup";
+import AlumniLogin from "./Pages/ALogin";
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -28,6 +30,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/alogin" element={<AlumniLogin/>} />
         <Route path="/signup" element={<Signup/>} />
         <Route path="/placements" element={<Placement/>} />
         <Route path="/recruiter" element={<Recruiter/>} />

@@ -177,27 +177,31 @@ const MailboxComponent = () => {
   return (
     <div className="p-6 w-full flex flex-col space-y-4">
      {/*  <div className="bg-white p-6 "> */}
-        {/* <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide mb-8">
+        <h1 className="font-bold text-3xl lg:text-4xl text-center tracking-wide mb-4">
         Mail
         <span className="bg-custom-blue text-transparent bg-clip-text">
           Box
         </span>
-      </h1> */}
-        <div className="mb-4 flex items-center gap-2">
-          <FaSearch className="text-custom-blue" />
+      </h1>
+        <div className="mb-4 flex flex-col lg:flex-row items-center gap-y-4">
+         <div className="flex items-center gap-2  w-full ">
+          <FaSearch className="text-custom-blue " />
           <input
             type="text"
-            className="p-2 border border-gray-300 rounded-2xl w-3/6"
+            className="p-2 border border-gray-300 rounded-2xl w-full lg:w-1/2"
             placeholder="Search Messages"
             value={searchTerm}
             onChange={handleSearchChange}
           />
+          </div>
 
+<div className="flex items-center gap-4">
           {["All", "Inbox", "Sent", "Pending", "Draft"].map((filter) => (
-            <button
+        
+          <button
               key={filter}
               onClick={() => handleFilterChange(filter)}
-              className={`flex-1 p-2 rounded-3xl ${
+              className={`flex-1 px-4 p-2 rounded-3xl ${
                 selectedFilter === filter
                   ? "bg-custom-blue text-white"
                   : "bg-gray-200 text-gray-700"
@@ -212,6 +216,7 @@ const MailboxComponent = () => {
           >
             <FontAwesomeIcon icon={faPenToSquare} className="p-0.5" />
           </button>
+          </div>
         </div>
         {isComposing && (
           <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
@@ -224,6 +229,9 @@ const MailboxComponent = () => {
                 >
                   <FaTimes className="text-custom-blue " />
                 </button>
+                
+
+
               </div>
               <input
                 type="text"

@@ -4,17 +4,24 @@ import { Card, CardHeader, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
+import Jobdetail from "./Jobdetail";
 
 const CalendarComponent = () => {
   const [currentDate, setCurrentDate] = useState(new Date(2025, 0));
   const [events, setEvents] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedJobId, setSelectedJobId] = useState(null);
+  const [isJobDetailVisible, setJobDetailVisible] = useState(false);
+
+  const handleBack = () => {
+    setJobDetailVisible(false);
+    setTimeout(() => setSelectedJobId(null), 300); // Delay unmounting for transition
+  };
 
   const fetchEvents = async (year, month) => {
     try {
       setLoading(true);
-      // Calculate start and end dates for the current month
       const startDate = new Date(year, month, 1);
       const endDate = new Date(year, month + 1, 0);
 
@@ -51,7 +58,6 @@ const CalendarComponent = () => {
     );
   };
 
-
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   };
@@ -61,19 +67,25 @@ const CalendarComponent = () => {
   };
 
   const formatDate = (year, month, day) => {
-    return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return `${year}-${String(month + 1).padStart(2, "0")}-${String(
+      day
+    ).padStart(2, "0")}`;
   };
-
 
   const renderCalendar = () => {
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDay = getFirstDayOfMonth(currentDate);
     const days = [];
 
+    const onEventClick = (jobId) => {
+      setSelectedJobId(jobId);
+      setJobDetailVisible(true);
+    };
+
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       days.push(
-        <div key={`empty-${i}`} className="h-32 border border-custom-blue"></div>
+        <div key={`empty-${i}`} className="h-32 border border-gray-200"></div>
       );
     }
 
@@ -89,9 +101,9 @@ const CalendarComponent = () => {
       days.push(
         <div
           key={day}
-          className="h-32 border border-custom-blue p-2 overflow-y-auto"
+          className="h-32 border border-gray-200 p-2 overflow-y-auto"
         >
-          <div className="font-bold text-custom-blue mb-1">{day}</div>
+          <div className="font-bold mb-1">{day}</div>
           {dayEvents.map((event, idx) => (
             <div
               key={idx}
@@ -100,6 +112,7 @@ const CalendarComponent = () => {
                   ? "bg-blue-100 text-blue-800"
                   : "bg-green-100 text-green-800"
               }`}
+              onClick={() => onEventClick(event._id)}
             >
               <div className="font-semibold">{event.company}</div>
               <div>{event.type}</div>
@@ -130,12 +143,12 @@ const CalendarComponent = () => {
   ];
 
   return (
-    <Card className="max-w-6xl mx-auto border border-custom-blue">
+    <Card className="max-w-6xl mx-auto">
       <CardHeader>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
-            <Calendar className="mr-2 h-5 w-5 text-custom-blue" />
-            <h2 className="text-2xl text-custom-blue font-bold">
+            <Calendar className="mr-2 h-5 w-5" />
+            <h2 className="text-2xl font-bold">
               {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
             </h2>
           </div>
@@ -143,7 +156,6 @@ const CalendarComponent = () => {
             <Button
               variant="outline"
               size="sm"
-              className="bg-custom-blue text-white"
               onClick={() => navigateMonth(-1)}
               disabled={loading}
             >
@@ -151,7 +163,6 @@ const CalendarComponent = () => {
             </Button>
             <Button
               variant="outline"
-              className="bg-custom-blue text-white"
               size="sm"
               onClick={() => navigateMonth(1)}
               disabled={loading}
@@ -163,26 +174,19 @@ const CalendarComponent = () => {
       </CardHeader>
       <CardContent>
         {loading && <div className="text-center py-4">Loading events...</div>}
-
         {error && (
           <div className="text-red-500 text-center py-4">Error: {error}</div>
         )}
-
         {!loading && !error && (
           <>
-            {/* Calendar Header */}
-            <div className="grid grid-cols-7 gap-1 mb-2 text-custom-blue">
+            <div className="grid grid-cols-7 gap-1 mb-2">
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                 <div key={day} className="text-center font-semibold p-2">
                   {day}
                 </div>
               ))}
             </div>
-
-            {/* Calendar Grid */}
             <div className="grid grid-cols-7 gap-1">{renderCalendar()}</div>
-
-            {/* Legend */}
             <div className="mt-4 flex gap-4">
               <div className="flex items-center">
                 <div className="w-4 h-4 rounded bg-blue-100 mr-2"></div>
@@ -196,6 +200,18 @@ const CalendarComponent = () => {
           </>
         )}
       </CardContent>
+
+      {selectedJobId && (
+        <div
+          className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-90 transition-opacity duration-300 ${
+            isJobDetailVisible ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <div className="mx-auto px-4 py-6 transform transition-transform duration-300 scale-95">
+            <Jobdetail job_id={selectedJobId} onBack={handleBack} />
+          </div>
+        </div>
+      )}
     </Card>
   );
 };

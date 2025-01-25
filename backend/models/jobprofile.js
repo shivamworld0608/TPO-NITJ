@@ -62,6 +62,13 @@ const JobProfileSchema = new mongoose.Schema(
             }],
             default: []
           },
+          absent_students: {
+            type: [{
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "Student",
+            }],
+            default: []
+          },
           shortlisted_students: {
             type: [{
               type: mongoose.Schema.Types.ObjectId,
