@@ -147,7 +147,7 @@ const JobApplications = () => {
             Applied
           </button>
           <button
-            className={`px-4 py-2 rounded-3xl ${
+            className={`lg:px-4 lg:py-2 p-2 rounded-3xl ${
               activeTab === "notApplied" ? "bg-custom-blue text-white" : "bg-white"
             }`}
             onClick={() => setActiveTab("notApplied")}
