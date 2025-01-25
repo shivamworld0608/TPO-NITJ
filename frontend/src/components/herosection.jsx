@@ -5,11 +5,17 @@ function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
   const [slideIn, setSlideIn] = useState(false);
+  const [visible, setVisible] = useState(false);
   useEffect(() => {
-    setInterval(() => {
+    const slideInTimer = setTimeout(() => {
       setSlideIn(true);
     }, 500);
-    const interval = setInterval(() => {
+
+    const visibilityInterval = setInterval(() => {
+      setVisible((prev) => !prev);
+    }, 3500);
+
+    const imageInterval = setInterval(() => {
       setFadeIn(false);
 
       setTimeout(() => {
@@ -17,8 +23,14 @@ function HeroSection() {
         setFadeIn(true);
       }, 500);
     }, 5000);
-    return () => clearInterval(interval);
+
+    return () => {
+      clearTimeout(slideInTimer);
+      clearInterval(visibilityInterval);
+      clearInterval(imageInterval);
+    };
   }, [images.length]);
+
 
   return (
     <>
@@ -48,7 +60,7 @@ function HeroSection() {
           </div>
         </div>
         <div
-          className={`w-full sm:h-screen h-[50vh] transition-opacity duration-1000 ${
+          className={`w-full sm:h-[90vh] h-[50vh] transition-opacity duration-1000 ${
             fadeIn ? "opacity-100" : "opacity-0"
           }`}
           style={{
@@ -59,23 +71,33 @@ function HeroSection() {
           }}
         ></div>
         <div className="absolute inset-0 bg-black opacity-70 backdrop-blur-lg "></div>
-        <div className="absolute text flex flex-col gap-3 items-center justify-center p-10 text-white">
-          <div className="flex flex-col">
-            <span className="font-extrabold sm:text-4xl text-3xl">
+        <div className="absolute text flex flex-col gap-8 items-center justify-center p-10 text-white">
+          <div className="flex sm:flex-row flex-col items-center sm:text-5xl text-4xl gap-1">
+            <span className="font-extrabold ">
               Welcome to{" "}
             </span>
             <div className="flex">
-              <span className="font-extrabold sm:text-4xl text-3xl">TPO-</span>
-              <span className="text-sky-600 font-extrabold sm:text-4xl text-3xl">
+              <span className="font-extrabold ">TPO-</span>
+              <span className="text-sky-600 font-extrabold ">
                 NITJ
               </span>
             </div>
           </div>
-          <div className="sm:text-lg text-sm text-center">
-            Empowering Your Career Journey!
+          <div className={`message flex-col gap-2 ${visible? "flex":"hidden"}`}>
+            <div className="sm:text-xl text-sm text-center">
+              "Empowering Your Career Journey!"
+            </div>
+            <div className="sm:text-xl text-sm text-center">
+              "Your bridge to internships, training programs, and dream jobs."
+            </div>
           </div>
-          <div className="sm:text-lg text-sm text-center">
-            "Your bridge to internships, training programs, and dream jobs."
+          <div className={`message flex-col gap-2 ${visible? "hidden":"flex"}`}>
+            <div className="sm:text-xl text-sm text-center">
+              "Unlocking Potential, Creating Success"
+            </div>
+            <div className="sm:text-xl text-sm text-center">
+            "Strong industry connections and professional growth."
+            </div>
           </div>
           <div className="buttons flex gap-5">
             <button className="bg-sky-700 text-white font-medium p-3 rounded-xl z-0">
@@ -142,6 +164,26 @@ function HeroSection() {
             100% {
               transform: translateY(0%) rotate(0);
             }
+          }
+
+          @keyframes animaeMsg {
+            0% {
+              transform: translateY(-10%);
+              opacity:0;
+            }
+
+            50% {
+              transform: translateY(0%);
+              opacity:1;
+            }
+
+            100% {
+              transform: translateY(10%);
+              opacity:0;
+            }
+          }
+          .message {
+            animation: animaeMsg 3.5s linear infinite;
           }
 
           button {
