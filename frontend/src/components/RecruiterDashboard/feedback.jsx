@@ -28,7 +28,7 @@ const FeedbackForm = () => {
 
       {/* Technical Skill Rating */}
       <div className="mb-4">
-        <label className="block text-md font-medium mb-2">Rate Technical Skills</label>
+        <label className="block text-md font-medium mb-2">Rate Students Technical Skills</label>
         <div className="flex">
           {[1, 2, 3, 4, 5].map((star) => (
             <FaStar
@@ -44,7 +44,7 @@ const FeedbackForm = () => {
 
       {/* Communication Skill Rating */}
       <div className="mb-4">
-        <label className="block text-md font-medium mb-2">Rate Communication Skills</label>
+        <label className="block text-md font-medium mb-2">Rate Student Communication Skills</label>
         <div className="flex">
           {[1, 2, 3, 4, 5].map((star) => (
             <FaStar
@@ -60,7 +60,7 @@ const FeedbackForm = () => {
 
       {/* Overall Experience Rating */}
       <div className="mb-4">
-        <label className="block text-md font-medium mb-2">Rate Overall Experience with NITJ Community</label>
+        <label className="block text-md font-medium mb-2">Rate Overall Experience with our NITJ Community</label>
         <div className="flex">
           {[1, 2, 3, 4, 5].map((star) => (
             <FaStar
