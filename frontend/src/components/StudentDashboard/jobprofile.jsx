@@ -39,7 +39,7 @@ const JobApplications = () => {
     fetchJobs();
   }, []);
 
-  if (loading) return <BouncingLoader size="medium" text="Loading..." />;
+  if (loading) { <BouncingLoader size="medium" text="Loading..." />};
 
   if (error) {
     return <p className="text-center text-lg text-red-500">{error}</p>;

@@ -4,7 +4,6 @@ import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Checkbox } from '../ui/checkbox';
 import { Textarea } from '../ui/textarea';
-/* import { RadioGroup, RadioGroupItem } from '../ui/radio-group'; */
 import { 
   Building2, 
   GraduationCap, 
@@ -19,53 +18,8 @@ import {
 } from 'lucide-react';
 
 const JobAnnouncementForm = () => {
-  const [signature, setSignature] = useState(null);
-  const [isDrawing, setIsDrawing] = useState(false);
-  const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0 });
   const [hrContacts, setHrContacts] = useState([{ name: '', designation: '', email: '', phone: '' }]);
   const [otherSelectionDetails, setOtherSelectionDetails] = useState('');
-  const canvasRef = React.useRef(null);
-
-  const startDrawing = (e) => {
-    setIsDrawing(true);
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    setCurrentPosition({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top
-    });
-  };
-
-  const draw = (e) => {
-    if (!isDrawing) return;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    ctx.beginPath();
-    ctx.moveTo(currentPosition.x, currentPosition.y);
-    ctx.lineTo(x, y);
-    ctx.strokeStyle = '#000';
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.stroke();
-
-    setCurrentPosition({ x, y });
-  };
-
-  const stopDrawing = () => {
-    setIsDrawing(false);
-    setSignature(canvasRef.current.toDataURL());
-  };
-
-  const clearSignature = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    setSignature(null);
-  };
 
   const addHrContact = () => {
     setHrContacts([...hrContacts, { name: '', designation: '', email: '', phone: '' }]);
@@ -443,11 +397,20 @@ const JobAnnouncementForm = () => {
                   />
                 </div>
                 <div className="space-y-2">
+                  <label className="block text-sm font-medium"> Stipend (₹)*</label>
+                  <Input
+                    value={designation.ctc}
+                    onChange={(e) => updateDesignation(index, 'ctc', e.target.value)}
+                    placeholder="Enter Stipend if Intern"
+                    className="border-gray-300"
+                  />
+                </div>
+                <div className="space-y-2">
                   <label className="block text-sm font-medium">CTC (₹)*</label>
                   <Input
                     value={designation.ctc}
                     onChange={(e) => updateDesignation(index, 'ctc', e.target.value)}
-                    placeholder="Enter CTC details"
+                    placeholder="Enter CTC if PPO or FTE"
                     className="border-gray-300"
                   />
                 </div>
@@ -602,37 +565,6 @@ const JobAnnouncementForm = () => {
                   </div>
                 </div>
               ))}
-            </div>
-          </section>
-
-          {/* Digital Signature Section */}
-          <section className="space-y-6">
-            <div className="flex items-center gap-2 text-lg font-semibold text-blue-700 border-b pb-2">
-              <User2 className="w-6 h-6 text-custom-blue" />
-              <h3 className='text-custom-blue'>Digital Signature</h3>
-            </div>
-            
-            <div className="border rounded-lg p-6 bg-gray-50 space-y-4">
-              <p className="text-sm text-gray-600">Please sign in the box below</p>
-              <canvas
-                ref={canvasRef}
-                width={400}
-                height={200}
-                className="border rounded-lg w-full bg-white shadow-inner"
-                onMouseDown={startDrawing}
-                onMouseMove={draw}
-                onMouseUp={stopDrawing}
-                onMouseLeave={stopDrawing}
-              />
-              <div className="flex gap-4">
-                <Button 
-                  onClick={clearSignature} 
-                  variant="outline"
-                  className="text-sm"
-                >
-                  Clear Signature
-                </Button>
-              </div>
             </div>
           </section>
 

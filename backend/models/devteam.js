@@ -10,8 +10,26 @@ const DeveloperSchema = new mongoose.Schema({
   linkedinUrl: {
     type: String,
   },
+  githubUrl:{
+    type:String,
+  },
+  resumeUrl:{
+    type:String,
+  },
+  website:{
+    type:String,
+  },
+  email:{
+    type:String,
+  },
   mobile: {
     type: String,
+  },
+  department:{
+    type:String,
+  },
+  batch:{
+    type:String,
   },
   role: {
     type: String,
