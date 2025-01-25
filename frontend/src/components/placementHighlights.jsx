@@ -177,7 +177,7 @@ return (
                 {cardsData.map((card, index) => (
                     <div
                         key={index}
-                        className={`flex flex-col justify-center items-center ${card.bgColor} ${card.textColor} p-6 h-48 w-full max-w-xs rounded-lg text-center shadow-md`}
+                        className={`flex flex-col justify-center items-center ${card.bgColor} ${card.textColor} p-6 h-48 w-full max-w-xs rounded-lg text-center shadow-md m-auto`}
                     >
                         {card.icon}
                         <h3 className="text-xl font-bold mt-4">{card.title}</h3>
