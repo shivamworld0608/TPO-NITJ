@@ -1,13 +1,11 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
 function HeroSection() {
   const images = ["/NITJ_Pic1.png", "/NITJ_Pic3.png"];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
   const [slideIn, setSlideIn] = useState(false);
   const [visible, setVisible] = useState(false);
-  const navigate = useNavigate();
   useEffect(() => {
     const slideInTimer = setTimeout(() => {
       setSlideIn(true);
@@ -103,7 +101,6 @@ function HeroSection() {
           <div className="buttons flex gap-5">
             <button
               className="bg-sky-700 button text-white font-medium p-3 rounded-xl z-0"
-              onClick={() => navigate("/Signup")}
             >
               <a href="/signup">Register Now</a>
             </button>
