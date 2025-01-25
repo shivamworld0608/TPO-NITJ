@@ -1,16 +1,14 @@
 import React from "react";
-import { use } from "react";
 import { useEffect, useState } from "react";
 function HeroSection() {
   const images = ["/NITJ_Pic1.png", "/NITJ_Pic3.png"];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
-    const [slideIn, setSlideIn] = useState(false)
+  const [slideIn, setSlideIn] = useState(false);
   useEffect(() => {
     setInterval(() => {
-    setSlideIn(true)
-
-    },500)
+      setSlideIn(true);
+    }, 500);
     const interval = setInterval(() => {
       setFadeIn(false);
 
@@ -24,21 +22,33 @@ function HeroSection() {
 
   return (
     <>
-      <div className="relative overflow-x-hidden flex flex-col items-center justify-center">
+      <div className="relative overflow-hidden flex flex-col items-center justify-center lg:mt-0 -mt-10">
         <div className="absolute grid grid-cols-2 top-0 left-0 right-0 bottom-0">
-          <div className={`relative gate1 w-full h-screen bg-white z-[1000] transition-all duration-700 ${slideIn?"rounded-t-[100px] opacity-0 -translate-x-full":"rounded-none translate-x-0"}`}>
+          <div
+            className={`relative gate1 w-full h-screen bg-white z-[1000] transition-all duration-700 ${
+              slideIn
+                ? "rounded-t-[100px] opacity-0 -translate-x-full"
+                : "rounded-none translate-x-0"
+            }`}
+          >
             <p className="absolute right-0 top-1/2 text-5xl font-extrabold p-2">
               TPO
             </p>
           </div>
-          <div className={`relative gate2 w-full h-screen bg-white z-[1000] transition-all duration-700  ${slideIn?"rounded-t-[100px] opacity-0 translate-x-full":"rounded-none translate-x-0"}`}>
+          <div
+            className={`relative gate2 w-full h-screen bg-white z-[1000] transition-all duration-700  ${
+              slideIn
+                ? "rounded-t-[100px] opacity-0 translate-x-full"
+                : "rounded-none translate-x-0"
+            }`}
+          >
             <p className="absolute left-0 top-1/2 text-5xl font-extrabold text-sky-700 p-2">
               NITJ
             </p>
           </div>
         </div>
         <div
-          className={`w-full h-screen transition-opacity duration-1000 ${
+          className={`w-full sm:h-screen h-[50vh] transition-opacity duration-1000 ${
             fadeIn ? "opacity-100" : "opacity-0"
           }`}
           style={{
@@ -48,13 +58,22 @@ function HeroSection() {
             backgroundPosition: "center",
           }}
         ></div>
-        <div className="absolute inset-0 bg-black opacity-70 backdrop-blur-lg"></div>
+        <div className="absolute inset-0 bg-black opacity-70 backdrop-blur-lg "></div>
         <div className="absolute text flex flex-col gap-3 items-center justify-center p-10 text-white">
-          <div>
-            <span className="font-extrabold sm:text-4xl text-3xl">Welcome to TPO-</span>
-            <span className="text-sky-600 font-extrabold sm:text-4xl text-3xl">NITJ</span>
+          <div className="flex flex-col">
+            <span className="font-extrabold sm:text-4xl text-3xl">
+              Welcome to{" "}
+            </span>
+            <div className="flex">
+              <span className="font-extrabold sm:text-4xl text-3xl">TPO-</span>
+              <span className="text-sky-600 font-extrabold sm:text-4xl text-3xl">
+                NITJ
+              </span>
+            </div>
           </div>
-          <div className="sm:text-lg text-sm text-center">Empowering Your Career Journey!</div>
+          <div className="sm:text-lg text-sm text-center">
+            Empowering Your Career Journey!
+          </div>
           <div className="sm:text-lg text-sm text-center">
             "Your bridge to internships, training programs, and dream jobs."
           </div>
@@ -111,7 +130,8 @@ function HeroSection() {
                 0.98 95.45%,
                 0.99 97.73%,
                 1 100%
-              ) 0.55s;
+              )
+              0.55s;
           }
 
           @keyframes slider {
@@ -151,8 +171,6 @@ function HeroSection() {
           button:hover {
             color: #0369a1;
           }
-
-          
         `}
       </style>
     </>
