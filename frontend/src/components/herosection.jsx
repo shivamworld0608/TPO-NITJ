@@ -59,7 +59,7 @@ function HeroSection() {
           </div>
         </div>
         <div
-          className={`w-full sm:h-[80vh] h-[50vh] transition-opacity duration-1000 ${
+          className={`heroSection w-full sm:h-[80vh] h-[50vh] transition-opacity duration-1000 ${
             fadeIn ? "opacity-100" : "opacity-0"
           }`}
           style={{
@@ -67,9 +67,10 @@ function HeroSection() {
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
             backgroundPosition: "center",
+            animation: "scaling 6s linear infinite",
           }}
         ></div>
-        <div className="absolute inset-0 bg-black opacity-70 backdrop-blur-lg "></div>
+        <div className={`absolute inset-0 bg-black backdrop-blur-lg ${fadeIn ? "opacity-50" : "opacity-0"}`}></div>
         <div className="absolute text flex flex-col gap-8 items-center justify-center p-10 text-white">
           <div className="flex sm:flex-row flex-col items-center sm:text-5xl text-4xl gap-1">
             <span className="font-extrabold ">Welcome to </span>
@@ -163,6 +164,15 @@ function HeroSection() {
               transform: translateY(0%) rotate(0);
             }
           }
+          @keyframes scaling {
+            0% {
+              transform: scale(1);
+            }
+
+            100% {
+              transform: scale(1.2);
+            }
+          }
 
           @keyframes animaeMsg {
             0% {
@@ -183,7 +193,7 @@ function HeroSection() {
           .message {
             animation: animaeMsg 3.5s linear infinite;
           }
-
+    
           .button {
             position: relative;
             cursor: pointer;
