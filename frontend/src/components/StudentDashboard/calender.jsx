@@ -4,12 +4,22 @@ import { Card, CardHeader, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
+import Jobdetail from "./Jobdetail";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 
 const CalendarComponent = () => {
   const [currentDate, setCurrentDate] = useState(new Date(2025, 0));
   const [events, setEvents] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showJobDetail, setShowJobDetail] = useState(false);
+  const [selectedJobId, setSelectedJobId] = useState(null);
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    setShowJobDetail(false); // Go back to calendar view
+    setSelectedJobId(null); // Clear the selected job ID
+  };
 
   const fetchEvents = async (year, month) => {
     try {
@@ -31,6 +41,7 @@ const CalendarComponent = () => {
 
       if (response.data.success) {
         setEvents(response.data.events);
+        console.log(response.data.events);
       } else {
         setError("Failed to fetch events");
       }
@@ -51,7 +62,6 @@ const CalendarComponent = () => {
     );
   };
 
-
   const getDaysInMonth = (date) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   };
@@ -61,19 +71,35 @@ const CalendarComponent = () => {
   };
 
   const formatDate = (year, month, day) => {
-    return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    return `${year}-${String(month + 1).padStart(2, "0")}-${String(
+      day
+    ).padStart(2, "0")}`;
   };
-
 
   const renderCalendar = () => {
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDay = getFirstDayOfMonth(currentDate);
     const days = [];
 
+    const onEventClick = (jobId) => {
+      console.log("Event clicked", jobId);
+      setSelectedJobId(jobId); // Update state to store selected job ID
+      setShowJobDetail(true); // Toggle to show job details
+    };
+
+
+    if (selectedJobId) {
+      return (
+        <div className="container mx-auto px-4 py-6">
+          <Jobdetail job_id={selectedJobId} onBack={handleBack} />
+        </div>
+      );
+    }
+
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       days.push(
-        <div key={`empty-${i}`} className="h-32 border border-custom-blue"></div>
+        <div key={`empty-${i}`} className="h-32 border border-gray-200"></div>
       );
     }
 
@@ -89,9 +115,9 @@ const CalendarComponent = () => {
       days.push(
         <div
           key={day}
-          className="h-32 border border-custom-blue p-2 overflow-y-auto"
+          className="h-32 border border-gray-200 p-2 overflow-y-auto"
         >
-          <div className="font-bold text-custom-blue mb-1">{day}</div>
+          <div className="font-bold mb-1">{day}</div>
           {dayEvents.map((event, idx) => (
             <div
               key={idx}
@@ -100,6 +126,10 @@ const CalendarComponent = () => {
                   ? "bg-blue-100 text-blue-800"
                   : "bg-green-100 text-green-800"
               }`}
+              onClick={() => {
+                onEventClick(event._id);
+                // navigate("/sdashboard/job-application");
+              }} // Handle event click
             >
               <div className="font-semibold">{event.company}</div>
               <div>{event.type}</div>
@@ -130,12 +160,12 @@ const CalendarComponent = () => {
   ];
 
   return (
-    <Card className="max-w-6xl mx-auto border border-custom-blue">
+    <Card className="max-w-6xl mx-auto">
       <CardHeader>
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
-            <Calendar className="mr-2 h-5 w-5 text-custom-blue" />
-            <h2 className="text-2xl text-custom-blue font-bold">
+            <Calendar className="mr-2 h-5 w-5" />
+            <h2 className="text-2xl font-bold">
               {monthNames[currentDate.getMonth()]} {currentDate.getFullYear()}
             </h2>
           </div>
@@ -143,7 +173,6 @@ const CalendarComponent = () => {
             <Button
               variant="outline"
               size="sm"
-              className="bg-custom-blue text-white"
               onClick={() => navigateMonth(-1)}
               disabled={loading}
             >
@@ -151,7 +180,6 @@ const CalendarComponent = () => {
             </Button>
             <Button
               variant="outline"
-              className="bg-custom-blue text-white"
               size="sm"
               onClick={() => navigateMonth(1)}
               disabled={loading}
@@ -171,7 +199,7 @@ const CalendarComponent = () => {
         {!loading && !error && (
           <>
             {/* Calendar Header */}
-            <div className="grid grid-cols-7 gap-1 mb-2 text-custom-blue">
+            <div className="grid grid-cols-7 gap-1 mb-2">
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
                 <div key={day} className="text-center font-semibold p-2">
                   {day}
