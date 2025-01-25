@@ -256,7 +256,7 @@ const RecruiterDashboards = () => {
               ))}
               <button
                 onClick={handleLogout}
-                className={`flex items-center w-full px-4 py-2 mt-4 text-red-500 hover:bg-red-50 rounded-lg ${
+                className={`flex items-center w-full px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg ${
                   !isSidebarExpanded ? "justify-center" : ""
                 }`}
               >
