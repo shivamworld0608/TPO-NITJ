@@ -396,13 +396,13 @@ function showSearchPage(event) {
             </div>
           </div>
           <div className="flex basis-1/5 flex-row justify-center">
-            <button type="button" id="nav-search-btn-v2" className=" material-symbols-outlined duration-50 cursor-pointer text-center transition ease-in-out hover:box-border hover:h-10 hover:w-10 hover:rounded-full hover:border-2 hover:border-accent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tap to search">
+            {/* <button type="button" id="nav-search-btn-v2" className=" material-symbols-outlined duration-50 cursor-pointer text-center transition ease-in-out hover:box-border hover:h-10 hover:w-10 hover:rounded-full hover:border-2 hover:border-accent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tap to search">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24">
                 <path
                   d="M781.692-136.924 530.461-388.155q-30 24.769-69 38.769t-80.692 14q-102.55 0-173.582-71.014t-71.032-173.537q0-102.524 71.014-173.601 71.014-71.076 173.538-71.076 102.523 0 173.6 71.032T625.384-580q0 42.846-14.385 81.846-14.385 39-38.385 67.846l251.231 251.231-42.153 42.153Zm-400.923-258.46q77.308 0 130.962-53.654Q565.385-502.692 565.385-580q0-77.308-53.654-130.962-53.654-53.654-130.962-53.654-77.308 0-130.962 53.654Q196.154-657.308 196.154-580q0 77.308 53.653 130.962 53.654 53.654 130.962 53.654Z"
                 />
               </svg>
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
