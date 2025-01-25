@@ -116,6 +116,8 @@ const workflowStepOptions = [
   { value: "OA", label: "Online Assessment" },
   { value: "Interview", label: "Interview" },
   { value: "GD", label: "Group Discussion" },
+  { value: "Resume Shortlisting", label: "Resume Shortlisting" },
+  {value: "Others", label: "Others"},
 ];
 
 const CreateJob = ({ onJobCreated, onCancel }) => {
@@ -620,6 +622,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
             </div>
 
             {/* Dynamic Step Details Form */}
+                
+
             {workflowStep.step_type === "OA" && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                 <input
@@ -754,6 +758,67 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 />
               </div>
             )}
+
+{workflowStep.step_type === "Resume Shortlisting" && (
+              <></>
+            )}
+
+            {workflowStep.step_type === "Others" && (
+              <>
+              
+                <input
+                  type="text"
+                  name="Name of Round"
+                  placeholder="Name of Round"
+                  value={workflowStep.details.round_name || ""}
+                  onChange={handleStepDetailsChange}
+                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300 mt-4"
+                />
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                <input
+                  type="date"
+                  name="oa_date"
+                  placeholder="Round Date"
+                  value={workflowStep.details.oa_date || ""}
+                  onChange={handleStepDetailsChange}
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                />
+                <input
+                  type="string"
+                  name="oa_login_time"
+                  placeholder="Login Time"
+                  value={workflowStep.details.oa_login_time || ""}
+                  onChange={handleStepDetailsChange}
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                />
+                <input
+                  type="string"
+                  name="oa_duration"
+                  placeholder="Round Duration"
+                  value={workflowStep.details.oa_duration || ""}
+                  onChange={handleStepDetailsChange}
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                />
+                <textarea
+                  name="oa_link"
+                  placeholder="Round Link"
+                  value={workflowStep.details.oa_link || ""}
+                  onChange={handleStepDetailsChange}
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                />
+                <textarea
+                  name="oa_info"
+                  placeholder="Round Info"
+                  value={workflowStep.details.oa_info || ""}
+                  onChange={handleStepDetailsChange}
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                />
+              </div>
+              
+              
+            </>
+          )}
 
             {/* Add/Update Workflow Step Button */}
             <button
