@@ -166,7 +166,7 @@ const SharedExperience = () => {
 
 {activeTab === "myExperiences" && (
   <section>
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {eligible && (
         <div
           onClick={() => setShowEditor(true)}
@@ -176,9 +176,10 @@ const SharedExperience = () => {
         </div>
       )}
       {currentUserExperiences.map((experience) => (
+        
         <div
           key={experience._id}
-          className="bg-white border border-gray-200 rounded-xl shadow-md hover:shadow-2xl transition-transform hover:scale-105 hover:border-blue-500 duration-300 cursor-pointer overflow-hidden p-4 flex flex-col items-center justify-between text-center h-auto w-auto"
+          className=" border border-gray-200 rounded-xl shadow-md hover:shadow-2xl transition-transform hover:scale-105 hover:border-blue-500 duration-300 cursor-pointer overflow-hidden p-4 flex flex-col  items-center justify-between text-center h-auto w-auto"
           onClick={() => handleViewDetails(experience)}
         >
           <h4 className="text-lg font-semibold text-gray-800 break-words w-full px-2">
@@ -213,8 +214,9 @@ const SharedExperience = () => {
             </button>
           </div>
         </div>
+         
       ))}
-   
+  
 
           </div>
         </section>
@@ -222,7 +224,7 @@ const SharedExperience = () => {
 
       {activeTab === "otherExperiences" && (
         <section>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {otherExperiences.map((experience) => (
               <div
                 key={experience._id}
