@@ -24,16 +24,16 @@ import {
 import { Menu, X, LogOut } from "lucide-react";
 
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
-// import Home from "./StudentDashboard/home";
+
+import ProfileImage from "../assets/chillguy.png";
+import NITJlogo from "../assets/nitj-logo.png";
+
 import RHome from "./RecruiterDashboard/rhome.jsx"
 import Sidebar from "./sidebar.jsx";
 import CreatedJobs from "./RecruiterDashboard/createdjob";
 import MailboxComponent from "./RecruiterDashboard/rmailbox";
 import Request from "./RecruiterDashboard/Request.jsx";
 import Profile from "./RecruiterDashboard/profile.jsx";
-import ProfileImage from "../assets/chillguy.png";
-import NITJlogo from "../assets/nitj-logo.png";
-// import CopycreateJob from "./RecruiterDashboard/createjob.jsx";
 import TeamSection from "./Developers/TeamSection.jsx";
 import JobAnnouncementForm from "./RecruiterDashboard/jaf.jsx";
 import FeedbackForm from "./RecruiterDashboard/feedback.jsx";
@@ -93,12 +93,12 @@ const RecruiterDashboards = () => {
       label: "JAF",
       icon: faFileWaveform,
     },
-    { path: "/rdashboard/travel", label: "Travel planner", icon: faPlane },
     {
       path: "/rdashboard/createdjob",
       label: "Created Job Profile",
       icon: faBriefcase,
     },
+    { path: "/rdashboard/travel", label: "Travel planner", icon: faPlane },
     { path: "/rdashboard/feedback", label: "Feedback", icon: faComment },
 
     { path: "/rdashboard/rmailbox", 
@@ -157,7 +157,7 @@ const RecruiterDashboards = () => {
           <div className="flex items-center">
             <img
               onClick={() => navigate("/rdashboard/home")}
-              src={NITJlogo}
+              src={userData?.image || NITJlogo}
               alt="Logo"
               className="h-10 w-10 object-contain rounded"
             />
@@ -238,17 +238,52 @@ const RecruiterDashboards = () => {
         )}
       </header>
 
-      {/* Sidebar */}
-      <Sidebar
-        isSidebarExpanded={isSidebarExpanded}
-        isMobile={isMobile}
-        menuItems={menuItems}
-        location={location}
-        navigate={navigate}
-        handleLogout={handleLogout}
-        toggleSidebar={toggleSidebar}
-      />
-      
+      {/* Desktop Sidebar */}
+      {!isMobile && (
+        <>
+          <aside
+            className={`fixed left-0 top-16 h-full bg-white border-r border-gray-200 overflow-y-auto transition-all duration-300 ${
+              isSidebarExpanded ? "w-64" : "w-16"
+            }`}
+          >
+            <nav className="p-4">
+              {menuItems.map((item) => (
+                <MenuItem
+                  key={item.path}
+                  item={item}
+                  isSidebarExpanded={isSidebarExpanded}
+                />
+              ))}
+              <button
+                onClick={handleLogout}
+                className={`flex items-center w-full px-4 py-2 mt-4 text-red-500 hover:bg-red-50 rounded-lg ${
+                  !isSidebarExpanded ? "justify-center" : ""
+                }`}
+              >
+                <LogOut className="w-5 h-5" />
+                {/* Conditionally render the label only when the sidebar is expanded */}
+                {isSidebarExpanded && <span className="ml-3">Logout</span>}
+              </button>
+            </nav>
+          </aside>
+
+          {/* Toggle Button */}
+          <button
+            onClick={toggleSidebar}
+            className={`fixed top-16 bg-white rounded-r p-2 shadow-md transition-all duration-300 hover:bg-gray-100 ${
+              isSidebarExpanded ? "left-64" : "left-16"
+            }`}
+          >
+            {isSidebarExpanded ? (
+              <RiMenuFold3Fill size={20} />
+            ) : (
+              <RiMenuFold4Fill size={20} />
+            )}
+          </button>
+        </>
+      )}
+
+
       {/* Main Content */}
       <main
         className={`flex-1 mt-16 transition-all duration-300 ${
