@@ -14,15 +14,14 @@ const TeamPage = () => {
     useEffect(() => {
         const fetchTeamData = async () => {
             try {
-                const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/devteam/get`); // Replace with your backend URL
+                const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/devteam/get`);
                 const developers = response.data.developers;
 
-                // Group the data by roles
                 const groupedData = developers.reduce(
                     (acc, member) => {
                         if (member.role === 'Coordinator') {
                             acc.coordinator.push(member);
-                        } else if (member.role === 'Developer Team Leads') {
+                        } else if (member.role === 'Developer Team Lead') {
                             acc.devTeam.push(member);
                         } else if (member.role === 'Developer') {
                             acc.developers.push(member);
