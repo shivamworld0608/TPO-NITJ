@@ -23,9 +23,9 @@ const Home = () => {
       <div className="max-w-full mx-auto  mt-24"><WhyRecruit /></div>
       <div className="max-w-7xl mx-auto "><PlacementHighlights /></div> 
       <div className="max-w-7xl mx-auto"><EventsSection/></div>
-      <div className="max-w-7xl mx-auto mt-24 mb-40 pt-15 px-6"><ImageSlider/></div>   
+      <div className="max-w-7xl mx-auto mt-24 mb-16 pt-15 px-6"><ImageSlider/></div>   
       <div className="max-w-7xl mx-auto"><TestimonialTPC /></div>
-      <div className=" max-w-7xl mx-auto mt-24"><FAQ /></div>
+      <div className=" max-w-7xl mx-auto mt-10"><FAQ /></div>
       <div className=" max-w-full mx-auto"><ContactUs /></div>
       <Footer/>
 
