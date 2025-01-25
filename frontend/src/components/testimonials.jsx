@@ -1,142 +1,230 @@
-import { useState, useEffect } from 'react';
-import { FaStar, FaChevronLeft, FaChevronRight, FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
-import { motion } from 'framer-motion';
+// avatar: 'https://randomuser.me/api/portraits/men/29.jpg',
+// avatar: 'https://randomuser.me/api/portraits/men/57.jpg',
+// avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+
+
+
+
+
+
+
+import React, { useState, useEffect, useRef } from 'react';
+import { Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const testimonials = [
   {
-    name: 'Om Sharma',
-    role: 'Placed at TechCorp',
-    year: 'Batch of 2024',
-    text: 'The Training and Placement Cell provided exceptional support throughout the placement season. The pre-placement training sessions were highly beneficial.',
+    name: "Emily Rodriguez",
+    course: "Web Development Bootcamp",
+    quote: "This program completely transformed my career. I went from zero coding knowledge to landing a job at a tech startup in just six months!",
     rating: 5,
-    avatar: 'https://randomuser.me/api/portraits/men/29.jpg',
+    image: "https://randomuser.me/api/portraits/men/57.jpg",
+    background: "bg-gradient-to-br from-blue-100 to-blue-200"
   },
   {
-    name: 'Rajiv Maltra',
-    role: 'Intern at PM Solutions',
-    year: 'Batch of 2025',
-    text: 'Thanks to the TPC, I secured a great internship. The training programs and mock interviews were a game-changer for my preparation.',
+    name: "Michael Chang",
+    course: "Data Science Masterclass",
+    quote: "The curriculum was challenging but incredibly supportive. The instructors helped me build a portfolio that impressed my future employers.",
     rating: 5,
-    avatar: 'https://randomuser.me/api/portraits/men/57.jpg',
+    image: "https://randomuser.me/api/portraits/men/29.jpg",
+    background: "bg-gradient-to-br from-green-100 to-green-50"
   },
   {
-    name: 'Snehal Verma',
-    role: 'Recruiter at DesignPro',
-    year: 'Recruitment Drive 2023',
-    text: 'The candidates from NITJ are highly skilled and motivated. The placement process was smooth, and the support from the TPC team was exemplary.',
-    rating: 4,
-    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
+    name: "Sara Johnson",
+    course: "UX Design Intensive",
+    quote: "Learning design thinking and practical skills has been a game-changer. I now confidently design user-centered digital experiences.",
+    rating: 5,
+    image: "https://randomuser.me/api/portraits/men/57.jpg",
+    background: "bg-gradient-to-br from-purple-100 to-purple-200"
   },
+  {
+    name: "Alex Kim",
+    course: "AI & Machine Learning Program",
+    quote: "The hands-on projects and expert mentorship gave me the skills to develop cutting-edge AI solutions and launch my tech career.",
+    rating: 5,
+    image: "https://randomuser.me/api/portraits/women/44.jpg",
+    background: "bg-gradient-to-br from-red-100 to-red-200"
+  }
 ];
 
-const TestimonialTPC = () => {
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+const StudentTestimonials = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const intervalRef = useRef(null);
 
-  const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  const startAutoPlay = () => {
+    intervalRef.current = setInterval(() => {
+      handleNext();
+    }, 5000);
   };
 
-  const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  const stopAutoPlay = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
   };
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      nextTestimonial();
-    }, 5000);
-    return () => clearInterval(interval);
+    startAutoPlay();
+    return stopAutoPlay;
   }, []);
 
-  return (
-    <div className="testimonial-section  px-4 bg-white">
-      <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl text-center mb-12">
-        What Our <span className="text-custom-blue">Students Say!</span>
-      </h2>
+  const handleNext = () => {
+    setDirection(1);
+    setActiveIndex((prev) => (prev + 1) % testimonials.length);
+  };
 
-      <div className="testimonial-container relative flex justify-center items-center">
-        <motion.div
-          className="testimonial-card-container relative w-full max-w-5xl h-80 md:h-96 lg:h-[450px]"
-          style={{
-            perspective: '1000px',
-          }}
+  const handlePrev = () => {
+    setDirection(-1);
+    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const renderStars = (rating) => {
+    return Array.from({ length: 5 }).map((_, index) => (
+      <Star 
+        key={index} 
+        className={`
+          inline-block mx-0.5 
+          ${index < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
+        `} 
+        size={20} 
+      />
+    ));
+  };
+
+  return (
+    <section className="bg-white py-16 px-4 overflow-hidden">
+      <div className="max-w-5xl mx-auto text-center relative">
+        {/* <motion.h2 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-4xl font-extrabold mb-12 text-gray-900 tracking-tight"
         >
-          <motion.div
-            className="testimonial-cards absolute top-0 left-0 w-full h-full flex justify-center items-center"
-            style={{
-              transformStyle: 'preserve-3d',
-              transform: `rotateY(${currentTestimonial * -120}deg)`,
-              transition: 'transform 1s ease-in-out',
-            }}
+          Student Success Stories
+        </motion.h2> */}
+
+
+
+        
+        <h1 className="font-bold text-3xl lg:text-4xl text-center tracking-wide mb-7">
+        What Our&nbsp;
+        <span className="bg-custom-blue text-transparent bg-clip-text">
+         Students Say
+        </span>
+      </h1>
+
+
+        <div 
+          className="relative h-[500px] w-full group"
+          onMouseEnter={stopAutoPlay}
+          onMouseLeave={startAutoPlay}
+        >
+          <button 
+            onClick={handlePrev}
+            className="
+              absolute left-0 top-1/2 -translate-y-1/2 z-30 
+              bg-white/70 hover:bg-white/90 rounded-full p-2 
+              shadow-lg group-hover:opacity-100 opacity-0 
+              transition-all duration-300
+            "
           >
-            {testimonials.map((testimonial, index) => {
-              const isActive = index === currentTestimonial;
-              return (
+            <ChevronLeft size={32} className="text-gray-700" />
+          </button>
+
+          <button 
+            onClick={handleNext}
+            className="
+              absolute right-0 top-1/2 -translate-y-1/2 z-30 
+              bg-white/70 hover:bg-white/90 rounded-full p-2 
+              shadow-lg group-hover:opacity-100 opacity-0 
+              transition-all duration-300
+            "
+          >
+            <ChevronRight size={32} className="text-gray-700" />
+          </button>
+
+          <AnimatePresence initial={false} custom={direction}>
+            {testimonials.map((testimonial, index) => (
+              activeIndex === index && (
                 <motion.div
                   key={index}
-                  className={`testimonial-card bg-white p-6 rounded-lg shadow-lg max-w-sm w-[60vw] h-[40vh] absolute ${
-                    isActive ? 'scale-105' : ''
-                  }`}
-                  style={{
-                    transform: `rotateY(${index * 120}deg) translateZ(300px)`,
+                  custom={direction}
+                  variants={{
+                    enter: (direction) => ({
+                      x: direction > 0 ? 1000 : -1000,
+                      opacity: 0
+                    }),
+                    center: {
+                      zIndex: 1,
+                      x: 0,
+                      opacity: 1
+                    },
+                    exit: (direction) => ({
+                      zIndex: 0,
+                      x: direction < 0 ? 1000 : -1000,
+                      opacity: 0
+                    })
                   }}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 1 }}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: "spring", stiffness: 300, damping: 30 },
+                    opacity: { duration: 0.2 }
+                  }}
+                  className={`
+                    absolute inset-0 rounded-2xl shadow-2xl 
+                    ${testimonial.background} 
+                    flex flex-col items-center justify-center p-12
+                  `}
                 >
-                  <div className="testimonial-header flex items-center mb-4">
-                    <img
-                      src={testimonial.avatar}
-                      alt={`${testimonial.name} Avatar`}
-                      className="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full object-cover mr-4"
-                    />
-                    <div>
-                      <h3 className="text-base md:text-lg lg:text-xl font-semibold text-gray-900">
-                        {testimonial.name}
-                      </h3>
-                      <p className="text-sm md:text-base text-gray-500">{testimonial.role}</p>
-                      <p className="text-xs md:text-sm text-gray-400">Year: {testimonial.year}</p>
+                  <div className="max-w-2xl">
+                    <Quote className="text-blue-500 mb-6 mx-auto" size={64} />
+                    
+                    <p className="text-2xl font-medium text-gray-800 mb-8 italic">
+                      "{testimonial.quote}"
+                    </p>
+                    
+                    <div className="flex items-center justify-center mb-6">
+                      {renderStars(testimonial.rating)}
+                    </div>
+
+                    <div className="flex items-center justify-center">
+                      <img 
+                        src={testimonial.image} 
+                        alt={testimonial.name} 
+                        className="w-24 h-24 rounded-full border-4 border-white shadow-lg mr-6"
+                      />
+                      <div className="text-left">
+                        <h3 className="text-2xl font-bold text-gray-900">{testimonial.name}</h3>
+                        <p className="text-md text-gray-600">{testimonial.course}</p>
+                      </div>
                     </div>
                   </div>
-
-                  <div className="testimonial-text mb-4 text-gray-700 flex items-start">
-                    <FaQuoteLeft className="text-lg md:text-xl text-gray-400 mr-2" />
-                    <p className="text-sm md:text-base lg:text-lg italic">{testimonial.text}</p>
-                    <FaQuoteRight className="text-lg md:text-xl text-gray-400 ml-2" />
-                  </div>
-
-                  <div className="testimonial-rating flex items-center">
-                    {[...Array(5)].map((_, i) => (
-                      <FaStar
-                        key={i}
-                        className={`text-yellow-500 ${i < testimonial.rating ? 'fill-current' : ''}`}
-                      />
-                    ))}
-                  </div>
                 </motion.div>
-              );
-            })}
-          </motion.div>
-        </motion.div>
-
-        <div className={`absolute left-4 md:left-8 top-1/2 transform -translate-y-1/2`}>
-          <button
-            className="bg-custom-blue p-2 md:p-3 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300"
-            onClick={prevTestimonial}
-          >
-            <FaChevronLeft className="text-sm md:text-xl text-white" />
-          </button>
+              )
+            ))}
+          </AnimatePresence>
         </div>
-        <div className={`absolute right-4 md:right-8 top-1/2 transform -translate-y-1/2`}>
-          <button
-            className="bg-custom-blue p-2 md:p-3 rounded-full shadow-lg hover:bg-blue-600 transition-all duration-300"
-            onClick={nextTestimonial}
-          >
-            <FaChevronRight className="text-sm md:text-xl text-white" />
-          </button>
+
+        <div className="flex justify-center mt-12 space-x-3">
+          {testimonials.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveIndex(index)}
+              className={`
+                w-3 h-3 rounded-full transition-all duration-300
+                ${activeIndex === index 
+                  ? 'bg-custom-blue w-8' 
+                  : 'bg-gray-300 hover:bg-blue-300'}
+              `}
+            />
+          ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default TestimonialTPC;
+export default StudentTestimonials;
