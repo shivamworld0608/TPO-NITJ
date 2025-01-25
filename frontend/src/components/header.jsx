@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
+import { useState } from "react";
 
 
 const Header = () => {
@@ -27,6 +28,35 @@ const Header = () => {
       console.error("Error during logout:", error.response?.data || error);
     }
   };
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  // This is your search functionality
+//   function search_resources() {
+//     const searchQuery = document.getElementById('searchbar').value.toLowerCase();
+//     const resultsContainer = document.getElementById('Big_alphabets');
+//     const noResultContainer = document.getElementById('noresult');
+    
+//     // Your data (for example purposes)
+//     const resources = ['Faculty', 'Links', 'Library', 'Research', 'Everything']; 
+    
+//     const filteredResults = resources.filter(item => item.toLowerCase().includes(searchQuery));
+
+//     if (filteredResults.length > 0) {
+//         noResultContainer.classList.add('hidden');  // Hide the "No results found"
+//         resultsContainer.innerHTML = filteredResults.map(result => `<div>${result}</div>`).join('');
+//     } else {
+//         resultsContainer.innerHTML = '';
+//         noResultContainer.classList.remove('hidden'); // Show the "No results found"
+//     }
+// }
+
+// Function to show the search page when search is submitted
+function showSearchPage(event) {
+    event.preventDefault();
+    document.getElementById('search_page').classList.remove('hidden');
+}
 
   return (
     <>
@@ -291,164 +321,173 @@ const Header = () => {
         </a>
         {/* <!-- Logo CONTAINER ends -->
         <!-- NAV BAR starts--> */}
-        <div className="sm:block bg-accent drop-shadow-lg z-40 bg-[#0369a0]">
-          <div className="container">
-            <div
-              className="z-40 flex h-7 sm:h-10 max-w-screen px-4 flex-row justify-between bg-accent text-lg text-white">
-              <div className="flex items-center sm:hidden h-full">
-                <span
-                  className="material-symbols-outlined pr-2"
-                  style={{ fontVariationSettings: '"FILL" 0, "wght" 200, "grad" 0, "opzs" 40' }}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24">
-                    <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
-                  </svg>
-                </span>
+         <div className="sm:block bg-accent drop-shadow-lg z-40 bg-[#0369a0]">
+  <div className="container">
+    <div className="z-40 flex h-7 sm:h-10 max-w-screen px-4 flex-row justify-between bg-accent text-lg text-white">
+      <div className="flex items-center lg:hidden h-full">
+        <button
+          onClick={toggleMenu}
+          className="material-symbols-outlined pr-2"
+          style={{ fontVariationSettings: '"FILL" 0, "wght" 200, "grad" 0, "opzs" "40"'}}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24">
+            <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+          </svg>
+        </button>
 
-                <a href="/index.html" className="h-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24" className="h-6 w-6" fill="currentColor"
-                    viewBox="0 -960 960 960" width="24">
-                    <path
-                      d="M240-200h147.692v-235.385h184.616V-200H720v-360L480-741.538 240-560v360Zm-40 40v-420l280-211.539L760-580v420H532.308v-235.384H427.692V-160H200Zm280-310.769Z" />
-                  </svg>
-                </a>
-              </div>
-              <div className="sm:hidden block">
-                <button type="button" id="nav-search-btn" className="block  material-symbols-outlined duration-50 cursor-pointer text-center transition ease-in-out hover:box-border sm:hover:h-10 sm:hover:w-10 hover:rounded-full hover:border-2 hover:border-accent"
-                  data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tap to search">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" height="24"
-                    viewBox="0 -960 960 960" width="24">
-                    <path
-                      d="M781.692-136.924 530.461-388.155q-30 24.769-69 38.769t-80.692 14q-102.55 0-173.582-71.014t-71.032-173.537q0-102.524 71.014-173.601 71.014-71.076 173.538-71.076 102.523 0 173.6 71.032T625.384-580q0 42.846-14.385 81.846-14.385 39-38.385 67.846l251.231 251.231-42.153 42.153Zm-400.923-258.46q77.308 0 130.962-53.654Q565.385-502.692 565.385-580q0-77.308-53.654-130.962-53.654-53.654-130.962-53.654-77.308 0-130.962 53.654Q196.154-657.308 196.154-580q0 77.308 53.653 130.962 53.654 53.654 130.962 53.654Z" />
-                  </svg>
-                </button>
-              </div>
-              <div className="basis-2/5 hidden sm:block top-0 ">
-                <div className="flex w-full flex-row justify-between px-4">
-                  <div className="flex items-center">
-                    <a href="/" className="hidden sm:block text-xs">
-                      <svg xmlns="http://www.w3.org/2000/svg" height="24" className="h-6 w-6"
-                        fill="currentColor" viewBox="0 -960 960 960" width="24">
-                        <path
-                          d="M240-200h147.692v-235.385h184.616V-200H720v-360L480-741.538 240-560v360Zm-40 40v-420l280-211.539L760-580v420H532.308v-235.384H427.692V-160H200Zm280-310.769Z" />
-                      </svg>
-                    </a>
-                  </div>
-                  <div id="menu-1" className="group cursor-default hover:bg-blue-800">
-                    <div id="Administration" className="p-1.5 font-medium uppercase"><a href="/placements">Placements</a></div>
-                  </div>
-                  <div id="menu-2" className="group cursor-default hover:bg-blue-800">
-                    <div id="Academics" className="p-1.5 font-medium uppercase"><a href="/internships"></a>Internships</div>
-                  </div>
-                  <div id="menu-3" className="group cursor-default hover:bg-blue-800">
-                    <div id="Admissions" className="p-1.5 font-medium uppercase">Alumni</div>
-                  </div>
-                </div>
-              </div>
-              <div className="basis-2/5 hidden sm:block w-full top-0">
-                <div className="flex w-full flex-row justify-between">
-                  <div className="basis-4/5">
-                    <div className="flex flex-row justify-between">
-                      <div id="menu-4" className="group cursor-default hover:bg-blue-800">
-                        <div id="Research" className="p-1.5 font-medium uppercase"><a href="/team">People</a></div>
-                      </div>
-                      <div id="menu-5" className="group cursor-default hover:bg-blue-800">
-                        <div id="Alumni" className="p-1.5 font-medium uppercase"><a href="/faq">FAQs</a></div>
-                      </div>
-                      <div id="menu-6" className="group relative cursor-default hover:bg-blue-800">
-                        <div id="Life at NITJ" className="p-1.5 font-medium uppercase"><a href="/login">Login</a></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex basis-1/5 flex-row justify-center">
-                    <button type="button" id="nav-search-btn-v2"
-                      className=" material-symbols-outlined duration-50 cursor-pointer text-center transition ease-in-out hover:box-border hover:h-10 hover:w-10 hover:rounded-full hover:border-2 hover:border-accent"
-                      data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tap to search">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor"
-                        height="24" viewBox="0 -960 960 960" width="24">
-                        <path
-                          d="M781.692-136.924 530.461-388.155q-30 24.769-69 38.769t-80.692 14q-102.55 0-173.582-71.014t-71.032-173.537q0-102.524 71.014-173.601 71.014-71.076 173.538-71.076 102.523 0 173.6 71.032T625.384-580q0 42.846-14.385 81.846-14.385 39-38.385 67.846l251.231 251.231-42.153 42.153Zm-400.923-258.46q77.308 0 130.962-53.654Q565.385-502.692 565.385-580q0-77.308-53.654-130.962-53.654-53.654-130.962-53.654-77.308 0-130.962 53.654Q196.154-657.308 196.154-580q0 77.308 53.653 130.962 53.654 53.654 130.962 53.654Z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <a href="/" className="h-full">
+          <svg xmlns="http://www.w3.org/2000/svg" height="full" className="" fill="currentColor" viewBox="0 -960 960 960" width="24">
+            <path
+              d="M240-200h147.692v-235.385h184.616V-200H720v-360L480-741.538 240-560v360Zm-40 40v-420l280-211.539L760-580v420H532.308v-235.384H427.692V-160H200Zm280-310.769Z"
+            />
+          </svg>
+        </a>
+      </div>
+
+      {/* Menu for small and medium screens */}
+      <div className={`lg:hidden ${isOpen ? 'block' : 'hidden'}`}>
+        <div className="flex flex-col items-center absolute left-0 top-7 md:top-10 bg-[#0369a0] text-white w-[100vw] py-2">
+          <a href="/placements" className="p-1.5 font-medium uppercase">Placements</a>
+          <a href="/internships" className="p-1.5 font-medium uppercase">Internships</a>
+          <a href="/alumni" className="p-1.5 font-medium uppercase">Alumni</a>
+          <a href="/team" className="p-1.5 font-medium uppercase">People</a>
+          <a href="/faq" className="p-1.5 font-medium uppercase">FAQs</a>
+          <a href="/login" className="p-1.5 font-medium uppercase">Login</a>
         </div>
-        {/* <!-- NAV BAR ends--> */}
-      </header>
-      {/* <!-- === Search bar starts === --> */}
-      <div id="search_page"
-        className="fixed inset-0 min-h-screen z-[51] hidden w-full flex justify-center items-center flex-col gap-10 bg-slate-900/80 backdrop-blur-sm overflow-x-hidden overflow-y-scroll">
-        <span aria-hidden="true" className="sr-only sm:w-1/2">ONLY for tailwindCSS</span>
-        <form id="search_form" className="sticky h-10 top-0 w-full z-[52]" onKeyPress="checkEnter(event)">
-          <div className="flex px-2 sm:px-28">
-            <button id="dropdown-button" data-dropdown-toggle="dropdown"
-              className="z-10 inline-flex flex-shrink-0 items-center rounded-l-lg border border-gray-300 bg-gray-100 py-2.5 px-4 text-center text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-700"
-              type="button">
-              All categories
-              <svg className="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd"></path>
+      </div>
+
+      {/* Menu for larger screens (sm and md) */}
+      <div className="basis-2/5 hidden  md:hidden lg:block top-0">
+        <div className="flex w-full flex-row justify-between px-4">
+          <div className="flex items-center">
+            <a href="/" className="hidden sm:block text-xs">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" className="h-6 w-6" fill="currentColor" viewBox="0 -960 960 960" width="24">
+                <path
+                  d="M240-200h147.692v-235.385h184.616V-200H720v-360L480-741.538 240-560v360Zm-40 40v-420l280-211.539L760-580v420H532.308v-235.384H427.692V-160H200Zm280-310.769Z"
+                />
               </svg>
-            </button>
-            <div id="dropdown"
-              className="absolute z-10 hidden w-44 translate-y-11 divide-y divide-gray-100 rounded bg-white shadow dark:bg-gray-700"
-              data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top">
-              <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
-                <li>
-                  <button type="button"
-                    className="inline-flex w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                    Faculty
-                  </button>
-                </li>
-                <li>
-                  <button type="button"
-                    className="inline-flex w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                    Links
-                  </button>
-                </li>
-                <li>
-                  <button type="button"
-                    className="inline-flex w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                    Library
-                  </button>
-                </li>
-                <li>
-                  <button type="button"
-                    className="inline-flex w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                    Research
-                  </button>
-                </li>
-                <li>
-                  <button type="button"
-                    className="inline-flex w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                    Everything
-                  </button>
-                </li>
-              </ul>
-            </div>
-            <div className="relative w-full">
-              <input type="text" id="searchbar" onKeyUp="search_resources()" onSubmit="showSearchPage(event)"
-                className="z-20 block w-full rounded-r-lg border border-l-2 border-gray-300 border-l-gray-50 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:border-l-gray-700 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500"
-                placeholder="Search Resources, Navbar links..." required={true} />
-              <button type="button" className=" material-symbols-outlined absolute top-0 right-0 rounded-r-lg border border-blue-700 bg-blue-700 p-1 text-2xl text-white hover:bg-blue-800">
-                search
-              </button>
-            </div>
+            </a>
           </div>
-        </form>
-        <div id="resources"
-          className="relative pt-20 z-[51] min-w-full hidden flex flex-col items-center justify-center overflow-x-hidden overflow-y-scroll">
-          <div id="Big_alphabets" className="min-h-screen min-w-full text-4xl font-bold px-2 sm:px-28"></div>
-          <div id="noresult" className="absolute hidden min-w-full top-44 text-2xl font-bold">
-            <div className="text-center text-white">No results found</div>
-            <div className="text-center text-white">Try searching something else</div>
+          <div id="menu-1" className="group cursor-default  hover:bg-blue-800">
+            <div id="Administration" className="p-1.5 font-medium uppercase"><a href="/placements">Placements</a></div>
+          </div>
+          <div id="menu-2" className="group cursor-default hover:bg-blue-800">
+            <div id="Academics" className="p-1.5 font-medium uppercase"><a href="/internships">Internships</a></div>
+          </div>
+          <div id="menu-3" className="group cursor-default hover:bg-blue-800">
+            <div id="Admissions" className="p-1.5 font-medium uppercase">Alumni</div>
           </div>
         </div>
       </div>
+
+      <div className="basis-2/5 hidden  md:hidden lg:block w-full top-0">
+        <div className="flex w-full flex-row justify-between">
+          <div className="basis-4/5">
+            <div className="flex flex-row justify-between">
+              <div id="menu-4" className="group cursor-default hover:bg-blue-800">
+                <div id="Research" className="p-1.5 font-medium uppercase"><a href="/team">People</a></div>
+              </div>
+              <div id="menu-5" className="group cursor-default hover:bg-blue-800">
+                <div id="Alumni" className="p-1.5 font-medium uppercase"><a href="/faq">FAQs</a></div>
+              </div>
+              <div id="menu-6" className="group relative cursor-default hover:bg-blue-800">
+                <div id="Life at NITJ" className="p-1.5 font-medium uppercase"><a href="/login">Login</a></div>
+              </div>
+            </div>
+          </div>
+          <div className="flex basis-1/5 flex-row justify-center">
+            <button type="button" id="nav-search-btn-v2" className=" material-symbols-outlined duration-50 cursor-pointer text-center transition ease-in-out hover:box-border hover:h-10 hover:w-10 hover:rounded-full hover:border-2 hover:border-accent" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Tap to search">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="currentColor" height="24" viewBox="0 -960 960 960" width="24">
+                <path
+                  d="M781.692-136.924 530.461-388.155q-30 24.769-69 38.769t-80.692 14q-102.55 0-173.582-71.014t-71.032-173.537q0-102.524 71.014-173.601 71.014-71.076 173.538-71.076 102.523 0 173.6 71.032T625.384-580q0 42.846-14.385 81.846-14.385 39-38.385 67.846l251.231 251.231-42.153 42.153Zm-400.923-258.46q77.308 0 130.962-53.654Q565.385-502.692 565.385-580q0-77.308-53.654-130.962-53.654-53.654-130.962-53.654-77.308 0-130.962 53.654Q196.154-657.308 196.154-580q0 77.308 53.653 130.962 53.654 53.654 130.962 53.654Z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+        {/* <!-- NAV BAR ends--> */}
+      </header>
+      {/* <!-- === Search bar starts === --> */}
+      {/* <div id="search_page"
+    className="fixed inset-0 min-h-screen z-[51] hidden w-full flex justify-center items-center flex-col gap-10 bg-slate-900/80 backdrop-blur-sm overflow-x-hidden overflow-y-scroll">
+    <span aria-hidden="true" className="sr-only sm:w-1/2">ONLY for tailwindCSS</span>
+    <form id="search_form" className="sticky h-10 top-0 w-full z-[52]" onSubmit="showSearchPage(event)">
+        <div className="flex px-2 sm:px-28">
+            <button id="dropdown-button" data-dropdown-toggle="dropdown"
+                className="z-10 inline-flex flex-shrink-0 items-center rounded-l-lg border border-gray-300 bg-gray-100 py-2.5 px-4 text-center text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-700"
+                type="button">
+                All categories
+                <svg className="ml-1 h-4 w-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd"></path>
+                </svg>
+            </button>
+            <div id="dropdown"
+                className="absolute z-10 hidden w-44 translate-y-11 divide-y divide-gray-100 rounded bg-white shadow dark:bg-gray-700"
+                data-popper-reference-hidden="" data-popper-escaped="" data-popper-placement="top">
+                <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
+                    <li>
+                        <button type="button"
+                            className="inline-flex w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                            Faculty
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button"
+                            className="inline-flex w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                            Links
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button"
+                            className="inline-flex w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                            Library
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button"
+                            className="inline-flex w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                            Research
+                        </button>
+                    </li>
+                    <li>
+                        <button type="button"
+                            className="inline-flex w-full py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                            Everything
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <div className="relative w-full">
+                <input type="text" id="searchbar" onKeyUp="search_resources()"
+                    className="z-20 block w-full rounded-r-lg border border-l-2 border-gray-300 border-l-gray-50 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:border-l-gray-700 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500"
+                    placeholder="Search Resources, Navbar links..." required={true} />
+                <button type="button"
+                    className="material-symbols-outlined absolute top-0 right-0 rounded-r-lg border border-blue-700 bg-blue-700 p-1 text-2xl text-white hover:bg-blue-800">
+                    search
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div id="resources"
+        className="relative pt-20 z-[51] min-w-full hidden flex flex-col items-center justify-center overflow-x-hidden overflow-y-scroll">
+        <div id="Big_alphabets" className="min-h-screen min-w-full text-4xl font-bold px-2 sm:px-28"></div>
+        <div id="noresult" className="absolute hidden min-w-full top-44 text-2xl font-bold">
+            <div className="text-center text-white">No results found</div>
+            <div className="text-center text-white">Try searching something else</div>
+        </div>
+    </div>
+</div> */}
+
+
+
     </>
 
   );
