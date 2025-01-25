@@ -178,7 +178,7 @@ const Request = () => {
                 Request{" "}
                 <span className="bg-custom-blue text-transparent bg-clip-text">Help</span>
               </h1>
-              <div className="flex justify-center">
+              <div className="flex sm:flex-row flex-col justify-center items-center">
                 <span className="text-base text-black">Easily raise and</span>
                 <span className="mx-1 bg-custom-blue text-transparent bg-clip-text text-center">track your issues</span>
               </div>
