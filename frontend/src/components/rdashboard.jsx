@@ -37,6 +37,7 @@ import NITJlogo from "../assets/nitj-logo.png";
 import TeamSection from "./Developers/TeamSection.jsx";
 import JobAnnouncementForm from "./RecruiterDashboard/jaf.jsx";
 import FeedbackForm from "./RecruiterDashboard/feedback.jsx";
+import TravelPlanner from "./RecruiterDashboard/travelplanner.jsx";
 import { FaComment } from "react-icons/fa";
 
 const RecruiterDashboards = () => {
@@ -264,7 +265,7 @@ const RecruiterDashboards = () => {
               <Route path="createdjob" element={<CreatedJobs />} />
               <Route path="request-help" element={<Request />} />
               <Route path="feedback" element={<FeedbackForm/>} />
-              <Route path="travel" element={<FeedbackForm/>} />
+              <Route path="travel" element={<TravelPlanner/>} />
               <Route path="mailbox" element={<MailboxComponent />} />
               <Route path="profile" element={<Profile />} />
               <Route path="team" element={<TeamSection />} />
