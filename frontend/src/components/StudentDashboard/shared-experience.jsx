@@ -6,6 +6,7 @@ import parse from "html-react-parser";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import BouncingLoader from "../BouncingLoader";
+import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 
 const SharedExperience = () => {
   const [showEditor, setShowEditor] = useState(false);
@@ -51,7 +52,9 @@ const SharedExperience = () => {
       if (result.isConfirmed) {
         try {
           await axios.delete(
-            `${import.meta.env.REACT_APP_BASE_URL}/sharedexperience/${experience._id}`,
+            `${import.meta.env.REACT_APP_BASE_URL}/sharedexperience/${
+              experience._id
+            }`,
             { withCredentials: true }
           );
           setCurrentUserExperiences((prev) =>
@@ -117,131 +120,154 @@ const SharedExperience = () => {
         >
           <FaArrowLeft />
         </button>
-        <h1 className="text-4xl font-bold mb-4">{selectedExperience.title || "Untitled Experience"}</h1>
-        <p className="text-black mb-1 mt-4">By: {selectedExperience.author?.name || "Anonymous"}</p>
-        <p className="text-gray-600 mb-6">
-          {new Date(selectedExperience.createdAt).toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "short",
-            day: "numeric",
-          })}
+        <h1 className="text-4xl font-bold mb-4">
+          {selectedExperience.title || "Untitled Experience"}
+        </h1>
+        <p className="text-black mb-1 mt-4">
+          By: {selectedExperience.author?.name || "Anonymous"}
         </p>
-        <div className="prose max-w-none">{parse(selectedExperience.content)}</div>
+        <p className="text-gray-600 mb-6">
+          {new Date(selectedExperience.createdAt).toLocaleDateString(
+            undefined,
+            {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            }
+          )}
+        </p>
+        <div className="prose max-w-none">
+          {parse(selectedExperience.content)}
+        </div>
       </div>
     );
   }
 
   return (
-      <>
+    <>
       {/* Tabs */}
-      <div className="flex justify-between items-center bg-white p-4 rounded-t-lg ">
-          <h2 className="text-3xl font-semibold text-custom-blue capitalize underline underline-offset-8">
-        {activeTab === "myExperiences" ? "My Experiences" : "Other Experiences"}
-      </h2>
-      <div className="flex border border-gray-300 rounded-3xl bg-white">
+      <div className="flex justify-between items-center flex-col lg:flex-row p-4 rounded-t-lg ">
+        <h2 className="text-3xl font-bold text-custom-blue capitalize">
+          <span className="text-black">
+            {activeTab === "myExperiences" ? "My" : "Other"}
+          </span>{" "}
+          Experiences
+        </h2>
+
+        <div className="flex border border-gray-300 rounded-3xl lg:mt-0 bg-white mt-10">
           {/* Active Tab Heading */}
-        <button
-          className={`px-4 py-2 rounded-3xl ${
-            activeTab === "myExperiences" ? "bg-custom-blue text-white" : "bg-white"
-          }`}
-          onClick={() => setActiveTab("myExperiences")}
-        >
-          My Experiences
-        </button>
-        <button
-          className={`px-4 py-2 rounded-3xl ${
-            activeTab === "otherExperiences" ? "bg-custom-blue text-white" : "bg-white"
-          }`}
-          onClick={() => setActiveTab("otherExperiences")}
-        >
-          Other Experiences
-        </button>
-      </div>
+          <button
+            className={`px-4 py-2 rounded-3xl ${
+              activeTab === "myExperiences"
+                ? "bg-custom-blue text-white"
+                : "bg-white"
+            }`}
+            onClick={() => setActiveTab("myExperiences")}
+          >
+            My Experiences
+          </button>
+          <button
+            className={`px-4 py-2 rounded-3xl ${
+              activeTab === "otherExperiences"
+                ? "bg-custom-blue text-white"
+                : "bg-white"
+            }`}
+            onClick={() => setActiveTab("otherExperiences")}
+          >
+            Other Experiences
+          </button>
+        </div>
       </div>
 
       {/* Tab Content */}
       <div className="container mx-auto px-4 py-6">
-      {activeTab === "myExperiences" && (
-        <section>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {eligible && (
-              <div
-                onClick={() => setShowEditor(true)}
-                className="bg-white border-dashed border-4 border-gray-300 rounded-xl flex items-center justify-center cursor-pointer shadow-lg hover:shadow-2xl transition-transform hover:scale-105 duration-300 text-custom-blue text-7xl p-4"
-              >
-                +
-              </div>
-            )}
-            {currentUserExperiences.map((experience) => (
-              <div
-                key={experience._id}
-                className="bg-white border-2 border-gray-200 rounded-xl shadow-md hover:shadow-lg transition-transform hover:scale-105 hover:border-blue-400 duration-300 cursor-pointer overflow-hidden p-1"
-                onClick={() => handleViewDetails(experience)}
-              >
-                <h4 className="text-md font-medium text-gray-700 text-center px-4">
-                  {experience.title || "Untitled Experience"}
-                </h4>
-                <div className="text-sm text-gray-600 text-center space-y-1 p-2">
-                  <p>
-                    {new Date(experience.createdAt).toLocaleDateString(undefined, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </p>
-                  <span
-                    className="text-custom-blue font-medium hover:text-green-500 mx-4"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedExperience(experience);
-                      setIsEditing(true);
-                    }}
-                  >
-                    Edit
-                  </span>
-                  <span
-                    className="text-custom-blue font-medium hover:text-red-500"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(experience);
-                    }}
-                  >
-                    Delete
-                  </span>
+        {activeTab === "myExperiences" && (
+          <section>
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {eligible && (
+                <div
+                  onClick={() => setShowEditor(true)}
+                  className="bg-gradient-to-r from-blue-500 to-purple-500 border-dashed border-4 border-gray-300 rounded-xl flex items-center justify-center cursor-pointer shadow-lg hover:shadow-2xl transition-transform hover:scale-105 duration-300 text-white text-6xl p-5 h-auto w-56"
+                >
+                  <FaPlus />
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              )}
+              {currentUserExperiences.map((experience) => (
+                <div
+                  key={experience._id}
+                  className=" border border-gray-200 rounded-xl shadow-md hover:shadow-2xl transition-transform hover:scale-105 hover:border-blue-500 duration-300 cursor-pointer overflow-hidden p-4 flex flex-col  items-center justify-between text-center h-auto w-auto"
+                  onClick={() => handleViewDetails(experience)}
+                >
+                  <h4 className="text-lg font-semibold text-gray-800 break-words w-full px-2">
+                    {experience.title || "Untitled Experience"}
+                  </h4>
+                  <p className="text-sm text-gray-600 break-words px-2">
+                    {new Date(experience.createdAt).toLocaleDateString(
+                      undefined,
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )}
+                  </p>
+                  <div className="flex justify-center space-x-3 mt-2 w-full">
+                    <button
+                      className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition duration-300 shadow-md w-24 flex items-center justify-center space-x-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedExperience(experience);
+                        setIsEditing(true);
+                      }}
+                    >
+                      <FaEdit /> <span>Edit</span>
+                    </button>
+                    <button
+                      className="bg-red-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition duration-300 shadow-md w-24 flex items-center justify-center space-x-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(experience);
+                      }}
+                    >
+                      <FaTrash /> <span>Delete</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
-      {activeTab === "otherExperiences" && (
-        <section>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {otherExperiences.map((experience) => (
-              <div
-                key={experience._id}
-                className="bg-white border border-custom-blue rounded-xl shadow-md hover:shadow-lg transition-transform hover:scale-105 hover:border-blue-400 duration-300 cursor-pointer overflow-hidden py-4"
-                onClick={() => handleViewDetails(experience)}
-              >
-                <h4 className="text-md font-medium text-gray-700 text-center px-4">
-                  {experience.title || "Untitled Experience"}
-                </h4>
-                <div className="text-sm text-gray-600 text-center space-y-1 p-4">
-                  <p>By: {experience.author.name || "Anonymous"}</p>
-                  <p>
-                    {new Date(experience.createdAt).toLocaleDateString(undefined, {
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
-                  </p>
+        {activeTab === "otherExperiences" && (
+          <section>
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {otherExperiences.map((experience) => (
+                <div
+                  key={experience._id}
+                  className="bg-white border border-custom-blue rounded-xl shadow-md hover:shadow-lg transition-transform hover:scale-105 hover:border-blue-400 duration-300 cursor-pointer overflow-hidden py-4"
+                  onClick={() => handleViewDetails(experience)}
+                >
+                  <h4 className="text-md font-medium text-gray-700 text-center px-4">
+                    {experience.title || "Untitled Experience"}
+                  </h4>
+                  <div className="text-sm text-gray-600 text-center space-y-1 p-4">
+                    <p>By: {experience.author.name || "Anonymous"}</p>
+                    <p>
+                      {new Date(experience.createdAt).toLocaleDateString(
+                        undefined,
+                        {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        }
+                      )}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+              ))}
+            </div>
+          </section>
+        )}
       </div>
     </>
   );

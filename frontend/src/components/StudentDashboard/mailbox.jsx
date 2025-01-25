@@ -195,13 +195,13 @@ const MailboxComponent = () => {
           />
           </div>
 
-<div className="flex items-center gap-4">
+    <div className="flex items-center sm:gap-4 gap-1">
           {["All", "Inbox", "Sent", "Pending", "Draft"].map((filter) => (
         
           <button
               key={filter}
               onClick={() => handleFilterChange(filter)}
-              className={`flex-1 px-4 p-2 rounded-3xl ${
+              className={`flex-1 sm:px-4 p-2 rounded-3xl ${
                 selectedFilter === filter
                   ? "bg-custom-blue text-white"
                   : "bg-gray-200 text-gray-700"

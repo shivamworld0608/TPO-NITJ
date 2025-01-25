@@ -30,7 +30,7 @@ const TopRecruiters = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto my-8">
+    <div className="max-w-5xl mx-auto mb-0">
       <h1 className="text-3xl font-bold text-center mb-6">Top Recruiters</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {recruiters.map((recruiter) => (
