@@ -98,7 +98,7 @@ const Pdashboard = () => {
     // { label: "Notifications", icon: faBell, path: "/pdashboard/notifications" },
     { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" },
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
-    { label: "Experience Sharing", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
+    { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
     { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
     // { label: "Placement Policy", icon: faFileAlt, path: "/pdashboard/placement-policy" },
     { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
@@ -244,7 +244,7 @@ const Pdashboard = () => {
               ))}
               <button
                 onClick={handleLogout}
-                className={`flex items-center w-full px-4 py-2 mt-2 text-red-500 hover:bg-red-50 rounded-lg ${
+                className={`flex items-center w-full px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg ${
                   !isSidebarExpanded ? "justify-center" : ""
                 }`}
               >
@@ -259,7 +259,7 @@ const Pdashboard = () => {
           <button
             onClick={toggleSidebar}
             className={`fixed top-16 bg-white rounded-r p-2 shadow-md transition-all duration-300 hover:bg-gray-100 ${
-              isSidebarExpanded ? "left-64" : "left-16"
+              isSidebarExpanded ? "left-64 ml-3" : "left-16"
             }`}
           >
             {isSidebarExpanded ? (
