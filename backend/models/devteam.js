@@ -33,7 +33,7 @@ const DeveloperSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['Coordinator','Developer Team Leads','Developer'],
+    enum: ['Coordinator','Developer Team Lead','Developer'],
   },
 });
 

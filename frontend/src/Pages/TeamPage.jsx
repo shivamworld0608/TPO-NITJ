@@ -97,7 +97,7 @@ const TeamPage = () => {
                             <TeamSection title="Coordinator" members={teamData.coordinator} />
                         ):(
                             <div>
-                                <TeamSection title="Development Team Leads" members={teamData.devTeam} />
+                                <TeamSection title="Development Team Lead" members={teamData.devTeam} />
                                 <TeamSection title="Developers" members={teamData.developers} />                               
                             </div>
                         )

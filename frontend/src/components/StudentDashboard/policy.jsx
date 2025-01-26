@@ -3,8 +3,7 @@ import { Download, Loader2, Trash2, Upload, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { Button } from '../ui/button'
-import {Input} from "../ui/input";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import {FileText} from 'lucide-react';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -91,8 +90,8 @@ const PDFDownloadCards = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto p-6">
-        <div className="rounded-lg shadow-sm p-6 mb-6">
+      <div className="container mx-auto p-4">
+        <div className="rounded-lg  p-6 mb-2">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
               <h1 className="text-3xl font-bold text-gray-900">PDF <span className='text-custom-blue'>Documents</span></h1>
           </div>
@@ -114,7 +113,7 @@ const PDFDownloadCards = () => {
                       <h2 className="text-lg font-semibold text-gray-900 group-hover:text-custom-blue transition-colors">
                         {pdf.title}
                       </h2>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-xs mt-1 text-gray-500">
                         Uploaded by: {pdf.uploadedBy?.name || 'Unknown'}
                       </p>
                     </div>
@@ -124,20 +123,17 @@ const PDFDownloadCards = () => {
                   <div className="aspect-w-3 aspect-h-4 mb-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center group-hover:border-custom-blue transition-colors">
                     <div className="text-center p-4">
                       <FileText className="h-12 w-12 mx-auto text-gray-400 group-hover:text-custom-blue transition-colors" />
-                      <p className="text-sm font-medium text-gray-600 mt-2">PDF Document</p>
+                      <p className="text-sm font-medium text-gray-600 mt-1">PDF Document</p>
                       <p className="text-sm text-gray-400">{formatFileSize(pdf.size)}</p>
                     </div>
                   </div>
-                  {pdf.description && (
-                    <p className="text-sm text-gray-600 line-clamp-2">{pdf.description}</p>
-                  )}
                   <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
                     <span className="inline-block px-2 py-1 bg-gray-100 rounded-full">
                       {formatDate(pdf.uploadDate)}
                     </span>
                   </div>
                 </CardContent>
-                <CardFooter className="p-2 bg-custom-blue text-white rounded">
+                <CardFooter className="p-1 bg-custom-blue text-white rounded">
                   <Button 
                     variant="default"
                     className="w-full"

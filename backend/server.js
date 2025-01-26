@@ -20,6 +20,8 @@ import reqhelproutes from "./routes/reqhelp.js";
 import jobEventroutes from "./routes/jobEvents.js"
 import pdfroutes from "./routes/pdf.js";
 import feedbackRoutes from "./routes/feedbackRoutes.js";
+import jafRoutes from "./routes/jaf.js"
+import travelplannerRoutes from "./routes/travelplanner.js"
 
 import { mkdir } from 'fs/promises';
 try {
@@ -80,6 +82,8 @@ app.use("/placements",placementroutes);
 app.use("/reqhelp",authenticate,reqhelproutes);
 app.use("/job-events",jobEventroutes);
 app.use("/feedback",authenticate,feedbackRoutes);
+app.use("/jaf",authenticate,jafRoutes);
+app.use("/travel-planner",travelplannerRoutes);
 app.use('/api/pdfs', authenticate, pdfroutes);
 app.use('/api',authenticate, formTemplateroutes);
 

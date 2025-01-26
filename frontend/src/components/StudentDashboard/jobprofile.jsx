@@ -39,7 +39,11 @@ const JobApplications = () => {
     fetchJobs();
   }, []);
 
-  if (loading) { <BouncingLoader size="medium" text="Loading..." />};
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+    </div>
+  );
 
   if (error) {
     return <p className="text-center text-lg text-red-500">{error}</p>;

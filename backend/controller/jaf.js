@@ -1,6 +1,8 @@
- import JobAnnouncementForm from "../models/jaf";
-export default createJobAnnouncementForm = async (req, res) => {
+ import JobAnnouncementForm from "../models/jaf.js";
+
+export const createJobAnnouncementForm = async (req, res) => {
   try {
+    const recruiterId=req.user.userId;
     const {
       organizationName,
       websiteUrl,
@@ -25,6 +27,7 @@ export default createJobAnnouncementForm = async (req, res) => {
     } = req.body;
 
     const newJobAnnouncement = new JobAnnouncementForm({
+      recruiterId,
       organizationName,
       websiteUrl,
       category, 
@@ -46,8 +49,8 @@ export default createJobAnnouncementForm = async (req, res) => {
       hrContacts,
       postalAddress
     });
-    const savedJobAnnouncement = await newJobAnnouncement.save();
-    res.status(201).json({
+      const savedJobAnnouncement = await newJobAnnouncement.save();
+      res.status(201).json({
       message: 'Job Announcement Form created successfully',
       data: savedJobAnnouncement
     });
