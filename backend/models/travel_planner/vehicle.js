@@ -1,6 +1,10 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const VehicleRequisitionSchema = new mongoose.Schema({
+  recruiterId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Recruiter',
+  },
   indentor: {
     employeeCode: {
       type: String,
@@ -33,7 +37,7 @@ const VehicleRequisitionSchema = new mongoose.Schema({
   },
   purposeType: {
     type: String,
-    enum: ['Personal', 'Official'],
+    enum: ['Non-Official', 'Official'],
   },
   supportingDocument: {
     type: String,
