@@ -83,7 +83,7 @@ app.use("/reqhelp",authenticate,reqhelproutes);
 app.use("/job-events",jobEventroutes);
 app.use("/feedback",authenticate,feedbackRoutes);
 app.use("/jaf",authenticate,jafRoutes);
-app.use("/travel-planner",travelplannerRoutes);
+app.use("/travel-planner",authenticate,travelplannerRoutes);
 app.use('/api/pdfs', authenticate, pdfroutes);
 app.use('/api',authenticate, formTemplateroutes);
 

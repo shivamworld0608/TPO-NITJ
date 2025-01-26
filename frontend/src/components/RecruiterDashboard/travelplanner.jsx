@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import toast from "react-hot-toast";
 import { CheckCircle2, Circle, ArrowLeft } from "lucide-react";
 import VisitorTab from "./visitortab";
 import VehicleTab from "./vehicletab";
@@ -44,9 +47,36 @@ function App() {
     tableRows: [{ date: "", breakfast: "", lunch: "", dinner: "", snacks: "" }],
   });
 
-  const handleSubmit = () => {
-    alert('booking submitted successfully');
+
+  const handleSubmit = async () => {
+
+    const bookingDetails = {
+      visitorDetails,
+      wantVehicle,
+      vehicleDetails,
+      wantRoom,
+      roomDetails,
+      wantFood,
+      foodDetails,
+    };
+   const result = await Swal.fire({
+              title: 'Are you sure?',
+              text: 'You won’t be able to edit this in Future!',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: 'green-300',
+              cancelButtonColor: '#3085d',
+              confirmButtonText: 'Yes, submit it!',
+            });
+    if (result.isConfirmed) {
+    try {
+      const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/travel-planner/create`, bookingDetails, {withCredentials:true});
+      toast.success("Booking form submitted successfully 😊");
+    } catch (error) {
+      toast.error("Some error in submitting");
+    }}
   };
+  
 
   const steps = ["Visitor", "Vehicle", "Room", "Food", "Summary"];
 
@@ -60,7 +90,7 @@ function App() {
   };
 
   const handleStepClick = (index) => {
-    if (index === step) return; // Prevent navigating to the same step
+    if (index === step) return;
     if (canNavigateToStep(index)) {
       setStep(index);
     }

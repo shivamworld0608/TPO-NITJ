@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 
 const GuestHouseBookingSchema = new mongoose.Schema({
+  recruiterId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Recruiter',
+  },
   visitType: {
     type: String,
     enum: ['Official', 'Non-Official'],
@@ -43,6 +47,9 @@ const GuestHouseBookingSchema = new mongoose.Schema({
   },
   departureDateTime: {
     type: Date,
+  },
+  notes:{
+    type:String,
   },
   bookingPerson: {
     name: {
