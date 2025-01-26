@@ -337,14 +337,14 @@ const PDFDownloadCards = () => {
               <div className="flex justify-between items-start">
                 <div>
                   <h2 className="text-lg font-semibold">{pdf.title}</h2>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-xs text-gray-500">
                     Uploaded by: {pdf.uploadedBy?.name || 'Unknown'}
                   </p>
                 </div>
                 {pdf.uploadedBy?._id === pdf.uploadedBy?._id && (
                   <button
                     onClick={() => handleDelete(pdf._id)}
-                    className="text-gray-400 hover:text-red-500 transition-colors"
+                    className="text-red-400 hover:text-red-500 transition-colors"
                     title="Delete PDF"
                   >
                     <Trash2 size={20} />
@@ -362,9 +362,6 @@ const PDFDownloadCards = () => {
                   <p className="text-sm text-gray-400">{formatFileSize(pdf.size)}</p>
                 </div>
               </div>
-              {pdf.description && (
-                <p className="text-sm text-gray-600 mb-2">{pdf.description}</p>
-              )}
               <div className="text-sm text-gray-500">
                 Downloads: {pdf.downloads}
               </div>

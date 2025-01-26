@@ -9,7 +9,6 @@ export const uploadPDF = async (req, res) => {
 
     const newPDF = new PDF({
       title: req.body.title,
-      description: req.body.description || '',
       filename: req.file.filename,
       filepath: req.file.path,
       size: req.file.size,

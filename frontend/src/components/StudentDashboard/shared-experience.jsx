@@ -76,7 +76,11 @@ const SharedExperience = () => {
     setSelectedExperience(null);
   };
 
-  if (loading) return <BouncingLoader size="medium" text="Loading..." />;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+    </div>
+  );
 
   if (error) {
     return (

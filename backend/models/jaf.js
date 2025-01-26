@@ -29,6 +29,10 @@ const DesignationSchema = new mongoose.Schema({
 });
 
 const JobAnnouncementFormSchema = new mongoose.Schema({
+  recruiterId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Recruiter',
+  },
   organizationName: {
     type: String,
   },
@@ -86,12 +90,12 @@ const JobAnnouncementFormSchema = new mongoose.Schema({
   specificLocations: String,
 
   bond: {
-    type:boolean
+    type:Boolean
   },
 
   selectionProcess:{
     type: [String],
-    enum: ['Written Test', 'Interview', 'Group Discussion']
+    /* enum: ['Written Test', 'Interview', 'Group Discussion'] */
   },
   additionalSelectionDetails:{
     type:String
@@ -100,9 +104,11 @@ const JobAnnouncementFormSchema = new mongoose.Schema({
     type:Boolean,
   },
   hrContacts: [HrContactSchema],
-
   postalAddress:{
     type:String
+  },
+  approved_status:{
+    type:Boolean
   }
 }, {
   timestamps: true

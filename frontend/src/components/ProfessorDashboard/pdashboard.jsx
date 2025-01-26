@@ -7,21 +7,12 @@ import axios from "axios";
 import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
 import {
   faHome,
-  faBriefcase,
-  faClipboard,
-  faClipboardUser,
-  faComments,
+  faFileWaveform,
   faEnvelope,
-  faHandsHelping,
-  faShareSquare,
-  faCalendar,
-  faNoteSticky,
   faBriefcaseClock,
-  faBell,
   faQuestionCircle,
   faShareAlt,
   faChartBar,
-  faFileAlt,
   faUpload,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -33,8 +24,8 @@ import ProfileImage from "../../assets/chillguy.png";
 import NITJlogo from "../../assets/nitj-logo.png";
 
 
-import JobManagement from "./pjobmanagement"; // Import the JobManagement component
-import OAManagement from "./poamanagement"; // Import the OAManagement component
+import JobManagement from "./pjobmanagement";
+import OAManagement from "./poamanagement";
 import InterviewManagement from "./pinterviewmanagement";
 import PNotifications from "./pnotifications";
 import Mailbox from "./pmailbox";
@@ -45,6 +36,7 @@ import RequestHelpManager from "./Request";
 import Profile from "../StudentDashboard/profile";
 import Home from "./home";
 import Upload from "./pUpload.jsx";
+import JAF from "./jaf.jsx";
 import TeamSection from "../Developers/TeamSection.jsx";
 
 
@@ -92,15 +84,12 @@ const Pdashboard = () => {
 
   const menuItems = [
     { label: "Dashboard", icon: faHome, path: "/pdashboard/dashboard" },
+    { label: "JAF",  icon: faFileWaveform, path: "/pdashboard/jaf" },
     { label: "Job Profile Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
-    // { label: "OA Management", icon: faClipboard, path: "/pdashboard/oa-management" },
-    // { label: "Interview Management", icon: faClipboardUser, path: "/pdashboard/interview-management" },
-    // { label: "Notifications", icon: faBell, path: "/pdashboard/notifications" },
     { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" },
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
     { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
-    // { label: "Placement Policy", icon: faFileAlt, path: "/pdashboard/placement-policy" },
     { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
   ];
 
@@ -282,6 +271,7 @@ const Pdashboard = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="dashboard" element={<Home />} />
+            <Route path="jaf" element={<JAF/>} />
             <Route path="job-profile-management" element={<JobManagement />} />
             <Route path="oa-management" element={<OAManagement />} />
             <Route path="interview-management" element={<InterviewManagement />} />

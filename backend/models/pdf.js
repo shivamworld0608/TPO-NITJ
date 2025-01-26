@@ -4,9 +4,6 @@ const pdfSchema = new mongoose.Schema({
   title: {
     type: String,
   },
-  description: {
-    type: String,
-  },
   filename: {
     type: String,
   },

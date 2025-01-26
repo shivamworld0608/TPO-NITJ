@@ -11,7 +11,6 @@ export const getJobEvents = async (req, res) => {
           message: 'Both startDate and endDate are required'
         });
       }
-  
       console.log('Fetching events for date range:', { startDate, endDate });
       
     
