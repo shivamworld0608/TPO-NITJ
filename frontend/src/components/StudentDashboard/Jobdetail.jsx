@@ -3,8 +3,11 @@ import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import ApplicationForm from "./applicationform";
 import BouncingLoader from "../BouncingLoader";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBriefcase, faMapMarkerAlt, faDollarSign, faCalendarAlt, faClipboardList, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
-const Jobdetail = ({ job_id, onBack,onShow }) => {
+
+const Jobdetail = ({ job_id, onBack, onShow }) => {
     const [activeInfo, setActiveInfo] = useState("jobDescription");
     const [jobDetails, setJobDetails] = useState({});
     const [loading, setLoading] = useState(true);
@@ -58,25 +61,47 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
     if (application) {
         console.log(application)
         return (
-          <div className="container mx-auto px-4 py-6">
-            <ApplicationForm onHide={() => setapplication(false)} jobId={job_id} />
-          </div>
+            <div className="container mx-auto px-4 py-6">
+                <ApplicationForm onHide={() => setapplication(false)} jobId={job_id} />
+            </div>
         );
-      }
-
+    }
+    const details = [
+        { icon: faClipboardList, label: "JOB ID", value: jobDetails.job_id || "N/A" },
+        { icon: faBriefcase, label: "JOB TYPE", value: jobDetails.jobtype || "N/A" },
+        { icon: faClipboardList, label: "JOB CATEGORY", value: jobDetails.job_category || "N/A" },
+        { icon: faBriefcase, label: "JOB ROLE", value: jobDetails.jobrole || "N/A" },
+        { icon: faDollarSign, label: "CTC", value: jobDetails.job_salary?.ctc || "N/A" },
+        { icon: faDollarSign, label: "BASE SALARY", value: jobDetails.job_salary?.base_salary || "N/A" },
+        { icon: faMapMarkerAlt, label: "LOCATION", value: jobDetails.joblocation || "N/A" },
+        { icon: faInfoCircle, label: "DESCRIPTION", value: jobDetails.jobdescription || "No description available" },
+    ];
     const info = {
         jobDescription: (
             <>
-                <p><strong>Job ID:</strong> {jobDetails.job_id || "N/A"}</p>
-                <p><strong>Company:</strong> {jobDetails.company_name || "N/A"}</p>
-                <p><strong>Job Title:</strong> {jobDetails.job_role || "N/A"}</p>
-                <p><strong>Job Location:</strong> {jobDetails.joblocation || "N/A"}</p>
-                <p><strong>Job Type:</strong> {jobDetails.jobtype || "N/A"}</p>
-                <p><strong>CTC:</strong> {jobDetails.job_salary?.ctc || "N/A"}</p>
-                <p><strong>Base Salary:</strong> {jobDetails.job_salary?.base_salary || "N/A"}</p>
-                <p><strong>Deadline:</strong> {jobDetails.deadline || "N/A"}</p>
-                <p><strong>Job Category:</strong> {jobDetails.job_category || "N/A"}</p>
-                <p><strong>Description:</strong> {jobDetails.jobdescription || "No description available"}</p>
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-4">
+                    {details.map((detail, index) => (
+                        <div
+                            key={index}
+                            className="flex flex-col items-center bg-white rounded-lg border border-gray-300 p-4 shadow-sm hover:scale-105  transition-transform duration-200"
+                        >
+                            <FontAwesomeIcon
+                                icon={detail.icon}
+                                className="text-custom-blue text-2xl mb-2 "
+                            />
+                            <hr className="w-10 border-gray-300 my-2" />
+                            <span className="text-sm font-semibold text-gray-500">
+                                {detail.label}
+                            </span>
+                            <hr className="w-10 border-gray-300 my-2" />
+                            <span className="text-black font-medium text-sm">
+                                {detail.value}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+
+
             </>
         ),
         hiringFlow: (
@@ -100,7 +125,7 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
                                         ></div>
                                     )}
                                 </div>
-        
+
                                 {/* Step Details */}
                                 <div className="ml-10 p-4 sm:w-2/5 w-full h-auto border border-blue-500 rounded-lg bg-white shadow-md group-hover:shadow-lg transition-shadow">
                                     <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-500 transition-colors">
@@ -146,73 +171,83 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
                 </div>
             </div>
         ),
-        
+
         eligibilityCriteria: (
-            <div className="bg-gray-100 p-4 rounded-md shadow-md">
-                <h3 className="text-lg font-bold mb-4 text-gray-700">Eligibility Criteria</h3>
-                <div className="space-y-2">
-                    <p>
-                        <strong className="text-gray-600">Branch Allowed:</strong> 
-                        <span className="text-gray-800">
-                            {jobDetails.eligibility_criteria?.department_allowed?.join(', ') || "N/A"}
+            <div className="bg-white p-6     ">
+                <h3 className="text-xl font-bold text-gray-800 mb-6">Eligibility Criteria</h3>
+                <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                        <p className="text-gray-600 font-medium">Branch Allowed:</p>
+                        <span className="text-gray-900 font-semibold">
+                            {jobDetails.eligibility_criteria?.department_allowed?.join(", ") || "N/A"}
                         </span>
-                    </p>
-                    <p>
-                        <strong className="text-gray-600">Gender Allowed:</strong> 
-                        <span className="text-gray-800">
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <p className="text-gray-600 font-medium">Gender Allowed:</p>
+                        <span className="text-gray-900 font-semibold">
                             {jobDetails.eligibility_criteria?.gender_allowed || "N/A"}
                         </span>
-                    </p>
-                    <p>
-                        <strong className="text-gray-600">Eligible Batch:</strong> 
-                        <span className="text-gray-800">
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <p className="text-gray-600 font-medium">Eligible Batch:</p>
+                        <span className="text-gray-900 font-semibold">
                             {jobDetails.eligibility_criteria?.eligible_batch || "N/A"}
                         </span>
-                    </p>
-                    <p>
-                        <strong className="text-gray-600">Minimum CGPA:</strong> 
-                        <span className="text-gray-800">
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <p className="text-gray-600 font-medium">Minimum CGPA:</p>
+                        <span className="text-gray-900 font-semibold">
                             {jobDetails.eligibility_criteria?.minimum_cgpa || "N/A"}
                         </span>
-                    </p>
-                    <p>
-                        <strong className="text-gray-600">Active Backlogs:</strong> 
-                        <span className="text-gray-800">
-                            {jobDetails.eligibility_criteria?.active_backlogs === false 
-                                ? "No active backlogs allowed" 
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <p className="text-gray-600 font-medium">Active Backlogs:</p>
+                        <span className="text-gray-900 font-semibold">
+                            {jobDetails.eligibility_criteria?.active_backlogs === false
+                                ? "No active backlogs allowed"
                                 : "N/A"}
                         </span>
-                    </p>
-                    <p>
-                        <strong className="text-gray-600">Student Status:</strong> 
-                        <span className={status.eligible ? 'text-green-500 font-semibold' : 'text-red-500 font-semibold'}>
+                    </div>
+                    <div className="flex justify-between items-center">
+                        <p className="text-gray-600 font-medium">Student Status:</p>
+                        <span
+                            className={`font-semibold ${status.eligible ? "text-green-600" : "text-red-600"
+                                }`}
+                        >
                             {status.eligible ? "Eligible" : "Not Eligible"}
                             {status.reason ? ` (${status.reason})` : ""}
                         </span>
-                    </p>
+                    </div>
                 </div>
-                <div className="mt-4">
-                    <button 
-                        className={`px-4 py-2 rounded-md font-semibold text-white ${
-                            status.eligible 
-                                ? (status.applied 
-                                    ? "bg-blue-500 cursor-not-allowed" 
-                                    : "bg-green-500 hover:bg-green-600") 
+                <div className="mt-6 flex justify-end">
+                    <button
+                        className={`px-5 py-2 rounded-lg font-semibold text-white transition-all duration-200 ${status.eligible
+                                ? status.applied
+                                    ? "bg-blue-500 cursor-not-allowed"
+                                    : "bg-green-500 hover:bg-green-600"
                                 : "bg-gray-300 cursor-not-allowed"
-                        }`}
+                            }`}
                         disabled={!status.eligible || status.applied}
-                        onClick={() => !status.applied && setapplication(true)}
+                        onClick={() => !status.applied && setApplication(true)}
                     >
-                        {status.eligible 
-                            ? (status.applied ? "Applied" : "Apply Now") 
+                        {status.eligible
+                            ? status.applied
+                                ? "Applied"
+                                : "Apply Now"
                             : "Not Eligible"}
                     </button>
                 </div>
             </div>
         ),
-        
+
         deadline: (
-            <p className="text-center"><strong>Please Apply before: {jobDetails.deadline || "N/A"}</strong></p>
+            <p className="text-center"><strong>Please Apply before: {jobDetails.deadline
+                ? new Date(jobDetails.deadline).toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                })
+                : "Not Provided"}</strong></p>
         ),
     };
 
@@ -236,18 +271,20 @@ const Jobdetail = ({ job_id, onBack,onShow }) => {
             </div>
 
             <div className="flex justify-center sm:space-x-4 space-x-1 mb-8">
-                {Object.keys(info).map((key) => (
-                    <button
-                        key={key}
-                        onClick={() => setActiveInfo(key)}
-                        className={`sm:px-6 sm:py-3 p-2 bg-custom-blue rounded-md transition duration-300 sm:text-base text-sm ${
-                            activeInfo === key ? 'bg-custom-blue text-white' : 'bg-blue-500 text-white hover:bg-blue-600'
-                        }`}
-                    >
-                        {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
-                    </button>
-                ))}
-            </div>
+    {Object.keys(info).map((key) => (
+        <button
+            key={key}
+            onClick={() => setActiveInfo(key)}
+            className={`sm:px-6 sm:py-3 p-2 rounded-md font-semibold transition duration-200 sm:text-base text-sm 
+                ${activeInfo === key 
+                    ? 'bg-custom-blue text-white' // Active tab styles
+                    : 'bg-white text-custom-blue border border-custom-blue hover:bg-gray-100' // Inactive tab styles
+                }`}
+        >
+            {key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}
+        </button>
+    ))}
+</div>
 
             <div className="w-full max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg">
                 {info[activeInfo]}
