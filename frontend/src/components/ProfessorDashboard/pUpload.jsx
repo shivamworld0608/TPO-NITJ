@@ -1,11 +1,97 @@
-
 import React, { useState, useEffect } from 'react';
 import { Download, Loader2, Trash2, Upload, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "../ui/dialog";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import Swal from 'sweetalert2';
+
+
+const PDFUploadModal = ({ 
+  isOpen, 
+  onClose, 
+  file, 
+  onUpload 
+}) => {
+  const [title, setTitle] = useState('');
+  const [titleError, setTitleError] = useState('');
+
+  const handleTitleChange = (e) => {
+    const newTitle = e.target.value;
+    setTitle(newTitle);
+    
+    if (newTitle.length > 50) {
+      setTitleError('Title must be 50 characters or less');
+    } else {
+      setTitleError('');
+    }
+  };
+
+  const handleUpload = () => {
+    if (!title.trim()) {
+      setTitleError('Title is required');
+      return;
+    }
+
+    if (title.length > 50) {
+      return;
+    }
+
+    onUpload(title);
+    onClose();
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Upload <span className='text-custom-blue'>PDF</span> </DialogTitle>
+          <DialogDescription>
+            Enter title for your choosen PDF document
+          </DialogDescription>
+        </DialogHeader>
+        
+        <div className="grid gap-4 py-4">
+            <Input
+              placeholder="Enter PDF title"
+              value={title}
+              onChange={handleTitleChange}
+              className="w-full md:w-1/2 lg:w-1/2"
+              maxLength={35}
+            />
+            {titleError && (
+              <div className="col-span-4 text-red-500 flex items-center gap-2">
+                <AlertCircle className="h-4 w-4" />
+                {titleError}
+              </div>
+            )}
+        </div>
+        
+        <DialogFooter>
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={onClose}
+          >
+            Cancel
+          </Button>
+          <Button 
+            type="submit" 
+            onClick={handleUpload}
+            disabled={!!titleError || !title.trim()}
+          >
+            <Upload className="mr-2 h-4 w-4" />
+            Upload
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const PDFDownloadCards = () => {
   const [pdfs, setPdfs] = useState([]);
@@ -14,6 +100,8 @@ const PDFDownloadCards = () => {
   const [uploadingFile, setUploadingFile] = useState(false);
   const [downloadingStates, setDownloadingStates] = useState({});
   const [uploadProgress, setUploadProgress] = useState(0);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   // Helper functions
   const formatDate = (dateString) => {
@@ -32,16 +120,18 @@ const PDFDownloadCards = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  // Initialize axios with defaults
   const api = axios.create({
-    baseURL:  `${import.meta.env.REACT_APP_BASE_URL}`, 
-    withCredentials: true // Important for sending cookies
+    baseURL: `${import.meta.env.REACT_APP_BASE_URL}`, 
+    withCredentials: true
   });
 
   const fetchPDFs = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/api/pdfs');
+      const response = await axios.get(
+        `${import.meta.env.REACT_APP_BASE_URL}/api/pdfs/`,
+        { withCredentials: true }
+      );
       setPdfs(response.data);
       setError(null);
     } catch (err) {
@@ -57,25 +147,31 @@ const PDFDownloadCards = () => {
     fetchPDFs();
   }, []);
 
-  const handleFileUpload = async (event) => {
+  const handleFileSelect = (event) => {
     const file = event.target.files[0];
     if (!file) return;
 
-    // Validate file size (10MB limit)
+    // File validation
     if (file.size > 10 * 1024 * 1024) {
       toast.error("File size exceeds 10MB limit");
       return;
     }
-
-    // Validate file type
     if (file.type !== 'application/pdf') {
       toast.error("Only PDF files are allowed");
       return;
     }
 
+    // Store file and open modal
+    setSelectedFile(file);
+    setIsUploadModalOpen(true);
+  };
+
+  const handleFileUpload = async (title) => {
+    if (!selectedFile) return;
+
     const formData = new FormData();
-    formData.append('pdf', file);
-    formData.append('title', file.name.replace('.pdf', ''));
+    formData.append('pdf', selectedFile);
+    formData.append('title', title);
 
     setUploadingFile(true);
     setUploadProgress(0);
@@ -103,20 +199,30 @@ const PDFDownloadCards = () => {
     } finally {
       setUploadingFile(false);
       setUploadProgress(0);
+      setSelectedFile(null);
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this PDF?')) return;
-
+       const result = await Swal.fire({
+         title: 'Are you sure?',
+         text: 'You won’t be able to undo this action!',
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#d33',
+         cancelButtonColor: '#3085d6',
+         confirmButtonText: 'Yes, delete it!',
+       });
+   if (result.isConfirmed) {
     try {
       await api.delete(`/api/pdfs/${id}`);
       await fetchPDFs();
-      toast.success("PDF deleted successfully");
+      Swal.fire('Deleted!', 'The pdf has been deleted.', 'success');
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Delete failed';
-      toast.error(errorMessage);
+      Swal.fire('Failed!', 'Failed to delete this pdf. Please try again.', 'error');
     }
+  }
   };
 
   const handleDownload = async (id, filename) => {
@@ -176,7 +282,7 @@ const PDFDownloadCards = () => {
           <input
             type="file"
             accept=".pdf"
-            onChange={handleFileUpload}
+            onChange={handleFileSelect}
             className="hidden"
             id="pdf-upload"
             disabled={uploadingFile}
@@ -207,6 +313,14 @@ const PDFDownloadCards = () => {
           )}
         </div>
       </div>
+
+      {/* Upload Modal */}
+      <PDFUploadModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+        file={selectedFile}
+        onUpload={handleFileUpload}
+      />
 
       {error && (
         <Alert variant="destructive" className="mb-6">
@@ -259,7 +373,7 @@ const PDFDownloadCards = () => {
               <button
                 onClick={() => handleDownload(pdf._id, pdf.filename)}
                 disabled={downloadingStates[pdf._id]}
-                className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center gap-2 bg-custom-blue text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {downloadingStates[pdf._id] ? (
                   <>
