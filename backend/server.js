@@ -18,7 +18,7 @@ import sharedexperienceroutes from "./routes/sharedexperience.js";
 import placementroutes from "./routes/placement.js";
 import reqhelproutes from "./routes/reqhelp.js";
 import jobEventroutes from "./routes/jobEvents.js"
-import pdfroutes from "./routes/pdfRoutes.js";
+import pdfroutes from "./routes/pdf.js";
 
 import { mkdir } from 'fs/promises';
 try {
@@ -78,16 +78,8 @@ app.use('/sharedexperience',authenticate,sharedexperienceroutes);
 app.use("/placements",placementroutes);
 app.use("/reqhelp",authenticate,reqhelproutes);
 app.use("/job-events",jobEventroutes);
-
-
-// Serve uploads directory statically
-app.use('/uploads', express.static('uploads'));
-
-// Add PDF routes
 app.use('/api/pdfs', authenticate, pdfroutes);
-
 app.use('/api',authenticate, formTemplateroutes);
-/* app.use('/applicationform',applicationformroutes); */
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

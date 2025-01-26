@@ -213,7 +213,7 @@ const SharedExperience = () => {
                   </p>
                   <div className="flex justify-center space-x-3 mt-2 w-full">
                     <button
-                      className="bg-blue-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition duration-300 shadow-md w-24 flex items-center justify-center space-x-2"
+                      className="bg-custom-blue text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition duration-300 shadow-md w-24 flex items-center justify-center space-x-2"
                       onClick={(e) => {
                         e.stopPropagation();
                         setSelectedExperience(experience);

@@ -1,9 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { Download, Loader2, Trash2, Upload, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Button } from '../ui/button'
+import {Input} from "../ui/input";
 import { ToastContainer, toast } from 'react-toastify';
+import {FileText} from 'lucide-react';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 
@@ -11,11 +13,9 @@ const PDFDownloadCards = () => {
   const [pdfs, setPdfs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [uploadingFile, setUploadingFile] = useState(false);
   const [downloadingStates, setDownloadingStates] = useState({});
-  const [uploadProgress, setUploadProgress] = useState(0);
 
-  // Helper functions
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -32,10 +32,9 @@ const PDFDownloadCards = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  // Initialize axios with defaults
   const api = axios.create({
     baseURL:  `${import.meta.env.REACT_APP_BASE_URL}`, 
-    withCredentials: true // Important for sending cookies
+    withCredentials: true
   });
 
   const fetchPDFs = async () => {
@@ -57,76 +56,12 @@ const PDFDownloadCards = () => {
     fetchPDFs();
   }, []);
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    // Validate file size (10MB limit)
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size exceeds 10MB limit");
-      return;
-    }
-
-    // Validate file type
-    if (file.type !== 'application/pdf') {
-      toast.error("Only PDF files are allowed");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('pdf', file);
-    formData.append('title', file.name.replace('.pdf', ''));
-
-    setUploadingFile(true);
-    setUploadProgress(0);
-
-    try {
-      await api.post('/api/pdfs/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setUploadProgress(percentCompleted);
-        },
-      });
-      
-      await fetchPDFs();
-      toast.success("PDF uploaded successfully");
-      setError(null);
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Upload failed';
-      setError(errorMessage);
-      toast.error(errorMessage);
-    } finally {
-      setUploadingFile(false);
-      setUploadProgress(0);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this PDF?')) return;
-
-    try {
-      await api.delete(`/api/pdfs/${id}`);
-      await fetchPDFs();
-      toast.success("PDF deleted successfully");
-    } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Delete failed';
-      toast.error(errorMessage);
-    }
-  };
-
   const handleDownload = async (id, filename) => {
     setDownloadingStates(prev => ({ ...prev, [id]: true }));
-
     try {
       const response = await api.get(`/api/pdfs/download/${id}`, {
-        responseType: 'blob'
-      });
-      
+        responseType: 'blob'}
+      );
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -155,91 +90,93 @@ const PDFDownloadCards = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      {/* Toast Container */}
-      <ToastContainer 
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto p-6">
+        <div className="rounded-lg shadow-sm p-6 mb-6">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
+              <h1 className="text-3xl font-bold text-gray-900">PDF <span className='text-custom-blue'>Documents</span></h1>
+          </div>
 
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">PDF Documents</h1>
-        
-      </div>
+          {error && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
 
-      {error && (
-        <Alert variant="destructive" className="mb-6">
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Error</AlertTitle>
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {pdfs.map((pdf) => (
+              <Card key={pdf._id} className="group hover:shadow-md transition-shadow duration-200 bg-white">
+                <CardHeader className="p-4 pb-2">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h2 className="text-lg font-semibold text-gray-900 group-hover:text-custom-blue transition-colors">
+                        {pdf.title}
+                      </h2>
+                      <p className="text-sm text-gray-500">
+                        Uploaded by: {pdf.uploadedBy?.name || 'Unknown'}
+                      </p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent className="p-4">
+                  <div className="aspect-w-3 aspect-h-4 mb-4 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200 flex items-center justify-center group-hover:border-custom-blue transition-colors">
+                    <div className="text-center p-4">
+                      <FileText className="h-12 w-12 mx-auto text-gray-400 group-hover:text-custom-blue transition-colors" />
+                      <p className="text-sm font-medium text-gray-600 mt-2">PDF Document</p>
+                      <p className="text-sm text-gray-400">{formatFileSize(pdf.size)}</p>
+                    </div>
+                  </div>
+                  {pdf.description && (
+                    <p className="text-sm text-gray-600 line-clamp-2">{pdf.description}</p>
+                  )}
+                  <div className="mt-2 flex items-center gap-2 text-xs text-gray-500">
+                    <span className="inline-block px-2 py-1 bg-gray-100 rounded-full">
+                      {formatDate(pdf.uploadDate)}
+                    </span>
+                  </div>
+                </CardContent>
+                <CardFooter className="p-2 bg-custom-blue text-white rounded">
+                  <Button 
+                    variant="default"
+                    className="w-full"
+                    onClick={() => handleDownload(pdf._id, pdf.filename)}
+                    disabled={downloadingStates[pdf._id]}
+                  >
+                    {downloadingStates[pdf._id] ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                        Downloading...
+                      </>
+                    ) : (
+                      <>
+                        <Download className="h-4 w-4 mr-2" />
+                        Download PDF
+                      </>
+                    )}
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {pdfs.map((pdf) => (
-          <Card key={pdf._id} className="overflow-hidden">
-            <CardHeader className="p-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h2 className="text-lg font-semibold">{pdf.title}</h2>
-                  <p className="text-sm text-gray-500">
-                    Uploaded by: {pdf.uploadedBy?.name || 'Unknown'}
-                  </p>
-                </div>
-              </div>
-                
-              <p className="text-sm text-gray-500">
-                {formatDate(pdf.uploadDate)}
-              </p>
-            </CardHeader>
-            <CardContent className="p-4">
-              <div className="aspect-w-3 aspect-h-4 mb-4 bg-gray-100 rounded-md flex items-center justify-center">
-                <div className="text-center p-4">
-                  <p className="text-gray-500 mb-2">PDF Document</p>
-                  <p className="text-sm text-gray-400">{formatFileSize(pdf.size)}</p>
-                </div>
-              </div>
-              {pdf.description && (
-                <p className="text-sm text-gray-600 mb-2">{pdf.description}</p>
-              )}
-              
-            </CardContent>
-            <CardFooter className="p-4 bg-gray-50">
-              <button
-                onClick={() => handleDownload(pdf._id, pdf.filename)}
-                disabled={downloadingStates[pdf._id]}
-                className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          {pdfs.length === 0 && !loading && (
+            <div className="text-center py-16">
+              <FileText className="h-16 w-16 mx-auto text-gray-300 mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">No PDFs Found</h3>
+              <p className="text-gray-500 mb-4">Upload your first PDF using the button above</p>
+              <Button 
+                variant="outline" 
+                className="inline-flex items-center gap-2"
               >
-                {downloadingStates[pdf._id] ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    Downloading...
-                  </>
-                ) : (
-                  <>
-                    <Download size={20} />
-                    Download PDF
-                  </>
-                )}
-              </button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-
-      {pdfs.length === 0 && !loading && (
-        <div className="text-center py-12 text-gray-500">
-          No PDFs uploaded yet. Upload your first PDF using the button above.
+                <Upload className="h-4 w-4" />
+                Upload PDF
+              </Button>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

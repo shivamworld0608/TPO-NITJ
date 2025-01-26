@@ -1,20 +1,16 @@
-// routes/pdfRoutes.js
 import express from 'express';
+import upload from '../utils/multer.js';
+const router = express.Router();
 import { 
   uploadPDF, 
   getAllPDFs, 
-  getPDFById, 
   downloadPDF, 
   deletePDF,
-  upload 
-} from '../controller/pdfController.js';
+} from '../controller/pdf.js';
 
-const router = express.Router();
 
-// PDF routes
 router.post('/upload', upload.single('pdf'), uploadPDF);
 router.get('/', getAllPDFs);
-router.get('/:id', getPDFById);
 router.get('/download/:id', downloadPDF);
 router.delete('/:id', deletePDF);
 
