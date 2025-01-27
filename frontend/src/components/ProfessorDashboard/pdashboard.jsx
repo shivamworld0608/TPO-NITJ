@@ -7,6 +7,7 @@ import axios from "axios";
 import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
 import {
   faHome,
+  faUser,
   faFileWaveform,
   faEnvelope,
   faBriefcaseClock,
@@ -38,6 +39,7 @@ import Home from "./home";
 import Upload from "./pUpload.jsx";
 import JAF from "./jaf.jsx";
 import TeamSection from "../Developers/TeamSection.jsx";
+import StudentAnalyticsDashboard from "./studentanalysis.jsx";
 
 
 const Pdashboard = () => {
@@ -89,6 +91,7 @@ const Pdashboard = () => {
     { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" },
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
+    {label:"Student",icon:faUser,path:"/pdashboard/student-analysis"},
     { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
     { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
   ];
@@ -278,6 +281,7 @@ const Pdashboard = () => {
             <Route path="notifications" element={<PNotifications />} />
             <Route path="pmailbox" element={<Mailbox />} />
             <Route path="help-requests" element={<RequestHelpManager />} />
+            <Route path="student-analysis" element={<StudentAnalyticsDashboard />} />
             <Route path="experience-sharing" element={<ExperienceSharing />} />
             <Route path="placement-insights" element={<PlacementInsights />} />
             <Route path="placement-policy" element={<PlacementPolicy />} />

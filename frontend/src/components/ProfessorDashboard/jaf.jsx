@@ -18,10 +18,11 @@ const JAF = () => {
     const fetchJobProfiles = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/professor/getjobs`,
+          `${import.meta.env.REACT_APP_BASE_URL}/jaf/get`,
           { withCredentials: true }
         );
         setJobProfiles(response.data);
+        console.log(jobProfiles);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to fetch job profiles.");
       } finally {
