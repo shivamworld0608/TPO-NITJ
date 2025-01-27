@@ -60,4 +60,15 @@ export const createJobAnnouncementForm = async (req, res) => {
       error: error.message
     });
   }
-}; 
+};
+
+export const getjaf= async (req, res) => {
+  try{
+       const approved_jaf=await JobAnnouncementForm.find({approved_status:true});
+       const notapproved_jaf=await JobAnnouncementForm.find({approved_status:false});
+       res.status(200).json({approved_jaf, notapproved_jaf});
+  }
+  catch(error){
+    res.status(400).json({message:'Error fetching Job Announcement Form',error:error.message});
+  }
+}

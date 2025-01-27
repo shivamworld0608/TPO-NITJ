@@ -32,7 +32,7 @@ const studentSchema = new mongoose.Schema({
   },
   course:{
     type:String,
-    enum:["B.Tech","M.Tech","MBA"]
+    enum:["B.Tech","M.Tech","MBA","M.Sc","PHD"]
   },
   address: {
     type: String,
