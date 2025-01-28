@@ -15,6 +15,7 @@ export const getStudentAnalytics = async (req, res) => {
                 department: student.department,
                 course: student.course,
                 batch: student.batch,
+                gender: student.gender,
                 cgpa: student.cgpa,
                 placementstatus: student.placementstatus,
                 applications: {
@@ -112,5 +113,61 @@ export const getStudentAnalytics = async (req, res) => {
             message: "Error retrieving student analytics",
             error: error.message
         });
+    }
+};
+
+
+
+export const Studentprofileupdate = async (req, res) => {
+    try {
+        const userId = req.user.userId;
+        const { name, email,phone,rollno,department,batch,cgpa,gender } = req.body;
+
+        if (!name || !email) {
+            return res.status(400).json({ message: 'Name, email are required' });
+        }
+        const student = await Student.findById(userId);
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+        student.name = name;
+        student.email = email;
+        if(phone!="") student.phone = phone;
+        if(rollno!="") student.rollno = rollno;
+        if(department!="") student.department = department;
+        if(year!="") student.year = year;
+        if(batch!="") student.batch = batch;
+        if(address!="") student.address = address;
+        if(cgpa!="") student.cgpa = cgpa;
+        if(gender!="") student.gender = gender;
+
+        await student.save();
+        res.status(200).json({ message: 'Profile updated successfully', user:student });
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+export const updatesProfile = async (req, res) => {
+    try {
+        const {studentId, name, email,rollno,department,course,active,batch,cgpa,gender } = req.body;
+        const student = await Student.findById(studentId);
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+        student.name = name;
+        student.email = email;
+        if(rollno!="") student.rollno = rollno;
+        if(department!="") student.department = department;
+        if(batch!="") student.batch = batch;
+        if(address!="") student.address = address;
+        if(cgpa!="") student.cgpa = cgpa;
+        if(gender!="") student.gender = gender;
+
+        await student.save();
+        res.status(200).json({ message: 'Profile updated successfully', user:student });
+    } catch (error) {
+        console.error('Error updating user profile:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 };

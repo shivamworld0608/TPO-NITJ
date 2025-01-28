@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Card, CardContent } from '../ui/card';
 import { Input } from '../ui/input';
 import { Select } from '../ui/select';
+import { Button } from '../ui/button';
+import { X, Pencil, Save} from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 
@@ -12,9 +14,18 @@ const StudentAnalyticsDashboard = () => {
     course: '',
     batch: '',
     cgpa: '',
+    rollno: '',
+    name: '',
     placementstatus: ''
   });
-  
+  const [editMode, setEditMode] = useState(false);
+  const [editedStudent, setEditedStudent] = useState(null);
+
+  const handleEditClick = (student) => {
+    setEditMode(true);
+    setEditedStudent({ ...student });
+  };
+
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -35,6 +46,44 @@ const StudentAnalyticsDashboard = () => {
     fetchStudents();
   }, []);
 
+  const clearFilters = () => {
+    setFilters({
+      department: '',
+      course: '',
+      batch: '',
+      cgpa: '',
+      rollno: '',
+      name: '',
+      placementstatus: ''
+    });
+  };
+  const handleSaveClick = async () => {
+    try {
+      await axios.put(
+        `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/update/${editedStudent._id}`,
+        editedStudent,
+        { withCredentials: true }
+      );
+      setEditMode(false);
+      // Refresh data after save
+      const response = await axios.get(
+        `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/get`,
+        { withCredentials: true }
+      );
+      setData(response.data.data || []);
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to update student details.");
+    }
+  };
+
+  const handleChange = (field, value) => {
+    if (!editedStudent) return;
+    
+    setEditedStudent(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
   // Filter options
   const departmentOptions = [
     { value: 'All', label: 'All' },
@@ -69,6 +118,14 @@ const StudentAnalyticsDashboard = () => {
     { value: '> 7.0', label: '> 7.0' }
   ];
 
+  const batchOptions = [
+    { value: 'All', label: 'All' },
+    { value: '2025', label: '2025' },
+    { value: '2026', label: '2026' },
+    { value: '2027', label: '2027' },
+    { value: '2028', label: '2028' }
+  ];
+  
   const placementStatusOptions = [
     { value: 'All', label: 'All' },
     { value: 'Not Placed', label: 'Not Placed' },
@@ -82,11 +139,15 @@ const StudentAnalyticsDashboard = () => {
     return (
       (filters.department === '' || filters.department === 'All' || student.department === filters.department) &&
       (filters.course === '' || filters.course === 'All' || student.course === filters.course) &&
-      (filters.batch === '' || student.batch === filters.batch) &&
+      (filters.batch === '' || filters.batch === 'All' || student.batch === filters.batch) &&
       (filters.cgpa === '' || filters.cgpa === 'All' || 
         parseFloat(student.cgpa) > parseFloat(filters.cgpa.replace('> ', ''))) &&
       (filters.placementstatus === '' || filters.placementstatus === 'All' || 
-        student.placementstatus === filters.placementstatus)
+        student.placementstatus === filters.placementstatus) &&
+      (filters.name === '' || 
+        student.name.toLowerCase().includes(filters.name.toLowerCase())) &&
+      (filters.rollno === '' || 
+        student.rollno.toLowerCase().includes(filters.rollno.toLowerCase()))
     );
   });
 
@@ -125,11 +186,12 @@ const StudentAnalyticsDashboard = () => {
             onValueChange={(value) => setFilters({ ...filters, course: value })}
             placeholder="Select Course"
           />
-
-          <Input
-            placeholder="Batch (e.g., 2024)"
+          
+          <Select
+            options={batchOptions}
             value={filters.batch}
-            onChange={(e) => setFilters({ ...filters, batch: e.target.value })}
+            onValueChange={(value) => setFilters({ ...filters, batch: value })}
+            placeholder="Select Batch"
           />
 
           <Select
@@ -138,13 +200,34 @@ const StudentAnalyticsDashboard = () => {
             onValueChange={(value) => setFilters({ ...filters, cgpa: value })}
             placeholder="Select CGPA Criteria"
           />
-
+          
           <Select
             options={placementStatusOptions}
             value={filters.placementstatus}
             onValueChange={(value) => setFilters({ ...filters, placementstatus: value })}
             placeholder="Select Placement Status"
           />
+          
+          <Input
+            placeholder="Search by Student Name"
+            value={filters.name}
+            onChange={(e) => setFilters({ ...filters, name: e.target.value })}
+          />
+          
+          <Input
+            placeholder="Search by Student Roll no."
+            value={filters.rollno}
+            onChange={(e) => setFilters({ ...filters, rollno: e.target.value })}
+          />
+          
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2"
+            onClick={clearFilters}
+          >
+            <X className="h-4 w-4" />
+            Clear Filters
+          </Button>
         </div>
       </Card>
 
@@ -173,24 +256,146 @@ const StudentAnalyticsDashboard = () => {
             <DialogContent className="max-w-4xl">
               <DialogHeader>
                 <DialogTitle>Student Analysis - {student.name}</DialogTitle>
+                <div className="flex justify-between items-start mb-4">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-2"
+            onClick={() => editMode ? handleSaveClick() : handleEditClick(student)}
+          >
+            {editMode ? (
+              <>
+                <Save className="h-4 w-4" />
+                Save
+              </>
+            ) : (
+              <>
+                <Pencil className="h-4 w-4" />
+                Edit
+              </>
+            )}
+          </Button>
+        </div>
               </DialogHeader>
               
               {/* Student Details */}
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div>
-                  <h4 className="font-semibold mb-2">Personal Details</h4>
-                  <p>Roll No: {student.rollno}</p>
-                  <p>Email: {student.email}</p>
-                  <p>Department: {student.department}</p>
-                  <p>Course: {student.course}</p>
-                  <p>CGPA: {student.cgpa}</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2">Application Summary</h4>
-                  <p>Total Applications: {student.applications.total}</p>
-                  <p>Placement Status: {student.placementstatus}</p>
-                </div>
-              </div>
+             <div className="grid grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700">Name</label>
+              {editMode ? (
+                <Input
+                  value={editedStudent.name}
+                  onChange={(e) => handleChange('name', e.target.value)}
+                  className="mt-1"
+                />
+              ) : (
+                <p className="mt-1">{student.name}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">Roll No</label>
+              {editMode ? (
+                <Input
+                  value={editedStudent.rollno}
+                  onChange={(e) => handleChange('rollno', e.target.value)}
+                  className="mt-1"
+                />
+              ) : (
+                <p className="mt-1">{student.rollno}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">Email</label>
+              {editMode ? (
+                <Input
+                  value={editedStudent.email}
+                  onChange={(e) => handleChange('email', e.target.value)}
+                  className="mt-1"
+                />
+              ) : (
+                <p className="mt-1">{student.email}</p>
+              )}
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium text-gray-700">Department</label>
+              {editMode ? (
+                <Select
+                  options={departmentOptions}
+                  value={editedStudent.department}
+                  onValueChange={(value) => handleChange('department', value)}
+                  className="mt-1"
+                />
+              ) : (
+                <p className="mt-1">{student.department}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">Course</label>
+              {editMode ? (
+                <Select
+                  options={courseOptions}
+                  value={editedStudent.course}
+                  onValueChange={(value) => handleChange('course', value)}
+                  className="mt-1"
+                />
+              ) : (
+                <p className="mt-1">{student.course}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">Batch</label>
+              {editMode ? (
+                <Select
+                  options={batchOptions}
+                  value={editedStudent.batch}
+                  onValueChange={(value) => handleChange('batch', value)}
+                  className="mt-1"
+                />
+              ) : (
+                <p className="mt-1">{student.batch}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">CGPA</label>
+              {editMode ? (
+                <Input
+                  type="number"
+                  min="0"
+                  max="10"
+                  value={editedStudent.cgpa}
+                  onChange={(e) => handleChange('cgpa', e.target.value)}
+                  className="mt-1"
+                />
+              ) : (
+                <p className="mt-1">{student.cgpa}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-gray-700">Placement Status</label>
+              {editMode ? (
+                <Select
+                  options={placementStatusOptions}
+                  value={editedStudent.placementstatus}
+                  onValueChange={(value) => handleChange('placementstatus', value)}
+                  className="mt-1"
+                />
+              ) : (
+                <p className="mt-1">{student.placementstatus}</p>
+              )}
+            </div>
+          </div>
+          </div>
+
 
               {/* Assessment Performance Chart */}
               <div className="h-64 mb-6">
