@@ -409,13 +409,14 @@ const StudentAnalyticsDashboard = () => {
             </DialogTrigger>
 
             {/* Student Details Dialog */}
-            <DialogContent className="max-w-4xl">
-              <DialogHeader>
-                <div className="flex items-center justify-between">
-                  <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                    <GraduationCap className="h-6 w-6 text-blue-500" />
-                    {student.name}
-                  </DialogTitle>
+            <DialogContent className="max-w-4xl max-h-[90vh] p-0">
+              <div className="overflow-y-auto max-h-[90vh] px-6">
+                <DialogHeader className="sticky top-0 bg-white py-4 z-10">
+                  <div className="flex items-center justify-between">
+                    <DialogTitle className="text-2xl font-bold flex items-center gap-2">
+                      <GraduationCap className="h-6 w-6 text-blue-500" />
+                      {student.name}
+                    </DialogTitle>
                   <Button
                     variant="outline"
                     className="flex items-center gap-2"
@@ -752,6 +753,7 @@ const StudentAnalyticsDashboard = () => {
                     </div>
                   </CardContent>
                 </Card>
+              </div>
               </div>
             </DialogContent>
           </Dialog>
