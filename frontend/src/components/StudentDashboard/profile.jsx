@@ -193,15 +193,15 @@ function Profile() {
 
           {isEditing ? (
             <div>
-              <input
+              {/* <input
                 type="text"
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
                 placeholder="Name"
                 className="mt-2 p-2 mx-2 border border-custom-blue rounded"
-              />
-              <input
+              /> */}
+         {/*      <input
                 type="email"
                 name="email"
                 readOnly
@@ -209,7 +209,7 @@ function Profile() {
                 onChange={handleChange}
                 placeholder="Email"
                 className="mt-2 p-2 mx-2 border border-custom-blue rounded"
-              />
+              /> */}
               <input
                 type="string"
                 name="phone"
@@ -218,15 +218,15 @@ function Profile() {
                 placeholder="Phone"
                 className="mt-2 mx-2 p-2 border border-custom-blue rounded"
               />
-              <input
+            {/*   <input
                 type="number"
                 name="rollno"
                 value={formData.rollno}
                 onChange={handleChange}
                 placeholder="Roll No."
                 className="mt-2 mx-2 p-2 border border-custom-blue rounded"
-              />
-              <select
+              /> */}
+              {/* <select
                 name="department"
                 value={formData.department}
                 onChange={handleChange}
@@ -244,8 +244,8 @@ function Profile() {
                 <option value="BT">BT</option>
                 <option value="TT">TT</option>
                 <option value="IPE">IPE</option>
-              </select>
-              <select
+              </select> */}
+              {/* <select
                 name="year"
                 value={formData.year}
                 onChange={handleChange}
@@ -256,8 +256,8 @@ function Profile() {
                 <option value="2">2nd Year</option>
                 <option value="3">3rd Year</option>
                 <option value="4">4th Year</option>
-              </select>
-              <select
+              </select> */}
+             {/*  <select
                 name="batch"
                 value={formData.batch}
                 onChange={handleChange}
@@ -269,7 +269,7 @@ function Profile() {
                 <option value="2027">2027</option>
                 <option value="2028">2028</option>
                 <option value="2029">2029</option>
-              </select>
+              </select> */}
               <input
                 type="text"
                 name="address"
@@ -278,7 +278,7 @@ function Profile() {
                 placeholder="Address"
                 className="mt-2 p-2 mx-2 border border-custom-blue rounded"
               />
-              <input
+            {/*   <input
                 type="text"
                 name="cgpa"
                 readOnly
@@ -286,8 +286,8 @@ function Profile() {
                 onChange={handleChange}
                 placeholder="CGPA"
                 className="mt-2 p-2 mx-2 border border-custom-blue rounded"
-              />
-              <select
+              /> */}
+           {/*    <select
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
@@ -297,7 +297,7 @@ function Profile() {
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
                 <option value="Other">Other</option>
-              </select>
+              </select> */}
               <button
                 onClick={handleSubmit}
                 className="mt-4 mx-2 bg-custom-blue text-white px-4 py-1 border border-custom-blue-400 rounded"

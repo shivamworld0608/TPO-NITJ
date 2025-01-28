@@ -92,7 +92,7 @@ const StudentAnalyticsDashboard = () => {
       [field]: value
     }));
   };
-  
+
   const departmentOptions = [
     { value: 'All', label: 'All' },
     { value: 'Computer Science & Engineering', label: 'Computer Science & Engineering' },
@@ -396,6 +396,7 @@ const StudentAnalyticsDashboard = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm text-gray-600">Batch {student.batch}</span>
+                      <span className="text-sm text-gray-600">CGPA {student.cgpa}</span>
                     </div>
                   </div>
 
