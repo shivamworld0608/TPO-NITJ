@@ -24,6 +24,9 @@ const StudentAnalyticsDashboard = () => {
   });
   const [editMode, setEditMode] = useState(false);
   const [editedStudent, setEditedStudent] = useState(null);
+  const [sortField, setSortField] = useState('name');
+  const [sortDirection, setSortDirection] = useState('asc');
+  
 
   const handleEditClick = (student) => {
     setEditMode(true);
@@ -92,6 +95,9 @@ const StudentAnalyticsDashboard = () => {
       [field]: value
     }));
   };
+
+
+
 
   const departmentOptions = [
     { value: 'All', label: 'All' },
@@ -218,6 +224,28 @@ const StudentAnalyticsDashboard = () => {
   if (error) {
     return <div className="p-6 text-red-500">Error: {error}</div>;
   }
+
+  const sortedStudents = [...filteredStudents].sort((a, b) => {
+    if (sortField === 'name') {
+      return sortDirection === 'asc' 
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name);
+    } else if (sortField === 'cgpa') {
+      return sortDirection === 'asc'
+        ? parseFloat(a.cgpa) - parseFloat(b.cgpa)
+        : parseFloat(b.cgpa) - parseFloat(a.cgpa);
+    }
+    return 0;
+  });
+  
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
@@ -374,9 +402,38 @@ const StudentAnalyticsDashboard = () => {
         </CardContent>
       </Card>
 
+      <div className="flex items-center gap-4 mb-4">
+  <span className="text-sm font-medium text-gray-700">Sort by:</span>
+  <Button 
+    variant="outline"
+    className={`flex items-center gap-2 ${sortField === 'name' ? 'bg-blue-50' : ''}`}
+    onClick={() => handleSort('name')}
+  >
+    Name
+    {sortField === 'name' && (
+      <span className="ml-1">
+        {sortDirection === 'asc' ? '↑' : '↓'}
+      </span>
+    )}
+  </Button>
+  <Button 
+    variant="outline"
+    className={`flex items-center gap-2 ${sortField === 'cgpa' ? 'bg-blue-50' : ''}`}
+    onClick={() => handleSort('cgpa')}
+  >
+    CGPA
+    {sortField === 'cgpa' && (
+      <span className="ml-1">
+        {sortDirection === 'asc' ? '↑' : '↓'}
+      </span>
+    )}
+  </Button>
+</div>
+
+
       {/* Students Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredStudents.map(student => (
+        {sortedStudents.map(student => (
           <Dialog key={student._id}>
             <DialogTrigger asChild>
               <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-0 hover:border-blue-500 hover:scale-102">
