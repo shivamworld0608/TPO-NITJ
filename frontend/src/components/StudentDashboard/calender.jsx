@@ -1,4 +1,3 @@
-// components/Calendar.jsx
 import React, { useState, useEffect } from "react";
 import { Card, CardHeader, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
@@ -13,9 +12,22 @@ const CalendarComponent = () => {
   const [error, setError] = useState(null);
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [isJobDetailVisible, setJobDetailVisible] = useState(false);
+  const [isWideScreen, setIsWideScreen] = useState(false);
+  const [selectedDateEvents, setSelectedDateEvents] = useState([]);
+  const [isDatePopupVisible, setDatePopupVisible] = useState(false);
 
   useEffect(() => {
-    if (isJobDetailVisible) {
+    const checkWidth = () => {
+      setIsWideScreen(window.innerWidth > 625);
+    };
+
+    checkWidth();
+    window.addEventListener("resize", checkWidth);
+    return () => window.removeEventListener("resize", checkWidth);
+  }, []);
+
+  useEffect(() => {
+    if (isJobDetailVisible || isDatePopupVisible) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
@@ -24,11 +36,11 @@ const CalendarComponent = () => {
     return () => {
       document.body.style.overflow = "auto";
     };
-  }, [isJobDetailVisible]);
+  }, [isJobDetailVisible, isDatePopupVisible]);
 
   const handleBack = () => {
     setJobDetailVisible(false);
-    setTimeout(() => setSelectedJobId(null), 300); // Delay unmounting for transition
+    setTimeout(() => setSelectedJobId(null), 300); 
   };
 
   const fetchEvents = async (year, month) => {
@@ -94,6 +106,11 @@ const CalendarComponent = () => {
       setJobDetailVisible(true);
     };
 
+    const onDateClick = (dayEvents) => {
+      setSelectedDateEvents(dayEvents);
+      setDatePopupVisible(true);
+    };
+
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < firstDay; i++) {
       days.push(
@@ -116,27 +133,39 @@ const CalendarComponent = () => {
       days.push(
         <div
           key={day}
-          className="sm:h-32 h-20 border border-gray-200 sm:p-2 pl-1 pt-1 overflow-y-auto sm:overflow-x-auto overflow-x-hidden"
+          className="sm:h-32 h-20 border border-gray-200 sm:p-2 pl-1 pt-1 overflow-y-auto cursor-pointer"
+          onClick={() => (!isWideScreen && dayEvents.length > 0 ? onDateClick(dayEvents) : null)}
         >
           <div className="font-bold mb-1">{day}</div>
-          {dayEvents.map((event, idx) => (
-            <div
-              key={idx}
-              className={`sm:h-full sm:w-full w-fit h-5 sm:p-1 mb-1 rounded text-xs ${
-                event.type === "internship"
-                  ? "bg-blue-100 text-blue-800"
-                  : "bg-green-100 text-green-800"
-              }`}
-              onClick={() => onEventClick(event._id)}
-            >
-              <div className="font-semibold flex">
-                {event.company}
+          {isWideScreen
+            ? dayEvents.map((event, idx) => (
+                <div
+                  key={idx}
+                  className={`sm:h-full sm:w-full w-fit h-5 sm:p-1 mb-1 rounded text-xs cursor-pointer ${
+                    event.type === "internship"
+                      ? "bg-blue-100 text-blue-800"
+                      : "bg-green-100 text-green-800"
+                  }`}
+                  onClick={() => onEventClick(event._id)}
+                >
+                  <div className="font-semibold">{event.company}</div>
+                  <div className="sm:block hidden">{event.type}</div>
+                  <div className="sm:block hidden">{event.role}</div>
+                  <div className="sm:block hidden">{event.time}</div>
+                </div>
+              ))
+            : dayEvents.map((event, idx) => (
+              <div
+                key={idx}
+                className={`w-3 h-3 sm:p-1 mb-1 rounded text-xs cursor-pointer ${
+                  event.type === "internship"
+                    ? "bg-blue-100 text-blue-800"
+                    : "bg-green-100 text-green-800"
+                }`}
+              >
+                
               </div>
-              <div className="sm:flex hidden">{event.type}</div>
-              <div className="sm:flex hidden">{event.role}</div>
-              <div className="sm:flex hidden">{event.time}</div>
-            </div>
-          ))}
+            ))}
         </div>
       );
     }
@@ -204,20 +233,11 @@ const CalendarComponent = () => {
               ))}
             </div>
             <div className="grid grid-cols-7 sm:gap-1">{renderCalendar()}</div>
-            <div className="mt-4 flex gap-4">
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded bg-blue-100 mr-2"></div>
-                <span className="text-sm">Internships</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-4 h-4 rounded bg-green-100 mr-2"></div>
-                <span className="text-sm">Placements</span>
-              </div>
-            </div>
           </>
         )}
       </CardContent>
 
+      {/* Popup for Job Details */}
       {selectedJobId && (
         <div
           className={`fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white bg-opacity-90 transition-opacity duration-300 ${
@@ -227,6 +247,43 @@ const CalendarComponent = () => {
         >
           <div className="h-[90vh] p-5 bg-white shadow-lg rounded-lg overflow-y-auto">
             <Jobdetail job_id={selectedJobId} onBack={handleBack} />
+          </div>
+        </div>
+      )}
+
+      {/* Popup for Date Events (Mobile View) */}
+      {isDatePopupVisible && (
+        <div
+          className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
+          style={{ zIndex: 999 }}
+        >
+          <div className="bg-white rounded-lg p-5 w-11/12 max-w-lg">
+            <h3 className="text-lg font-bold mb-4">Events on Selected Day</h3>
+            {selectedDateEvents.map((event, idx) => (
+              <div
+                key={idx}
+                className={`p-3 mb-2 rounded cursor-pointer ${
+                  event.type === "internship"
+                    ? "bg-blue-100 text-blue-800"
+                    : "bg-green-100 text-green-800"
+                }`}
+                onClick={() => {
+                  setSelectedJobId(event._id);
+                  setDatePopupVisible(false);
+                  setJobDetailVisible(true);
+                }}
+              >
+                <div className="font-semibold">{event.company}</div>
+                <div>{event.type}</div>
+              </div>
+            ))}
+            <Button
+              variant="outline"
+              className="mt-4 w-full"
+              onClick={() => setDatePopupVisible(false)}
+            >
+              Close
+            </Button>
           </div>
         </div>
       )}
