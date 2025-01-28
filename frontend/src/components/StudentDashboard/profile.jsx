@@ -23,6 +23,10 @@ function Profile() {
     address: "",
     cgpa: "",
     gender: "",
+    course:"",
+    active_backlogs:"",
+    backlogs_history:"",
+    debarred:"",
     image: "",
   });
 
@@ -44,6 +48,10 @@ function Profile() {
         address: userData.address,
         cgpa: userData.cgpa,
         gender: userData.gender,
+        course:userData.course,
+        debarred:userData.debarred,
+        active_backlogs:userData.active_backlogs,
+        backlogs_history:userData.backlogs_history,
         image: userData.image,
       });
     }
@@ -343,6 +351,12 @@ function Profile() {
           <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
             <CheckCircle2 />
           </div>
+          <p className="font-italic tracking-tight">Gender: {formData.gender}</p>
+        </div>
+        <div className="flex items-center">
+          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+            <CheckCircle2 />
+          </div>
           <p className="font-italic tracking-tight">Email: {formData.email}</p>
         </div>
         <div className="flex items-center">
@@ -355,18 +369,28 @@ function Profile() {
           <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
             <CheckCircle2 />
           </div>
-          <p className="font-italic tracking-tight">Year: {formData.year}</p>
+          <p className="font-italic tracking-tight">Batch: {formData.batch}</p>
+        </div>
+        <div className="flex items-center">
+          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+            <CheckCircle2 />
+          </div>
+          <p className="font-italic tracking-tight">
+            Course: {formData.course}
+          </p>
+        </div>
+        <div className="flex items-center">
+          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+            <CheckCircle2 />
+          </div>
+          <p className="font-italic tracking-tight">
+            Branch: {formData.department}
+          </p>
         </div>
       </div>
       
       {/* Right Column */}
       <div className="w-full md:w-1/2 space-y-6">
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">Gender: {formData.gender}</p>
-        </div>
         <div className="flex items-center">
           <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
             <CheckCircle2 />
@@ -380,6 +404,32 @@ function Profile() {
           <p className="font-italic tracking-tight">
             Branch: {formData.department}
           </p>
+        </div>
+        <div className="flex items-center">
+          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+            <CheckCircle2 />
+          </div>
+          <p className="font-italic tracking-tight">
+            Course: {formData.course}
+          </p>
+        </div>
+        <div className="flex items-center">
+          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+            <CheckCircle2 />
+          </div>
+          <p className="font-italic tracking-tight">Active Backlogs: {formData.active_backlogs?"Yes":"No"}</p>
+        </div>
+        <div className="flex items-center">
+          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+            <CheckCircle2 />
+          </div>
+          <p className="font-italic tracking-tight">Backlogs History: {formData.backlogs_history?"Yes":"No"}</p>
+        </div>
+        <div className="flex items-center">
+          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+            <CheckCircle2 />
+          </div>
+          <p className="font-italic tracking-tight">Debarred: {formData.debarred?"Yes":"No"}</p>
         </div>
         <div className="flex items-center">
           <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
