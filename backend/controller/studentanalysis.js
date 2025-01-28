@@ -18,6 +18,9 @@ export const getStudentAnalytics = async (req, res) => {
                 gender: student.gender,
                 cgpa: student.cgpa,
                 placementstatus: student.placementstatus,
+                debarred:student.debarred,
+                active_backlogs:student.active_backlogs,
+                backlogs_history:student.backlogs_history,
                 applications: {
                     total: 0,
                     jobProfiles: []
@@ -117,55 +120,29 @@ export const getStudentAnalytics = async (req, res) => {
 };
 
 
-
 export const Studentprofileupdate = async (req, res) => {
     try {
-        const userId = req.user.userId;
-        const { name, email,phone,rollno,department,batch,cgpa,gender } = req.body;
-
-        if (!name || !email) {
-            return res.status(400).json({ message: 'Name, email are required' });
-        }
+        const userId = req.params.id;
+        const editedStudent=req.body;
+        const { name, rollno, email, phone, department, batch, course, cgpa, gender, placementstatus, active_backlogs, backlogs_history } = editedStudent;
         const student = await Student.findById(userId);
         if (!student) {
             return res.status(404).json({ message: 'Student not found' });
         }
-        student.name = name;
-        student.email = email;
+        if(name!="") student.name = name;
+        if(rollno!="") student.rollno = rollno;
+        if(email!="") student.email = email;
         if(phone!="") student.phone = phone;
-        if(rollno!="") student.rollno = rollno;
-        if(department!="") student.department = department;
-        if(year!="") student.year = year;
-        if(batch!="") student.batch = batch;
-        if(address!="") student.address = address;
-        if(cgpa!="") student.cgpa = cgpa;
-        if(gender!="") student.gender = gender;
-
-        await student.save();
-        res.status(200).json({ message: 'Profile updated successfully', user:student });
-    } catch (error) {
-        console.error('Error updating user profile:', error);
-        res.status(500).json({ message: 'Server error' });
-    }
-};
-export const updatesProfile = async (req, res) => {
-    try {
-        const {studentId, name, email,rollno,department,course,active,batch,cgpa,gender } = req.body;
-        const student = await Student.findById(studentId);
-        if (!student) {
-            return res.status(404).json({ message: 'Student not found' });
-        }
-        student.name = name;
-        student.email = email;
-        if(rollno!="") student.rollno = rollno;
         if(department!="") student.department = department;
         if(batch!="") student.batch = batch;
-        if(address!="") student.address = address;
+        if(course!="") student.course = course;
         if(cgpa!="") student.cgpa = cgpa;
         if(gender!="") student.gender = gender;
-
+        if(placementstatus!="") student.placementstatus = placementstatus;
+        if(active_backlogs!="") student.active_backlogs = active_backlogs;
+        if(backlogs_history!="") student.backlogs_history = backlogs_history;
         await student.save();
-        res.status(200).json({ message: 'Profile updated successfully', user:student });
+        res.status(200).json({ message: 'Profile updated successfully'});
     } catch (error) {
         console.error('Error updating user profile:', error);
         res.status(500).json({ message: 'Server error' });

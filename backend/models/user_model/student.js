@@ -46,6 +46,15 @@ const studentSchema = new mongoose.Schema({
   },
   active_backlogs: {
     type: Boolean,
+    default:false,
+  },
+  backlogs_history: {
+    type: Boolean,
+    default:false,
+  },
+  debarred:{
+    type:Boolean,
+    default:false,
   },
   image: {
     type: String,
