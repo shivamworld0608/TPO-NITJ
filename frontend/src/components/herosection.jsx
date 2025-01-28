@@ -105,7 +105,7 @@ function HeroSection() {
             <button
               className="bg-sky-700 button text-white font-medium p-3 rounded-xl z-0"
               onClick={() => {
-                navigate("/Signup")
+                navigate("/login")
               }}
             >
               Register Now

@@ -92,21 +92,24 @@ const StudentAnalyticsDashboard = () => {
       [field]: value
     }));
   };
-  // Filter options
+  
   const departmentOptions = [
     { value: 'All', label: 'All' },
-    { value: 'CSE', label: 'CSE' },
-    { value: 'ECE', label: 'ECE' },
-    { value: 'EE', label: 'EE' },
-    { value: 'ME', label: 'ME' },
-    { value: 'CE', label: 'CE' },
-    { value: 'IT', label: 'IT' },
-    { value: 'CH', label: 'CH' },
-    { value: 'ICE', label: 'ICE' },
-    { value: 'BT', label: 'BT' },
-    { value: 'TT', label: 'TT' },
-    { value: 'IPE', label: 'IPE' }
-  ];
+    { value: 'Computer Science & Engineering', label: 'Computer Science & Engineering' },
+    { value: 'Information Technology', label: 'Information Technology' },
+    { value: 'Data Science and Engineering', label: 'Data Science and Engineering' },
+    { value: 'Mathematics and Computing', label: 'Mathematics and Computing' },
+    { value: 'Electronics & Communication Engineering', label: 'Electronics & Communication Engineering' },
+    { value: 'Electronics and VLSI Engineering', label: 'Electronics and VLSI Engineering' },
+    { value: 'Electrical Engineering', label: 'Electrical Engineering' },
+    { value: 'Instrumentation and Control Engineering', label: 'Instrumentation and Control Engineering' },
+    { value: 'Mechanical Engineering', label: 'Mechanical Engineering' },
+    { value: 'Civil Engineering', label: 'Civil Engineering' },
+    { value: 'Chemical Engineering', label: 'Chemical Engineering' },
+    { value: 'Industrial & Production Engineering', label: 'Industrial & Production Engineering' },
+    { value: 'Textile Technology', label: 'Textile Technology' },
+    { value: 'Biotechnology', label: 'Biotechnology' }
+];
 
   const courseOptions = [
     { value: 'All', label: 'All' },

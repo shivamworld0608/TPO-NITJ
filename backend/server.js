@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import path from "path";
+
 
 import authroutes from "./routes/auth.js";
 import interviewroutes from "./routes/interview.js";
@@ -23,6 +23,7 @@ import feedbackRoutes from "./routes/feedbackRoutes.js";
 import jafRoutes from "./routes/jaf.js";
 import travelplannerRoutes from "./routes/travelplanner.js";
 import studentanalysisRoutes from "./routes/studentanalysis.js";
+import companiesanalysisRoutes from "./routes/companiesanalysis.js"
 
 import { mkdir } from 'fs/promises';
 try {
@@ -86,6 +87,7 @@ app.use("/feedback",authenticate,feedbackRoutes);
 app.use("/jaf",authenticate,jafRoutes);
 app.use("/travel-planner",authenticate,travelplannerRoutes);
 app.use("/student-analysis",authenticate,studentanalysisRoutes);
+app.use("/companies-analysis",authenticate,companiesanalysisRoutes);
 app.use('/api/pdfs', authenticate, pdfroutes);
 app.use('/api',authenticate, formTemplateroutes);
 
