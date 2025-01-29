@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Select } from '../ui/select';
 import { Button } from '../ui/button';
-import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap } from 'lucide-react';
+import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 
@@ -482,31 +482,36 @@ const StudentAnalyticsDashboard = () => {
             {/* Student Details Dialog */}
             <DialogContent className="max-w-6xl max-h-[90vh] p-0">
               <div className="overflow-y-auto max-h-[90vh] px-6">
-                <DialogHeader className="sticky top-0 bg-white py-4 z-10">
-                  <div className="flex items-center justify-between">
-                    <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                      <GraduationCap className="h-6 w-6 text-blue-500" />
-                      {student.name}
-                    </DialogTitle>
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-2"
-                    onClick={() => editMode ? handleSaveClick() : handleEditClick(student)}
-                  >
-                    {editMode ? (
-                      <>
-                        <Save className="h-4 w-4" />
-                        Save Changes
-                      </>
-                    ) : (
-                      <>
-                        <Pencil className="h-4 w-4" />
-                        Edit Details
-                      </>
-                    )}
-                  </Button>
-                </div>
-              </DialogHeader>
+              <DialogHeader className="sticky top-0 bg-white py-4 z-10">
+  <div className="flex flex-col  gap-4 sm:flex-row sm:justify-between">
+    
+    {/* Title Section - Centered */}
+    <DialogTitle className="text-2xl font-bold flex items-center gap-2 justify-center lg:items-center lg:justify-center">
+      <User className="h-6 w-6 text-blue-500" />
+      {student.name}
+    </DialogTitle>
+
+    {/* Button Section - Stacked on Small Screens, Inline on Larger Screens */}
+    <Button
+      variant="outline"
+      className="flex items-center gap-2"
+      onClick={() => editMode ? handleSaveClick() : handleEditClick(student)}
+    >
+      {editMode ? (
+        <>
+          <Save className="h-4 w-4" />
+          Save Changes
+        </>
+      ) : (
+        <>
+          <Pencil className="h-4 w-4" />
+          Edit Details
+        </>
+      )}
+    </Button>
+  </div>
+</DialogHeader>
+
 
               <div className="mt-6">
                 <div className="grid grid-cols-2 gap-8">
