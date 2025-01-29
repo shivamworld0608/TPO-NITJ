@@ -40,11 +40,7 @@ const testimonials = [
 const StudentTestimonials = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [direction, setDirection] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
   const intervalRef = useRef(null);
-  const containerRef = useRef(null);
 
   const startAutoPlay = () => {
     intervalRef.current = setInterval(() => {
@@ -73,41 +69,6 @@ const StudentTestimonials = () => {
     setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - containerRef.current.offsetLeft);
-    setScrollLeft(containerRef.current.scrollLeft);
-    stopAutoPlay();
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const walk = (x - startX) * 2;
-    
-    if (Math.abs(walk) > 50) {
-      if (walk > 0) {
-        handlePrev();
-      } else {
-        handleNext();
-      }
-      setIsDragging(false);
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    startAutoPlay();
-  };
-
-  const handleMouseLeave = () => {
-    if (isDragging) {
-      setIsDragging(false);
-      startAutoPlay();
-    }
-  };
-
   const renderStars = (rating) => {
     return Array.from({ length: 5 }).map((_, index) => (
       <Star 
@@ -124,20 +85,30 @@ const StudentTestimonials = () => {
   return (
     <section className="bg-white py-5 px-4 overflow-hidden">
       <div className="max-w-5xl mx-auto text-center relative">
+        {/* <motion.h2 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-4xl font-extrabold mb-12 text-gray-900 tracking-tight"
+        >
+          Student Success Stories
+        </motion.h2> */}
+
+
+
+        
         <h1 className="font-bold text-3xl lg:text-4xl text-center tracking-wide mb-7">
-          What Our&nbsp;
-          <span className="bg-custom-blue text-transparent bg-clip-text">
-            Students Say
-          </span>
-        </h1>
+        What Our&nbsp;
+        <span className="bg-custom-blue text-transparent bg-clip-text">
+         Students Say
+        </span>
+      </h1>
+
 
         <div 
-          ref={containerRef}
-          className="relative h-[500px] w-full group cursor-grab"
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseLeave}
+          className="relative h-[500px] w-full group"
+          onMouseEnter={stopAutoPlay}
+          onMouseLeave={startAutoPlay}
         >
           <button 
             onClick={handlePrev}
@@ -196,7 +167,6 @@ const StudentTestimonials = () => {
                     absolute inset-0 rounded-2xl shadow-2xl 
                     ${testimonial.background} 
                     flex flex-col items-center justify-center p-12
-                    ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}
                   `}
                 >
                   <div className="max-w-2xl">
