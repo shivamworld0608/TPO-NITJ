@@ -34,6 +34,7 @@ import ProfileImage from "../assets/chillguy.png";
 import NITJlogo from "../assets/nitj-logo.png";
 import Request from "./StudentDashboard/Request";
 import TeamSection from "./Developers/TeamSection.jsx";
+import ResumeBuilder from "./StudentDashboard/resume.jsx";
 
 
 const StudentDashboard = () => {
@@ -101,6 +102,7 @@ const StudentDashboard = () => {
       icon: faShareSquare,
     },
     { path: "/sdashboard/policy-guidlines", label: "Policy & Guidlines", icon: faNoteSticky },
+    { path: "/sdashboard/resume", label: "Resume", icon: faNoteSticky },
   ];
 
   const MenuItem = ({ item, onClick, isSidebarExpanded }) => {
@@ -291,6 +293,7 @@ const StudentDashboard = () => {
             <Route path="request-help" element={<Request />} />
             <Route path="policy-guidlines" element={<PDFDownloadCards />} />
             <Route path="team" element={<TeamSection />} />
+            <Route path="resume" element={<ResumeBuilder />} />
             </Routes>
         </div>
 

@@ -9,19 +9,18 @@ function RoomTab({
 }) {
   const [errors, setErrors] = useState({});
 
-  // Validate all required fields
   const validateForm = () => {
     const newErrors = {};
     if (!roomDetails.numberOfRooms)
-      newErrors.numberOfRooms = "Number of rooms is required.";
+      newErrors.numberOfRooms = "This field is required.";
     if (!roomDetails.arrivalDate)
-      newErrors.arrivalDate = "Arrival date is required.";
+      newErrors.arrivalDate = "This field is required.";
     if (!roomDetails.departureDate)
-      newErrors.departureDate = "Departure date is required.";
+      newErrors.departureDate = "This field is required.";
     if (!roomDetails.arrivalTime)
-      newErrors.arrivalTime = "Arrival time is required.";
+      newErrors.arrivalTime = "This field is required.";
     if (!roomDetails.departureTime)
-      newErrors.departureTime = "Departure time is required.";
+      newErrors.departureTime = "This field is required.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -34,136 +33,158 @@ function RoomTab({
   };
 
   const renderRoomForm = () => (
-    <div className="space-y-4 mt-6">
-      <div className="grid grid-cols-1 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Number of Rooms <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="number"
-            value={roomDetails.numberOfRooms}
-            onChange={(e) =>
-              setRoomDetails({
-                ...roomDetails,
-                numberOfRooms: Number(e.target.value),
-              })
-            }
-            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          {errors.numberOfRooms && (
-            <p className="text-red-500 text-sm">{errors.numberOfRooms}</p>
-          )}
+    <div className="mt-8">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+        <div className="mb-8">
+          <h3 className="text-2xl font-semibold text-gray-800">
+            Accommodation Details
+          </h3>
+          <p className="text-gray-600 mt-2">
+            Please provide your room booking requirements
+          </p>
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Arrival Date <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="date"
-              value={roomDetails.arrivalDate}
-              onChange={(e) =>
-                setRoomDetails({ ...roomDetails, arrivalDate: e.target.value })
-              }
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.arrivalDate && (
-              <p className="text-red-500 text-sm">{errors.arrivalDate}</p>
-            )}
+
+        <div className="grid gap-6">
+          <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div className="grid gap-6">
+              <div className="space-y-1">
+                <label className="block text-sm font-medium text-gray-700">
+                  Number of Rooms <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  value={roomDetails.numberOfRooms || ""}
+                  onChange={(e) =>
+                    setRoomDetails({
+                      ...roomDetails,
+                      numberOfRooms: Number(e.target.value),
+                    })
+                  }
+                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent bg-white"
+                  min="1"
+                  placeholder="Enter number of rooms"
+                />
+                {errors.numberOfRooms && (
+                  <p className="text-red-500 text-xs mt-1">{errors.numberOfRooms}</p>
+                )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Arrival Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    value={roomDetails.arrivalDate || ""}
+                    onChange={(e) =>
+                      setRoomDetails({ ...roomDetails, arrivalDate: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent bg-white"
+                  />
+                  {errors.arrivalDate && (
+                    <p className="text-red-500 text-xs mt-1">{errors.arrivalDate}</p>
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Arrival Time <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="time"
+                    value={roomDetails.arrivalTime || ""}
+                    onChange={(e) =>
+                      setRoomDetails({ ...roomDetails, arrivalTime: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent bg-white"
+                  />
+                  {errors.arrivalTime && (
+                    <p className="text-red-500 text-xs mt-1">{errors.arrivalTime}</p>
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Departure Date <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    value={roomDetails.departureDate || ""}
+                    onChange={(e) =>
+                      setRoomDetails({ ...roomDetails, departureDate: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent bg-white"
+                  />
+                  {errors.departureDate && (
+                    <p className="text-red-500 text-xs mt-1">{errors.departureDate}</p>
+                  )}
+                </div>
+
+                <div className="space-y-1">
+                  <label className="block text-sm font-medium text-gray-700">
+                    Departure Time <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="time"
+                    value={roomDetails.departureTime || ""}
+                    onChange={(e) =>
+                      setRoomDetails({ ...roomDetails, departureTime: e.target.value })
+                    }
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent bg-white"
+                  />
+                  {errors.departureTime && (
+                    <p className="text-red-500 text-xs mt-1">{errors.departureTime}</p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Arrival Time <span className="text-red-500">*</span>
+
+          <div className="pt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Additional Notes
             </label>
-            <input
-              type="time"
-              value={roomDetails.arrivalTime}
+            <textarea
+              value={roomDetails.notes || ""}
               onChange={(e) =>
-                setRoomDetails({ ...roomDetails, arrivalTime: e.target.value })
+                setRoomDetails({ ...roomDetails, notes: e.target.value })
               }
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent bg-white"
+              rows={3}
+              placeholder="Enter any special requirements or preferences..."
             />
-            {errors.arrivalTime && (
-              <p className="text-red-500 text-sm">{errors.arrivalTime}</p>
-            )}
           </div>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Departure Date <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="date"
-              value={roomDetails.departureDate}
-              onChange={(e) =>
-                setRoomDetails({
-                  ...roomDetails,
-                  departureDate: e.target.value,
-                })
-              }
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.departureDate && (
-              <p className="text-red-500 text-sm">{errors.departureDate}</p>
-            )}
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Departure Time <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="time"
-              value={roomDetails.departureTime}
-              onChange={(e) =>
-                setRoomDetails({
-                  ...roomDetails,
-                  departureTime: e.target.value,
-                })
-              }
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {errors.departureTime && (
-              <p className="text-red-500 text-sm">{errors.departureTime}</p>
-            )}
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">
-            Additional Notes
-          </label>
-          <textarea
-            value={roomDetails.notes || ""}
-            onChange={(e) =>
-              setRoomDetails({ ...roomDetails, notes: e.target.value })
-            }
-            className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            rows={3}
-          />
         </div>
       </div>
+
       <button
         onClick={handleNext}
-        className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all"
+        className="w-full mt-6 py-4 px-6 bg-custom-blue text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:ring-offset-2 transition-colors text-lg"
       >
-        Next
+        Continue to Next Step
       </button>
     </div>
   );
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-blue-900">
-        Do you need accommodation?
-      </h2>
-      <div className="flex gap-4">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-custom-blue mb-2">
+          Accommodation
+        </h2>
+        <p className="text-custom-blue">
+          Would you like to book accommodation for your stay?
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
         <button
           onClick={() => setWantRoom(true)}
-          className={`flex-1 px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 ${
-            wantRoom === true
-              ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
-              : "bg-blue-50 text-blue-600 hover:bg-blue-100"
+          className={`px-6 py-4 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 ${
+            wantRoom
+              ? "bg-custom-blue text-white hover:bg-custom-blue shadow-lg"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           }`}
         >
           Yes
@@ -173,16 +194,16 @@ function RoomTab({
             setWantRoom(false);
             onNext();
           }}
-          className={`flex-1 px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 ${
+          className={`px-6 py-4 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 ${
             wantRoom === false
-              ? "bg-red-500 text-white shadow-lg shadow-red-200"
-              : "bg-red-50 text-red-600 hover:bg-red-100"
+              ? "bg-red-500 text-white hover:bg-red-600 shadow-lg"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           }`}
         >
           No
         </button>
       </div>
-      {wantRoom === true && renderRoomForm()}
+      {wantRoom && renderRoomForm()}
     </div>
   );
 }
