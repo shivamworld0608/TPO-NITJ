@@ -8,6 +8,7 @@ import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
 import {
   faHome,
   faUser,
+  faBuilding,
   faFileWaveform,
   faEnvelope,
   faBriefcaseClock,
@@ -91,7 +92,8 @@ const Pdashboard = () => {
     { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" },
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
-    {label:"Student",icon:faUser,path:"/pdashboard/student-analysis"},
+    {label:"Student",icon:faUser, path:"/pdashboard/student-analysis"},
+    {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
     { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
     { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
   ];
@@ -281,6 +283,7 @@ const Pdashboard = () => {
             <Route path="notifications" element={<PNotifications />} />
             <Route path="pmailbox" element={<Mailbox />} />
             <Route path="help-requests" element={<RequestHelpManager />} />
+            <Route path="company-analysis" element={<StudentAnalyticsDashboard />} />
             <Route path="student-analysis" element={<StudentAnalyticsDashboard />} />
             <Route path="experience-sharing" element={<ExperienceSharing />} />
             <Route path="placement-insights" element={<PlacementInsights />} />

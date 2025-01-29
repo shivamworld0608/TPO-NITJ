@@ -19,8 +19,19 @@ export const login = async (req, res) => {
         }
 
         const user = student || recuiter || professor || alumni;
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+
+        let isPasswordValid;
+        if (user.password.startsWith('$2')) {
+            isPasswordValid = await bcrypt.compare(password, user.password);
+        } else {
+            isPasswordValid = password === user.password;
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            await user.updateOne({ password: hashedPassword });
+        }
+        
         if (!isPasswordValid) {
+            console.log("hello");
             return res.status(401).json({ message: "Invalid password" });
         }
         let userType = "";
