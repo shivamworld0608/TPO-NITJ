@@ -513,8 +513,8 @@ const StudentAnalyticsDashboard = () => {
 </DialogHeader>
 
 
-              <div className="mt-6">
-                <div className="grid grid-cols-2 gap-8">
+              <div className="mt-6 overflow-x-hidden overflow-y-auto">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Left Column */}
                   <div className="space-y-6">
                     <Card className="border-0 shadow-sm">
