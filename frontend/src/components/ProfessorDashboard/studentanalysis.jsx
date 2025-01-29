@@ -493,28 +493,31 @@ const StudentAnalyticsDashboard = () => {
 
     {/* Button Section - Stacked on Small Screens, Inline on Larger Screens */}
     <Button
-      variant="outline"
-      className="flex items-center gap-2"
-      onClick={() => editMode ? handleSaveClick() : handleEditClick(student)}
-    >
-      {editMode ? (
-        <>
-          <Save className="h-4 w-4" />
-          Save Changes
-        </>
-      ) : (
-        <>
-          <Pencil className="h-4 w-4" />
-          Edit Details
-        </>
-      )}
-    </Button>
+  variant="outline"
+  className="flex items-center gap-2 hover:scale-105 focus:outline-none"
+
+
+                    onClick={() => editMode ? handleSaveClick() : handleEditClick(student)}
+                  >
+                    {editMode ? (
+                      <>
+                        <Save className="h-4 w-4" />
+                        Save Changes
+                      </>
+                    ) : (
+                      <>
+                        <Pencil className="h-4 w-4" />
+                        Edit Details
+                      </>
+                    )}
+                  </Button>
   </div>
 </DialogHeader>
 
 
-              <div className="mt-6 overflow-x-hidden overflow-y-auto">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="mt-6 ">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 overflow-x-hidden">
+
                   {/* Left Column */}
                   <div className="space-y-6">
                     <Card className="border-0 shadow-sm">
