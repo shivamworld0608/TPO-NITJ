@@ -22,7 +22,19 @@ const studentSchema = new mongoose.Schema({
   },
   department: {
     type: String,
-    enum: ['CSE', 'ECE', 'EE', 'ME', 'CE', 'IT', 'CH','ICE','BT','TT','IPE'],
+    enum: [
+      'Computer Science & Engineering',
+      'Electronics & Communication Engineering',
+      'Electrical Engineering',
+      'Mechanical Engineering',
+      'Civil Engineering',
+      'Information Technology',
+      'Chemical Engineering',
+      'Instrumentation and Control Engineering',
+      'Biotechnology',
+      'Textile Technology',
+      'Industrial & Production Engineering'
+  ]
   },
   year: {
     type: String,
@@ -53,6 +65,10 @@ const studentSchema = new mongoose.Schema({
     default:false,
   },
   debarred:{
+    type:Boolean,
+    default:false,
+  },
+  disability:{
     type:Boolean,
     default:false,
   },

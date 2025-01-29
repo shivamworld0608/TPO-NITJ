@@ -188,7 +188,7 @@ const LoginSignup = ({Login}) => {
             >
               Login
             </button>
-            <p className="text-custom-blue text-xs text-center">
+           {/*  <p className="text-custom-blue text-xs text-center">
               Don't have an account?{" "}
               <span
                 className="text-gray-500 cursor-pointer"
@@ -196,7 +196,7 @@ const LoginSignup = ({Login}) => {
               >
                 Signup
               </span>
-            </p>
+            </p> */}
           </form>
         ) : (
           <form onSubmit={handleSignup} className="mt-6 space-y-4 flex flex-col">

@@ -1,13 +1,3 @@
-// avatar: 'https://randomuser.me/api/portraits/men/29.jpg',
-// avatar: 'https://randomuser.me/api/portraits/men/57.jpg',
-// avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-
-
-
-
-
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';

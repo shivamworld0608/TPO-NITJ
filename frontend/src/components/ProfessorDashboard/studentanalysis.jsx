@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Select } from '../ui/select';
 import { Button } from '../ui/button';
-import { X, Pencil, Save, Search, Filter, Users, GraduationCap } from 'lucide-react';
+import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 
@@ -24,6 +24,9 @@ const StudentAnalyticsDashboard = () => {
   });
   const [editMode, setEditMode] = useState(false);
   const [editedStudent, setEditedStudent] = useState(null);
+  const [sortField, setSortField] = useState('name');
+  const [sortDirection, setSortDirection] = useState('asc');
+  
 
   const handleEditClick = (student) => {
     setEditMode(true);
@@ -92,21 +95,27 @@ const StudentAnalyticsDashboard = () => {
       [field]: value
     }));
   };
-  // Filter options
+
+
+
+
   const departmentOptions = [
     { value: 'All', label: 'All' },
-    { value: 'CSE', label: 'CSE' },
-    { value: 'ECE', label: 'ECE' },
-    { value: 'EE', label: 'EE' },
-    { value: 'ME', label: 'ME' },
-    { value: 'CE', label: 'CE' },
-    { value: 'IT', label: 'IT' },
-    { value: 'CH', label: 'CH' },
-    { value: 'ICE', label: 'ICE' },
-    { value: 'BT', label: 'BT' },
-    { value: 'TT', label: 'TT' },
-    { value: 'IPE', label: 'IPE' }
-  ];
+    { value: 'Computer Science & Engineering', label: 'Computer Science & Engineering' },
+    { value: 'Information Technology', label: 'Information Technology' },
+    { value: 'Data Science and Engineering', label: 'Data Science and Engineering' },
+    { value: 'Mathematics and Computing', label: 'Mathematics and Computing' },
+    { value: 'Electronics & Communication Engineering', label: 'Electronics & Communication Engineering' },
+    { value: 'Electronics and VLSI Engineering', label: 'Electronics and VLSI Engineering' },
+    { value: 'Electrical Engineering', label: 'Electrical Engineering' },
+    { value: 'Instrumentation and Control Engineering', label: 'Instrumentation and Control Engineering' },
+    { value: 'Mechanical Engineering', label: 'Mechanical Engineering' },
+    { value: 'Civil Engineering', label: 'Civil Engineering' },
+    { value: 'Chemical Engineering', label: 'Chemical Engineering' },
+    { value: 'Industrial & Production Engineering', label: 'Industrial & Production Engineering' },
+    { value: 'Textile Technology', label: 'Textile Technology' },
+    { value: 'Biotechnology', label: 'Biotechnology' }
+];
 
   const courseOptions = [
     { value: 'All', label: 'All' },
@@ -215,6 +224,28 @@ const StudentAnalyticsDashboard = () => {
   if (error) {
     return <div className="p-6 text-red-500">Error: {error}</div>;
   }
+
+  const sortedStudents = [...filteredStudents].sort((a, b) => {
+    if (sortField === 'name') {
+      return sortDirection === 'asc' 
+        ? a.name.localeCompare(b.name)
+        : b.name.localeCompare(a.name);
+    } else if (sortField === 'cgpa') {
+      return sortDirection === 'asc'
+        ? parseFloat(a.cgpa) - parseFloat(b.cgpa)
+        : parseFloat(b.cgpa) - parseFloat(a.cgpa);
+    }
+    return 0;
+  });
+  
+  const handleSort = (field) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
@@ -371,28 +402,68 @@ const StudentAnalyticsDashboard = () => {
         </CardContent>
       </Card>
 
+      <div className="flex items-center gap-4 mb-4">
+  <span className="text-sm font-medium text-gray-700">Sort by:</span>
+  <Button 
+    variant="outline"
+    className={`flex items-center gap-2 ${sortField === 'name' ? 'bg-blue-50' : ''}`}
+    onClick={() => handleSort('name')}
+  >
+    Name
+    {sortField === 'name' && (
+      <span className="ml-1">
+        {sortDirection === 'asc' ? '↑' : '↓'}
+      </span>
+    )}
+  </Button>
+  <Button 
+    variant="outline"
+    className={`flex items-center gap-2 ${sortField === 'cgpa' ? 'bg-blue-50' : ''}`}
+    onClick={() => handleSort('cgpa')}
+  >
+    CGPA
+    {sortField === 'cgpa' && (
+      <span className="ml-1">
+        {sortDirection === 'asc' ? '↑' : '↓'}
+      </span>
+    )}
+  </Button>
+</div>
+
+
       {/* Students Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredStudents.map(student => (
+        {sortedStudents.map(student => (
           <Dialog key={student._id}>
             <DialogTrigger asChild>
-              <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-0 hover:border-blue-500 hover:scale-102">
+              <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-400  hover:scale-105 hover:bg-white">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-bold text-lg text-gray-900">{student.name}</h3>
+                    <div className="flex items-center gap-2">
+                    <UserCog className="h-5 w-5 text-gray-400" />
+
+
+                      <h3 className="font-bold text-lg  text-gray-900">{student.name}</h3>
+                      </div>
                       <p className="text-sm text-gray-500 mt-1">{student.rollno}</p>
+                      <span className="text-sm text-gray-600">{student.course}</span>
                     </div>
                     <GraduationCap className="h-6 w-6 text-blue-500" />
                   </div>
                   
-                  <div className="mt-4 space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">{student.department} - {student.course}</span>
+                  <div className="mt-2 space-y-2">
+                  <div className="flex items-center gap-2">
+        
+                      <span className="text-sm text-gray-600">{student.department}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Batch {student.batch}</span>
+                      <span className="text-sm text-gray-600">Batch: {student.batch}</span>
+                    
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">CGPA: {student.cgpa}</span>
+                    
                     </div>
                   </div>
 
@@ -400,7 +471,7 @@ const StudentAnalyticsDashboard = () => {
                     student.placementstatus === 'Super Dream' ? 'bg-green-100 text-green-800' :
                     student.placementstatus === 'Dream' ? 'bg-blue-100 text-blue-800' :
                     student.placementstatus === 'Below Dream' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-gray-100 text-gray-800'
+                    'bg-gray-600 text-gray-100'
                   }`}>
                     {student.placementstatus}
                   </div>
@@ -409,17 +480,23 @@ const StudentAnalyticsDashboard = () => {
             </DialogTrigger>
 
             {/* Student Details Dialog */}
-            <DialogContent className="max-w-4xl max-h-[90vh] p-0">
+            <DialogContent className="max-w-6xl max-h-[90vh] p-0">
               <div className="overflow-y-auto max-h-[90vh] px-6">
-                <DialogHeader className="sticky top-0 bg-white py-4 z-10">
-                  <div className="flex items-center justify-between">
-                    <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                      <GraduationCap className="h-6 w-6 text-blue-500" />
-                      {student.name}
-                    </DialogTitle>
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-2"
+              <DialogHeader className="sticky top-0 bg-white py-4 z-10">
+  <div className="flex flex-col  gap-4 sm:flex-row sm:justify-between">
+    
+    {/* Title Section - Centered */}
+    <DialogTitle className="text-2xl font-bold flex items-center gap-2 justify-center lg:items-center lg:justify-center">
+      <User className="h-6 w-6 text-blue-500" />
+      {student.name}
+    </DialogTitle>
+
+    {/* Button Section - Stacked on Small Screens, Inline on Larger Screens */}
+    <Button
+  variant="outline"
+  className="flex items-center gap-2 hover:scale-105 focus:outline-none"
+
+
                     onClick={() => editMode ? handleSaveClick() : handleEditClick(student)}
                   >
                     {editMode ? (
@@ -434,11 +511,13 @@ const StudentAnalyticsDashboard = () => {
                       </>
                     )}
                   </Button>
-                </div>
-              </DialogHeader>
+  </div>
+</DialogHeader>
 
-              <div className="mt-6">
-                <div className="grid grid-cols-2 gap-8">
+
+              <div className="mt-6 ">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 overflow-x-hidden">
+
                   {/* Left Column */}
                   <div className="space-y-6">
                     <Card className="border-0 shadow-sm">
@@ -497,95 +576,7 @@ const StudentAnalyticsDashboard = () => {
                       </CardContent>
                     </Card>
 
-                    <Card className="border-0 shadow-sm">
-                      <CardHeader>
-                        <CardTitle className="text-lg">Academic Details</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Department</label>
-                          {editMode ? (
-                            <Select
-                              options={departmentOptions}
-                              value={editedStudent.department}
-                              onValueChange={(value) => handleChange('department', value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.department}</p>
-                          )}
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Course</label>
-                          {editMode ? (
-                            <Select
-                              options={courseOptions}
-                              value={editedStudent.course}
-                              onValueChange={(value) => handleChange('course', value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.course}</p>
-                          )}
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">CGPA</label>
-                          {editMode ? (
-                            <Input
-                              type="number"
-                              min="0"
-                              max="10"
-                              step="0.01"
-                              value={editedStudent.cgpa}
-                              onChange={(e) => handleChange('cgpa', e.target.value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.cgpa}</p>
-                          )}
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Batch</label>
-                          {editMode ? (
-                            <Select
-                              options={batchOptions}
-                              value={editedStudent.batch}
-                              onValueChange={(value) => handleChange('batch', value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.batch}</p>
-                          )}
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Active Backlog</label>
-                          {editMode ? (
-                            <Select
-                              options={backlogOptions}
-                              value={editedStudent.active_backlogs}
-                              onValueChange={(value) => handleChange('active_backlogs', value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.active_backlogs ? 'Yes' : 'No'}</p>
-                          )}
-                        </div>
-                         
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Backlogs History</label>
-                          {editMode ? (
-                            <Select
-                              options={backlogOptions}
-                              value={editedStudent.backlogs_history}
-                              onValueChange={(value) => handleChange('backlogs_history', value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.backlogs_history ? 'Yes' : 'No'}</p>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
+                    
                   </div>
 
                   {/* Right Column */}
@@ -631,7 +622,113 @@ const StudentAnalyticsDashboard = () => {
                       </CardContent>
                     </Card>
                     <Card className="border-0 shadow-sm">
-    <CardHeader>
+   
+  </Card>
+                  </div>
+                </div>
+                <Card className="border-0 shadow-sm">
+  <CardHeader>
+    <CardTitle className="text-lg">Academic Details</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Department */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">Department</label>
+        {editMode ? (
+          <Select
+            options={departmentOptions}
+            value={editedStudent.department}
+            onValueChange={(value) => handleChange("department", value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.department}</p>
+        )}
+      </div>
+
+      {/* Course */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">Course</label>
+        {editMode ? (
+          <Select
+            options={courseOptions}
+            value={editedStudent.course}
+            onValueChange={(value) => handleChange("course", value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.course}</p>
+        )}
+      </div>
+
+      {/* CGPA */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">CGPA</label>
+        {editMode ? (
+          <Input
+            type="number"
+            min="0"
+            max="10"
+            step="0.01"
+            value={editedStudent.cgpa}
+            onChange={(e) => handleChange("cgpa", e.target.value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.cgpa}</p>
+        )}
+      </div>
+
+      {/* Batch */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">Batch</label>
+        {editMode ? (
+          <Select
+            options={batchOptions}
+            value={editedStudent.batch}
+            onValueChange={(value) => handleChange("batch", value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.batch}</p>
+        )}
+      </div>
+
+      {/* Active Backlogs */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">Active Backlog</label>
+        {editMode ? (
+          <Select
+            options={backlogOptions}
+            value={editedStudent.active_backlogs}
+            onValueChange={(value) => handleChange("active_backlogs", value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.active_backlogs ? "Yes" : "No"}</p>
+        )}
+      </div>
+
+      {/* Backlogs History */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">Backlogs History</label>
+        {editMode ? (
+          <Select
+            options={backlogOptions}
+            value={editedStudent.backlogs_history}
+            onValueChange={(value) => handleChange("backlogs_history", value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.backlogs_history ? "Yes" : "No"}</p>
+        )}
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+      <CardHeader>
       <CardTitle className="text-lg">Assessment Performance</CardTitle>
     </CardHeader>
     <CardContent className="space-y-6">
@@ -681,54 +778,56 @@ const StudentAnalyticsDashboard = () => {
       </div>
 
       {/* Chart */}
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getAssessmentData(student)}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="total" fill="#6366f1" name="Total" />
-            <Bar dataKey="shortlisted" fill="#22c55e" name="Shortlisted" />
-            <Bar dataKey="rejected" fill="#ef4444" name="Rejected" />
-            <Bar dataKey="absent" fill="#f59e0b" name="Absent" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      <div className="h-72  p-0">
+  <ResponsiveContainer width="100%" height="100%">
+    <BarChart data={getAssessmentData(student)} >
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="name" />
+      <YAxis /> //extra margin due to this y-axis automatically added
+      <Tooltip />
+      <Bar dataKey="total" fill="#6366f1" name="Total" />
+      <Bar dataKey="shortlisted" fill="#22c55e" name="Shortlisted" />
+      <Bar dataKey="rejected" fill="#ef4444" name="Rejected" />
+      <Bar dataKey="absent" fill="#f59e0b" name="Absent" />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
+
 
       {/* Assessment Type Breakdown */}
-      <div className="grid grid-cols-1 gap-4 mt-4">
-        {Object.entries(student?.assessments || {}).map(([type, data]) => (
-          <div key={type} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center space-x-4">
-              <div className="font-medium capitalize">{type}</div>
-            </div>
-            <div className="flex space-x-4 text-sm">
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                <span className="text-gray-600">Total: {data.total}</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-                <span className="text-gray-600">Passed: {data.shortlisted}</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
-                <span className="text-gray-600">Failed: {data.rejected}</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-amber-500 mr-2"></div>
-                <span className="text-gray-600">Absent: {data.absent}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </CardContent>
-  </Card>
-                  </div>
-                </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+  {Object.entries(student?.assessments || {}).map(([type, data]) => (
+    <div
+      key={type}
+      className="p-6 bg-gray-50 rounded-lg shadow-sm flex flex-col items-center text-center"
+    >
+      {/* Heading */}
+      <div className="font-semibold text-lg capitalize mb-4">{type}</div>
 
+      {/* Centered Status Row */}
+      <div className="flex flex-wrap justify-center items-center gap-6 text-sm w-full">
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
+          <span className="text-gray-600">Total: {data.total}</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+          <span className="text-gray-600">Passed: {data.shortlisted}</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+          <span className="text-gray-600">Failed: {data.rejected}</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-amber-500 mr-2"></div>
+          <span className="text-gray-600">Absent: {data.absent}</span>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+    </CardContent>
                 {/* Applications Section */}
                 <Card className="mt-6 border-0 shadow-sm">
                   <CardHeader>
