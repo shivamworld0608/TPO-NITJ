@@ -11,15 +11,14 @@ const Request = () => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const availableIssues = [
-    "Job Profile",
-    "Eligibility Issue",
-    "Application Form Issue",
-    "OA Issue",
-    "Interview Issue",
-    "GD Issue",
-    "Login/Signup Issue",
-    "Profile Issue",
-    "Other"
+    "Job Posting Issue",
+    "Candidate Eligibility Issue",
+    "Application Review Issue",
+    "Assessment/Test Access Issue",
+    "Interview Scheduling Issue",
+    "Communication Issue",
+    "Company Profile Issue",
+    "Other",
   ];
 
   useEffect(() => {
@@ -98,8 +97,8 @@ const Request = () => {
 
                     <span
                       className={`flex items-center text-sm font-semibold py-1 px-3 rounded ${detail.status === "Resolved"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-yellow-100 text-yellow-700"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-yellow-100 text-yellow-700"
                         }`}
                     >
                       {detail.status === "Resolved" ? (
@@ -127,48 +126,45 @@ const Request = () => {
 
   return (
     <div className="p-6 min-h-screen">
-       <div className="flex ">
-            <div className="w-9/12">
+      <div className="flex ">
+        <div className="w-9/12">
 
-            </div>
-           
-            <div className=" border border-gray-300 rounded-3xl bg-gray-50">
-                     
-                      <button
-                          className={`px-4 py-2 rounded-3xl ${
-                              activeTab === "request"
-                                  ? "bg-custom-blue text-white"
-                                  : "bg-white"
-                          }`}
-                          onClick={() => setActiveTab("request")}
-                      >
-                          Request
-                      </button>
-                      <button
-                          className={`px-4 py-2 rounded-3xl ${
-                              activeTab === "resolved"
-                                  ? "bg-custom-blue text-white"
-                                  : "bg-white"
-                          }`}
-                          onClick={() => setActiveTab("resolved")}
-                      >
-                          Resolved
-                      </button>
-                      <button
-                          className={`px-4 py-2 rounded-3xl ${
-                              activeTab === "unresolved"
-                                  ? "bg-custom-blue text-white"
-                                  : "bg-white"
-                          }`}
-                          onClick={() => setActiveTab("unresolved")}
-                      >
-                          Unresolved
-                      </button>
-                  </div>
-                  </div>
-    
-           
-          
+        </div>
+
+        <div className=" border border-gray-300 rounded-3xl bg-gray-50">
+
+          <button
+            className={`px-4 py-2 rounded-3xl ${activeTab === "request"
+                ? "bg-custom-blue text-white"
+                : "bg-white"
+              }`}
+            onClick={() => setActiveTab("request")}
+          >
+            Request
+          </button>
+          <button
+            className={`px-4 py-2 rounded-3xl ${activeTab === "resolved"
+                ? "bg-custom-blue text-white"
+                : "bg-white"
+              }`}
+            onClick={() => setActiveTab("resolved")}
+          >
+            Resolved
+          </button>
+          <button
+            className={`px-4 py-2 rounded-3xl ${activeTab === "unresolved"
+                ? "bg-custom-blue text-white"
+                : "bg-white"
+              }`}
+            onClick={() => setActiveTab("unresolved")}
+          >
+            Unresolved
+          </button>
+        </div>
+      </div>
+
+
+
 
       <div className="max-w-lg mx-auto mt-0 bg-white rounded-lg shadow-lg p-6">
         {activeTab === "request" ? (

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Trash2, PlusCircle } from "lucide-react";
 
 function FoodArrangementTab({
   wantFood,
@@ -14,7 +15,6 @@ function FoodArrangementTab({
     foodDetails.tableRows.forEach((row, index) => {
       if (!row.date) newErrors[`date-${index}`] = "Date is required.";
     });
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -47,128 +47,113 @@ function FoodArrangementTab({
   };
 
   const renderFoodForm = () => (
-    <div className="space-y-6 mt-6">
-      <h3 className="text-lg font-medium text-blue-900">Meal Details</h3>
-      <h3 className="text-lg font-medium text-blue-900 text-center">Arrangement to be made for Nos. of persons</h3>
-      <table className="w-full border-collapse border border-gray-300 mb-6">
-        <thead>
-          <tr className="bg-blue-100">
-            <th className="border border-gray-300 p-2">Date</th>
-            <th className="border border-gray-300 p-2">Breakfast</th>
-            <th className="border border-gray-300 p-2">Lunch</th>
-            <th className="border border-gray-300 p-2">Dinner</th>
-            <th className="border border-gray-300 p-2">Snacks</th>
-            <th className="border border-gray-300 p-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
+    <div className="mt-8">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+        <div className="mb-8">
+          <h3 className="text-2xl font-semibold text-gray-800">
+            Meal Details
+          </h3>
+          <p className="text-gray-600 mt-2">
+            Please specify the number of persons required for each meal
+          </p>
+        </div>
+
+        <div className="grid gap-8">
           {foodDetails.tableRows.map((row, index) => (
-            <tr key={index}>
-              <td className="border border-gray-300 p-2">
-                <input
-                  type="date"
-                  value={row.date || ""}
-                  onChange={(e) =>
-                    handleRowChange(index, "date", e.target.value)
-                  }
-                  className="w-full p-2 border rounded"
-                />
-                {errors[`date-${index}`] && (
-                  <p className="text-red-500 text-sm">{errors[`date-${index}`]}</p>
-                )}
-              </td>
-              <td className="border border-gray-300 p-2">
-                <input
-                  type="number"
-                  value={row.breakfast || ""}
-                  onChange={(e) =>
-                    handleRowChange(index, "breakfast", e.target.value)
-                  }
-                  className="w-full p-2 border rounded"
-                />
-              </td>
-              <td className="border border-gray-300 p-2">
-                <input
-                  type="number"
-                  value={row.lunch || ""}
-                  onChange={(e) =>
-                    handleRowChange(index, "lunch", e.target.value)
-                  }
-                  className="w-full p-2 border rounded"
-                />
-              </td>
-              <td className="border border-gray-300 p-2">
-                <input
-                  type="number"
-                  value={row.dinner || ""}
-                  onChange={(e) =>
-                    handleRowChange(index, "dinner", e.target.value)
-                  }
-                  className="w-full p-2 border rounded"
-                />
-              </td>
-              <td className="border border-gray-300 p-2">
-                <input
-                  type="number"
-                  value={row.snacks || ""}
-                  onChange={(e) =>
-                    handleRowChange(index, "snacks", e.target.value)
-                  }
-                  className="w-full p-2 border rounded"
-                />
-              </td>
-              <td className="border border-gray-300 p-2 text-center">
+            <div key={index} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex-1 mr-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    value={row.date || ""}
+                    onChange={(e) => handleRowChange(index, "date", e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent bg-white"
+                  />
+                  {errors[`date-${index}`] && (
+                    <p className="text-red-500 text-xs mt-1">{errors[`date-${index}`]}</p>
+                  )}
+                </div>
                 <button
                   onClick={() => removeRow(index)}
-                  className="text-red-600 hover:underline"
+                  className="p-2 text-red-600 hover:text-red-700 rounded-full hover:bg-red-50 transition-colors self-end"
                 >
-                  Remove
+                  <Trash2 className="w-5 h-5" />
                 </button>
-              </td>
-            </tr>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {["breakfast", "lunch", "dinner", "snacks"].map((meal) => (
+                  <div key={meal} className="space-y-1">
+                    <label className="block text-sm font-medium text-gray-700 capitalize">
+                      {meal}
+                    </label>
+                    <input
+                      type="number"
+                      value={row[meal] || ""}
+                      onChange={(e) => handleRowChange(index, meal, e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent bg-white"
+                      min="0"
+                      placeholder="0"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
-      <button
-        onClick={addRow}
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Add Row
-      </button>
-      <div>
-        <label className="block text-sm font-medium text-gray-700">
-          Additional Notes
-        </label>
-        <textarea
-          value={foodDetails.notes || ""}
-          onChange={(e) =>
-            setFoodDetails({ ...foodDetails, notes: e.target.value })
-          }
-          className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          rows={3}
-        />
+
+          <button
+            onClick={addRow}
+            className="flex items-center justify-center gap-2 px-6 py-3 text-sm font-medium text-blue-600 hover:text-blue-700 rounded-lg border-2 border-dashed border-blue-200 hover:border-blue-300 bg-blue-50 hover:bg-blue-100 transition-colors w-full"
+          >
+            <PlusCircle className="w-5 h-5" />
+            Add Another Day
+          </button>
+
+          <div className="pt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Additional Notes
+            </label>
+            <textarea
+              value={foodDetails.notes || ""}
+              onChange={(e) => setFoodDetails({ ...foodDetails, notes: e.target.value })}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent bg-white"
+              rows={3}
+              placeholder="Enter any special dietary requirements, preferences, or additional notes..."
+            />
+          </div>
+        </div>
       </div>
+
       <button
         onClick={handleNext}
-        className="w-full px-6 py-3 bg-blue-600 text-white rounded hover:bg-blue-700 mt-4"
+        className="w-full mt-6 py-4 px-6 bg-custom-blue text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:ring-offset-2 transition-colors text-lg"
       >
-        Next
+        Continue to Next Step
       </button>
     </div>
   );
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-semibold text-blue-900">
-        Do you need food arrangements?
-      </h2>
-      <div className="flex gap-4">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-bold text-custom-blue mb-2">
+          Food Arrangements
+        </h2>
+        <p className="text-custom-blue">
+          Would you like to arrange meals for your event?
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
         <button
           onClick={() => setWantFood(true)}
-          className={`flex-1 px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 ${
-            wantFood === true
-              ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
-              : "bg-blue-50 text-blue-600 hover:bg-blue-100"
+          className={`px-6 py-4 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 ${
+            wantFood
+              ? "bg-custom-blue text-white hover:bg-custom-blue shadow-lg"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           }`}
         >
           Yes
@@ -178,16 +163,16 @@ function FoodArrangementTab({
             setWantFood(false);
             onNext();
           }}
-          className={`flex-1 px-6 py-3 rounded-lg text-lg font-medium transition-all duration-200 ${
+          className={`px-6 py-4 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 ${
             wantFood === false
-              ? "bg-red-500 text-white shadow-lg shadow-red-200"
-              : "bg-red-50 text-red-600 hover:bg-red-100"
+              ? "bg-red-500 text-white hover:bg-red-600 shadow-lg"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
           }`}
         >
           No
         </button>
       </div>
-      {wantFood === true && renderFoodForm()}
+      {wantFood && renderFoodForm()}
     </div>
   );
 }
