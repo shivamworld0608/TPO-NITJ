@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Select } from '../ui/select';
 import { Button } from '../ui/button';
-import { X, Pencil, Save, Search, Filter, Users, GraduationCap } from 'lucide-react';
+import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 
@@ -436,24 +436,34 @@ const StudentAnalyticsDashboard = () => {
         {sortedStudents.map(student => (
           <Dialog key={student._id}>
             <DialogTrigger asChild>
-              <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-0 hover:border-blue-500 hover:scale-102">
+              <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-400  hover:scale-105 hover:bg-white">
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-bold text-lg text-gray-900">{student.name}</h3>
+                    <div className="flex items-center gap-2">
+                    <UserCog className="h-5 w-5 text-gray-400" />
+
+
+                      <h3 className="font-bold text-lg  text-gray-900">{student.name}</h3>
+                      </div>
                       <p className="text-sm text-gray-500 mt-1">{student.rollno}</p>
+                      <span className="text-sm text-gray-600">{student.course}</span>
                     </div>
                     <GraduationCap className="h-6 w-6 text-blue-500" />
                   </div>
                   
-                  <div className="mt-4 space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-gray-400" />
-                      <span className="text-sm text-gray-600">{student.department} - {student.course}</span>
+                  <div className="mt-2 space-y-2">
+                  <div className="flex items-center gap-2">
+        
+                      <span className="text-sm text-gray-600">{student.department}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Batch {student.batch}</span>
-                      <span className="text-sm text-gray-600">CGPA {student.cgpa}</span>
+                      <span className="text-sm text-gray-600">Batch: {student.batch}</span>
+                    
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-gray-600">CGPA: {student.cgpa}</span>
+                    
                     </div>
                   </div>
 
@@ -461,7 +471,7 @@ const StudentAnalyticsDashboard = () => {
                     student.placementstatus === 'Super Dream' ? 'bg-green-100 text-green-800' :
                     student.placementstatus === 'Dream' ? 'bg-blue-100 text-blue-800' :
                     student.placementstatus === 'Below Dream' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-gray-100 text-gray-800'
+                    'bg-gray-600 text-gray-100'
                   }`}>
                     {student.placementstatus}
                   </div>
@@ -470,7 +480,7 @@ const StudentAnalyticsDashboard = () => {
             </DialogTrigger>
 
             {/* Student Details Dialog */}
-            <DialogContent className="max-w-4xl max-h-[90vh] p-0">
+            <DialogContent className="max-w-6xl max-h-[90vh] p-0">
               <div className="overflow-y-auto max-h-[90vh] px-6">
                 <DialogHeader className="sticky top-0 bg-white py-4 z-10">
                   <div className="flex items-center justify-between">
@@ -558,95 +568,7 @@ const StudentAnalyticsDashboard = () => {
                       </CardContent>
                     </Card>
 
-                    <Card className="border-0 shadow-sm">
-                      <CardHeader>
-                        <CardTitle className="text-lg">Academic Details</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Department</label>
-                          {editMode ? (
-                            <Select
-                              options={departmentOptions}
-                              value={editedStudent.department}
-                              onValueChange={(value) => handleChange('department', value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.department}</p>
-                          )}
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Course</label>
-                          {editMode ? (
-                            <Select
-                              options={courseOptions}
-                              value={editedStudent.course}
-                              onValueChange={(value) => handleChange('course', value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.course}</p>
-                          )}
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">CGPA</label>
-                          {editMode ? (
-                            <Input
-                              type="number"
-                              min="0"
-                              max="10"
-                              step="0.01"
-                              value={editedStudent.cgpa}
-                              onChange={(e) => handleChange('cgpa', e.target.value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.cgpa}</p>
-                          )}
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Batch</label>
-                          {editMode ? (
-                            <Select
-                              options={batchOptions}
-                              value={editedStudent.batch}
-                              onValueChange={(value) => handleChange('batch', value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.batch}</p>
-                          )}
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Active Backlog</label>
-                          {editMode ? (
-                            <Select
-                              options={backlogOptions}
-                              value={editedStudent.active_backlogs}
-                              onValueChange={(value) => handleChange('active_backlogs', value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.active_backlogs ? 'Yes' : 'No'}</p>
-                          )}
-                        </div>
-                         
-                        <div>
-                          <label className="text-sm font-medium text-gray-700">Backlogs History</label>
-                          {editMode ? (
-                            <Select
-                              options={backlogOptions}
-                              value={editedStudent.backlogs_history}
-                              onValueChange={(value) => handleChange('backlogs_history', value)}
-                              className="mt-1"
-                            />
-                          ) : (
-                            <p className="mt-1 text-gray-900">{student.backlogs_history ? 'Yes' : 'No'}</p>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
+                    
                   </div>
 
                   {/* Right Column */}
@@ -692,7 +614,113 @@ const StudentAnalyticsDashboard = () => {
                       </CardContent>
                     </Card>
                     <Card className="border-0 shadow-sm">
-    <CardHeader>
+   
+  </Card>
+                  </div>
+                </div>
+                <Card className="border-0 shadow-sm">
+  <CardHeader>
+    <CardTitle className="text-lg">Academic Details</CardTitle>
+  </CardHeader>
+  <CardContent>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {/* Department */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">Department</label>
+        {editMode ? (
+          <Select
+            options={departmentOptions}
+            value={editedStudent.department}
+            onValueChange={(value) => handleChange("department", value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.department}</p>
+        )}
+      </div>
+
+      {/* Course */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">Course</label>
+        {editMode ? (
+          <Select
+            options={courseOptions}
+            value={editedStudent.course}
+            onValueChange={(value) => handleChange("course", value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.course}</p>
+        )}
+      </div>
+
+      {/* CGPA */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">CGPA</label>
+        {editMode ? (
+          <Input
+            type="number"
+            min="0"
+            max="10"
+            step="0.01"
+            value={editedStudent.cgpa}
+            onChange={(e) => handleChange("cgpa", e.target.value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.cgpa}</p>
+        )}
+      </div>
+
+      {/* Batch */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">Batch</label>
+        {editMode ? (
+          <Select
+            options={batchOptions}
+            value={editedStudent.batch}
+            onValueChange={(value) => handleChange("batch", value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.batch}</p>
+        )}
+      </div>
+
+      {/* Active Backlogs */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">Active Backlog</label>
+        {editMode ? (
+          <Select
+            options={backlogOptions}
+            value={editedStudent.active_backlogs}
+            onValueChange={(value) => handleChange("active_backlogs", value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.active_backlogs ? "Yes" : "No"}</p>
+        )}
+      </div>
+
+      {/* Backlogs History */}
+      <div>
+        <label className="text-sm font-medium text-gray-700">Backlogs History</label>
+        {editMode ? (
+          <Select
+            options={backlogOptions}
+            value={editedStudent.backlogs_history}
+            onValueChange={(value) => handleChange("backlogs_history", value)}
+            className="mt-1"
+          />
+        ) : (
+          <p className="mt-1 text-gray-900">{student.backlogs_history ? "Yes" : "No"}</p>
+        )}
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+      <CardHeader>
       <CardTitle className="text-lg">Assessment Performance</CardTitle>
     </CardHeader>
     <CardContent className="space-y-6">
@@ -742,7 +770,7 @@ const StudentAnalyticsDashboard = () => {
       </div>
 
       {/* Chart */}
-      <div className="h-64">
+      <div className="h-72">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={getAssessmentData(student)}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -758,38 +786,39 @@ const StudentAnalyticsDashboard = () => {
       </div>
 
       {/* Assessment Type Breakdown */}
-      <div className="grid grid-cols-1 gap-4 mt-4">
-        {Object.entries(student?.assessments || {}).map(([type, data]) => (
-          <div key={type} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-            <div className="flex items-center space-x-4">
-              <div className="font-medium capitalize">{type}</div>
-            </div>
-            <div className="flex space-x-4 text-sm">
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                <span className="text-gray-600">Total: {data.total}</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-                <span className="text-gray-600">Passed: {data.shortlisted}</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
-                <span className="text-gray-600">Failed: {data.rejected}</span>
-              </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-amber-500 mr-2"></div>
-                <span className="text-gray-600">Absent: {data.absent}</span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </CardContent>
-  </Card>
-                  </div>
-                </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+  {Object.entries(student?.assessments || {}).map(([type, data]) => (
+    <div
+      key={type}
+      className="p-6 bg-gray-50 rounded-lg shadow-sm flex flex-col items-center text-center"
+    >
+      {/* Heading */}
+      <div className="font-semibold text-lg capitalize mb-4">{type}</div>
 
+      {/* Centered Status Row */}
+      <div className="flex flex-wrap justify-center items-center gap-6 text-sm w-full">
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
+          <span className="text-gray-600">Total: {data.total}</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+          <span className="text-gray-600">Passed: {data.shortlisted}</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+          <span className="text-gray-600">Failed: {data.rejected}</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-amber-500 mr-2"></div>
+          <span className="text-gray-600">Absent: {data.absent}</span>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+    </CardContent>
                 {/* Applications Section */}
                 <Card className="mt-6 border-0 shadow-sm">
                   <CardHeader>
