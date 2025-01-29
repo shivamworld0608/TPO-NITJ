@@ -770,20 +770,21 @@ const StudentAnalyticsDashboard = () => {
       </div>
 
       {/* Chart */}
-      <div className="h-72">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getAssessmentData(student)}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="total" fill="#6366f1" name="Total" />
-            <Bar dataKey="shortlisted" fill="#22c55e" name="Shortlisted" />
-            <Bar dataKey="rejected" fill="#ef4444" name="Rejected" />
-            <Bar dataKey="absent" fill="#f59e0b" name="Absent" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      <div className="h-72  p-0">
+  <ResponsiveContainer width="100%" height="100%">
+    <BarChart data={getAssessmentData(student)} >
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="name" />
+      <YAxis /> //extra margin due to this y-axis automatically added
+      <Tooltip />
+      <Bar dataKey="total" fill="#6366f1" name="Total" />
+      <Bar dataKey="shortlisted" fill="#22c55e" name="Shortlisted" />
+      <Bar dataKey="rejected" fill="#ef4444" name="Rejected" />
+      <Bar dataKey="absent" fill="#f59e0b" name="Absent" />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
+
 
       {/* Assessment Type Breakdown */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
