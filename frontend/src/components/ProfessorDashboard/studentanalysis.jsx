@@ -96,9 +96,6 @@ const StudentAnalyticsDashboard = () => {
     }));
   };
 
-
-
-
   const departmentOptions = [
     { value: 'All', label: 'All' },
     { value: 'Computer Science & Engineering', label: 'Computer Science & Engineering' },
@@ -132,7 +129,11 @@ const StudentAnalyticsDashboard = () => {
     { value: '> 8.5', label: '> 8.5' },
     { value: '> 8.0', label: '> 8.0' },
     { value: '> 7.5', label: '> 7.5' },
-    { value: '> 7.0', label: '> 7.0' }
+    { value: '> 7.0', label: '> 7.0' },
+    { value: '> 6.5', label: '> 6.5' },
+    { value: '> 6.0', label: '> 6.0' },
+    { value: '> 5.5', label: '> 5.5' },
+    { value: '> 5.0', label: '> 5.0' },
   ];
 
   const genderOptions = [
@@ -246,6 +247,12 @@ const StudentAnalyticsDashboard = () => {
       setSortDirection('asc');
     }
   };
+
+  const handleDialogClose = () => {
+    setEditMode(false);
+    setEditedStudent(null);
+  };
+
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
@@ -434,7 +441,11 @@ const StudentAnalyticsDashboard = () => {
       {/* Students Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {sortedStudents.map(student => (
-          <Dialog key={student._id}>
+          <Dialog key={student._id} onOpenChange={(open) => {
+            if (!open) {
+              handleDialogClose();
+            }
+          }}>
             <DialogTrigger asChild>
               <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-0 hover:border-blue-500 hover:scale-102">
                 <CardContent className="p-6">
@@ -596,7 +607,6 @@ const StudentAnalyticsDashboard = () => {
                               type="number"
                               min="0"
                               max="10"
-                              step="0.01"
                               value={editedStudent.cgpa}
                               onChange={(e) => handleChange('cgpa', e.target.value)}
                               className="mt-1"

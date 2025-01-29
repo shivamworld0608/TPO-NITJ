@@ -79,7 +79,12 @@ const studentSchema = new mongoose.Schema({
         type: String,
         enum: ['Not Placed','Below Dream', 'Dream', 'Super Dream'  ],
         default:'Not Placed',
-    }
+    },
+  internshipstatus: {
+        type: String,
+        enum: ['No Intern','2m Intern', '6m Intern', '11m Intern'],
+        default:'No Intern',
+  }
 }, { timestamps: true });
 
 const Student = mongoose.model('Student', studentSchema);
