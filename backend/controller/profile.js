@@ -77,7 +77,6 @@ export const updatesProfile = async (req, res) => {
 };
 
 
-
 //handle student profile photo
 export const handlesProfilePhoto = async (req, res) => {
     const image = req.file.path;

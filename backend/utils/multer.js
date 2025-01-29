@@ -6,7 +6,7 @@ import url from 'url';
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const baseDir = process.env.NODE_ENV === "production" ? '/tmp' : __dirname;
-const uploadsDir = path.join(baseDir, 'uploads'); // Use absolute path
+const uploadsDir = path.join(baseDir, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }

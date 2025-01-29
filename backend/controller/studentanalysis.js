@@ -124,7 +124,7 @@ export const Studentprofileupdate = async (req, res) => {
     try {
         const userId = req.params.id;
         const editedStudent=req.body;
-        const { name, rollno, email, phone, department, batch, course, cgpa, gender, placementstatus, active_backlogs, backlogs_history } = editedStudent;
+        const { name, rollno, email, phone, department, batch, course,debarred, cgpa, gender, placementstatus, active_backlogs, backlogs_history } = editedStudent;
         const student = await Student.findById(userId);
         if (!student) {
             return res.status(404).json({ message: 'Student not found' });
@@ -138,6 +138,7 @@ export const Studentprofileupdate = async (req, res) => {
         if(course!="") student.course = course;
         if(cgpa!="") student.cgpa = cgpa;
         if(gender!="") student.gender = gender;
+        if(debarred!="")student.debarred=debarred;
         if(placementstatus!="") student.placementstatus = placementstatus;
         if(active_backlogs!="") student.active_backlogs = active_backlogs;
         if(backlogs_history!="") student.backlogs_history = backlogs_history;
