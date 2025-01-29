@@ -720,7 +720,7 @@ const StudentAnalyticsDashboard = () => {
   </CardContent>
 </Card>
 
-                <CardHeader>
+      <CardHeader>
       <CardTitle className="text-lg">Assessment Performance</CardTitle>
     </CardHeader>
     <CardContent className="space-y-6">
@@ -786,35 +786,38 @@ const StudentAnalyticsDashboard = () => {
       </div>
 
       {/* Assessment Type Breakdown */}
-      <div className="grid grid-cols-1 gap-4 mt-4">
-        {Object.entries(student?.assessments || {}).map(([type, data]) => (
-          <div key={type} className="p-4 bg-gray-50 rounded-lg">
-          {/* Heading */}
-          <div className="font-semibold text-lg capitalize mb-2">{type}</div>
-        
-          {/* Status Row */}
-          <div className="flex flex-wrap items-center gap-4 text-sm">
-            <div className="flex items-center">
-              <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-              <span className="text-gray-600">Total: {data.total}</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
-              <span className="text-gray-600">Passed: {data.shortlisted}</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
-              <span className="text-gray-600">Failed: {data.rejected}</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-3 h-3 rounded-full bg-amber-500 mr-2"></div>
-              <span className="text-gray-600">Absent: {data.absent}</span>
-            </div>
-          </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+  {Object.entries(student?.assessments || {}).map(([type, data]) => (
+    <div
+      key={type}
+      className="p-6 bg-gray-50 rounded-lg shadow-sm flex flex-col items-center text-center"
+    >
+      {/* Heading */}
+      <div className="font-semibold text-lg capitalize mb-4">{type}</div>
+
+      {/* Centered Status Row */}
+      <div className="flex flex-wrap justify-center items-center gap-6 text-sm w-full">
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
+          <span className="text-gray-600">Total: {data.total}</span>
         </div>
-        
-        ))}
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
+          <span className="text-gray-600">Passed: {data.shortlisted}</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
+          <span className="text-gray-600">Failed: {data.rejected}</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-4 h-4 rounded-full bg-amber-500 mr-2"></div>
+          <span className="text-gray-600">Absent: {data.absent}</span>
+        </div>
       </div>
+    </div>
+  ))}
+</div>
+
     </CardContent>
                 {/* Applications Section */}
                 <Card className="mt-6 border-0 shadow-sm">
