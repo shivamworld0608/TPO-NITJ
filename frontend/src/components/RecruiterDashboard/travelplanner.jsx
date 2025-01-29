@@ -8,11 +8,10 @@ import VehicleTab from "./vehicletab";
 import RoomTab from "./roomtab";
 import FoodTab from "./foodtab";
 
-function App() {
+function TravelPlanner() {
   const [step, setStep] = useState(0);
 
   const [visitorDetails, setVisitorDetails] = useState({
-    kindOfVisit: "",
     purpose: "",
     visitorName: "",
     designation: "",
@@ -26,8 +25,13 @@ function App() {
   const [wantVehicle, setWantVehicle] = useState(null);
   const [vehicleDetails, setVehicleDetails] = useState({
     passengers: "",
-    pickup: "",
-    pickupTime: "",
+    pickupLocation: "",
+    dropLocation: "",
+    pickupDateTime: "",
+    returnJourney: "",
+    returnPickupLocation: "",
+    returnDropLocation: "",
+    returnDateTime: "",
     notes: "",
   });
 
@@ -45,11 +49,10 @@ function App() {
   const [wantFood, setWantFood] = useState(null);
   const [foodDetails, setFoodDetails] = useState({
     tableRows: [{ date: "", breakfast: "", lunch: "", dinner: "", snacks: "" }],
+    notes: "",
   });
 
-
   const handleSubmit = async () => {
-
     const bookingDetails = {
       visitorDetails,
       wantVehicle,
@@ -59,24 +62,28 @@ function App() {
       wantFood,
       foodDetails,
     };
-   const result = await Swal.fire({
-              title: 'Are you sure?',
-              text: 'You won’t be able to edit this in Future!',
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: 'green-300',
-              cancelButtonColor: '#3085d',
-              confirmButtonText: 'Yes, submit it!',
-            });
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to edit this in Future!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3B82F6",
+      cancelButtonColor: "#EF4444",
+      confirmButtonText: "Yes, submit it!",
+    });
     if (result.isConfirmed) {
-    try {
-      const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/travel-planner/create`, bookingDetails, {withCredentials:true});
-      toast.success("Booking form submitted successfully 😊");
-    } catch (error) {
-      toast.error("Some error in submitting");
-    }}
+      try {
+        const response = await axios.post(
+          `${import.meta.env.REACT_APP_BASE_URL}/travel-planner/create`,
+          bookingDetails,
+          { withCredentials: true }
+        );
+        toast.success("Booking form submitted successfully 😊");
+      } catch (error) {
+        toast.error("Some error in submitting");
+      }
+    }
   };
-  
 
   const steps = ["Visitor", "Vehicle", "Room", "Food", "Summary"];
 
@@ -97,42 +104,41 @@ function App() {
   };
 
   const renderProgressBar = () => (
-    <div className="mb-10">
+    <div className="mb-8">
       <div className="flex justify-between items-center">
         {steps.map((stepName, index) => (
           <React.Fragment key={stepName}>
-            <div
-              className={`flex flex-col items-center ${
-                canNavigateToStep(index)
-                  ? "hover:scale-105 transition-transform"
-                  : "opacity-50"
-              }`}
-            >
-              {index < step ? (
-                <CheckCircle2 className="w-10 h-10 text-blue-500 drop-shadow-md" />
-              ) : (
-                <Circle
-                  className={`w-10 h-10 ${
-                    index === step
-                      ? "text-blue-500 drop-shadow-md"
-                      : "text-gray-300"
-                  }`}
-                />
-              )}
+            <div className="flex flex-col items-center">
+              <div className="bg-white flex items-center justify-center relative">
+                {index < step ? (
+                  <CheckCircle2 className="w-8 h-8 text-custom-blue" />
+                ) : (
+                  <Circle
+                    className={`w-8 h-8 ${
+                      index === step ? "text-custom-blue" : "text-gray-300"
+                    }`}
+                  />
+                )}
+              </div>
               <span
-                className={`mt-3 text-sm font-medium ${
-                  index === step ? "text-blue-600" : "text-gray-500"
+                className={`mt-2 text-sm font-medium ${
+                  index === step ? "text-custom-blue" : "text-gray-500"
                 }`}
               >
                 {stepName}
               </span>
             </div>
             {index < steps.length - 1 && (
-              <div
-                className={`h-1 w-full ${
-                  index < step ? "bg-blue-500" : "bg-gray-200"
-                }`}
-              />
+              <div className="flex flex-1 items-center">
+                <div
+                  className={`h-1 w-full ${
+                    index < step ? "bg-custom-blue" : "bg-gray-200"
+                  }`}
+                  style={{
+                    transform: "translateY(-14px)",
+                  }}
+                />
+              </div>
             )}
           </React.Fragment>
         ))}
@@ -183,164 +189,275 @@ function App() {
       case 4:
         return (
           <div className="space-y-8">
-            <h2 className="text-3xl font-bold text-blue-900">
-              Booking Summary
-            </h2>
-            <div className="space-y-4">
-              <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
-                <h3 className="text-lg font-semibold text-blue-800 mb-3">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                Booking Summary
+              </h2>
+              <p className="text-gray-600">Review your booking details below</p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
                   Visitor Information
                 </h3>
-                <div className="space-y-2">
-                  <p className="text-blue-600">
-                    Name: {visitorDetails.visitorName}
-                  </p>
-                  <p className="text-blue-600">
-                    Visit Type: {visitorDetails.kindOfVisit}
-                  </p>
-                  <p className="text-blue-600">
-                    Purpose: {visitorDetails.purpose}
-                  </p>
-                  <p className="text-blue-600">
-                    Organization: {visitorDetails.organization}
-                  </p>
-                  <p className="text-blue-600">
-                    Designation: {visitorDetails.designation}
-                  </p>
-                  <p className="text-blue-600">
-                    Contact: {visitorDetails.contact}
-                  </p>
-                  <p className="text-blue-600">Email: {visitorDetails.email}</p>
-                  <p className="text-blue-600">
-                    Expected Number of Visitors:{" "}
-                    {visitorDetails.expectedVisitors}
-                  </p>
-                  {visitorDetails.companions.length > 0 && (
+                <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-blue-600">Accompanying Visitors:</p>
-                      <ul className="list-disc list-inside">
-                        {visitorDetails.companions.map(
-                          (companion, index) =>
-                            companion && (
-                              <li key={index} className="text-blue-600 ml-4">
-                                {companion}
-                              </li>
-                            )
-                        )}
-                      </ul>
+                      <p className="text-sm font-medium text-gray-500">Name</p>
+                      <p className="text-gray-800">
+                        {visitorDetails.visitorName}
+                      </p>
                     </div>
-                  )}
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">
+                        Purpose
+                      </p>
+                      <p className="text-gray-800">{visitorDetails.purpose}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">
+                        Organization
+                      </p>
+                      <p className="text-gray-800">
+                        {visitorDetails.organization}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">
+                        Designation
+                      </p>
+                      <p className="text-gray-800">
+                        {visitorDetails.designation}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">
+                        Contact
+                      </p>
+                      <p className="text-gray-800">{visitorDetails.contact}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-500">Email</p>
+                      <p className="text-gray-800">{visitorDetails.email}</p>
+                    </div>
+                  </div>
+                  {visitorDetails.companions.length > 0 &&
+                    visitorDetails.companions[0] && (
+                      <div>
+                        <p className="text-sm font-medium text-gray-500 mb-2">
+                          Accompanying Visitors
+                        </p>
+                        <ul className="list-disc list-inside space-y-1">
+                          {visitorDetails.companions.map(
+                            (companion, index) =>
+                              companion && (
+                                <li key={index} className="text-gray-800 ml-4">
+                                  {companion}
+                                </li>
+                              )
+                          )}
+                        </ul>
+                      </div>
+                    )}
                 </div>
               </div>
 
-              <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
-                <h3 className="text-lg font-semibold text-blue-800 mb-3">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
                   Vehicle Booking
                 </h3>
                 {wantVehicle ? (
-                  <div className="space-y-2">
-                    <p className="text-blue-600">
-                      Passengers: {vehicleDetails.passengers}
-                    </p>
-                    <p className="text-blue-600">
-                      Pickup Location: {vehicleDetails.pickup}
-                    </p>
-                    <p className="text-blue-600">
-                      <p>
-                        Pickup Time:{" "}
-                        {new Date(vehicleDetails.pickupTime).toLocaleDateString(
-                          "en-US",
-                          {
+                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Passengers
+                        </p>
+                        <p className="text-gray-800">
+                          {vehicleDetails.passengers}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Pickup Location
+                        </p>
+                        <p className="text-gray-800">
+                          {vehicleDetails.pickupLocation}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Drop Location
+                        </p>
+                        <p className="text-gray-800">
+                          {vehicleDetails.dropLocation}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Pickup Time
+                        </p>
+                        <p className="text-gray-800">
+                        {new Date(
+                            vehicleDetails.pickupDateTime
+                          ).toLocaleString("en-US", {
                             day: "2-digit",
                             month: "short",
                             year: "numeric",
-                          }
-                        )}
-                      </p>
-                    </p>
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Return Pickup Location
+                        </p>
+                        <p className="text-gray-800">
+                          {vehicleDetails.returnPickupLocation}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Return Drop Location
+                        </p>
+                        <p className="text-gray-800">
+                          {vehicleDetails.returnDropLocation}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Return Pickup Time
+                        </p>
+                        <p className="text-gray-800">
+                          {new Date(
+                            vehicleDetails.returnDateTime
+                          ).toLocaleString("en-US", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </p>
+                      </div>
+                    </div>
                     {vehicleDetails.notes && (
-                      <p className="text-blue-600">
-                        Additional Note: {vehicleDetails.notes}
-                      </p>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Additional Notes
+                        </p>
+                        <p className="text-gray-800">{vehicleDetails.notes}</p>
+                      </div>
                     )}
                   </div>
                 ) : (
-                  <p className="text-gray-600">No vehicle booking needed</p>
+                  <p className="text-gray-500">No vehicle booking needed</p>
                 )}
               </div>
 
-              <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
-                <h3 className="text-lg font-semibold text-blue-800 mb-3">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
                   Room Booking
                 </h3>
                 {wantRoom ? (
-                  <div className="space-y-2">
-                    <p className="text-blue-600">
-                      Rooms Required: {roomDetails.numberOfRooms}
-                    </p>
-                    <p className="text-blue-600">
-                      Stay:{" "}
-                      {new Date(
-                        roomDetails.arrivalDate + " " + roomDetails.arrivalTime
-                      ).toLocaleString("en-US", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                      })}{" "}
-                      to{" "}
-                      {new Date(
-                        roomDetails.departureDate +
-                          " " +
-                          roomDetails.departureTime
-                      ).toLocaleString("en-US", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "2-digit",
-                        hour12: true,
-                      })}
-                    </p>
-
+                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Rooms Required
+                        </p>
+                        <p className="text-gray-800">
+                          {roomDetails.numberOfRooms}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Stay Duration
+                        </p>
+                        <p className="text-gray-800">
+                          {new Date(
+                            roomDetails.arrivalDate +
+                              " " +
+                              roomDetails.arrivalTime
+                          ).toLocaleString("en-US", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                          {" to "}
+                          {new Date(
+                            roomDetails.departureDate +
+                              " " +
+                              roomDetails.departureTime
+                          ).toLocaleString("en-US", {
+                            day: "2-digit",
+                            month: "short",
+                            year: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          })}
+                        </p>
+                      </div>
+                    </div>
                     {roomDetails.notes && (
-                      <p className="text-blue-600">
-                        Additional Note: {roomDetails.notes}
-                      </p>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Additional Notes
+                        </p>
+                        <p className="text-gray-800">{roomDetails.notes}</p>
+                      </div>
                     )}
                   </div>
                 ) : (
-                  <p className="text-gray-600">No room booking needed</p>
+                  <p className="text-gray-500">No room booking needed</p>
                 )}
               </div>
 
-              <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
-                <h3 className="text-lg font-semibold text-blue-800 mb-3">
+              <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
                   Food Selection
                 </h3>
                 {wantFood ? (
-                  <div className="space-y-2">
-                    <p className="text-blue-600">Meal Schedule:</p>
-                    <p className="text-blue-600 text-center">
-                      Arrangement to be made for Nos. of persons
+                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 space-y-4">
+                    <p className="text-sm font-medium text-gray-500 mb-4">
+                      Meal Schedule
                     </p>
                     <div className="overflow-x-auto">
-                      <table className="min-w-full text-sm">
+                      <table className="min-w-full">
                         <thead>
-                          <tr className="text-left text-blue-600">
-                            <th className="py-2">Date</th>
-                            <th className="py-2">Breakfast</th>
-                            <th className="py-2">Lunch</th>
-                            <th className="py-2">Dinner</th>
-                            <th className="py-2">Snacks</th>
+                          <tr className="bg-gray-100">
+                            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                              Date
+                            </th>
+                            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                              Breakfast
+                            </th>
+                            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                              Lunch
+                            </th>
+                            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                              Dinner
+                            </th>
+                            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
+                              Snacks
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
                           {foodDetails.tableRows.map((row, index) => (
-                            <tr key={index} className="text-blue-600">
-                              <td className="py-2">
+                            <tr
+                              key={index}
+                              className="border-t border-gray-200"
+                            >
+                              <td className="px-4 py-2 text-gray-800">
                                 {new Date(row.date).toLocaleDateString(
                                   "en-US",
                                   {
@@ -350,33 +467,40 @@ function App() {
                                   }
                                 )}
                               </td>
-
-                              <td className="py-2">{row.breakfast || 0}</td>
-                              <td className="py-2">{row.lunch || 0}</td>
-                              <td className="py-2">{row.dinner || 0}</td>
-                              <td className="py-2">{row.snacks || 0}</td>
+                              <td className="px-4 py-2 text-gray-800">
+                                {row.breakfast || 0}
+                              </td>
+                              <td className="px-4 py-2 text-gray-800">
+                                {row.lunch || 0}
+                              </td>
+                              <td className="px-4 py-2 text-gray-800">
+                                {row.dinner || 0}
+                              </td>
+                              <td className="px-4 py-2 text-gray-800">
+                                {row.snacks || 0}
+                              </td>
                             </tr>
                           ))}
                         </tbody>
                       </table>
                     </div>
                     {foodDetails.notes && (
-                      <p className="text-blue-600">
-                        Additional Note:{foodDetails.notes}
-                      </p>
+                      <div>
+                        <p className="text-sm font-medium text-gray-500">
+                          Additional Notes
+                        </p>
+                        <p className="text-gray-800">{foodDetails.notes}</p>
+                      </div>
                     )}
                   </div>
                 ) : (
-                  <p className="text-gray-600">No food selection needed</p>
+                  <p className="text-gray-500">No food selection needed</p>
                 )}
               </div>
             </div>
 
             <button
-              className="w-full py-4 px-6 bg-blue-600 text-white rounded-lg text-lg font-medium
-                hover:bg-blue-700 active:bg-blue-800 
-                transition-all duration-200 shadow-lg shadow-blue-200
-                transform hover:scale-[1.02]"
+              className="w-full mt-6 py-4 px-6 bg-custom-blue text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:ring-offset-2 transition-colors text-lg"
               onClick={handleSubmit}
             >
               Confirm Booking
@@ -389,23 +513,33 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-2xl mx-auto">
-        <div className="flex items-center justify-between mb-10">
-          <h1 className="text-4xl font-bold text-blue-900">Travel Planner</h1>
+    <div className="min-h-screen bg-gradient-to-b">
+      <div className="max-w-3xl mx-auto px-6 py-10">
+        {/* Header Section */}
+        <div className="flex items-center justify-between mb-12">
+          <h1 className="text-4xl font-extrabold text-custom-blue tracking-tight ">
+            Travel Planner
+          </h1>
           {step > 0 && (
             <button
-              onClick={() => setStep(step - 1)}
-              className="flex items-center gap-2 text-blue-600 hover:text-blue-800
-                px-4 py-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Back
-            </button>
+            onClick={() => setStep(step - 1)}
+            className="flex items-center gap-2 text-white bg-custom-blue hover:bg-custom-blue
+              px-6 py-3 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105
+              focus:outline-none focus:ring-2 focus:ring-custom-blue focus:ring-opacity-50 active:scale-95"
+            aria-label="Go Back"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="font-medium text-sm">Back</span>
+          </button>
+          
           )}
         </div>
-        {renderProgressBar()}
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-blue-100">
+
+        {/* Progress Bar */}
+        <div className="mb-10">{renderProgressBar()}</div>
+
+        {/* Content Section */}
+        <div className="bg-white rounded-2xl shadow-lg p-10 border border-custom-blue">
           {renderContent()}
         </div>
       </div>
@@ -413,4 +547,4 @@ function App() {
   );
 }
 
-export default App;
+export default TravelPlanner;
