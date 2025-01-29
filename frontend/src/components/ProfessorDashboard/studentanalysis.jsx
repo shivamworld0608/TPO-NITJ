@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Select } from '../ui/select';
 import { Button } from '../ui/button';
-import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap } from 'lucide-react';
+import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 
@@ -482,15 +482,21 @@ const StudentAnalyticsDashboard = () => {
             {/* Student Details Dialog */}
             <DialogContent className="max-w-6xl max-h-[90vh] p-0">
               <div className="overflow-y-auto max-h-[90vh] px-6">
-                <DialogHeader className="sticky top-0 bg-white py-4 z-10">
-                  <div className="flex items-center justify-between">
-                    <DialogTitle className="text-2xl font-bold flex items-center gap-2">
-                      <GraduationCap className="h-6 w-6 text-blue-500" />
-                      {student.name}
-                    </DialogTitle>
-                  <Button
-                    variant="outline"
-                    className="flex items-center gap-2"
+              <DialogHeader className="sticky top-0 bg-white py-4 z-10">
+  <div className="flex flex-col  gap-4 sm:flex-row sm:justify-between">
+    
+    {/* Title Section - Centered */}
+    <DialogTitle className="text-2xl font-bold flex items-center gap-2 justify-center lg:items-center lg:justify-center">
+      <User className="h-6 w-6 text-blue-500" />
+      {student.name}
+    </DialogTitle>
+
+    {/* Button Section - Stacked on Small Screens, Inline on Larger Screens */}
+    <Button
+  variant="outline"
+  className="flex items-center gap-2 hover:scale-105 focus:outline-none"
+
+
                     onClick={() => editMode ? handleSaveClick() : handleEditClick(student)}
                   >
                     {editMode ? (
@@ -505,11 +511,13 @@ const StudentAnalyticsDashboard = () => {
                       </>
                     )}
                   </Button>
-                </div>
-              </DialogHeader>
+  </div>
+</DialogHeader>
 
-              <div className="mt-6">
-                <div className="grid grid-cols-2 gap-8">
+
+              <div className="mt-6 ">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-y-8 overflow-x-hidden">
+
                   {/* Left Column */}
                   <div className="space-y-6">
                     <Card className="border-0 shadow-sm">
@@ -770,20 +778,21 @@ const StudentAnalyticsDashboard = () => {
       </div>
 
       {/* Chart */}
-      <div className="h-72">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={getAssessmentData(student)}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="total" fill="#6366f1" name="Total" />
-            <Bar dataKey="shortlisted" fill="#22c55e" name="Shortlisted" />
-            <Bar dataKey="rejected" fill="#ef4444" name="Rejected" />
-            <Bar dataKey="absent" fill="#f59e0b" name="Absent" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      <div className="h-72  p-0">
+  <ResponsiveContainer width="100%" height="100%">
+    <BarChart data={getAssessmentData(student)} >
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="name" />
+      <YAxis /> //extra margin due to this y-axis automatically added
+      <Tooltip />
+      <Bar dataKey="total" fill="#6366f1" name="Total" />
+      <Bar dataKey="shortlisted" fill="#22c55e" name="Shortlisted" />
+      <Bar dataKey="rejected" fill="#ef4444" name="Rejected" />
+      <Bar dataKey="absent" fill="#f59e0b" name="Absent" />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
+
 
       {/* Assessment Type Breakdown */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
