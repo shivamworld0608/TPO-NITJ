@@ -79,7 +79,6 @@ const ResumeBuilder = () => {
                     updatedResume[section][index][field] = value;
                 }
             }
-
             return updatedResume;
         });
     };

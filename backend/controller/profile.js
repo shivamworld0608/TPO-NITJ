@@ -1,6 +1,7 @@
 import Recuiter from "../models/user_model/recuiter.js";
 import Professor from "../models/user_model/professor.js";
 import Student from "../models/user_model/student.js";
+import bcrypt from "bcrypt";
 
 import cloudinary from "../utils/cloudinary.js";
 import fs from 'fs';
@@ -94,3 +95,30 @@ export const handlesProfilePhoto = async (req, res) => {
       res.status(500).json({ success: false, error: "Profile Updation failed" });
     }
   };
+
+
+  export const changepass=async(req,res)=>{
+    try{
+        const {currentPassword,newPassword} = req.body;
+        const student = await Student.findById(req.user.userId);
+        const professor = await Professor.findById(req.user.userId);
+        const recuiter = await Recuiter.findById(req.user.userId);
+        const user = student || recuiter || professor;
+         let isMatch;
+                if (user.password.startsWith('$2')) {
+                    isMatch = await bcrypt.compare(currentPassword, user.password);
+                } else {
+                    isMatch = password === user.password;
+                }
+        if(!isMatch){
+            return res.status(401).json({message:"Old password is incorrect"});
+        }
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+            user.password = hashedPassword;
+            await user.save();
+            res.status(200).json({message:"Password changed successfully"});
+            }catch(error){
+             res.status(500).json({message:"Internal Server Error"});
+         }
+};

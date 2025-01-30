@@ -28,7 +28,6 @@ const Home = () => {
       <div className=" max-w-7xl mx-auto mt-10"><FAQ /></div>
       <div className=" max-w-full mx-auto"><ContactUs /></div>
       <Footer/>
-
     </>
   );
 };
