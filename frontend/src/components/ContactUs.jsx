@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaChevronRight } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -16,11 +17,10 @@ const ContactUs = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Display success toast
-    toast.success("Your message has been sent successfully!");
-    // Reset form
+    const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/contactus/submit`, formData);
+    toast.success("We will contact you soon!");
     setFormData({
       name: "",
       email: "",
@@ -41,16 +41,7 @@ const ContactUs = () => {
             We would love to hear from you! Reach out to us through any of the channels below.
           </p>
         </div>
-
-        {/* <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          Contact options (Phone, Email, Address)
-          Code omitted for brevity
-        </div> */}
-
         <div className="mt-12 bg-white rounded-xl shadow-lg p-8 sm:p-12">
-          {/* <h3 className="text-3xl text-center font-bold mb-6 sm:text-4xl">
-            Send Us <span className="text-custom-blue">Message</span>
-          </h3> */}
           <form className="grid gap-6 sm:grid-cols-2" onSubmit={handleSubmit}>
             <div>
               <label className="block text-gray-700 text-sm font-medium">Your Name</label>
@@ -122,13 +113,6 @@ const ContactUs = () => {
             </div>
 
             <div className="flex justify-end items-center mt-6 space-x-4 sm:col-span-2">
-              {/* <button
-                type="reset"
-                onClick={() => setFormData({ name: "", email: "", phone: "", department: "", message: "" })}
-                className="z-10 py-3 px-8 bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold rounded-full shadow-md hover:bg-gradient-to-l transition-all duration-300 focus:outline-none focus:ring-red-200 "
-              >
-                Clear
-              </button> */}
               <button
                 type="submit"
                 className="z-10 flex items-center justify-center gap-2 py-3 px-8 bg-gradient-to-r from-custom-blue to-blue-700 text-white font-semibold rounded-full shadow-md hover:bg-gradient-to-l transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
