@@ -25,6 +25,7 @@ import travelplannerRoutes from "./routes/travelplanner.js";
 import studentanalysisRoutes from "./routes/studentanalysis.js";
 import companiesanalysisRoutes from "./routes/companiesanalysis.js";
 import contactusRoutes from "./routes/contactus.js";
+import resumeroutes from "./routes/resume.js"
 
 import { mkdir } from 'fs/promises';
 try {
@@ -92,6 +93,8 @@ app.use("/companies-analysis",authenticate,companiesanalysisRoutes);
 app.use('/api/pdfs', authenticate, pdfroutes);
 app.use('/api',authenticate, formTemplateroutes);
 app.use('/contactus',contactusRoutes);
+app.use('/resume',authenticate, resumeroutes);
+
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
