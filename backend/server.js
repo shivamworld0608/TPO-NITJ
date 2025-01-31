@@ -29,6 +29,7 @@ import companiesanalysisRoutes from "./routes/companiesanalysis.js";
 import contactusRoutes from "./routes/contactus.js";
 import conversationRoutes from "./routes/conversation.js";
 import mailboxRoutes from "./routes/mailbox.js";
+import resumeroutes from "./routes/resume.js"
 
 import { mkdir } from 'fs/promises';
 try {
@@ -101,6 +102,7 @@ app.use('/api',authenticate, formTemplateroutes);
 app.use('/contactus',contactusRoutes);
 app.use('/conversations',authenticate,conversationRoutes);
 app.use('/mailbox',authenticate,mailboxRoutes);
+app.use('/resume',authenticate, resumeroutes);
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => {

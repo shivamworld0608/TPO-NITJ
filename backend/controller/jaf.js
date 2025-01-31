@@ -23,7 +23,8 @@ export const createJobAnnouncementForm = async (req, res) => {
       additionalSelectionDetails,
       summerInternshipOpportunities,
       hrContacts,
-      postalAddress
+      postalAddress,
+      approved_status
     } = req.body;
     
     const newJobAnnouncement = new JobAnnouncementForm({
@@ -47,7 +48,8 @@ export const createJobAnnouncementForm = async (req, res) => {
       additionalSelectionDetails,
       summerInternshipOpportunities,
       hrContacts,
-      postalAddress
+      postalAddress,
+      approved_status,
     });
       const savedJobAnnouncement = await newJobAnnouncement.save();
       res.status(201).json({
