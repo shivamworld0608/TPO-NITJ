@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, Trash2, Save } from 'lucide-react';
+import { Eye, Edit, Download, Trash } from "lucide-react";
+
 import axios from 'axios';
 import { jsPDF } from "jspdf";
 import ResumeDownload from './downloadresume';
@@ -225,39 +227,38 @@ const ResumeBuilder = () => {
     <div className="min-h-screen bg-gray-100 p-4">
       {/* Mode Selection Buttons */}
 
-      <div className="flex gap-4 mb-6 sticky top-0 bg-white p-4 rounded-lg shadow-md z-10">
+      <div className="grid grid-cols-2 lg:flex gap-4 mb-6 sticky top-0 bg-white p-4 rounded-xl shadow-lg z-10 sm:grid-cols-2 sm:grid-rows-2 max-w-6xl sm:p-3 mx-auto">
         <button
           onClick={() => setMode('view')}
-          className={`px-4 py-2 rounded ${mode === 'view' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-2  rounded-lg lg:w-full font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${mode === 'view' ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 hover:bg-gray-300'}`}
         >
-          View
+          <Eye className="w-4 h-4" /> View
         </button>
         <button
           onClick={() => setMode('create')}
-          className={`px-4 py-2 rounded ${mode === 'create' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          className={`px-3 py-2  rounded-lg lg:w-full font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${mode === 'create' ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-200 hover:bg-gray-300'}`}
         >
-          Create/Update
+          <Edit className="w-4 h-4" /> Create/Update
         </button>
 
         {/* Download Button */}
         <button
           onClick={generatePDF}
-          className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 flex items-center gap-2"
+          className="bg-green-600 text-white lg:w-full px-3 py-2  rounded-lg shadow-lg hover:bg-green-700 flex items-center justify-center gap-2 transition-all duration-300 sm:px-3 sm:py-2 sm:text-sm"
         >
-          <Save className="w-5 h-5" />
-          Download Resume
+          <Download className="w-4 h-4" /> Download
         </button>
         {/* Delete Button */}
         <button
           onClick={deleteResume}
-          className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-700 flex items-center gap-2"
+          className="bg-red-600 text-white px-3 py-2 lg:w-full  rounded-lg shadow-lg hover:bg-red-700 flex items-center justify-center gap-2 transition-all duration-300 sm:px-3 sm:py-2 sm:text-sm"
         >
-          <Save className="w-5 h-5" />
-          Delete
+          <Trash className="w-4 h-4" /> Delete
         </button>
       </div>
 
-      <form className="max-w-4xl mx-auto space-y-6" onSubmit={(e) => e.preventDefault()}>
+
+      <form className="max-w-6xl mx-auto space-y-6" onSubmit={(e) => e.preventDefault()}>
         {/* Basic Information */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
