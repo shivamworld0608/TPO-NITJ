@@ -1,552 +1,809 @@
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle, faEye, faEdit, faDownload, faSave, faArrowLeft, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Textarea } from '../ui/textarea';
+import React, { useState,useEffect } from 'react';
+import { PlusCircle, Trash2, Save } from 'lucide-react';
+import axios from 'axios';
+import { jsPDF } from "jspdf";
+import ResumeDownload from './downloadresume';
 
 const ResumeBuilder = () => {
-    const [mode, setMode] = useState('home');
-    const [resume, setResume] = useState({
-        name: "",
-        contact: {
-            github: "",
-            linkedin: "",
-            email: "",
-            phone: "",
-        },
-        education: [
-            {
-                institution: "",
-                location: "",
-                degree: "",
-                percentage: "",
-                duration: "",
-            },
-        ],
-        experience: [
-            {
-                title: "",
-                company: "",
-                description: [""],
-                techStack: [""],
-                duration: "",
-            },
-        ],
-        projects: [
-            {
-                name: "",
-                description: [""],
-                techStack: [""],
-                link: "",
-            },
-        ],
-        skills: [
-            {
-                category: "",
-                skills: [""],
-            },
-        ],
-        achievements: [
-            {
-                title: "",
-                description: "",
-            },
-        ],
-        interests: [""],
-        coursework: [""],
-        responsibilities: [
-            {
-                role: "",
-                description: "",
-            },
-        ],
+  const [mode, setMode] = useState('view');
+  const [formData, setFormData] = useState({
+    name: '',
+    contact: {
+      github: '',
+      linkedin: '',
+      email: '',
+      phone: ''
+    },
+    education: [{ institution: '', location: '', degree: '', percentage: '', duration: '' }],
+    experience: [{ title: '', company: '', description: [''], techStack: [''], duration: '' }],
+    projects: [{ name: '', description: [''], techStack: [''], link: '' }],
+    skills: [{ category: '', skills: [''] }],
+    achievements: [{ title: '', description: '', link: '' }],
+    interests: [''],
+    coursework: [''],
+    responsibilities: [{ role: '', description: '' }]
+  });
+
+  const handleChange = (e, section, index, field, subIndex) => {
+    const value = e.target.value;
+    setFormData(prev => {
+      const newData = { ...prev };
+      
+      if (subIndex !== undefined) {
+        newData[section][index][field][subIndex] = value;
+      } else if (field) {
+        newData[section][index][field] = value;
+      } else {
+        newData[section][index] = value;
+      }
+      
+      return newData;
     });
+  };
 
-    const handleInputChange = (section, index, field, value, subIndex) => {
-        setResume((prevResume) => {
-            const updatedResume = structuredClone(prevResume); // Deep clone to preserve reactivity
+  const addItem = (section) => {
+    setFormData(prev => {
+      const newData = { ...prev };
+      const emptyItem = {
+        education: { institution: '', location: '', degree: '', percentage: '', duration: '' },
+        experience: { title: '', company: '', description: [''], techStack: [''], duration: '' },
+        projects: { name: '', description: [''], techStack: [''], link: '' },
+        skills: { category: '', skills: [''] },
+        achievements: { title: '', description: '', link: '' },
+        responsibilities: { role: '', description: '' }
+      }[section] || '';
+      
+      newData[section] = [...newData[section], emptyItem];
+      return newData;
+    });
+  };
 
-            if (section === "name") {
-                updatedResume.name = value;
-            } else if (section === "contact") {
-                updatedResume.contact[field] = value;
-            } else if (Array.isArray(updatedResume[section])) {
-                if (subIndex !== undefined) {
-                    updatedResume[section][index][field][subIndex] = value;
-                } else {
-                    updatedResume[section][index][field] = value;
-                }
-            }
+  const removeItem = (section, index) => {
+    setFormData(prev => {
+      const newData = { ...prev };
+      newData[section].splice(index, 1);
+      return newData;
+    });
+  };
 
-            return updatedResume;
-        });
-    };
+  const addArrayItem = (section, index, field) => {
+    setFormData(prev => {
+      const newData = { ...prev };
+      newData[section][index][field].push('');
+      return newData;
+    });
+  };
 
-    const addArrayItem = (section, defaultItem) => {
-        setResume((prev) => ({
-            ...prev,
-            [section]: [...prev[section], defaultItem],
-        }));
-    };
+  const removeArrayItem = (section, index, field, subIndex) => {
+    setFormData(prev => {
+      const newData = { ...prev };
+      newData[section][index][field].splice(subIndex, 1);
+      return newData;
+    });
+  };
 
-    const removeArrayItem = (section, index) => {
-        setResume((prev) => {
-            const newSection = [...prev[section]];
-            newSection.splice(index, 1);
-            return { ...prev, [section]: newSection };
-        });
-    };
 
-    const addArraySubItem = (section, index, field) => {
-        setResume((prev) => {
-            const updatedResume = structuredClone(prev);
-            updatedResume[section][index][field].push("");
-            return updatedResume;
-        });
-    };
-
-    const removeArraySubItem = (section, index, field, subIndex) => {
-        setResume(prev => {
-            const newResume = { ...prev };
-            newResume[section][index][field].splice(subIndex, 1);
-            return newResume;
-        });
-    };
-
-    const ResumeForm = ({ isEditable }) => (
-        <div className="space-y-6 p-4">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Personal Information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
-                        <Input
-                            placeholder="Name"
-                            value={resume.name}
-                            onChange={(e) => handleInputChange('name', null, null, e.target.value)}
-                            disabled={!isEditable}
-                        />
-                        <div className="grid grid-cols-2 gap-4">
-                            <Input
-                                placeholder="Email"
-                                value={resume.contact.email}
-                                onChange={(e) => handleInputChange('contact', null, 'email', e.target.value)}
-                                disabled={!isEditable}
-                            />
-                            <Input
-                                placeholder="Phone"
-                                value={resume.contact.phone}
-                                onChange={(e) => handleInputChange('contact', null, 'phone', e.target.value)}
-                                disabled={!isEditable}
-                            />
-                            <Input
-                                placeholder="GitHub"
-                                value={resume.contact.github}
-                                onChange={(e) => handleInputChange('contact', null, 'github', e.target.value)}
-                                disabled={!isEditable}
-                            />
-                            <Input
-                                placeholder="LinkedIn"
-                                value={resume.contact.linkedin}
-                                onChange={(e) => handleInputChange('contact', null, 'linkedin', e.target.value)}
-                                disabled={!isEditable}
-                            />
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* Education Section */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex justify-between items-center">
-                        Education
-                        {isEditable && (
-                            <Button
-                                onClick={() => addArrayItem('education', {
-                                    institution: '',
-                                    location: '',
-                                    degree: '',
-                                    percentage: '',
-                                    duration: ''
-                                })}
-                                size="sm"
-                            >
-                                <FontAwesomeIcon icon={faPlusCircle} className="w-4 h-4 mr-2" />
-                                Add Education
-                            </Button>
-                        )}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {resume.education.map((edu, index) => (
-                        <div key={index} className="space-y-4 mb-6 relative">
-                            {isEditable && resume.education.length > 1 && (
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    className="absolute top-0 right-0"
-                                    onClick={() => removeArrayItem('education', index)}
-                                >
-                                    <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
-                                </Button>
-                            )}
-                            <Input
-                                placeholder="Institution"
-                                value={edu.institution}
-                                onChange={(e) => handleInputChange('education', index, 'institution', e.target.value)}
-                                disabled={!isEditable}
-                            />
-                            <div className="grid grid-cols-2 gap-4">
-                                <Input
-                                    placeholder="Location"
-                                    value={edu.location}
-                                    onChange={(e) => handleInputChange('education', index, 'location', e.target.value)}
-                                    disabled={!isEditable}
-                                />
-                                <Input
-                                    placeholder="Degree"
-                                    value={edu.degree}
-                                    onChange={(e) => handleInputChange('education', index, 'degree', e.target.value)}
-                                    disabled={!isEditable}
-                                />
-                                <Input
-                                    placeholder="Percentage"
-                                    value={edu.percentage}
-                                    onChange={(e) => handleInputChange('education', index, 'percentage', e.target.value)}
-                                    disabled={!isEditable}
-                                />
-                                <Input
-                                    placeholder="Duration"
-                                    value={edu.duration}
-                                    onChange={(e) => handleInputChange('education', index, 'duration', e.target.value)}
-                                    disabled={!isEditable}
-                                />
-                            </div>
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-
-            {/* Experience Section */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex justify-between items-center">
-                        Experience
-                        {isEditable && (
-                            <Button
-                                onClick={() =>
-                                    addArrayItem("experience", {
-                                        title: "",
-                                        company: "",
-                                        description: [""],
-                                        techStack: [""],
-                                        duration: "",
-                                    })
-                                }
-                                size="sm"
-                            >
-                                <FontAwesomeIcon icon={faPlusCircle} className="w-4 h-4 mr-2" />
-                                Add Experience
-                            </Button>
-                        )}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {resume.experience.map((exp, index) => (
-                        <div key={index} className="space-y-4 mb-6 relative">
-                            {isEditable && resume.experience.length > 1 && (
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    className="absolute top-0 right-0"
-                                    onClick={() => removeArrayItem("experience", index)}
-                                >
-                                    <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
-                                </Button>
-                            )}
-                            <div className="grid grid-cols-2 gap-4">
-                                <Input
-                                    placeholder="Title"
-                                    value={exp.title}
-                                    onChange={(e) =>
-                                        handleInputChange("experience", index, "title", e.target.value)
-                                    }
-                                    disabled={!isEditable}
-                                />
-                                <Input
-                                    placeholder="Company"
-                                    value={exp.company}
-                                    onChange={(e) =>
-                                        handleInputChange("experience", index, "company", e.target.value)
-                                    }
-                                    disabled={!isEditable}
-                                />
-                            </div>
-                            {exp.description.map((desc, subIndex) => (
-                                <div key={subIndex} className="flex gap-2">
-                                    <Textarea
-                                        placeholder="Description"
-                                        value={desc}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                "experience",
-                                                index,
-                                                "description",
-                                                e.target.value,
-                                                subIndex
-                                            )
-                                        }
-                                        disabled={!isEditable}
-                                    />
-                                    {isEditable && subIndex === exp.description.length - 1 && (
-                                        <Button
-                                            onClick={() =>
-                                                addArraySubItem("experience", index, "description")
-                                            }
-                                            size="sm"
-                                        >
-                                            <FontAwesomeIcon icon={faPlusCircle} className="w-4 h-4" />
-                                        </Button>
-                                    )}
-                                </div>
-                            ))}
-                            <Input
-                                placeholder="Duration"
-                                value={exp.duration}
-                                onChange={(e) =>
-                                    handleInputChange("experience", index, "duration", e.target.value)
-                                }
-                                disabled={!isEditable}
-                            />
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-          
-
-            {/* Projects Section */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex justify-between items-center">
-                        Projects
-                        {isEditable && (
-                            <Button
-                                onClick={() => addArrayItem('projects', {
-                                    name: '',
-                                    description: [''],
-                                    techStack: [''],
-                                    link: ''
-                                })}
-                                size="sm"
-                            >
-                                <FontAwesomeIcon icon={faPlusCircle} className="w-4 h-4 mr-2" />
-                                Add Project
-                            </Button>
-                        )}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {resume.projects.map((project, index) => (
-                        <div key={index} className="space-y-4 mb-6 relative">
-                            {isEditable && resume.projects.length > 1 && (
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    className="absolute top-0 right-0"
-                                    onClick={() => removeArrayItem('projects', index)}
-                                >
-                                    <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
-                                </Button>
-                            )}
-                            <Input
-                                placeholder="Project Name"
-                                value={project.name}
-                                onChange={(e) => handleInputChange('projects', index, 'name', e.target.value)}
-                                disabled={!isEditable}
-                            />
-                            {project.description.map((desc, subIndex) => (
-                                <div key={subIndex} className="flex gap-2">
-                                    <Textarea
-                                        placeholder="Description"
-                                        value={desc}
-                                        onChange={(e) => handleInputChange('projects', index, 'description', e.target.value, subIndex)}
-                                        disabled={!isEditable}
-                                    />
-                                    {isEditable && subIndex === project.description.length - 1 && (
-                                        <Button
-                                            onClick={() => addArraySubItem('projects', index, 'description')}
-                                            size="sm"
-                                        >
-                                            <FontAwesomeIcon icon={faPlusCircle} className="w-4 h-4" />
-                                        </Button>
-                                    )}
-                                </div>
-                            ))}
-                            <Input
-                                placeholder="Project Link"
-                                value={project.link}
-                                onChange={(e) => handleInputChange('projects', index, 'link', e.target.value)}
-                                disabled={!isEditable}
-                            />
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-
-            {/* Skills Section */}
-            <Card>
-                <CardHeader>
-                    <CardTitle className="flex justify-between items-center">
-                        Skills
-                        {isEditable && (
-                            <Button
-                                onClick={() => addArrayItem('skills', {
-                                    category: '',
-                                    skills: ['']
-                                })}
-                                size="sm"
-                            >
-                                <FontAwesomeIcon icon={faPlusCircle} className="w-4 h-4 mr-2" />
-                                Add Skill Category
-                            </Button>
-                        )}
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    {resume.skills.map((skillCategory, index) => (
-                        <div key={index} className="space-y-4 mb-6 relative">
-                            {isEditable && resume.skills.length > 1 && (
-                                <Button
-                                    variant="destructive"
-                                    size="sm"
-                                    className="absolute top-0 right-0"
-                                    onClick={() => removeArrayItem('skills', index)}
-                                >
-                                    <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
-                                </Button>
-                            )}
-                            <Input
-                                placeholder="Skill Category"
-                                value={skillCategory.category}
-                                onChange={(e) => handleInputChange('skills', index, 'category', e.target.value)}
-                                disabled={!isEditable}
-                            />
-                            {skillCategory.skills.map((skill, subIndex) => (
-                                <div key={subIndex} className="flex gap-2">
-                                    <Input
-                                        placeholder="Skill"
-                                        value={skill}
-                                        onChange={(e) => handleInputChange('skills', index, 'skills', e.target.value, subIndex)}
-                                        disabled={!isEditable}
-                                    />
-                                    {isEditable && subIndex === skillCategory.skills.length - 1 && (
-                                        <Button
-                                            onClick={() => addArraySubItem('skills', index, 'skills')}
-                                            size="sm"
-                                        >
-                                            <FontAwesomeIcon icon={faPlusCircle} className="w-4 h-4" />
-                                        </Button>
-                                    )}
-                                    {isEditable && skillCategory.skills.length > 1 && (
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            onClick={() => removeArraySubItem('skills', index, 'skills', subIndex)}
-                                        >
-                                            <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
-                                        </Button>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    ))}
-                </CardContent>
-            </Card>
-        </div>
-    );
-
-    const handleSave = () => {
-        console.log('Saving resume:', resume);
-        setMode('home');
-    };
-
-    const handleDownload = () => {
-        console.log('Downloading resume:', resume);
-    };
-
-    if (mode === 'home') {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-                <Card className="w-full max-w-md">
-                    <CardHeader>
-                        <CardTitle>Resume Builder</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <Button
-                            className="w-full"
-                            onClick={() => setMode('create')}
-                        >
-                            <FontAwesomeIcon icon={faPlusCircle} className="w-4 h-4 mr-2" />
-                            Create New Resume
-                        </Button>
-                        <Button
-                            className="w-full"
-                            onClick={() => setMode('edit')}
-                            variant="outline"
-                        >
-                            <FontAwesomeIcon icon={faEdit} className="w-4 h-4 mr-2" />
-                            Edit Resume
-                        </Button>
-                        <Button
-                            className="w-full"
-                            onClick={() => setMode('view')}
-                            variant="outline"
-                        >
-                            <FontAwesomeIcon icon={faEye} className="w-4 h-4 mr-2" />
-                            View Resume
-                        </Button>
-                    </CardContent>
-                </Card>
-            </div>
-        );
+  const uploadResume = async () => {
+    try {
+        const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/resume`, formData,{withCredentials:true});
+        
+        console.log("Upload successful:", response.data);
+    } catch (error) {
+        console.error("Upload failed:", error);
     }
+};
 
-    return (
-        <div className="min-h-screen bg-gray-50 p-4">
-            <div className="max-w-4xl mx-auto">
-                <div className="flex justify-between items-center mb-6">
-                    <Button
-                        variant="outline"
-                        onClick={() => setMode('home')}
-                    >
-                        <FontAwesomeIcon icon={faArrowLeft} className="w-4 h-4 mr-2" />
-                        Back
-                    </Button>
-                    <div className="space-x-2">
-                        {mode !== 'view' && (
-                            <Button onClick={handleSave}>
-                                <FontAwesomeIcon icon={faSave} className="w-4 h-4 mr-2" />
-                                Save
-                            </Button>
-                        )}
-                        <Button
-                            variant="outline"
-                            onClick={handleDownload}
-                        >
-                            <FontAwesomeIcon icon={faDownload} className="w-4 h-4 mr-2" />
-                            Download
-                        </Button>
-                    </div>
-                    
-                </div>
-                <ResumeForm isEditable={mode !== 'view'} />
-            </div>
+const HandleformData = async () => {
+    try {
+        const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/resume/getresumedata`, {
+            withCredentials: true, 
+        });
+        setFormData(response.data.data);  
+        // console.log(formData)
+        console.log('Fetched Form Data:', response.data);
+    } catch (error) {
+        console.error('Error fetching resume data:', error.response ? error.response.data : error.message);
+        return null;
+    }
+};
+
+useEffect(() => {
+    HandleformData();
+    
+  },[]);
+
+  const generatePDF = () => {
+    const resumeData= formData;
+      const doc = new jsPDF();
+      const marginLeft = 20;
+      let y = 20;
+  
+      // Header Section
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(22);
+      doc.text(resumeData.name, 105, y, { align: "center" });
+      y += 10;
+  
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`📧 ${resumeData.contact.email || "N/A"}`, marginLeft, y);
+      y += 7;
+      doc.text(`📞 ${resumeData.contact.phone || "N/A"}`, marginLeft, y);
+      y += 7;
+      doc.text(`🔗 LinkedIn: ${resumeData.contact.linkedin || "N/A"}`, marginLeft, y);
+      y += 7;
+      doc.text(`💻 GitHub: ${resumeData.contact.github || "N/A"}`, marginLeft, y);
+      y += 10;
+  
+      const renderSection = (title, data) => {
+        if (data.length === 0) return;
+  
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(14);
+        doc.text(title, marginLeft, y);
+        y += 6;
+  
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+  
+        data.forEach((item) => {
+          doc.text(`• ${item || "N/A"}`, marginLeft + 5, y);
+          y += 6;
+        });
+  
+        y += 4;
+      };
+  
+      renderSection(
+        "Education",
+        resumeData.education.map(
+          (edu) =>
+            `${edu.degree}, ${edu.institution} (CGPA: ${edu.percentage || "N/A"})`
+        )
+      );
+  
+      renderSection(
+        "Experience",
+        resumeData.experience.map(
+          (exp) => `${exp.title} at ${exp.company} (${exp.duration})`
+        )
+      );
+  
+      renderSection(
+        "Projects",
+        resumeData.projects.map(
+          (proj) => `${proj.name}: ${proj.description.join(", ")}`
+        )
+      );
+  
+      renderSection(
+        "Skills",
+        resumeData.skills.flatMap((skill) => skill.skills)
+      );
+  
+      renderSection(
+        "Achievements",
+        resumeData.achievements.map((ach) => ach.title)
+      );
+  
+      renderSection("Interests", resumeData.interests);
+      renderSection("Coursework", resumeData.coursework);
+      renderSection(
+        "Responsibilities",
+        resumeData.responsibilities.map((resp) => resp.role)
+      );
+  
+      doc.save("resume.pdf");
+    };
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-4">
+      {/* Mode Selection Buttons */}
+      <div className="flex gap-4 mb-6 sticky top-0 bg-white p-4 rounded-lg shadow-md z-10">
+        <button
+          onClick={() => setMode('create')}
+          className={`px-4 py-2 rounded ${mode === 'create' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+        >
+          Create/Update
+        </button>
+        <button
+          onClick={() =>{ setMode('view')}}
+          className={`px-4 py-2 rounded ${mode === 'view' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+        >
+          View
+        </button>
+         {/* Download Button */}
+          <button
+            onClick={generatePDF}
+            className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 flex items-center gap-2"
+          >
+            <Save className="w-5 h-5" />
+            Download Resume
+          </button>
+      </div>
+
+      <form className="max-w-4xl mx-auto space-y-6" onSubmit={(e) => e.preventDefault()}>
+        {/* Basic Information */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
+          <input
+            type="text"
+            placeholder="Name"
+            value={formData.name}
+            onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+            disabled={mode === 'view'}
+            className="p-2 border rounded w-full"
+          />
         </div>
-    );
+
+        {/* Contact Information */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Object.keys(formData.contact).map(field => (
+              <input
+                key={field}
+                type="text"
+                placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                value={formData.contact[field]}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  contact: { ...prev.contact, [field]: e.target.value }
+                }))}
+                disabled={mode === 'view'}
+                className="p-2 border rounded"
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Education Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Education</h2>
+            {mode !== 'view' && (
+              <button
+                type="button"
+                onClick={() => addItem('education')}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                <PlusCircle className="w-6 h-6" />
+              </button>
+            )}
+          </div>
+          {formData.education.map((edu, index) => (
+            <div key={index} className="border p-4 rounded mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Object.keys(edu).map(field => (
+                  <input
+                    key={field}
+                    type="text"
+                    placeholder={field.charAt(0).toUpperCase() + field.slice(1)}
+                    value={edu[field]}
+                    onChange={(e) => handleChange(e, 'education', index, field)}
+                    disabled={mode === 'view'}
+                    className="p-2 border rounded"
+                  />
+                ))}
+              </div>
+              {mode !== 'view' && formData.education.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeItem('education', index)}
+                  className="text-red-600 mt-2"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Experience Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Experience</h2>
+            {mode !== 'view' && (
+              <button
+                type="button"
+                onClick={() => addItem('experience')}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                <PlusCircle className="w-6 h-6" />
+              </button>
+            )}
+          </div>
+          {formData.experience.map((exp, index) => (
+            <div key={index} className="border p-4 rounded mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="Title"
+                  value={exp.title}
+                  onChange={(e) => handleChange(e, 'experience', index, 'title')}
+                  disabled={mode === 'view'}
+                  className="p-2 border rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Company"
+                  value={exp.company}
+                  onChange={(e) => handleChange(e, 'experience', index, 'company')}
+                  disabled={mode === 'view'}
+                  className="p-2 border rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Duration"
+                  value={exp.duration}
+                  onChange={(e) => handleChange(e, 'experience', index, 'duration')}
+                  disabled={mode === 'view'}
+                  className="p-2 border rounded"
+                />
+              </div>
+
+              {/* Description Array */}
+              <div className="mt-4">
+                <label className="block font-medium mb-2">Description</label>
+                {exp.description.map((desc, descIndex) => (
+                  <div key={descIndex} className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={desc}
+                      placeholder=""
+                      onChange={(e) => handleChange(e, 'experience', index, 'description', descIndex)}
+                      disabled={mode === 'view'}
+                      className="p-2 border rounded flex-1"
+                    />
+                    {mode !== 'view' && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => removeArrayItem('experience', index, 'description', descIndex)}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="w-5 h-5" />
+                        </button>
+                      </>
+                    )}
+                  </div>
+                ))}
+                {mode !== 'view' && (
+                  <button
+                    type="button"
+                    onClick={() => addArrayItem('experience', index, 'description')}
+                    className="text-blue-600"
+                  >
+                    <PlusCircle className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Tech Stack Array */}
+              <div className="mt-4">
+                <label className="block font-medium mb-2">Tech Stack</label>
+                {exp.techStack.map((tech, techIndex) => (
+                  <div key={techIndex} className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={tech}
+                      placeholder=""
+                      onChange={(e) => handleChange(e, 'experience', index, 'techStack', techIndex)}
+                      disabled={mode === 'view'}
+                      className="p-2 border rounded flex-1"
+                    />
+                    {mode !== 'view' && (
+                      <button
+                        type="button"
+                        onClick={() => removeArrayItem('experience', index, 'techStack', techIndex)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {mode !== 'view' && (
+                  <button
+                    type="button"
+                    onClick={() => addArrayItem('experience', index, 'techStack')}
+                    className="text-blue-600"
+                  >
+                    <PlusCircle className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+
+              {mode !== 'view' && formData.experience.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeItem('experience', index)}
+                  className="text-red-600 mt-4"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Projects Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Projects</h2>
+            {mode !== 'view' && (
+              <button
+                type="button"
+                onClick={() => addItem('projects')}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                <PlusCircle className="w-6 h-6" />
+              </button>
+            )}
+          </div>
+          {formData.projects.map((project, index) => (
+            <div key={index} className="border p-4 rounded mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  placeholder="Name"
+                  value={project.name}
+                  onChange={(e) => handleChange(e, 'projects', index, 'name')}
+                  disabled={mode === 'view'}
+                  className="p-2 border rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Link"
+                  value={project.link}
+                  onChange={(e) => handleChange(e, 'projects', index, 'link')}
+                  disabled={mode === 'view'}
+                  className="p-2 border rounded"
+                />
+              </div>
+
+              {/* Description Array */}
+              <div className="mt-4">
+                <label className="block font-medium mb-2">Description</label>
+                {project.description.map((desc, descIndex) => (
+                  <div key={descIndex} className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={desc}
+                      onChange={(e) => handleChange(e, 'projects', index, 'description', descIndex)}
+                      disabled={mode === 'view'}
+                      className="p-2 border rounded flex-1"
+                    />
+                    {mode !== 'view' && (
+                      <button
+                        type="button"
+                        onClick={() => removeArrayItem('projects', index, 'description', descIndex)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {mode !== 'view' && (
+                  <button
+                    type="button"
+                    onClick={() => addArrayItem('projects', index, 'description')}
+                    className="text-blue-600"
+                  >
+                    <PlusCircle className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+
+              <div className="mt-4">
+                <label className="block font-medium mb-2">Tech Stack</label>
+                {project.techStack.map((tech, techIndex) => (
+                  <div key={techIndex} className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={tech}
+                      onChange={(e) => handleChange(e, 'projects', index, 'techStack', techIndex)}
+                      disabled={mode === 'view'}
+                      className="p-2 border rounded flex-1"
+                    />
+                    {mode !== 'view' && (
+                      <button
+                        type="button"
+                        onClick={() => removeArrayItem('projects', index, 'techStack', techIndex)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {mode !== 'view' && (
+                  <button
+                    type="button"
+                    onClick={() => addArrayItem('projects', index, 'techStack')}
+                    className="text-blue-600"
+                  >
+                    <PlusCircle className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+
+              {mode !== 'view' && formData.projects.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeItem('projects', index)}
+                  className="text-red-600 mt-4"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Skills Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Skills</h2>
+            {mode !== 'view' && (
+              <button
+                type="button"
+                onClick={() => addItem('skills')}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                <PlusCircle className="w-6 h-6" />
+              </button>
+            )}
+          </div>
+          {formData.skills.map((skillGroup, index) => (
+            <div key={index} className="border p-4 rounded mb-4">
+              <input
+                type="text"
+                placeholder="Category"
+                value={skillGroup.category}
+                onChange={(e) => handleChange(e, 'skills', index, 'category')}
+                disabled={mode === 'view'}
+                className="p-2 border rounded w-full mb-4"
+              />
+              
+              {/* Skills Array */}
+              <div className="mt-2">
+                <label className="block font-medium mb-2">Skills</label>
+                {skillGroup.skills.map((skill, skillIndex) => (
+                  <div key={skillIndex} className="flex gap-2 mb-2">
+                    <input
+                      type="text"
+                      value={skill}
+                      onChange={(e) => handleChange(e, 'skills', index, 'skills', skillIndex)}
+                      disabled={mode === 'view'}
+                      className="p-2 border rounded flex-1"
+                    />
+                    {mode !== 'view' && (
+                      <button
+                        type="button"
+                        onClick={() => removeArrayItem('skills', index, 'skills', skillIndex)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+                {mode !== 'view' && (
+                  <button
+                    type="button"
+                    onClick={() => addArrayItem('skills', index, 'skills')}
+                    className="text-blue-600"
+                  >
+                    <PlusCircle className="w-5 h-5" />
+                  </button>
+                )}
+              </div>
+
+              {mode !== 'view' && formData.skills.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeItem('skills', index)}
+                  className="text-red-600 mt-2"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Achievements Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Achievements</h2>
+            {mode !== 'view' && (
+              <button
+                type="button"
+                onClick={() => addItem('achievements')}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                <PlusCircle className="w-6 h-6" />
+              </button>
+            )}
+          </div>
+          {formData.achievements.map((achievement, index) => (
+            <div key={index} className="border p-4 rounded mb-4">
+              <div className="grid grid-cols-1 gap-4">
+                <input
+                  type="text"
+                  placeholder="Title"
+                  value={achievement.title}
+                  onChange={(e) => handleChange(e, 'achievements', index, 'title')}
+                  disabled={mode === 'view'}
+                  className="p-2 border rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Description"
+                  value={achievement.description}
+                  onChange={(e) => handleChange(e, 'achievements', index, 'description')}
+                  disabled={mode === 'view'}
+                  className="p-2 border rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Link"
+                  value={achievement.link}
+                  onChange={(e) => handleChange(e, 'achievements', index, 'link')}
+                  disabled={mode === 'view'}
+                  className="p-2 border rounded"
+                />
+              </div>
+              {mode !== 'view' && formData.achievements.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeItem('achievements', index)}
+                  className="text-red-600 mt-2"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Interests Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Interests</h2>
+            {mode !== 'view' && (
+              <button
+                type="button"
+                onClick={() => addItem('interests')}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                <PlusCircle className="w-6 h-6" />
+              </button>
+            )}
+          </div>
+          {formData.interests.map((interest, index) => (
+            <div key={index} className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={interest}
+                onChange={(e) => handleChange(e, 'interests', index)}
+                disabled={mode === 'view'}
+                className="p-2 border rounded flex-1"
+              />
+              {mode !== 'view' && formData.interests.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeItem('interests', index)}
+                  className="text-red-600"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Coursework Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Coursework</h2>
+            {mode !== 'view' && (
+              <button
+                type="button"
+                onClick={() => addItem('coursework')}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                <PlusCircle className="w-6 h-6" />
+              </button>
+            )}
+          </div>
+          {formData.coursework.map((course, index) => (
+            <div key={index} className="flex gap-2 mb-2">
+              <input
+                type="text"
+                value={course}
+                onChange={(e) => handleChange(e, 'coursework', index)}
+                disabled={mode === 'view'}
+                className="p-2 border rounded flex-1"
+              />
+              {mode !== 'view' && formData.coursework.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeItem('coursework', index)}
+                  className="text-red-600"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Responsibilities Section */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold">Responsibilities</h2>
+            {mode !== 'view' && (
+              <button
+                type="button"
+                onClick={() => addItem('responsibilities')}
+                className="text-blue-600 hover:text-blue-800"
+              >
+                <PlusCircle className="w-6 h-6" />
+              </button>
+            )}
+          </div>
+          {formData.responsibilities.map((resp, index) => (
+            <div key={index} className="border p-4 rounded mb-4">
+              <div className="grid grid-cols-1 gap-4">
+                <input
+                  type="text"
+                  placeholder="Role"
+                  value={resp.role}
+                  onChange={(e) => handleChange(e, 'responsibilities', index, 'role')}
+                  disabled={mode === 'view'}
+                  className="p-2 border rounded"
+                />
+                <input
+                  type="text"
+                  placeholder="Description"
+                  value={resp.description}
+                  onChange={(e) => handleChange(e, 'responsibilities', index, 'description')}
+                  disabled={mode === 'view'}
+                  className="p-2 border rounded"
+                />
+              </div>
+              {mode !== 'view' && formData.responsibilities.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeItem('responsibilities', index)}
+                  className="text-red-600 mt-2"
+                >
+                  <Trash2 className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+         {/* Download Button */}
+         <div className="">
+          <button
+            onClick={uploadResume}
+            className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 flex items-center gap-2"
+          >
+            <Save className="w-5 h-5" />
+            Upload Resume
+          </button>
+        </div>
+        <div>
+        </div>
+
+      </form>
+       
+    </div>
+  );
 };
 
 export default ResumeBuilder;
