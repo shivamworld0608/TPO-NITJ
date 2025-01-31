@@ -55,12 +55,11 @@ const PDFDownloadCards = () => {
     fetchPDFs();
   }, []);
 
-  const handleDownload = async (id, filename) => {
+  const handleDownload = async (id,filename) => {
     setDownloadingStates(prev => ({ ...prev, [id]: true }));
     try {
-      const response = await api.get(`/api/pdfs/download/${id}`, {
-        responseType: 'blob'}
-      );
+      const response = await api.get(`/api/pdfs/download/${id}`,{responseType:'blob'});
+      
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
@@ -69,7 +68,7 @@ const PDFDownloadCards = () => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       await fetchPDFs();
       toast.success("PDF downloaded successfully");
     } catch (err) {

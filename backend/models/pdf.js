@@ -10,9 +10,6 @@ const pdfSchema = new mongoose.Schema({
   filepath: {
     type: String,
   },
-  thumbnail: {
-    type: String
-  },
   uploadDate: {
     type: Date,
     default: Date.now

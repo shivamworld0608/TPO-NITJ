@@ -10,7 +10,6 @@ export const submitExperience = async (req, res) => {
             content,
             author
         });
-        console.log("experience", experience);
         res.status(201).json({
             success: true,
             experience
@@ -32,6 +31,7 @@ export const getAllExperiences = async (req, res) => {
         const currentUserExperiences = experiences.filter(exp => exp.author._id.toString() === studentId);
         const otherExperiences = experiences.filter(exp => exp.author._id.toString() !== studentId);
         let eligible = false;
+        console.log(eligible);
         const jobs = await JobProfile.find({
             'Hiring_Workflow': {
                 $elemMatch: {
@@ -40,6 +40,7 @@ export const getAllExperiences = async (req, res) => {
                 },
             },
         });
+        console.log("hello");
         if (jobs.length > 0) {
             eligible = true;
         }

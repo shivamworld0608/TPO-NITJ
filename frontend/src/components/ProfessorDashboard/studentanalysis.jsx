@@ -96,9 +96,6 @@ const StudentAnalyticsDashboard = () => {
     }));
   };
 
-
-
-
   const departmentOptions = [
     { value: 'All', label: 'All' },
     { value: 'Computer Science & Engineering', label: 'Computer Science & Engineering' },
@@ -132,7 +129,11 @@ const StudentAnalyticsDashboard = () => {
     { value: '> 8.5', label: '> 8.5' },
     { value: '> 8.0', label: '> 8.0' },
     { value: '> 7.5', label: '> 7.5' },
-    { value: '> 7.0', label: '> 7.0' }
+    { value: '> 7.0', label: '> 7.0' },
+    { value: '> 6.5', label: '> 6.5' },
+    { value: '> 6.0', label: '> 6.0' },
+    { value: '> 5.5', label: '> 5.5' },
+    { value: '> 5.0', label: '> 5.0' },
   ];
 
   const genderOptions = [
@@ -246,6 +247,12 @@ const StudentAnalyticsDashboard = () => {
       setSortDirection('asc');
     }
   };
+
+  const handleDialogClose = () => {
+    setEditMode(false);
+    setEditedStudent(null);
+  };
+
 
   return (
     <div className="p-6 space-y-6 bg-gray-50 min-h-screen">
@@ -434,7 +441,11 @@ const StudentAnalyticsDashboard = () => {
       {/* Students Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {sortedStudents.map(student => (
-          <Dialog key={student._id}>
+          <Dialog key={student._id} onOpenChange={(open) => {
+            if (!open) {
+              handleDialogClose();
+            }
+          }}>
             <DialogTrigger asChild>
               <Card className="cursor-pointer hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-400  hover:scale-105 hover:bg-white">
                 <CardContent className="p-6">
@@ -575,8 +586,94 @@ const StudentAnalyticsDashboard = () => {
                         </div>
                       </CardContent>
                     </Card>
-
-                    
+                    <Card className="border-0 shadow-sm">
+                      <CardHeader>
+                        <CardTitle className="text-lg">Academic Details</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Department</label>
+                          {editMode ? (
+                            <Select
+                              options={departmentOptions}
+                              value={editedStudent.department}
+                              onValueChange={(value) => handleChange('department', value)}
+                              className="mt-1"
+                            />
+                          ) : (
+                            <p className="mt-1 text-gray-900">{student.department}</p>
+                          )}
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Course</label>
+                          {editMode ? (
+                            <Select
+                              options={courseOptions}
+                              value={editedStudent.course}
+                              onValueChange={(value) => handleChange('course', value)}
+                              className="mt-1"
+                            />
+                          ) : (
+                            <p className="mt-1 text-gray-900">{student.course}</p>
+                          )}
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">CGPA</label>
+                          {editMode ? (
+                            <Input
+                              type="number"
+                              min="0"
+                              max="10"
+                              value={editedStudent.cgpa}
+                              onChange={(e) => handleChange('cgpa', e.target.value)}
+                              className="mt-1"
+                            />
+                          ) : (
+                            <p className="mt-1 text-gray-900">{student.cgpa}</p>
+                          )}
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Batch</label>
+                          {editMode ? (
+                            <Select
+                              options={batchOptions}
+                              value={editedStudent.batch}
+                              onValueChange={(value) => handleChange('batch', value)}
+                              className="mt-1"
+                            />
+                          ) : (
+                            <p className="mt-1 text-gray-900">{student.batch}</p>
+                          )}
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Active Backlog</label>
+                          {editMode ? (
+                            <Select
+                              options={backlogOptions}
+                              value={editedStudent.active_backlogs}
+                              onValueChange={(value) => handleChange('active_backlogs', value)}
+                              className="mt-1"
+                            />
+                          ) : (
+                            <p className="mt-1 text-gray-900">{student.active_backlogs ? 'Yes' : 'No'}</p>
+                          )}
+                        </div>
+                         
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Backlogs History</label>
+                          {editMode ? (
+                            <Select
+                              options={backlogOptions}
+                              value={editedStudent.backlogs_history}
+                              onValueChange={(value) => handleChange('backlogs_history', value)}
+                              className="mt-1"
+                            />
+                          ) : (
+                            <p className="mt-1 text-gray-900">{student.backlogs_history ? 'Yes' : 'No'}</p>
+                          )}
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
 
                   {/* Right Column */}
