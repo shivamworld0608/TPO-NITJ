@@ -1,9 +1,9 @@
-import { CreateResume,UpdateResume,DeleteResume } from '../controller/resume';
-import Resume from '../models/resume';
+import express from 'express';
+import {CreateOrUpdateResume,DeleteResume,GetResumeData } from '../controller/resume.js ';
 const router = express.Router();
 
-router.post("/resume",CreateResume);
+router.post("/",CreateOrUpdateResume);
+router.get('/getresumedata',GetResumeData)
+router.delete("/deleteresume", DeleteResume);
 
-app.put("/resume/:studentId",UpdateResume );
-  
-app.delete("/resume/:studentId", DeleteResume);
+export default router;
