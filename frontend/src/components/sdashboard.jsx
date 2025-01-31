@@ -14,7 +14,8 @@ import {
   faHandsHelping,
   faShareSquare,
   faCalendar,
-  faNoteSticky
+  faNoteSticky,
+  faHammer
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -35,6 +36,7 @@ import NITJlogo from "../assets/nitj-logo.png";
 import Request from "./StudentDashboard/Request";
 import TeamSection from "./Developers/TeamSection.jsx";
 import ResumeBuilder from "./StudentDashboard/resume.jsx";
+import ChangePasswordForm from "./changepass.jsx";
 
 
 const StudentDashboard = () => {
@@ -103,6 +105,7 @@ const StudentDashboard = () => {
     },
     { path: "/sdashboard/policy-guidlines", label: "Policy & Guidlines", icon: faNoteSticky },
     { path: "/sdashboard/resume", label: "Resume", icon: faNoteSticky },
+    { path: "/sdashboard/change-pass", label: "Change Password", icon: faHammer },
   ];
 
   const MenuItem = ({ item, onClick, isSidebarExpanded }) => {
@@ -294,6 +297,7 @@ const StudentDashboard = () => {
             <Route path="policy-guidlines" element={<PDFDownloadCards />} />
             <Route path="team" element={<TeamSection />} />
             <Route path="resume" element={<ResumeBuilder />} />
+            <Route path="change-pass" element={<ChangePasswordForm />} />
             </Routes>
         </div>
 

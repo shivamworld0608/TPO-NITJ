@@ -1,21 +1,23 @@
 import PDF from '../models/pdf.js';
 import fs from 'fs';
+import { v2 as cloudinary } from 'cloudinary';
 
 export const uploadPDF = async (req, res) => {
+  const pdf = req.file.path;
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
-    }
+    const uploadedFile = await cloudinary.uploader.upload(pdf, {
+      resource_type: "raw",
+      folder: "pdfs",
+    });
 
+    fs.unlinkSync(pdf);
     const newPDF = new PDF({
       title: req.body.title,
       filename: req.file.filename,
-      filepath: req.file.path,
+      filepath: uploadedFile.secure_url,
       size: req.file.size,
-      thumbnail: req.body.thumbnail || '',
-      uploadedBy: req.user.userId
+      uploadedBy: req.user.userId,
     });
-
     await newPDF.save();
     res.status(201).json(newPDF);
   } catch (error) {
@@ -42,7 +44,7 @@ export const downloadPDF = async (req, res) => {
     }
     pdf.downloads += 1;
     await pdf.save();
-    res.download(pdf.filepath, pdf.filename);
+    res.json({ url: pdf.filepath });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -54,9 +56,7 @@ export const deletePDF = async (req, res) => {
     if (!pdf) {
       return res.status(404).json({ message: 'PDF not found' });
     }
-    fs.unlinkSync(pdf.filepath);
     await PDF.findByIdAndDelete(req.params.id);
-
     res.json({ message: 'PDF deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });

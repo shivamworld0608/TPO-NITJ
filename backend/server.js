@@ -26,6 +26,7 @@ import studentanalysisRoutes from "./routes/studentanalysis.js";
 import companiesanalysisRoutes from "./routes/companiesanalysis.js"
 import resumeroutes from "./routes/resume.js"
 
+
 import { mkdir } from 'fs/promises';
 try {
   await mkdir('uploads/pdfs', { recursive: true });
