@@ -119,16 +119,17 @@ export const getAllIssues = async (req, res) => {
     }
   };
 
-  export const getUnresolvedIssues = async (req, res) => {
+export const getUnresolvedIssues = async (req, res) => {
     try {
       const issues = await Issue.find({ "details.status": "Pending" });
+      console.log(issues);
       const populateDetails = async (issueList) => {
         return Promise.all(
           issueList.map(async (issue) => {
             const populatedDetails = await Promise.all(
               issue.details.map(async (detail) => {
                 if (detail.userId && detail.onModel) {
-                  const model = mongoose.model(detail.onModel); // Dynamically determine model
+                  const model = mongoose.model(detail.onModel);
                   const populatedUser = await model.findById(detail.userId, "name email");
                   return { ...detail.toObject(), userId: populatedUser };
                 }
