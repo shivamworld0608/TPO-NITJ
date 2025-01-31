@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PlusCircle, Trash2, Save } from 'lucide-react';
 import axios from 'axios';
 import { jsPDF } from "jspdf";
-import ResumeDownload from './downloadresume';
+import Resume from './downloadresume';
 
 const ResumeBuilder = () => {
   const [mode, setMode] = useState('view');
@@ -134,92 +134,8 @@ const ResumeBuilder = () => {
   useEffect(() => {
     HandleformData();
 
-  }, []);
+  },[]);
 
-  const generatePDF = () => {
-    const resumeData = formData;
-    const doc = new jsPDF();
-    const marginLeft = 20;
-    let y = 20;
-
-    // Header Section
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(22);
-    doc.text(resumeData.name, 105, y, { align: "center" });
-    y += 10;
-
-    doc.setFontSize(12);
-    doc.setFont("helvetica", "normal");
-    doc.text(`📧 ${resumeData.contact.email || "N/A"}`, marginLeft, y);
-    y += 7;
-    doc.text(`📞 ${resumeData.contact.phone || "N/A"}`, marginLeft, y);
-    y += 7;
-    doc.text(`🔗 LinkedIn: ${resumeData.contact.linkedin || "N/A"}`, marginLeft, y);
-    y += 7;
-    doc.text(`💻 GitHub: ${resumeData.contact.github || "N/A"}`, marginLeft, y);
-    y += 10;
-
-    const renderSection = (title, data) => {
-      if (data.length === 0) return;
-
-      doc.setFont("helvetica", "bold");
-      doc.setFontSize(14);
-      doc.text(title, marginLeft, y);
-      y += 6;
-
-      doc.setFont("helvetica", "normal");
-      doc.setFontSize(12);
-
-      data.forEach((item) => {
-        doc.text(`• ${item || "N/A"}`, marginLeft + 5, y);
-        y += 6;
-      });
-
-      y += 4;
-    };
-
-    renderSection(
-      "Education",
-      resumeData.education.map(
-        (edu) =>
-          `${edu.degree}, ${edu.institution} (CGPA: ${edu.percentage || "N/A"})`
-      )
-    );
-
-    renderSection(
-      "Experience",
-      resumeData.experience.map(
-        (exp) => `${exp.title} at ${exp.company} (${exp.duration})`
-      )
-    );
-
-    renderSection(
-      "Projects",
-      resumeData.projects.map(
-        (proj) => `${proj.name}: ${proj.description.join(", ")}`
-      )
-    );
-
-
-    renderSection(
-      "Skills",
-      resumeData.skills.flatMap((skill) => skill.skills)
-    );
-
-    renderSection(
-      "Achievements",
-      resumeData.achievements.map((ach) => ach.title)
-    );
-
-    renderSection("Interests", resumeData.interests);
-    renderSection("Coursework", resumeData.coursework);
-    renderSection(
-      "Responsibilities",
-      resumeData.responsibilities.map((resp) => resp.role)
-    );
-
-    doc.save("resume.pdf");
-  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -238,16 +154,6 @@ const ResumeBuilder = () => {
         >
           Create/Update
         </button>
-
-        {/* Download Button */}
-        <button
-          onClick={generatePDF}
-          className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 flex items-center gap-2"
-        >
-          <Save className="w-5 h-5" />
-          Download Resume
-        </button>
-        {/* Delete Button */}
         <button
           onClick={deleteResume}
           className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-700 flex items-center gap-2"
@@ -256,8 +162,11 @@ const ResumeBuilder = () => {
           Delete
         </button>
       </div>
+      {
+        mode=='view' && (<Resume resumeData={formData} />)
+      }
 
-      <form className="max-w-4xl mx-auto space-y-6" onSubmit={(e) => e.preventDefault()}>
+      {  mode !== 'view' && (<form className="max-w-4xl mx-auto space-y-6" onSubmit={(e) => e.preventDefault()}>
         {/* Basic Information */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
@@ -835,7 +744,7 @@ const ResumeBuilder = () => {
         <div>
         </div>
 
-      </form>
+      </form>)}
 
     </div>
   );
