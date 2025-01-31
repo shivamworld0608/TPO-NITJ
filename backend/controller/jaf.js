@@ -13,7 +13,7 @@ export const createJobAnnouncementForm = async (req, res) => {
       mTechPrograms,
       mbaProgramSpecializations,
       scienceStreamsSpecializations,
-      phdProgramSpecializations,
+      phdPrograms,
       requiredSkills,
       designations,
       jobLocation,
@@ -25,7 +25,7 @@ export const createJobAnnouncementForm = async (req, res) => {
       hrContacts,
       postalAddress
     } = req.body;
-
+    
     const newJobAnnouncement = new JobAnnouncementForm({
       recruiterId,
       organizationName,
@@ -37,7 +37,7 @@ export const createJobAnnouncementForm = async (req, res) => {
       mTechPrograms,
       mbaProgramSpecializations,
       scienceStreamsSpecializations,
-      phdProgramSpecializations,
+      phdPrograms,
       requiredSkills,
       designations,
       jobLocation,
@@ -55,6 +55,7 @@ export const createJobAnnouncementForm = async (req, res) => {
       data: savedJobAnnouncement
     });
   } catch (error) {
+    console.log(error);
     res.status(400).json({
       message: 'Error creating Job Announcement Form',
       error: error.message
