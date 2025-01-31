@@ -48,6 +48,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.0",
     "react-select": "^5.9.0",
+    "react-to-print": "^3.0.5",
     "react-toastify": "^11.0.2",
     "recharts": "^2.15.0",
     "redux-persist": "^6.0.0",
