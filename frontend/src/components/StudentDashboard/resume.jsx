@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PlusCircle, Trash2, Save } from 'lucide-react';
 import axios from 'axios';
 import { jsPDF } from "jspdf";
@@ -28,7 +28,7 @@ const ResumeBuilder = () => {
     const value = e.target.value;
     setFormData(prev => {
       const newData = { ...prev };
-      
+
       if (subIndex !== undefined) {
         newData[section][index][field][subIndex] = value;
       } else if (field) {
@@ -36,7 +36,7 @@ const ResumeBuilder = () => {
       } else {
         newData[section][index] = value;
       }
-      
+
       return newData;
     });
   };
@@ -52,7 +52,7 @@ const ResumeBuilder = () => {
         achievements: { title: '', description: '', link: '' },
         responsibilities: { role: '', description: '' }
       }[section] || '';
-      
+
       newData[section] = [...newData[section], emptyItem];
       return newData;
     });
@@ -85,141 +85,176 @@ const ResumeBuilder = () => {
 
   const uploadResume = async () => {
     try {
-        const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/resume`, formData,{withCredentials:true});
-        
-        console.log("Upload successful:", response.data);
-    } catch (error) {
-        console.error("Upload failed:", error);
-    }
-};
+      const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/resume`, formData, { withCredentials: true });
 
-const HandleformData = async () => {
+      console.log("Upload successful:", response.data);
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
+  };
+
+  const HandleformData = async () => {
     try {
-        const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/resume/getresumedata`, {
-            withCredentials: true, 
-        });
-        setFormData(response.data.data);  
-        // console.log(formData)
-        console.log('Fetched Form Data:', response.data);
+      const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/resume/getresumedata`, {
+        withCredentials: true,
+      });
+      setFormData(response.data.data);
+      // console.log(formData)
+      console.log('Fetched Form Data:', response.data);
     } catch (error) {
-        console.error('Error fetching resume data:', error.response ? error.response.data : error.message);
-        return null;
+      console.error('Error fetching resume data:', error.response ? error.response.data : error.message);
+      return null;
     }
-};
+  };
 
-useEffect(() => {
+  const deleteResume = async () => {
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.REACT_APP_BASE_URL}/resume/deleteresume`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Resume deleted successfully");
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error deleting resume data:",
+        error.response ? error.response.data : error.message
+      );
+      return null;
+    }
+  };
+
+
+  useEffect(() => {
     HandleformData();
-    
-  },[]);
+
+  }, []);
 
   const generatePDF = () => {
-    const resumeData= formData;
-      const doc = new jsPDF();
-      const marginLeft = 20;
-      let y = 20;
-  
-      // Header Section
+    const resumeData = formData;
+    const doc = new jsPDF();
+    const marginLeft = 20;
+    let y = 20;
+
+    // Header Section
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(22);
+    doc.text(resumeData.name, 105, y, { align: "center" });
+    y += 10;
+
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text(`📧 ${resumeData.contact.email || "N/A"}`, marginLeft, y);
+    y += 7;
+    doc.text(`📞 ${resumeData.contact.phone || "N/A"}`, marginLeft, y);
+    y += 7;
+    doc.text(`🔗 LinkedIn: ${resumeData.contact.linkedin || "N/A"}`, marginLeft, y);
+    y += 7;
+    doc.text(`💻 GitHub: ${resumeData.contact.github || "N/A"}`, marginLeft, y);
+    y += 10;
+
+    const renderSection = (title, data) => {
+      if (data.length === 0) return;
+
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(22);
-      doc.text(resumeData.name, 105, y, { align: "center" });
-      y += 10;
-  
-      doc.setFontSize(12);
+      doc.setFontSize(14);
+      doc.text(title, marginLeft, y);
+      y += 6;
+
       doc.setFont("helvetica", "normal");
-      doc.text(`📧 ${resumeData.contact.email || "N/A"}`, marginLeft, y);
-      y += 7;
-      doc.text(`📞 ${resumeData.contact.phone || "N/A"}`, marginLeft, y);
-      y += 7;
-      doc.text(`🔗 LinkedIn: ${resumeData.contact.linkedin || "N/A"}`, marginLeft, y);
-      y += 7;
-      doc.text(`💻 GitHub: ${resumeData.contact.github || "N/A"}`, marginLeft, y);
-      y += 10;
-  
-      const renderSection = (title, data) => {
-        if (data.length === 0) return;
-  
-        doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.text(title, marginLeft, y);
+      doc.setFontSize(12);
+
+      data.forEach((item) => {
+        doc.text(`• ${item || "N/A"}`, marginLeft + 5, y);
         y += 6;
-  
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-  
-        data.forEach((item) => {
-          doc.text(`• ${item || "N/A"}`, marginLeft + 5, y);
-          y += 6;
-        });
-  
-        y += 4;
-      };
-  
-      renderSection(
-        "Education",
-        resumeData.education.map(
-          (edu) =>
-            `${edu.degree}, ${edu.institution} (CGPA: ${edu.percentage || "N/A"})`
-        )
-      );
-  
-      renderSection(
-        "Experience",
-        resumeData.experience.map(
-          (exp) => `${exp.title} at ${exp.company} (${exp.duration})`
-        )
-      );
-  
-      renderSection(
-        "Projects",
-        resumeData.projects.map(
-          (proj) => `${proj.name}: ${proj.description.join(", ")}`
-        )
-      );
-  
-      renderSection(
-        "Skills",
-        resumeData.skills.flatMap((skill) => skill.skills)
-      );
-  
-      renderSection(
-        "Achievements",
-        resumeData.achievements.map((ach) => ach.title)
-      );
-  
-      renderSection("Interests", resumeData.interests);
-      renderSection("Coursework", resumeData.coursework);
-      renderSection(
-        "Responsibilities",
-        resumeData.responsibilities.map((resp) => resp.role)
-      );
-  
-      doc.save("resume.pdf");
+      });
+
+      y += 4;
     };
+
+    renderSection(
+      "Education",
+      resumeData.education.map(
+        (edu) =>
+          `${edu.degree}, ${edu.institution} (CGPA: ${edu.percentage || "N/A"})`
+      )
+    );
+
+    renderSection(
+      "Experience",
+      resumeData.experience.map(
+        (exp) => `${exp.title} at ${exp.company} (${exp.duration})`
+      )
+    );
+
+    renderSection(
+      "Projects",
+      resumeData.projects.map(
+        (proj) => `${proj.name}: ${proj.description.join(", ")}`
+      )
+    );
+
+
+    renderSection(
+      "Skills",
+      resumeData.skills.flatMap((skill) => skill.skills)
+    );
+
+    renderSection(
+      "Achievements",
+      resumeData.achievements.map((ach) => ach.title)
+    );
+
+    renderSection("Interests", resumeData.interests);
+    renderSection("Coursework", resumeData.coursework);
+    renderSection(
+      "Responsibilities",
+      resumeData.responsibilities.map((resp) => resp.role)
+    );
+
+    doc.save("resume.pdf");
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
       {/* Mode Selection Buttons */}
+
       <div className="flex gap-4 mb-6 sticky top-0 bg-white p-4 rounded-lg shadow-md z-10">
+        <button
+          onClick={() => setMode('view')}
+          className={`px-4 py-2 rounded ${mode === 'view' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+        >
+          View
+        </button>
         <button
           onClick={() => setMode('create')}
           className={`px-4 py-2 rounded ${mode === 'create' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
         >
           Create/Update
         </button>
+
+        {/* Download Button */}
         <button
-          onClick={() =>{ setMode('view')}}
-          className={`px-4 py-2 rounded ${mode === 'view' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+          onClick={generatePDF}
+          className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 flex items-center gap-2"
         >
-          View
+          <Save className="w-5 h-5" />
+          Download Resume
         </button>
-         {/* Download Button */}
-          <button
-            onClick={generatePDF}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 flex items-center gap-2"
-          >
-            <Save className="w-5 h-5" />
-            Download Resume
-          </button>
+        {/* Delete Button */}
+        <button
+          onClick={deleteResume}
+          className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-700 flex items-center gap-2"
+        >
+          <Save className="w-5 h-5" />
+          Delete
+        </button>
       </div>
 
       <form className="max-w-4xl mx-auto space-y-6" onSubmit={(e) => e.preventDefault()}>
@@ -566,7 +601,7 @@ useEffect(() => {
                 disabled={mode === 'view'}
                 className="p-2 border rounded w-full mb-4"
               />
-              
+
               {/* Skills Array */}
               <div className="mt-2">
                 <label className="block font-medium mb-2">Skills</label>
@@ -787,21 +822,21 @@ useEffect(() => {
             </div>
           ))}
         </div>
-         {/* Download Button */}
-         <div className="">
-          <button
+        {/* Download Button */}
+        <div className="">
+        {mode !== 'view' &&  (<button
             onClick={uploadResume}
             className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 flex items-center gap-2"
           >
             <Save className="w-5 h-5" />
-            Upload Resume
-          </button>
+            Save
+          </button>)}
         </div>
         <div>
         </div>
 
       </form>
-       
+
     </div>
   );
 };
