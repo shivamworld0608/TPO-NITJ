@@ -1,24 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import * as XLSX from 'xlsx';
 
 const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
-  const [students, setStudents] = useState([{ name: '', email: '' }]);
-  const [uploadMethod, setUploadMethod] = useState('manual'); // 'manual' or 'excel'
+  const [students, setStudents] = useState([]);
+  const [uploadMethod, setUploadMethod] = useState('shortlist');
+  useEffect(() => {
+    if (uploadMethod === 'shortlist') {
+      const fetchEligibleStudents = async () => {
+        try {
+          const response = await axios.post(
+            `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/eligible_students`,
+            { jobId, stepIndex },
+            { withCredentials: true }
+          );
+          const updatedStudents = response.data.eligibleStudents.map((student) => ({
+            ...student,
+            shortlisted: false,
+            absent: false,
+          }));
+          setStudents(updatedStudents);
+        } catch (err) {
+          console.error('Error fetching eligible students:', err);
+          toast.error('Failed to fetch eligible students');
+        }
+      };
+      fetchEligibleStudents();
+    }
+  }, [uploadMethod, jobId, stepIndex]);
 
-  const handleInputChange = (index, field, value) => {
+  const handleCheckboxChange = (index, field) => {
     const updatedStudents = [...students];
-    updatedStudents[index][field] = value;
+    updatedStudents[index][field] = !updatedStudents[index][field];
+    if (field === 'shortlisted' && updatedStudents[index].shortlisted) {
+      updatedStudents[index].absent = false;
+    } else if (field === 'absent' && updatedStudents[index].absent) {
+      updatedStudents[index].shortlisted = false;
+    }
     setStudents(updatedStudents);
-  };
-
-  const handleAddStudent = () => {
-    setStudents([...students, { name: '', email: '' }]);
-  };
-
-  const handleRemoveStudent = (index) => {
-    setStudents(students.filter((_, i) => i !== index));
   };
 
   const handleExcelUpload = (e) => {
@@ -33,14 +53,13 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
         const worksheet = workbook.Sheets[firstSheetName];
         const data = XLSX.utils.sheet_to_json(worksheet);
 
-        // Validate and transform the data
-        const transformedData = data.map(row => ({
+        const transformedData = data.map((row) => ({
           name: row.name || row.Name || '',
-          email: row.email || row.Email || ''
-        })).filter(student => student.name && student.email);
+          email: row.email || row.Email || '',
+        })).filter((student) => student.name && student.email);
 
         if (transformedData.length === 0) {
-          toast.error('No valid data found in Excel file. Please ensure columns are named "name" and "email"');
+          toast.error('No valid data found in Excel file. Ensure columns are named "name" and "email".');
           return;
         }
 
@@ -60,149 +79,118 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
   };
 
   const downloadTemplate = () => {
-    const ws = XLSX.utils.json_to_sheet([{ name: '', email: '' }]);
+    const ws = XLSX.utils.json_to_sheet([{ name: '', email: '', shortlisted: '', absent: '' }]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Students');
     XLSX.writeFile(wb, 'student_template.xlsx');
   };
 
   const handleSubmit = async () => {
-    // Validate students data
-    const invalidStudents = students.filter(s => !s.name || !s.email);
-    if (invalidStudents.length > 0) {
-      toast.error('Please fill in all student details');
+    const shortlistedStudents = students.filter((student) => student.shortlisted || uploadMethod !== 'shortlist');
+    if (shortlistedStudents.length === 0) {
+      toast.error('No students have been added or shortlisted');
       return;
     }
 
     try {
-      console.log('Shortlisting students...');
       await axios.post(
         `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/add-shortlist-students`,
-        { jobId, stepIndex, students },
+        { jobId, stepIndex, students: shortlistedStudents },
         { withCredentials: true }
       );
-      toast.success('Students shortlisted successfully!');
+      toast.success('Students processed successfully!');
       onClose();
     } catch (error) {
-      console.error('Error shortlisting students:', error);
-      toast.error('Failed to shortlist students.',error);
+      console.error('Error submitting students:', error);
+      toast.error('Failed to submit students.');
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl">
-      <h2 className="text-2xl sm:text-3xl font-bold text-blue-800 mb-6">Shortlist Students</h2>
 
       {/* Upload Method Toggle */}
       <div className="mb-6 flex justify-center space-x-4">
         <button
           className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-            uploadMethod === 'manual'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            uploadMethod === 'shortlist' ? 'bg-custom-blue text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
-          onClick={() => setUploadMethod('manual')}
+          onClick={() => setUploadMethod('shortlist')}
         >
-          Manual Entry
+          Select Manually
         </button>
         <button
           className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-            uploadMethod === 'excel'
-              ? 'bg-blue-500 text-white'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            uploadMethod === 'excel' ? 'bg-custom-blue text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
           }`}
           onClick={() => setUploadMethod('excel')}
         >
-          Excel Upload
+          Upload Excel
         </button>
       </div>
 
-      {uploadMethod === 'excel' ? (
-        <div className="mb-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
-          <div className="flex flex-col items-center space-y-4">
-            <button
-              onClick={downloadTemplate}
-              className="text-blue-500 hover:text-blue-600 underline"
-            >
-              Download Excel Template
-            </button>
-            <input
-              type="file"
-              accept=".xlsx,.xls"
-              onChange={handleExcelUpload}
-              className="w-full max-w-xs"
-            />
-            <p className="text-sm text-gray-500">
-              Upload Excel file with columns: name, email
-            </p>
-          </div>
-        </div>
-      ) : (
-        <>
-          {students.map((student, index) => (
-            <div
-              key={index}
-              className="mb-6 p-4 sm:p-6 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-md transition-shadow duration-300"
-            >
-              <input
-                type="text"
-                placeholder="Student Name"
-                value={student.name}
-                onChange={(e) => handleInputChange(index, 'name', e.target.value)}
-                className="w-full p-2 sm:p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300 mb-4"
-              />
-              <input
-                type="email"
-                placeholder="Student Email"
-                value={student.email}
-                onChange={(e) => handleInputChange(index, 'email', e.target.value)}
-                className="w-full p-2 sm:p-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-300"
-              />
-              <button
-                className="mt-4 text-red-500 hover:text-red-600 transition-all duration-300"
-                onClick={() => handleRemoveStudent(index)}
-              >
-                Remove Student
-              </button>
-            </div>
-          ))}
-
+      {/* Upload Excel */}
+      {uploadMethod === 'excel' && (
+        <div className="mb-6 border rounded-3xl py-4 shadow">
+          <input
+            type="file"
+            accept=".xlsx, .xls"
+            onChange={handleExcelUpload}
+            className="mb-4"
+          />
           <button
-            className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-            onClick={handleAddStudent}
+            className="bg-custom-blue text-white px-4 py-2 rounded-lg"
+            onClick={downloadTemplate}
           >
-            Add More Students
+            Download Template
           </button>
-        </>
+        </div>
       )}
 
-      {/* Preview of Excel Data */}
-      {uploadMethod === 'excel' && students.length > 0 && (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-4">Uploaded Students Preview</h3>
-          <div className="max-h-60 overflow-y-auto">
-            {students.map((student, index) => (
-              <div key={index} className="p-3 bg-gray-50 rounded mb-2">
-                <p>Name: {student.name}</p>
-                <p>Email: {student.email}</p>
-              </div>
-            ))}
-          </div>
+      {/* Shortlist */}
+      {uploadMethod === 'shortlist' && students.length > 0 && (
+        <div className="overflow-x-auto mb-6">
+          <table className="w-full text-sm text-left text-gray-500 border-collapse">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-100">
+              <tr>
+                <th className="px-4 py-2 border">Name</th>
+                <th className="px-4 py-2 border">Email</th>
+                <th className="px-4 py-2 border text-center">Shortlisted</th>
+                <th className="px-4 py-2 border text-center">Absent</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.map((student, index) => (
+                <tr key={index} className="bg-white border-b">
+                  <td className="px-4 py-2 border">{student.name}</td>
+                  <td className="px-4 py-2 border">{student.email}</td>
+                  <td className="px-4 py-2 border text-center">
+                    <input
+                      type="checkbox"
+                      checked={student.shortlisted}
+                      onChange={() => handleCheckboxChange(index, 'shortlisted')}
+                    />
+                  </td>
+                  <td className="px-4 py-2 border text-center">
+                    <input
+                      type="checkbox"
+                      checked={student.absent}
+                      onChange={() => handleCheckboxChange(index, 'absent')}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
       {/* Submit and Cancel Buttons */}
-      <div className="mt-8 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-        <button
-          className="flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-          onClick={handleSubmit}
-        >
+      <div className="mt-8 flex space-x-4">
+        <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={handleSubmit}>
           Submit
         </button>
-        <button
-          className="flex-1 bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-          onClick={onClose}
-        >
+        <button className="bg-gray-500 text-white px-4 py-2 rounded-lg" onClick={onClose}>
           Cancel
         </button>
       </div>
