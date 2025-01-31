@@ -15,7 +15,10 @@ import {
   faShareSquare,
   faCalendar,
   faNoteSticky,
-  faHammer
+  faHammer,
+  faUserTie,
+  faFileLines,
+  faFileAlt
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -104,7 +107,8 @@ const StudentDashboard = () => {
       icon: faShareSquare,
     },
     { path: "/sdashboard/policy-guidlines", label: "Policy & Guidlines", icon: faNoteSticky },
-    { path: "/sdashboard/resume", label: "Resume", icon: faNoteSticky },
+    { path: "/sdashboard/resume", label: "Resume", icon: faFileAlt
+     },
     { path: "/sdashboard/change-pass", label: "Change Password", icon: faHammer },
   ];
 
