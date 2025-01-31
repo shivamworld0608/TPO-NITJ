@@ -20,9 +20,11 @@ const ContactRequests = () => {
     fetchContactForms();
   }, []);
 
-  if (loading) {
-    return <div className="text-center py-8">Loading...</div>;
-  }
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+    </div>
+  );
 
   return (
     <section className="py-12 px-6 bg-gradient-to-b from-white via-blue-100 to-white min-h-screen">
