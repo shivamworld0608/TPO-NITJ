@@ -16,8 +16,6 @@ import {
   faShareAlt,
   faChartBar,
   faUpload,
-  faComments,
-  faContactCard,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -45,7 +43,6 @@ import TeamSection from "../Developers/TeamSection.jsx";
 import StudentAnalyticsDashboard from "./studentanalysis.jsx";
 import ContactRequests from "./contactus.jsx";
 import ConversationLog from "./conversation.jsx";
-import { FaRegPlusSquare, FaThinkPeaks } from "react-icons/fa";
 
 
 const Pdashboard = () => {
@@ -101,8 +98,8 @@ const Pdashboard = () => {
     {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
     { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
     { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
-    { label: "User Requests", icon: faContactCard, path: "/pdashboard/contact-request" },
-    { label: "Conversation Log", icon: faComments, path: "/pdashboard/conversation" },
+    { label: "Contact Request", icon: faUpload, path: "/pdashboard/contact-request" },
+    { label: "Conversation Log", icon: faUpload, path: "/pdashboard/conversation" },
     
   ];
 
