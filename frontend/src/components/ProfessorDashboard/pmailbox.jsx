@@ -4,10 +4,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import io from "socket.io-client";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
-const socket = io(`${import.meta.env.REACT_APP_BASE_URL}`); // WebSocket server URL
 
-const MailboxComponent = ({ userEmail, userType="Professor" }) => {
+
+const socket = io(`${import.meta.env.REACT_APP_BASE_URL}`);
+
+const MailboxComponent = ({userType="Professor" }) => {
+  const { userData } = useSelector((state) => state.auth);
+  const userEmail=userData.email;
   const [messages, setMessages] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isComposing, setIsComposing] = useState(false);
@@ -16,11 +21,10 @@ const MailboxComponent = ({ userEmail, userType="Professor" }) => {
     sender: userEmail,
     subject: "",
     body: "",
-    metadata: {}, // Add metadata for filtering
+    metadata: {},
   });
   const [selectedMessage, setSelectedMessage] = useState(null);
 
-  // Fetch initial emails
   useEffect(() => {
     const fetchMails = async () => {
       try {
@@ -36,7 +40,6 @@ const MailboxComponent = ({ userEmail, userType="Professor" }) => {
 
     fetchMails();
 
-    // Listen for new mails via WebSocket
     socket.on("newMail", (mail) => {
       if (mail.recipients.includes(userEmail)) {
         setMessages((prev) => [...prev, mail]);
@@ -48,22 +51,21 @@ const MailboxComponent = ({ userEmail, userType="Professor" }) => {
     };
   }, [userEmail]);
 
-  // Handle sending a new email
   const handleSendMessage = async () => {
     try {
       const payload = {
         ...newMessage,
-        senderType: userType, // Use the userType prop (Student, Professor, Recruiter)
-        metadata: newMessage.metadata, // Include metadata for filtering
+        senderType: userType,
+        metadata: newMessage.metadata,
       };
 
       let endpoint = "";
       if (userType === "Student") {
-        endpoint = "/mailbox/send-to-professors"; // Students can only send to professors
+        endpoint = "/mailbox/send-to-professors";
       } else if (userType === "Professor") {
-        endpoint = "/mailbox/send-to-students"; // Professors can send to students or recruiters
+        endpoint = "/mailbox/send-to-students";
       } else if (userType === "Recruiter") {
-        endpoint = "/mailbox/send-to-students"; // Recruiters can send to students
+        endpoint = "/mailbox/send-to-students";
       }
 
       const response = await axios.post(
@@ -72,7 +74,7 @@ const MailboxComponent = ({ userEmail, userType="Professor" }) => {
         { withCredentials: true }
       );
 
-      socket.emit("sendMail", response.data.mail); // Notify via WebSocket
+      socket.emit("sendMail", response.data.mail);
       setIsComposing(false);
       setNewMessage({ sender: userEmail, subject: "", body: "", metadata: {} });
     } catch (error) {
