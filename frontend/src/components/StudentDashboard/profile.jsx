@@ -78,6 +78,9 @@ function Profile() {
 
   const handleProfilePicSubmit = async (e) => {
     e.preventDefault();
+    if (e.target.files && e.target.files[0]) {
+      setSendImage(e.target.files[0]);
+    }
     if (!sendImage) return;
     try {
       const form = new FormData();
@@ -178,7 +181,8 @@ function Profile() {
           <input
             ref={fileInputRef}
             type="file"
-            onChange={handleFileChange}
+            onChange={handleProfilePicSubmit}
+            /* onChange={handleFileChange} */
             style={{ display: "none" }}
           />
 
