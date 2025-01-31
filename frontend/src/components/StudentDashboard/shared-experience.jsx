@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import BouncingLoader from "../BouncingLoader";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import { Plus } from "lucide-react";
 
 const SharedExperience = () => {
   const [showEditor, setShowEditor] = useState(false);
@@ -187,14 +188,15 @@ const SharedExperience = () => {
       <div className="container mx-auto px-4 py-6">
         {activeTab === "myExperiences" && (
           <section>
-            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+           <div className="flex justify-start items-center lg:flex-row flex-col   gap-6">
               {eligible && (
-                <div
-                  onClick={() => setShowEditor(true)}
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 border-dashed border-4 border-gray-300 rounded-xl flex items-center justify-center cursor-pointer shadow-lg hover:shadow-2xl transition-transform hover:scale-105 duration-300 text-white text-6xl p-5 h-auto w-56"
-                >
-                  <FaPlus />
-                </div>
+               <div
+  onClick={() => setShowEditor(true)}
+  className="bg-transparent border-2 border-custom-blue rounded-full flex items-center justify-center cursor-pointer shadow-md hover:shadow-lg transition-all hover:scale-110 duration-300 text-custom-blue hover:bg-custom-blue hover:text-white text-4xl p-4 h-24 w-24"
+>
+  <Plus className="w-8 h-8" />
+</div>
+
               )}
               {currentUserExperiences.map((experience) => (
                 <div
