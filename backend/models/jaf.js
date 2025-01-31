@@ -45,7 +45,7 @@ const JobAnnouncementFormSchema = new mongoose.Schema({
   },
   sector: {
     type: String,
-    enum: ['Core Engineering', 'IT', 'R&D', 'Analytics', 'Finance', 'Marketing', 'Networking', 'Educational']
+    enum: ['Core Engineering', 'IT', 'R&D', 'Analytics', 'Finance', 'Marketing', 'Networking', 'Educational',"Others"]
   },
   placementType: {
     type: [String],
@@ -59,7 +59,7 @@ const JobAnnouncementFormSchema = new mongoose.Schema({
   
   mTechPrograms: {
    type:[String],
-  /*  enum:['Computer Science & Engineering','Information Security','Data Science','Artificial Intelligence','Signal Processing and Machine Learning','VLSI Design','Electric Vehicle Design','Data Analytics','Biotechnology','Chemical Engineering','Structural and Construction Engineering','Geotechnical – GEO-Environmental Engineering','Industrial Engineering & Data Analytics',''] */
+   enum:["Computer Science & Engineering", "Information Security","Electronics & Communication Engineering", "VLSI Design","Machine Intelligence and Automation","Artificial Intelligence","Biotechnology","Chemical Engineering","Structural and Construction Engineering","Geotechnical -GEO-Environmental Engineering","Industrial Engineering","Manufacturing Technology","Design Engineering","Thermal Engineering","Renewable Energy","Textile Engineering & Management"] 
   },
   
   mbaProgramSpecializations: {
@@ -74,7 +74,21 @@ const JobAnnouncementFormSchema = new mongoose.Schema({
   
   phdProgramSpecializations:{
     type: [String],
-  /*   enum:[] */
+    enum:["Computer Science & Engineering",
+    "Electronics & Communication Engineering",
+    "Information Technology",
+    "Electrical Engineering",
+    "Instrumentation and Control Engineering",
+    "Mechanical Engineering",
+    "Civil Engineering",
+    "Chemical Engineering",
+    "Biotechnology",
+    "Industrial and Production Engineering",
+    "Textile Technology",
+    "Humanities & Management",
+    "Mathematics",
+    "Physics",
+    "Chemistry",]
   },
   requiredSkills: {
     type: String,
@@ -95,7 +109,12 @@ const JobAnnouncementFormSchema = new mongoose.Schema({
 
   selectionProcess:{
     type: [String],
-    /* enum: ['Written Test', 'Interview', 'Group Discussion'] */
+    enum: [    "Short Listing from resume / Database",
+      "CGPA",
+      "Aptitude test",
+      "Technical test",
+      "Group Discussion/Activity",
+      "Personal Interview",]
   },
   additionalSelectionDetails:{
     type:String
