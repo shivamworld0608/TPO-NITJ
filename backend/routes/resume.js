@@ -1,5 +1,5 @@
 import express from 'express';
-import {CreateOrUpdateResume,DeleteResume,GetResumeData } from '../controller/resume.js ';
+import {CreateOrUpdateResume,DeleteResume,GetResumeData } from '../controller/resume.js';
 const router = express.Router();
 
 router.post("/",CreateOrUpdateResume);
