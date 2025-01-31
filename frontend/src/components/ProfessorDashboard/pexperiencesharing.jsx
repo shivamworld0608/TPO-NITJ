@@ -22,7 +22,7 @@ const ProfessorExperienceManagement = () => {
       const response = await axios.get  (
         `${import.meta.env.REACT_APP_BASE_URL}/sharedexperience`, { withCredentials: true });
       setStudentExperiences(response.data.otherExperiences||[]);
-      console.log(response.data.otherExperiences);
+      console.log("ggyihn",response.data.otherExperiences);
       setIsLoading(false);
     } catch (error) {
       toast.error('Failed to fetch student experiences');
@@ -105,10 +105,11 @@ const ProfessorExperienceManagement = () => {
       </CardContent>
     </Card>
   );
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+    </div>
+  );
 
   return (
     <div className="max-w-2xl mx-auto p-4">

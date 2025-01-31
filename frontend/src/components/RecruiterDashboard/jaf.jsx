@@ -39,6 +39,7 @@ const JobAnnouncementForm = () => {
     summerInternshipOpportunities: "false",
     hrContacts: [{ name: "", designation: "", email: "", phone: "" }],
     postalAddress: "",
+    approved_status:false,
   });
 
   const bTechPrograms = [
@@ -153,49 +154,38 @@ const JobAnnouncementForm = () => {
   };
 
   
-  // const handleProgramCheckboxChange = (
-  //   type,
-  //   program,
-  //   specialization,
-  //   checked
-  // ) => {
-  //   setFormData((prev) => {
+  // const handleProgramCheckboxChange = (type, program, specialization, checked) => {
+  //   setFormData(prev => {
   //     let updatedPrograms = [...(prev[type] || [])];
-
+      
   //     if (specialization) {
-  //       // Handle specialization checkbox
-  //       const specializationEntry = `${program} - ${specialization}`;
-
+  //       // Handle specialization checkbox - store only specialization name
   //       if (checked) {
-  //         // Add specialization if checked
-  //         if (!updatedPrograms.includes(specializationEntry)) {
-  //           updatedPrograms.push(specializationEntry);
+  //         // Add just the specialization if checked
+  //         if (!updatedPrograms.includes(specialization)) {
+  //           updatedPrograms.push(specialization);
   //         }
-
+          
   //         // Check if all specializations are now selected
-  //         const allSpecializations =
-  //           mTechPrograms.circuital
-  //             .concat(mTechPrograms.nonCircuital)
-  //             .find((p) => p.name === program)?.specializations || [];
-
-  //         const allSpecSelected = allSpecializations.every((spec) =>
-  //           updatedPrograms.includes(`${program} - ${spec}`)
+  //         const programData = mTechPrograms.circuital
+  //           .concat(mTechPrograms.nonCircuital)
+  //           .find(p => p.name === program);
+            
+  //         const allSpecializations = programData?.specializations || [];
+  //         const allSpecSelected = allSpecializations.every(spec => 
+  //           updatedPrograms.includes(spec)
   //         );
-
+          
   //         // If all specializations are selected, add the main program
   //         if (allSpecSelected && !updatedPrograms.includes(program)) {
   //           updatedPrograms.push(program);
   //         }
   //       } else {
   //         // Remove specialization if unchecked
-  //         updatedPrograms = updatedPrograms.filter(
-  //           (entry) => entry !== specializationEntry
-  //         );
-
+  //         updatedPrograms = updatedPrograms.filter(entry => entry !== specialization);
+          
   //         // Remove main program checkbox when any specialization is unchecked
-  //         updatedPrograms = updatedPrograms.filter(
-  //           (entry) => entry !== program
-  //         );
+  //         updatedPrograms = updatedPrograms.filter(entry => entry !== program);
   //       }
   //     } else {
   //       // Handle main program checkbox
@@ -204,26 +194,30 @@ const JobAnnouncementForm = () => {
   //         if (!updatedPrograms.includes(program)) {
   //           updatedPrograms.push(program);
   //         }
-
+          
   //         // Add all specializations
   //         const programData = mTechPrograms.circuital
   //           .concat(mTechPrograms.nonCircuital)
-  //           .find((p) => p.name === program);
-
-  //         programData?.specializations.forEach((spec) => {
-  //           const specEntry = `${program} - ${spec}`;
-  //           if (!updatedPrograms.includes(specEntry)) {
-  //             updatedPrograms.push(specEntry);
+  //           .find(p => p.name === program);
+            
+  //         programData?.specializations.forEach(spec => {
+  //           if (!updatedPrograms.includes(spec)) {
+  //             updatedPrograms.push(spec);
   //           }
   //         });
   //       } else {
   //         // Remove main program and ALL its specializations when unchecked
-  //         updatedPrograms = updatedPrograms.filter(
-  //           (entry) => entry !== program && !entry.startsWith(`${program} - `)
+  //         const programData = mTechPrograms.circuital
+  //           .concat(mTechPrograms.nonCircuital)
+  //           .find(p => p.name === program);
+            
+  //         const specializationsToRemove = programData?.specializations || [];
+  //         updatedPrograms = updatedPrograms.filter(entry => 
+  //           entry !== program && !specializationsToRemove.includes(entry)
   //         );
   //       }
   //     }
-
+      
   //     return { ...prev, [type]: updatedPrograms };
   //   });
   // };
@@ -232,63 +226,48 @@ const JobAnnouncementForm = () => {
     setFormData(prev => {
       let updatedPrograms = [...(prev[type] || [])];
       
+      // Find program data to check if it has specializations
+      const programData = mTechPrograms.circuital
+        .concat(mTechPrograms.nonCircuital)
+        .find(p => p.name === program);
+      
+      const hasSpecializations = programData?.specializations?.length > 0;
+      
       if (specialization) {
-        // Handle specialization checkbox - store only specialization name
+        // Handle specialization checkbox - only for programs with specializations
         if (checked) {
-          // Add just the specialization if checked
           if (!updatedPrograms.includes(specialization)) {
             updatedPrograms.push(specialization);
           }
-          
-          // Check if all specializations are now selected
-          const programData = mTechPrograms.circuital
-            .concat(mTechPrograms.nonCircuital)
-            .find(p => p.name === program);
-            
-          const allSpecializations = programData?.specializations || [];
-          const allSpecSelected = allSpecializations.every(spec => 
-            updatedPrograms.includes(spec)
-          );
-          
-          // If all specializations are selected, add the main program
-          if (allSpecSelected && !updatedPrograms.includes(program)) {
-            updatedPrograms.push(program);
-          }
         } else {
-          // Remove specialization if unchecked
           updatedPrograms = updatedPrograms.filter(entry => entry !== specialization);
-          
-          // Remove main program checkbox when any specialization is unchecked
-          updatedPrograms = updatedPrograms.filter(entry => entry !== program);
         }
       } else {
         // Handle main program checkbox
-        if (checked) {
-          // Add main program if checked
-          if (!updatedPrograms.includes(program)) {
-            updatedPrograms.push(program);
+        if (hasSpecializations) {
+          // For programs with specializations
+          if (checked) {
+            // Add all specializations
+            programData.specializations.forEach(spec => {
+              if (!updatedPrograms.includes(spec)) {
+                updatedPrograms.push(spec);
+              }
+            });
+          } else {
+            // Remove all specializations
+            updatedPrograms = updatedPrograms.filter(entry => 
+              !programData.specializations.includes(entry)
+            );
           }
-          
-          // Add all specializations
-          const programData = mTechPrograms.circuital
-            .concat(mTechPrograms.nonCircuital)
-            .find(p => p.name === program);
-            
-          programData?.specializations.forEach(spec => {
-            if (!updatedPrograms.includes(spec)) {
-              updatedPrograms.push(spec);
-            }
-          });
         } else {
-          // Remove main program and ALL its specializations when unchecked
-          const programData = mTechPrograms.circuital
-            .concat(mTechPrograms.nonCircuital)
-            .find(p => p.name === program);
-            
-          const specializationsToRemove = programData?.specializations || [];
-          updatedPrograms = updatedPrograms.filter(entry => 
-            entry !== program && !specializationsToRemove.includes(entry)
-          );
+          // For programs without specializations
+          if (checked) {
+            if (!updatedPrograms.includes(program)) {
+              updatedPrograms.push(program);
+            }
+          } else {
+            updatedPrograms = updatedPrograms.filter(entry => entry !== program);
+          }
         }
       }
       
@@ -556,9 +535,13 @@ const JobAnnouncementForm = () => {
                         <div className="flex items-center space-x-2">
                           <Checkbox
                             id={`mtech-${program.name}`}
-                            checked={formData.mTechPrograms.includes(
-                              program.name
-                            )}
+                            checked={
+                              program.specializations.length === 0 
+                                ? formData.mTechPrograms.includes(program.name)
+                                : program.specializations.every(spec => 
+                                    formData.mTechPrograms.includes(spec)
+                                  )
+                            }
                             onChange={(checked) =>
                               handleProgramCheckboxChange(
                                 "mTechPrograms",
@@ -620,9 +603,13 @@ const JobAnnouncementForm = () => {
                         <div className="flex items-center space-x-2">
                           <Checkbox
                             id={`mtech-${program.name}`}
-                            checked={formData.mTechPrograms.includes(
-                              program.name
-                            )}
+                            checked={
+                              program.specializations.length === 0 
+                                ? formData.mTechPrograms.includes(program.name)
+                                : program.specializations.every(spec => 
+                                    formData.mTechPrograms.includes(spec)
+                                  )
+                            }
                             onChange={(checked) =>
                               handleProgramCheckboxChange(
                                 "mTechPrograms",

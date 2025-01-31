@@ -28,6 +28,7 @@ export const getAllExperiences = async (req, res) => {
             .populate('author', 'name email')
             .sort('-createdAt');
         const studentId = req.user.userId;
+        console.log("hiiii");
         const currentUserExperiences = experiences.filter(exp => exp.author._id.toString() === studentId);
         const otherExperiences = experiences.filter(exp => exp.author._id.toString() !== studentId);
         let eligible = false;
@@ -40,10 +41,10 @@ export const getAllExperiences = async (req, res) => {
                 },
             },
         });
-        console.log("hello");
         if (jobs.length > 0) {
             eligible = true;
         }
+        console.log("hero");
         res.status(200).json({
             eligible,
             currentUserExperiences,
