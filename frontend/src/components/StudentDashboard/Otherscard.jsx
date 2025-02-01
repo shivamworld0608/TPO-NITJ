@@ -53,16 +53,20 @@ export default function Otherscard(props) {
               <span className="font-medium text-gray-800 mr-2">
                 Others Link:
               </span>
-              <a
-                href={others_link}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => {
+                  const url = others_link.startsWith("http")
+                    ? others_link
+                    : `https://${others_link}`;
+                  window.open(url, "_blank");
+                }}
                 className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
               >
                 Start
-              </a>
+              </button>
             </div>
           )}
+
           {was_shortlisted && (
             <div className="text-sm text-gray-500 flex items-center">
               {was_shortlisted}
