@@ -52,10 +52,10 @@ const JobAnnouncementFormSchema = new mongoose.Schema({
     enum: ['Virtual Placement', 'Campus Placement']
   },
 
-  bTechPrograms: [{
+  bTechPrograms: {
     type:[String],
     enum:['Computer Science & Engineering','Electronics & Communication Engineering','Instrumentation and Control Engineering','Electrical Engineering','Information Technology','Biotechnology','Chemical Engineering','Civil Engineering','Industrial & Production Engineering','Mechanical Engineering','Textile Technology'],
-  }],
+  },
   
   mTechPrograms: {
    type:[String],
@@ -72,7 +72,7 @@ const JobAnnouncementFormSchema = new mongoose.Schema({
     enum:['Physics','Chemistry','Mathematics']
   },
   
-  phdProgramSpecializations:{
+  phdPrograms:{
     type: [String],
     enum:["Computer Science & Engineering",
     "Electronics & Communication Engineering",
