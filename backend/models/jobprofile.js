@@ -50,7 +50,7 @@ const JobProfileSchema = new mongoose.Schema(
         {
           step_type: {
             type: String,
-            enum: ["Resume Shortlisting", "OA", "Interview", "GD","Other"],
+            /* enum: ["Resume Shortlisting", "OA", "Interview", "GD","Others"], */
           },
           details: {
             type: mongoose.Schema.Types.Mixed,
