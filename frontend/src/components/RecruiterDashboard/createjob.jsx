@@ -805,9 +805,9 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               
                 <input
                   type="string"
-                  name="Name of Round"
+                  name="others_round_name"
                   placeholder="Name of Round"
-                  value={workflowStep.details.round_name}
+                  value={workflowStep.details.others_round_name}
                   onChange={handleStepDetailsChange}
                   className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300 mt-4"
                 />
