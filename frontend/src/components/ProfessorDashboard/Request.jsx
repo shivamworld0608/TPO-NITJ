@@ -17,7 +17,8 @@ const RequestHelpManager = () => {
         `${import.meta.env.REACT_APP_BASE_URL}/reqhelp/get-unresolved`,
         { withCredentials: true }
       );
-      setIssues(response.data.data);
+      setIssues(response.data.data||[]);
+      console.log(issues);
     } catch (error) {
       console.error("Error fetching issues:", error);
     } finally {
@@ -50,10 +51,11 @@ const RequestHelpManager = () => {
     }
   };
 
-  if (loading) {
-    return <p className="text-center text-gray-500">Loading issues...</p>;
-  }
-
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+    </div>
+  );
   return (
     <div className="p-6 min-h-screen">
       <h1 className="text-3xl font-bold text-custom-blue mb-4">Pending Issues</h1>

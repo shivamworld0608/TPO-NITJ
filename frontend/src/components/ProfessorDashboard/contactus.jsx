@@ -20,16 +20,18 @@ const ContactRequests = () => {
     fetchContactForms();
   }, []);
 
-  if (loading) {
-    return <div className="text-center py-8">Loading...</div>;
-  }
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+    </div>
+  );
 
   return (
-    <section className="py-12 px-6 bg-gradient-to-b from-white via-blue-100 to-white min-h-screen">
+    <section className="py-12 px-6  min-h-screen">
       <div className="max-w-7xl mx-auto">
-        <h2 className="text-3xl font-bold sm:text-4xl lg:text-5xl text-center mb-12">
-          Contact <span className="text-custom-blue">Requests</span>
-        </h2>
+        <h1 className="text-3xl font-bold sm:text-4xl lg:text-4xl text-center mb-12">
+          User <span className="text-custom-blue">Requests</span>
+        </h1>
 
         {Object.keys(contactForms).map((department) => (
           <div key={department} className="mb-8">

@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
+import configureWebSocket from "./utils/websocket.js";
+import http from "http";
 
 
 import authroutes from "./routes/auth.js";
@@ -25,6 +27,9 @@ import travelplannerRoutes from "./routes/travelplanner.js";
 import studentanalysisRoutes from "./routes/studentanalysis.js";
 import companiesanalysisRoutes from "./routes/companiesanalysis.js";
 import contactusRoutes from "./routes/contactus.js";
+import conversationRoutes from "./routes/conversation.js";
+import mailboxRoutes from "./routes/mailbox.js";
+import resumeroutes from "./routes/resume.js"
 
 import { mkdir } from 'fs/promises';
 try {
@@ -35,6 +40,9 @@ try {
 
 
 const app = express();
+const server = http.createServer(app);
+configureWebSocket(server);
+
 dotenv.config();
 app.use(cors({credentials: true, origin: process.env.CLIENT_URL}));
 
@@ -92,8 +100,11 @@ app.use("/companies-analysis",authenticate,companiesanalysisRoutes);
 app.use('/api/pdfs', authenticate, pdfroutes);
 app.use('/api',authenticate, formTemplateroutes);
 app.use('/contactus',contactusRoutes);
+app.use('/conversations',authenticate,conversationRoutes);
+app.use('/mailbox',authenticate,mailboxRoutes);
+app.use('/resume',authenticate, resumeroutes);
 
 const port = process.env.PORT || 5000;
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 }); 
