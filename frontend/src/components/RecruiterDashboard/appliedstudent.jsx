@@ -39,7 +39,7 @@ const AppliedStudents = ({ jobId, onClose }) => {
         acc[field.fieldName] = field.value;
         return acc;
       }, {});
-      return { ...formattedFields, StudentName: submission.studentId.name };
+      return { ...formattedFields,Resume:submission.resumeUrl};
     });
 
     const worksheet = XLSX.utils.json_to_sheet(data);
@@ -84,6 +84,7 @@ const AppliedStudents = ({ jobId, onClose }) => {
                   {field.fieldName}
                 </th>
               ))}
+              <th className="border border-gray-300 px-4 py-2 bg-gray-50">Resume</th>
             </tr>
           </thead>
           <tbody>
@@ -97,6 +98,20 @@ const AppliedStudents = ({ jobId, onClose }) => {
                     {field.value}
                   </td>
                 ))}
+
+<td className="border border-gray-300 px-4 py-2">
+               <button
+                  className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-grren-700 transition-colors"
+                   onClick={() => {
+        const url = submission.resumeUrl.startsWith("http") ? others_link : `https://${submission.resumeUrl}`;
+        window.open(url, "_blank");
+      }}
+
+                >
+                  View
+                </button>
+
+</td>
               </tr>
             ))}
           </tbody>
