@@ -15,7 +15,7 @@ const EditApplicationForm = ({ jobId, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const studentProperties = ['gender', 'department', 'cgpa', 'name'];
+  const studentProperties = ['gender', 'department', 'cgpa', 'name','email'];
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -53,6 +53,12 @@ const EditApplicationForm = ({ jobId, onClose }) => {
             )
           }
         : field
+    ));
+  };
+
+  const handleCheckboxChange = (index, key) => {
+    setFields(fields.map((field, i) => 
+      i === index ? { ...field, [key]: !field[key] } : field
     ));
   };
 
@@ -184,18 +190,14 @@ const EditApplicationForm = ({ jobId, onClose }) => {
               <Checkbox
   id={`required-${index}`}
   checked={field.isRequired}
-  onChange={(e) =>
-    handleFieldChange(index, 'isRequired', e.target.checked)
-  }
+  onChange={() => handleCheckboxChange(index, 'isRequired')}
 />
 <Label htmlFor={`required-${index}`}>Required</Label>
 
 <Checkbox
   id={`autofill-${index}`}
   checked={field.isAutoFill}
-  onChange={(e) =>
-    handleFieldChange(index, 'isAutoFill', e.target.checked)
-  }
+  onChange={() => handleCheckboxChange(index, 'isAutoFill')}
 />
 <Label htmlFor={`autofill-${index}`}>Auto-Fill</Label>
 

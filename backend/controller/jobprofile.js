@@ -491,3 +491,31 @@ export const eligibleinthis = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+export const viewshortlisting=async(req,res)=>{
+  try {
+    const { jobId, stepIndex } = req.body;
+    const jobProfile = await JobProfile.findById(jobId);
+    if (!jobProfile) {
+      return res.status(404).json({ error: 'Job profile not found' });
+    }
+    const shortlisted_studentsid = jobProfile.Hiring_Workflow[stepIndex]?.shortlisted_students;
+    const submissions = await FormSubmission.find({
+      studentId: { $in: shortlisted_studentsid },
+      jobId,
+    });
+    const shortlistedStudents = submissions.map(submission => {
+      const nameField = submission.fields.find(field => field.fieldName === 'Name');
+      const emailField = submission.fields.find(field => field.fieldName === 'Email');
+
+      return {
+        name: nameField ? nameField.value : submission.studentId.name,
+        email: emailField ? emailField.value : submission.studentId.email,
+      };
+    });
+    res.status(200).json({ shortlistedStudents });
+  } catch (error) {
+    console.error('Error in eligibleinthis:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
