@@ -6,9 +6,12 @@ import * as XLSX from 'xlsx';
 const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
   const [students, setStudents] = useState([]);
   const [uploadMethod, setUploadMethod] = useState('shortlist');
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     if (uploadMethod === 'shortlist') {
       const fetchEligibleStudents = async () => {
+        setLoading(true);
         try {
           const response = await axios.post(
             `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/eligible_students`,
@@ -24,6 +27,8 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
         } catch (err) {
           console.error('Error fetching eligible students:', err);
           toast.error('Failed to fetch eligible students');
+        } finally {
+          setLoading(false);
         }
       };
       fetchEligibleStudents();
@@ -38,6 +43,15 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
     } else if (field === 'absent' && updatedStudents[index].absent) {
       updatedStudents[index].shortlisted = false;
     }
+    setStudents(updatedStudents);
+  };
+
+  const handleBulkAction = (action) => {
+    const updatedStudents = students.map(student => ({
+      ...student,
+      shortlisted: action === 'shortlist',
+      absent: action === 'absent'
+    }));
     setStudents(updatedStudents);
   };
 
@@ -56,6 +70,8 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
         const transformedData = data.map((row) => ({
           name: row.name || row.Name || '',
           email: row.email || row.Email || '',
+          shortlisted: row.shortlisted || false,
+          absent: row.absent || false,
         })).filter((student) => student.name && student.email);
 
         if (transformedData.length === 0) {
@@ -86,12 +102,13 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
   };
 
   const handleSubmit = async () => {
-    const shortlistedStudents = students.filter((student) => student.shortlisted || uploadMethod !== 'shortlist');
+    const shortlistedStudents = students.filter((student) => student.shortlisted|| student.absent || uploadMethod !== 'shortlist');
     if (shortlistedStudents.length === 0) {
       toast.error('No students have been added or shortlisted');
       return;
     }
 
+    setLoading(true);
     try {
       await axios.post(
         `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/add-shortlist-students`,
@@ -103,12 +120,13 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
     } catch (error) {
       console.error('Error submitting students:', error);
       toast.error('Failed to submit students.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl">
-
       {/* Upload Method Toggle */}
       <div className="mb-6 flex justify-center space-x-4">
         <button
@@ -150,6 +168,20 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
       {/* Shortlist */}
       {uploadMethod === 'shortlist' && students.length > 0 && (
         <div className="overflow-x-auto mb-6">
+          <div className="mb-4 flex space-x-4">
+            <button
+              className="bg-green-500 text-white px-4 py-2 rounded-lg"
+              onClick={() => handleBulkAction('shortlist')}
+            >
+              Shortlist All
+            </button>
+            <button
+              className="bg-red-500 text-white px-4 py-2 rounded-lg"
+              onClick={() => handleBulkAction('absent')}
+            >
+              Mark All Absent
+            </button>
+          </div>
           <table className="w-full text-sm text-left text-gray-500 border-collapse">
             <thead className="text-xs text-gray-700 uppercase bg-gray-100">
               <tr>
@@ -187,10 +219,10 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
 
       {/* Submit and Cancel Buttons */}
       <div className="mt-8 flex space-x-4">
-        <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={handleSubmit}>
-          Submit
+        <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={handleSubmit} disabled={loading}>
+          {loading ? 'Submitting...' : 'Submit'}
         </button>
-        <button className="bg-gray-500 text-white px-4 py-2 rounded-lg" onClick={onClose}>
+        <button className="bg-gray-500 text-white px-4 py-2 rounded-lg" onClick={onClose} disabled={loading}>
           Cancel
         </button>
       </div>
