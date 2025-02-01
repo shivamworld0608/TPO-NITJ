@@ -16,6 +16,9 @@ import {
   faShareAlt,
   faChartBar,
   faUpload,
+  faContactCard,
+  faComment,
+  
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -43,6 +46,7 @@ import TeamSection from "../Developers/TeamSection.jsx";
 import StudentAnalyticsDashboard from "./studentanalysis.jsx";
 import ContactRequests from "./contactus.jsx";
 import ConversationLog from "./conversation.jsx";
+import { FaRegComment } from "react-icons/fa";
 
 
 const Pdashboard = () => {
@@ -98,8 +102,8 @@ const Pdashboard = () => {
     {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
     { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
     { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
-    { label: "Contact Request", icon: faUpload, path: "/pdashboard/contact-request" },
-    { label: "Conversation Log", icon: faUpload, path: "/pdashboard/conversation" },
+    { label: "User Requests", icon: faContactCard, path: "/pdashboard/contact-request" },
+    { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
     
   ];
 
@@ -144,7 +148,7 @@ const Pdashboard = () => {
           <div className="flex items-center">
             <img
               onClick={() => navigate("/sdashboard/home")}
-              src={userData?.image || NITJlogo}
+              src={ NITJlogo}
               alt="Logo"
               className="h-10 w-10 object-contain rounded"
             />
