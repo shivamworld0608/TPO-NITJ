@@ -118,7 +118,6 @@ const workflowStepOptions = [
   { value: "OA", label: "Online Assessment" },
   { value: "Interview", label: "Interview" },
   { value: "GD", label: "Group Discussion" },
-  
   {value: "Others", label: "Others"},
 ];
 
@@ -280,6 +279,13 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
           <div className="text-sm">
             <p>Date: {step.details.gd_date}</p>
             <p>Time: {step.details.gd_time}</p>
+          </div>
+        );
+      case "Others":
+        return (
+          <div className="text-sm">
+            <p>Date: {step.details.others_date}</p>
+            <p>Time: {step.details.others_time}</p>
           </div>
         );
       default:
@@ -798,10 +804,10 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               <>
               
                 <input
-                  type="text"
+                  type="string"
                   name="Name of Round"
                   placeholder="Name of Round"
-                  value={workflowStep.details.round_name || ""}
+                  value={workflowStep.details.round_name}
                   onChange={handleStepDetailsChange}
                   className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300 mt-4"
                 />
@@ -809,44 +815,43 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                 <input
                   type="date"
-                  name="oa_date"
+                  name="others_date"
                   placeholder="Round Date"
-                  value={workflowStep.details.oa_date || ""}
+                  value={workflowStep.details.others_date || ""}
                   onChange={handleStepDetailsChange}
                   className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <input
                   type="string"
-                  name="oa_login_time"
+                  name="others_login_time"
                   placeholder="Login Time"
-                  value={workflowStep.details.oa_login_time || ""}
+                  value={workflowStep.details.others_login_time || ""}
                   onChange={handleStepDetailsChange}
                   className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <input
                   type="string"
-                  name="oa_duration"
+                  name="others_duration"
                   placeholder="Round Duration"
-                  value={workflowStep.details.oa_duration || ""}
+                  value={workflowStep.details.others_duration || ""}
                   onChange={handleStepDetailsChange}
                   className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <textarea
-                  name="oa_link"
+                  name="others_link"
                   placeholder="Round Link"
-                  value={workflowStep.details.oa_link || ""}
+                  value={workflowStep.details.others_link || ""}
                   onChange={handleStepDetailsChange}
                   className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <textarea
-                  name="oa_info"
+                  name="others_info"
                   placeholder="Round Info"
-                  value={workflowStep.details.oa_info || ""}
+                  value={workflowStep.details.others_info || ""}
                   onChange={handleStepDetailsChange}
                   className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
               </div>
-              
               
             </>
           )}

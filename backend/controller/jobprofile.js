@@ -68,6 +68,16 @@ export const createJobProfilecopy = async (req, res) => {
           };
           break;
 
+        case 'Others':
+          processedStep.details = {
+            others_date: step.details?.others_date || '',
+            others_login_time: step.details?.others_login_time || '',
+            others_duration: step.details?.others_duration || '',
+            others_info: step.details?.others_info || '',
+            others_link: step.details?.others_link || ''
+          };
+          break;
+
         default:
           throw new Error(`Invalid step type: ${step.step_type}`);
       }
