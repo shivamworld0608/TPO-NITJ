@@ -211,9 +211,7 @@ const AppliedStudentp = ({ jobId,onClose }) => {
                    onClick={() => {
         const url = submission.resumeUrl.startsWith("http") ? others_link : `https://${submission.resumeUrl}`;
         window.open(url, "_blank");
-      }}
-
-                >
+      }} >
                   View
                 </button>
 
