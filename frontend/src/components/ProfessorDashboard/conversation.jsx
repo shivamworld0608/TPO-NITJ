@@ -277,7 +277,7 @@ const ConversationLog = () => {
       Add
     </Button>
   </DialogActions>
-</Dialog>;
+</Dialog>
 
 
       {/* Notes Dialog */}
@@ -324,7 +324,7 @@ const ConversationLog = () => {
       Save
     </Button>
   </DialogActions>
-</Dialog>;
+</Dialog>
 
 
       {/* Edit Conversation Dialog */}
@@ -417,7 +417,7 @@ const ConversationLog = () => {
       Save
     </Button>
   </DialogActions>
-</Dialog>;
+</Dialog>
 
     </div>
     </>
