@@ -2,8 +2,15 @@ import React, { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 
 export default function Otherscard(props) {
-  const { company_name, others_date, others_time, others_info, others_link, was_shortlisted } =
-    props;
+  const {
+    company_name,
+    others_date,
+    others_round_name,
+    others_time,
+    others_info,
+    others_link,
+    was_shortlisted,
+  } = props;
 
   const [showModal, setShowModal] = useState(false);
 
@@ -19,7 +26,13 @@ export default function Otherscard(props) {
         </h2>
         <div className="mt-4 space-y-4">
           <div className="text-sm text-gray-500 flex items-center">
-            <span className="font-medium text-gray-800 mr-2">Others Date:</span>
+            <span className="font-medium text-gray-800 mr-2">Round Name:</span>
+            <span className="font-medium text-gray-500">
+              {others_round_name || "na"}
+            </span>
+          </div>
+          <div className="text-sm text-gray-500 flex items-center">
+            <span className="font-medium text-gray-800 mr-2">Date:</span>
             <span className="font-medium text-gray-500">
               {" "}
               {others_date
@@ -32,12 +45,14 @@ export default function Otherscard(props) {
             </span>
           </div>
           <div className="text-sm text-gray-500 flex items-center">
-            <span className="font-medium text-gray-800 mr-2">Others Time:</span>
+            <span className="font-medium text-gray-800 mr-2">Time:</span>
             <span className="font-medium text-gray-500">{others_time}</span>
           </div>
           {others_link && (
             <div className="text-sm text-gray-500 flex items-center">
-              <span className="font-medium text-gray-800 mr-2">Others Link:</span>
+              <span className="font-medium text-gray-800 mr-2">
+                Others Link:
+              </span>
               <a
                 href={others_link}
                 target="_blank"
