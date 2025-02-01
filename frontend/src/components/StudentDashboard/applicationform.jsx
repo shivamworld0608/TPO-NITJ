@@ -3,12 +3,12 @@ import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { FaArrowLeft } from "react-icons/fa";
 
-
 const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
   const [fields, setFields] = useState([]);
   const [resumeUrl, setResumeUrl] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchFormTemplate = async () => {
@@ -69,6 +69,8 @@ const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
       return;
     }
 
+    setIsSubmitting(true);
+
     try {
       const submissionData = {
         jobId,
@@ -92,6 +94,8 @@ const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
     } catch (err) {
       console.error(err);
       toast.error('Failed to submit form.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -171,10 +175,11 @@ const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
       </div>
 
       <button
-        className="mt-6 w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+        className="mt-6 w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-green-300 disabled:cursor-not-allowed"
         onClick={handleSubmit}
+        disabled={isSubmitting}
       >
-        Submit
+        {isSubmitting ? 'Submitting...' : 'Submit'}
       </button>
     </div>
   );
