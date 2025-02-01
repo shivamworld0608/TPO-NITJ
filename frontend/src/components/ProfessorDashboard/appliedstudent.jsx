@@ -41,7 +41,7 @@ const AppliedStudentp = ({ jobId,onClose }) => {
         acc[field.fieldName] = field.value;
         return acc;
       }, {});
-      return { ...formattedFields, StudentName: submission.studentId.name };
+      return { ...formattedFields,Resume:submission.resumeUrl };
     });
     exportToExcel(data, 'Professor_Submissions');
   };
@@ -195,6 +195,7 @@ const AppliedStudentp = ({ jobId,onClose }) => {
               {submissions[0]?.fields.map((field, index) => (
                 <th key={index} className="border border-gray-300 px-4 py-2 bg-gray-50">{field.fieldName}</th>
               ))}
+              <th className="border border-gray-300 px-4 py-2 bg-gray-50">Resume</th>
               <th className="border border-gray-300 px-4 py-2 bg-gray-50">Actions</th>
             </tr>
           </thead>
@@ -204,6 +205,19 @@ const AppliedStudentp = ({ jobId,onClose }) => {
                 {submission.fields.map((field, fieldIndex) => (
                   <td key={fieldIndex} className="border border-gray-300 px-4 py-2">{field.value}</td>
                 ))}
+               <td className="border border-gray-300 px-4 py-2">
+               <button
+                  className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-grren-700 transition-colors"
+                   onClick={() => {
+        const url = submission.resumeUrl.startsWith("http") ? others_link : `https://${submission.resumeUrl}`;
+        window.open(url, "_blank");
+      }}
+
+                >
+                  View
+                </button>
+
+</td>
                 <td className="border border-gray-300 px-4 py-2">
                   <button
                     className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition-colors"
