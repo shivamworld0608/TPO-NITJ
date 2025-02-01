@@ -70,6 +70,7 @@ export const createJobProfilecopy = async (req, res) => {
 
         case 'Others':
           processedStep.details = {
+            others_round_name:step.details?.others_round_name||'',
             others_date: step.details?.others_date || '',
             others_login_time: step.details?.others_login_time || '',
             others_duration: step.details?.others_duration || '',
