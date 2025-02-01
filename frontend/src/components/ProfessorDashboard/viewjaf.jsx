@@ -291,17 +291,131 @@ function ViewJAF({ jaf: initialJAF }) {
     }
   };
 
-  const downloadPDF = () => {
-    const element = document.getElementById('jaf-form');
-    const opt = {
-      margin: 1,
-      filename: 'JAF_Form.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
-    };
+  // const downloadPDF = () => {
+  //   const element = document.getElementById('jaf-form');
+  //   const opt = {
+  //     margin: 1,
+  //     filename: 'JAF_Form.pdf',
+  //     image: { type: 'jpeg', quality: 0.98 },
+  //     html2canvas: { scale: 2 },
+  //     jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+  //   };
 
-    html2pdf().set(opt).from(element).save();
+  //   html2pdf().set(opt).from(element).save();
+  // };
+
+
+  const downloadPDF = async () => {
+    // Show loading state in UI
+    const downloadButton = document.querySelector('button:has(.download)');
+    if (downloadButton) {
+      const originalContent = downloadButton.innerHTML;
+      downloadButton.disabled = true;
+      downloadButton.innerHTML = 'Generating PDF...';
+    }
+  
+    try {
+      const element = document.getElementById('jaf-form');
+      if (!element) {
+        throw new Error('Form element not found');
+      }
+  
+      // Clone the element to avoid modifying the original
+      const clonedElement = element.cloneNode(true);
+      
+      // Add print-specific styles
+      const styleSheet = document.createElement('style');
+      styleSheet.textContent = `
+        @media print {
+          #jaf-form {
+            font-family: Arial, sans-serif !important;
+            line-height: 1.6 !important;
+            font-size: 12pt !important;
+            color: black !important;
+            background: white !important;
+          }
+          #jaf-form * {
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          input[type="checkbox"] {
+            -webkit-appearance: none;
+            border: 1px solid black;
+            width: 12px;
+            height: 12px;
+            position: relative;
+          }
+          input[type="checkbox"]:checked:after {
+            content: '✓';
+            position: absolute;
+            left: 1px;
+            top: -3px;
+          }
+        }
+      `;
+      document.head.appendChild(styleSheet);
+  
+      // Configure PDF options
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `JAF_Form_${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          logging: false,
+          allowTaint: false,
+          removeContainer: true,
+          backgroundColor: '#ffffff'
+        },
+        jsPDF: {
+          unit: 'mm',
+          format: 'a4',
+          orientation: 'portrait',
+          compress: true
+        },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+      };
+  
+      // Pre-process images
+      const images = clonedElement.getElementsByTagName('img');
+      await Promise.all(Array.from(images).map(img => new Promise((resolve) => {
+        if (img.complete) {
+          resolve();
+        } else {
+          img.onload = resolve;
+          img.onerror = resolve;
+        }
+      })));
+  
+      // Generate and save PDF
+      await html2pdf()
+        .from(clonedElement)
+        .set(opt)
+        .save();
+  
+      // Cleanup
+      styleSheet.remove();
+      
+    } catch (error) {
+      console.error('PDF generation failed:', error);
+      toast.error('Failed to generate PDF. Please try again.');
+    } finally {
+      // Reset button state
+      const downloadButton = document.querySelector('button:has(.download)');
+      if (downloadButton) {
+        downloadButton.disabled = false;
+        downloadButton.innerHTML = `<Download className="w-4 h-4" /> Download PDF`;
+      }
+    }
+  };
+
+  const isElementVisible = (element) => {
+    if (!element) return false;
+    const style = window.getComputedStyle(element);
+    return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
   };
 
   const renderActionButton = () => {
