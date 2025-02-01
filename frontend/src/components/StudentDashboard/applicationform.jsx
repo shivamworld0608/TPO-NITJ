@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { FaArrowLeft } from "react-icons/fa";
-import BouncingLoader from "../BouncingLoader";
 
-const ApplicationForm = ({ jobId, onHide }) => {
+
+const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
   const [fields, setFields] = useState([]);
   const [resumeUrl, setResumeUrl] = useState('');
   const [loading, setLoading] = useState(true);
@@ -87,6 +87,7 @@ const ApplicationForm = ({ jobId, onHide }) => {
         withCredentials: true
       });
       toast.success('Form submitted successfully!');
+      onApplicationSuccess();
       onHide();
     } catch (err) {
       console.error(err);
@@ -94,7 +95,12 @@ const ApplicationForm = ({ jobId, onHide }) => {
     }
   };
 
-  if (loading) return <BouncingLoader size="medium" text="Loading..." />;
+  if (loading) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+    </div>
+  );
+
   if (error) return <p>{error}</p>;
 
   return (
@@ -152,7 +158,7 @@ const ApplicationForm = ({ jobId, onHide }) => {
 
       <div className="mb-4">
         <label className="block text-gray-700 font-medium mb-2">
-          Resume URL <span className="text-red-500">*</span>
+          Resume URL <span className="text-red-500">*(Provide google drive link of uploaded Resume and make it visible to everyone)</span>
         </label>
         <input
           type="url"
