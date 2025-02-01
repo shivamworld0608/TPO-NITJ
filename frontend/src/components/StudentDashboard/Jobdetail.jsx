@@ -138,7 +138,16 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
                                                 <br />
                                                 <span>Time: {step.details.interview_time || "N/A"}</span>
                                             </>
-                                        ) : (
+                                        ) : step.step_type === "Others" ? (
+                                            <>
+                                                <span>Round Name: {step.details.others_round_name || "N/A"}</span>
+                                                <br />
+                                                <span>Date: {step.details.others_date || "To be announced"}</span>
+                                                <br />
+                                                <span>Time: {step.details.others_duration || "N/A"}</span>
+                                            </>
+                                        ) : 
+                                        (
                                             "To be announced"
                                         )}
                                     </p>

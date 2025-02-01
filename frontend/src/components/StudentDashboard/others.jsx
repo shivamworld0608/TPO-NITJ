@@ -25,6 +25,8 @@ const Others = () => {
           { withCredentials: true }
         );
         setPreviousJobs(pastResponse.data.pastOthers || []);
+        console.log(upcomingJobs);
+
       } catch (error) {
         console.error("Error fetching assessments:", error);
       } finally {
@@ -63,6 +65,7 @@ const Others = () => {
               company_name={others.company_name}
               company_logo={others.company_logo}
               others_date={others.others_date}
+              others_round_name = {others.others_round_name}
               others_login_time={others.others_time}
               others_info={others.others_info}
               others_link={others.others_link}
@@ -83,6 +86,7 @@ const Others = () => {
               company_name={others.company_name}
               company_logo={others.company_logo}
               others_date={others.others_date}
+              others_round_name = {others.others_round_name}
               other_login_time={others.others_time}
               others_info={others.others_info}
               others_link={others.others_link}
