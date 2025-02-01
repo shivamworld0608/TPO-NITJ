@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import ApplicationForm from "./applicationform";
-import BouncingLoader from "../BouncingLoader";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBriefcase, faMapMarkerAlt, faDollarSign, faCalendarAlt, faClipboardList, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
@@ -49,20 +48,36 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
         fetchEligibility();
     }, [job_id]);
 
-    if (loading) return <BouncingLoader size="medium" text="Loading..." />;
+
+    if (loading) return (
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+        </div>
+      );
 
     if (error) {
         return <div className="min-h-screen flex items-center justify-center text-red-600">{error}</div>;
     }
 
-    if (application) {
+    const handleApplicationSuccess = () => {
+        setStatus(prevStatus => ({
+          ...prevStatus,
+          applied: true
+        }));
+      };
+    
+      if (application) {
         return (
-            <div className="container mx-auto px-4 py-6">
-                <ApplicationForm onHide={() => setapplication(false)} jobId={job_id} />
-            </div>
+          <div className="container mx-auto px-4 py-6">
+            <ApplicationForm 
+              onHide={() => setApplication(false)} 
+              jobId={job_id} 
+              onApplicationSuccess={handleApplicationSuccess} 
+            />
+          </div>
         );
-    }
-
+      }
+    
     const details = [
         { icon: faClipboardList, label: "JOB ID", value: jobDetails.job_id || "N/A" },
         { icon: faBriefcase, label: "JOB TYPE", value: jobDetails.jobtype || "N/A" },
