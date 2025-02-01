@@ -2,6 +2,7 @@ import JobProfile from "../models/jobprofile.js";
 import Student from "../models/user_model/student.js";
 import FormSubmission from '../models/FormSubmission.js';
 import Placement from '../models/placement.js';
+import mongoose from "mongoose";
 export const createJobProfilecopy = async (req, res) => {
   try {
     const recruiter_id = req.user.userId;
@@ -376,7 +377,7 @@ export const checkEligibility = async (req, res) => {
   }
 };
 
-export const addshortlistStudents = async (req, res) => {
+/* export const addshortlistStudents = async (req, res) => {
   try {
     const { jobId, stepIndex, students } = req.body;
     const job = await JobProfile.findById(jobId);
@@ -457,6 +458,135 @@ export const addshortlistStudents = async (req, res) => {
     await job.save();
 
     res.status(200).json({ message: 'Students shortlisted successfully.' });
+  } catch (error) {
+    console.error('Error shortlisting students:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}; */
+
+
+export const addshortlistStudents = async (req, res) => {
+  try {
+    const { jobId, stepIndex, students } = req.body;
+
+    // Validate jobId and stepIndex
+    if (!mongoose.Types.ObjectId.isValid(jobId)) {
+      return res.status(400).json({ error: 'Invalid job ID' });
+    }
+
+    // Find the job profile
+    const job = await JobProfile.findById(jobId);
+    if (!job) {
+      return res.status(404).json({ error: 'Job not found' });
+    }
+
+    // Validate stepIndex
+    if (stepIndex < 0 || stepIndex >= job.Hiring_Workflow.length) {
+      return res.status(400).json({ error: 'Invalid step index' });
+    }
+
+    const step = job.Hiring_Workflow[stepIndex];
+    if (!step) {
+      return res.status(400).json({ error: 'Step not found' });
+    }
+
+    const studentIds = []; // For newly shortlisted students
+    const absentIds = [];  // For absent students
+
+    // Process each student
+    for (const student of students) {
+      const formSubmission = await FormSubmission.findOne({
+        jobId: jobId,
+        'fields.value': student.email,
+      });
+
+      if (formSubmission) {
+        const studentId = formSubmission.studentId;
+
+        // If the student is marked as absent
+        if (student.absent) {
+          // Remove the student from shortlisted_students if they are already there
+          if (step.shortlisted_students.includes(studentId)) {
+            step.shortlisted_students = step.shortlisted_students.filter(
+              (id) => id.toString() !== studentId.toString()
+            );
+          }
+          // Add the student to absent_students if they are not already there
+          if (!step.absent_students.includes(studentId)) {
+            absentIds.push(studentId);
+          }
+        }
+        // If the student is marked as shortlisted and not absent
+        else if (student.shortlisted) {
+          // Remove the student from absent_students if they are already there
+          if (step.absent_students.includes(studentId)) {
+            step.absent_students = step.absent_students.filter(
+              (id) => id.toString() !== studentId.toString()
+            );
+          }
+          // Add the student to shortlisted_students if they are not already there
+          if (!step.shortlisted_students.includes(studentId)) {
+            studentIds.push(studentId);
+          }
+        }
+      } else {
+        console.error(`FormSubmission not found for email: ${student.email}`);
+      }
+    }
+
+    // Add newly shortlisted students to the step
+    step.shortlisted_students.push(...studentIds);
+
+    // Add absent students to the step
+    step.absent_students.push(...absentIds);
+
+    // If there is a next step, add shortlisted students to its eligible_students
+    if (job.Hiring_Workflow[stepIndex + 1]) {
+      const nextStep = job.Hiring_Workflow[stepIndex + 1];
+      for (const studentId of studentIds) {
+        if (!nextStep.eligible_students.includes(studentId)) {
+          nextStep.eligible_students.push(studentId);
+        }
+      }
+    } else {
+      // If this is the final step, update placement status for shortlisted students
+      const placementData = [];
+      for (const studentId of studentIds) {
+        const student = await Student.findById(studentId);
+        if (student) {
+          student.placementstatus = job.job_class;
+          await student.save();
+          placementData.push({
+            studentId: studentId,
+            name: student.name,
+            image: student.image || '',
+            email: student.email,
+            gender: student.gender,
+            department: student.department,
+          });
+        } else {
+          console.error(`Student not found for ID: ${studentId}`);
+        }
+      }
+
+      // Create a new placement record
+      const placement = new Placement({
+        company_name: job.company_name,
+        company_logo: job.company_logo,
+        placement_type: job.job_category,
+        batch: job.eligibility_criteria?.eligible_batch,
+        degree: job.eligibility_criteria?.course_allowed,
+        shortlisted_students: placementData,
+        ctc: job.job_salary?.ctc || 'N/A',
+      });
+
+      await placement.save();
+    }
+
+    // Save the updated job profile
+    await job.save();
+
+    res.status(200).json({ message: 'Students processed successfully.' });
   } catch (error) {
     console.error('Error shortlisting students:', error);
     res.status(500).json({ error: 'Internal server error' });

@@ -6,18 +6,19 @@ import { FaArrowLeft } from "react-icons/fa";
 import { AlertCircle, GripVertical, X, Edit2 } from "lucide-react";
 
 const btechdepartmentOptions = [
-  { value: "CSE", label: "Computer Science & Engineering" },
-  { value: "ECE", label: "Electronics & Communication Engineering" },
-  { value: "EE", label: "Electrical Engineering" },
-  { value: "ME", label: "Mechanical Engineering" },
-  { value: "CE", label: "Civil Engineering" },
-  { value: "IT", label: "Information Technology" },
-  { value: "CH", label: "Chemical Engineering" },
-  { value: "ICE", label: "Instrumentation and Control Engineering" },
-  { value: "BT", label: "Biotechnology" },
-  { value: "TT", label: "Textile Technology" },
-  { value: "IPE", label: "Industrial & Production Engineering" },
+  { value: "Computer Science & Engineering", label: "Computer Science & Engineering" },
+  { value: "Electronics & Communication Engineering", label: "Electronics & Communication Engineering" },
+  { value: "Electrical Engineering", label: "Electrical Engineering" },
+  { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+  { value: "Civil Engineering", label: "Civil Engineering" },
+  { value: "Information Technology", label: "Information Technology" },
+  { value: "Chemical Engineering", label: "Chemical Engineering" },
+  { value: "Instrumentation and Control Engineering", label: "Instrumentation and Control Engineering" },
+  { value: "Biotechnology", label: "Biotechnology" },
+  { value: "Textile Technology", label: "Textile Technology" },
+  { value: "Industrial & Production Engineering", label: "Industrial & Production Engineering" },
 ];
+
 
 const mtechdepartmentOptions = [
   {
