@@ -37,6 +37,7 @@ import Request from "./StudentDashboard/Request";
 import TeamSection from "./Developers/TeamSection.jsx";
 import ResumeBuilder from "./StudentDashboard/resume.jsx";
 import ChangePasswordForm from "./changepass.jsx";
+import Others from "./StudentDashboard/others.jsx";
 
 
 const StudentDashboard = () => {
@@ -91,6 +92,7 @@ const StudentDashboard = () => {
     { path: "/sdashboard/oa", label: "OA", icon: faClipboard },
     { path: "/sdashboard/interviews", label: "Interview", icon: faComments },
     { path: "/sdashboard/gd", label: "GD", icon: faComments },
+    { path: "/sdashboard/others", label: "Others", icon: faClipboard },
     { path: "/sdashboard/calendar", label: "Calendar", icon: faCalendar },
     { path: "/sdashboard/mailbox", label: "Mailbox", icon: faEnvelope },
     {
@@ -289,6 +291,7 @@ const StudentDashboard = () => {
             <Route path="oa" element={<OnlineAssessment />} />
             <Route path="interviews" element={<Interviews />} />
             <Route path="gd" element={<GD />} />
+            <Route path="others" element={<Others />} />
             <Route path="calendar" element={<CalendarComponent />} />
             <Route path="mailbox" element={<MailboxComponent />} />
             <Route path="shared-experience" element={<SharedExperience />} />

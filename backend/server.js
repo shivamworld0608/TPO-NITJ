@@ -30,6 +30,7 @@ import contactusRoutes from "./routes/contactus.js";
 import conversationRoutes from "./routes/conversation.js";
 import mailboxRoutes from "./routes/mailbox.js";
 import resumeroutes from "./routes/resume.js"
+import otherRoutes from "./routes/other.js"
 
 import { mkdir } from 'fs/promises';
 try {
@@ -103,6 +104,7 @@ app.use('/contactus',contactusRoutes);
 app.use('/conversations',authenticate,conversationRoutes);
 app.use('/mailbox',authenticate,mailboxRoutes);
 app.use('/resume',authenticate, resumeroutes);
+app.use('/others',authenticate, otherRoutes);
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => {
