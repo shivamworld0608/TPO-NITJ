@@ -1,7 +1,7 @@
 import express from "express";
 const router=express.Router();
 
-import { checkEligibility, getJobProfiletostudent,getJobProfiledetails, getJobsByRecruiter,createJobProfile,createJobProfilecopy,updateJob,deleteJob,getJobProfilesForProfessors,approveJobProfile,rejectJobProfile,addshortlistStudents,eligibleinthis  } from "../controller/jobprofile.js";
+import { checkEligibility, getJobProfiletostudent,getJobProfiledetails, getJobsByRecruiter,createJobProfile,createJobProfilecopy,updateJob,deleteJob,getJobProfilesForProfessors,approveJobProfile,rejectJobProfile,addshortlistStudents,eligibleinthis,viewshortlisting } from "../controller/jobprofile.js";
 
 router.get("/eligibility/:_id/", checkEligibility);
 router.get("/getjobs", getJobProfiletostudent);
@@ -22,5 +22,6 @@ router.post("/add-shortlist-students", addshortlistStudents);
 
 
 router.post("/eligible_students",eligibleinthis);
+router.post("/shortlisted_students",viewshortlisting);
 
 export default router;
