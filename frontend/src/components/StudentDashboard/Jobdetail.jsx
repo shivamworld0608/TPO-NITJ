@@ -12,7 +12,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [status, setStatus] = useState("");
-    const [application, setapplication] = useState(false);
+    const [application, setApplication] = useState(false);
 
     useEffect(() => {
         const fetchDetails = async () => {

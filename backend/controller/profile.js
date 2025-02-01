@@ -83,6 +83,7 @@ export const handlesProfilePhoto = async (req, res) => {
     const image = req.file.path;
     try{
       const x = await cloudinary.uploader.upload(image);
+      console.log(x.secure_url);
       fs.unlinkSync(image);
       const student = await Student.findOne({_id:req.user.userId});
       if (student) {

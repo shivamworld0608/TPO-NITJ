@@ -11,6 +11,7 @@ import CreateApplicationform from './createapplicationform';
 import ViewApplicationForm from './viewapplicationform';
 import EditApplicationForm from './editapplicationform';
 import ShortlistStudents from './shortliststudent';
+import ViewShortlistStudents from './viewshortlistedstudent';
 
 const formatDateTime = (dateString) => {
   if (!dateString) return 'N/A';
@@ -46,20 +47,22 @@ const ViewJobDetails = ({ job, onClose }) => {
   const [editedJob, setEditedJob] = useState(job);
   const [editedWorkflow, setEditedWorkflow] = useState(job.Hiring_Workflow || []);
   const [viewingShortlist, setViewingShortlist] = useState(null);
+  const [addingShortlist, setAddingShortlist] = useState(null);
 
   const departmentOptions = [
-    { value: 'CSE', label: 'CSE' },
-    { value: 'ECE', label: 'ECE' },
-    { value: 'EE', label: 'EE' },
-    { value: 'ME', label: 'ME' },
-    { value: 'CE', label: 'CE' },
-    { value: 'IT', label: 'IT' },
-    { value: 'CH', label: 'CH' },
-    { value: 'ICE', label: 'ICE' },
-    { value: 'BT', label: 'BT' },
-    { value: 'TT', label: 'TT' },
-    { value: 'IPE', label: 'IPE' },
+    { value: 'Computer Science & Engineering', label: 'Computer Science & Engineering' },
+    { value: 'Electronics & Communication Engineering', label: 'Electronics & Communication Engineering' },
+    { value: 'Electrical Engineering', label: 'Electrical Engineering' },
+    { value: 'Mechanical Engineering', label: 'Mechanical Engineering' },
+    { value: 'Civil Engineering', label: 'Civil Engineering' },
+    { value: 'Information Technology', label: 'Information Technology' },
+    { value: 'Chemical Engineering', label: 'Chemical Engineering' },
+    { value: 'Instrumentation and Control Engineering', label: 'Instrumentation and Control Engineering' },
+    { value: 'Biotechnology', label: 'Biotechnology' },
+    { value: 'Textile Technology', label: 'Textile Technology' },
+    { value: 'Industrial & Production Engineering', label: 'Industrial & Production Engineering' }
   ];
+  
 
   const jobTypeOptions = [
     { value: '', label: 'Select Job Type' },
@@ -425,7 +428,7 @@ const ViewJobDetails = ({ job, onClose }) => {
             <div className="mt-8 flex space-x-4">
             <button
                 className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-                onClick={() => setViewingShortlist({ stepIndex: index })}
+                onClick={() => setAddingShortlist({ stepIndex: index })}
               >
                 Add Shortlisted Students
               </button>
@@ -503,7 +506,6 @@ const ViewJobDetails = ({ job, onClose }) => {
             type="number"
             min="0"
             max="10"
-            step="0.01"
             value={editedJob.eligibility_criteria?.minimum_cgpa || ''}
             onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.minimum_cgpa', e.target.value)}
             className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -515,9 +517,18 @@ const ViewJobDetails = ({ job, onClose }) => {
     </div>
   );
 
-  if (viewingShortlist) {
+  if (addingShortlist) {
     return (
       <ShortlistStudents
+        jobId={job._id}
+        stepIndex={addingShortlist.stepIndex}
+        onClose={() => setAddingShortlist(null)}
+      />
+    );
+  }
+  if (viewingShortlist) {
+    return (
+      <ViewShortlistStudents
         jobId={job._id}
         stepIndex={viewingShortlist.stepIndex}
         onClose={() => setViewingShortlist(null)}

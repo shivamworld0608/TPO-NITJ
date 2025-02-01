@@ -28,23 +28,20 @@ export const getAllExperiences = async (req, res) => {
             .populate('author', 'name email')
             .sort('-createdAt');
         const studentId = req.user.userId;
-        console.log("hiiii");
         const currentUserExperiences = experiences.filter(exp => exp.author._id.toString() === studentId);
         const otherExperiences = experiences.filter(exp => exp.author._id.toString() !== studentId);
         let eligible = false;
-        console.log(eligible);
         const jobs = await JobProfile.find({
             'Hiring_Workflow': {
                 $elemMatch: {
                     step_type: 'Interview',
-                    eligible_students: studentId,
+                    eligible_students: { $in: [studentId] },
                 },
             },
         });
         if (jobs.length > 0) {
             eligible = true;
         }
-        console.log("hero");
         res.status(200).json({
             eligible,
             currentUserExperiences,
