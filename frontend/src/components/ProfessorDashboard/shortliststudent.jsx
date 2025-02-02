@@ -18,6 +18,7 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
             { jobId, stepIndex },
             { withCredentials: true }
           );
+          console.log(response.data);
           const updatedStudents = response.data.eligibleStudents.map((student) => ({
             ...student,
             shortlisted: false,

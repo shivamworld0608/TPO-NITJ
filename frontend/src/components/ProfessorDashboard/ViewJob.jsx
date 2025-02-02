@@ -12,6 +12,8 @@ import ViewApplicationForm from "./viewapplicationform";
 import EditApplicationForm from "./editapplicationform";
 import ShortlistStudents from "./shortliststudent";
 import ViewShortlistStudents from "./viewshortlistedstudent";
+import InterviewLinkManager from "./interviewlink";
+import GDLinkManager from "./gdlink";
 
 const formatDateTime = (dateString) => {
   if (!dateString) return "N/A";
@@ -50,6 +52,8 @@ const ViewJobDetails = ({ job, onClose }) => {
   );
   const [viewingShortlist, setViewingShortlist] = useState(null);
   const [addingShortlist, setAddingShortlist] = useState(null);
+  const [addingInterviewLink, setAddingInterviewLink] = useState(null);
+  const [addingGDLink, setAddingGDLink] = useState(null);
 
   const btechdepartmentOptions = [
     {
@@ -705,6 +709,32 @@ const ViewJobDetails = ({ job, onClose }) => {
     </div>
   );
 
+  if (addingInterviewLink) {
+    return (
+      <InterviewLinkManager
+        jobId={job._id}
+        stepIndex={addingInterviewLink.stepIndex}
+        onClose={() => setAddingInterviewLink(null)}
+        interviewLinks={
+          job.Hiring_Workflow[addingInterviewLink.stepIndex]?.details
+            .interview_link || []
+        }
+      />
+    );
+  }
+  if (addingGDLink) {
+    return (
+      <GDLinkManager
+        jobId={job._id}
+        stepIndex={addingGDLink.stepIndex}
+        onClose={() => setAddingGDLink(null)}
+        gdLinks={
+          job.Hiring_Workflow[addingGDLink.stepIndex]?.details.gd_link || []
+        }
+      />
+    );
+  }
+
   const renderHiringWorkflow = () => {
     if (!job.Hiring_Workflow || job.Hiring_Workflow.length === 0) {
       return <p className="mt-4 text-gray-500">No hiring workflow defined.</p>;
@@ -729,58 +759,92 @@ const ViewJobDetails = ({ job, onClose }) => {
             </h3>
 
             <ul className="space-y-4 text-gray-700">
-              {Object.entries(step.details || {}).map(([key, value]) => (
-                <li key={key} className="flex items-center">
-                  <strong className="w-1/3 text-gray-800 capitalize">
-                    {key.replace(/_/g, " ")}:
-                  </strong>
-                  {editingStepIndex === index &&
-                  editingSection === "hiring_workflow" ? (
-                    key.toLowerCase().includes("date") ? (
-                      <input
-                        type="date"
-                        value={
-                          editedWorkflow[index].details[key]
-                            ? new Date(editedWorkflow[index].details[key])
-                                .toISOString()
-                                .slice(0, 10)
-                            : ""
-                        }
-                        onChange={(e) =>
-                          handleInputChange(
-                            "hiring_workflow",
-                            `details.${key}`,
-                            e.target.value
-                          )
-                        }
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
+              {Object.entries(step.details || {}).map(([key, value]) => {
+                if (
+                  (step.step_type === "Interview" &&
+                    key.toLowerCase().includes("interview_link")) ||
+                  (step.step_type === "GD" &&
+                    key.toLowerCase().includes("gd_link"))
+                ) {
+                  return null;
+                }
+
+                return (
+                  <li key={key} className="flex items-center">
+                    <strong className="w-1/3 text-gray-800 capitalize">
+                      {key.replace(/_/g, " ")}:
+                    </strong>
+                    {editingStepIndex === index &&
+                    editingSection === "hiring_workflow" ? (
+                      key.toLowerCase().includes("date") ? (
+                        <input
+                          type="date"
+                          value={
+                            editedWorkflow[index].details[key]
+                              ? new Date(editedWorkflow[index].details[key])
+                                  .toISOString()
+                                  .slice(0, 10)
+                              : ""
+                          }
+                          onChange={(e) =>
+                            handleInputChange(
+                              "hiring_workflow",
+                              `details.${key}`,
+                              e.target.value
+                            )
+                          }
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      ) : (
+                        <input
+                          type="text"
+                          value={editedWorkflow[index].details[key] || ""}
+                          onChange={(e) =>
+                            handleInputChange(
+                              "hiring_workflow",
+                              `details.${key}`,
+                              e.target.value
+                            )
+                          }
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        />
+                      )
                     ) : (
-                      <input
-                        type="text"
-                        value={editedWorkflow[index].details[key] || ""}
-                        onChange={(e) =>
-                          handleInputChange(
-                            "hiring_workflow",
-                            `details.${key}`,
-                            e.target.value
-                          )
-                        }
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    )
-                  ) : (
-                    <span className="flex-1">
-                      {key.toLowerCase().includes("date")
-                        ? formatDate(value)
-                        : value || "N/A"}
-                    </span>
-                  )}
-                </li>
-              ))}
+                      <span className="flex-1">
+                        {key.toLowerCase().includes("date")
+                          ? formatDate(value)
+                          : value || "N/A"}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
 
             <div className="mt-8 flex space-x-4">
+              {step.step_type === "GD" && (
+                <button
+                  className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                  onClick={() =>
+                    setAddingGDLink({ stepIndex: index, type: "GD" })
+                  }
+                >
+                  Manage GD Links
+                </button>
+              )}
+              {step.step_type === "Interview" && (
+                <button
+                  className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                  onClick={() =>
+                    setAddingInterviewLink({
+                      stepIndex: index,
+                      type: "Interview",
+                    })
+                  }
+                >
+                  Manage Interview Links
+                </button>
+              )}
               <button
                 className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
                 onClick={() => setAddingShortlist({ stepIndex: index })}
