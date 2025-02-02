@@ -153,6 +153,7 @@ const ViewJobDetails = ({ job, onClose }) => {
         updateData = { job_salary: editedJob.job_salary };
       } else if (section === 'basic') {
         updateData = {
+          company_name:editedJob.company_name,
           job_role: editedJob.job_role,
           job_type: editedJob.job_type,
           jobdescription: editedJob.jobdescription,
@@ -213,6 +214,19 @@ const ViewJobDetails = ({ job, onClose }) => {
   const renderBasicDetails = () => {
     return (
       <div className="space-y-4 text-gray-700">
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Company Name:</strong>
+          {editingSection === 'basic' ? (
+            <input
+              type="text"
+              value={editedJob.company_name || ''}
+              onChange={(e) => handleInputChange('basic', 'company_name', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          ) : (
+            <span className="flex-1">{editedJob.company_name}</span>
+          )}
+        </div>
        <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Job Role:</strong>
           {editingSection === 'basic' ? (
@@ -461,25 +475,32 @@ const ViewJobDetails = ({ job, onClose }) => {
     );
   };
 
-  const renderEligibilityCriteria = () => (
+  const renderEligibilityCriteria = () =>(
     <div className="space-y-4 text-gray-700">
-      <div className="flex items-center">
-        <strong className="w-1/3 text-gray-800">Departments Allowed:</strong>
-        {editingSection === 'eligibility' ? (
-          <Select
-            isMulti
-            options={departmentOptions}
-            value={departmentOptions.filter(option => editedJob.eligibility_criteria?.department_allowed?.includes(option.value))}
-            onChange={(selectedOptions) => {
-              const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-              handleInputChange('eligibility', 'eligibility_criteria.department_allowed', selectedValues);
-            }}
-            className="rounded-xl"
-          />
-        ) : (
-          <span className="flex-1">{editedJob.eligibility_criteria?.department_allowed?.join(', ') || 'N/A'}</span>
-        )}
-      </div>
+    <div className="flex items-center">
+<strong className="w-1/3 text-gray-800">Departments Allowed:</strong>
+{editingSection === 'eligibility' ? (
+  <div className="flex-1">
+    <Select
+      isMulti
+      options={departmentOptions}
+      value={departmentOptions.filter(option => 
+        editedJob.eligibility_criteria?.department_allowed?.includes(option.value)
+      )}
+      onChange={(selectedOptions) => {
+        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
+        handleInputChange('eligibility', 'eligibility_criteria.department_allowed', selectedValues);
+      }}
+      className="rounded-xl"
+      classNamePrefix="select"
+    />
+  </div>
+) : (
+  <span className="flex-1">
+    {editedJob.eligibility_criteria?.department_allowed?.join(', ') || 'N/A'}
+  </span>
+)}
+</div>
 
       <div className="flex items-center">
         <strong className="w-1/3 text-gray-800">Gender Allowed:</strong>
@@ -492,10 +513,81 @@ const ViewJobDetails = ({ job, onClose }) => {
             <option value="">Select Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
-            <option value="Any">Any</option>
+            <option value="Other">Other</option>
+            <option value="Any">All</option>
           </select>
         ) : (
           <span className="flex-1">{editedJob.eligibility_criteria?.gender_allowed || 'N/A'}</span>
+        )}
+      </div>
+
+      <div className="flex items-center">
+        <strong className="w-1/3 text-gray-800">Course Allowed:</strong>
+        {editingSection === 'eligibility' ? (
+          <select
+            value={editedJob.eligibility_criteria?.course_allowed || ''}
+            onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.course_allowed', e.target.value)}
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select Course</option>
+            <option value="B.Tech">B.Tech</option>
+            <option value="M.Tech">M.Tech</option>
+            <option value="MBA">MBA</option>
+          </select>
+        ) : (
+          <span className="flex-1">{editedJob.eligibility_criteria?.course_allowed || 'N/A'}</span>
+        )}
+      </div>
+
+      <div className="flex items-center">
+        <strong className="w-1/3 text-gray-800">Eligible Batch:</strong>
+        {editingSection === 'eligibility' ? (
+          <select
+            value={editedJob.eligibility_criteria?.eligible_batch || ''}
+            onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.eligible_batch', e.target.value)}
+            className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">Select Batch</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
+          </select>
+        ) : (
+          <span className="flex-1">{editedJob.eligibility_criteria?.eligible_batch || 'N/A'}</span>
+        )}
+      </div>
+
+      <div className="flex items-center">
+        <strong className="w-1/3 text-gray-800">Active Backlogs Allowed:</strong>
+        {editingSection === 'eligibility' ? (
+          <input
+            type="checkbox"
+            checked={editedJob.eligibility_criteria?.active_backlogs || false}
+            onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.active_backlogs', e.target.checked)}
+            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+        ) : (
+          <span className="flex-1">
+            {editedJob.eligibility_criteria?.active_backlogs ? 'Yes' : 'No'}
+          </span>
+        )}
+      </div>
+      <div className="flex items-center">
+        <strong className="w-1/3 text-gray-800">Backlogs History Allowed:</strong>
+        {editingSection === 'eligibility' ? (
+          <input
+            type="checkbox"
+            checked={editedJob.eligibility_criteria?.history_backlogs || false}
+            onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.history_backlogs', e.target.checked)}
+            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+        ) : (
+          <span className="flex-1">
+            {editedJob.eligibility_criteria?.history_backlogs ? 'Yes' : 'No'}
+          </span>
         )}
       </div>
 

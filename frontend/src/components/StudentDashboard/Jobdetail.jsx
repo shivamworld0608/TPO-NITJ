@@ -3,6 +3,7 @@ import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import ApplicationForm from "./applicationform";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Swal from "sweetalert2";
 import { faBriefcase, faMapMarkerAlt, faDollarSign, faCalendarAlt, faClipboardList, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 
 const Jobdetail = ({ job_id, onBack, onShow }) => {
@@ -12,6 +13,8 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
     const [error, setError] = useState(null);
     const [status, setStatus] = useState("");
     const [application, setApplication] = useState(false);
+    const [isdeadlineOver, setIsdeadlineOver] = useState(false);
+    const [timeLeft, setTimeLeft] = useState("");
 
     useEffect(() => {
         const fetchDetails = async () => {
@@ -40,6 +43,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
                     { withCredentials: true }
                 );
                 setStatus(response.data || "");
+                setIsdeadlineOver(response.data.isDeadlineOver);
             } catch (error) {
                 setError("Failed to fetch eligibility status. Please try again.");
             }
@@ -48,12 +52,88 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
         fetchEligibility();
     }, [job_id]);
 
+    useEffect(() => {
+        if (jobDetails.deadline) {
+            const deadlineDate = new Date(jobDetails.deadline).getTime();
+
+            const updateCountdown = () => {
+                const now = new Date().getTime();
+                const timeDifference = deadlineDate - now;
+
+                if (timeDifference > 0) {
+                    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor(
+                        (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+                    );
+                    const minutes = Math.floor(
+                        (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+                    );
+                    const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                    setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+                } else {
+                    setTimeLeft("Deadline Passed");
+                    setIsdeadlineOver(true);
+                    clearInterval(interval);
+                }
+            };
+
+            // Update the countdown every second
+            const interval = setInterval(updateCountdown, 1000);
+
+            // Clear the interval when the component unmounts
+            return () => clearInterval(interval);
+        }
+    }, [jobDetails.deadline]);
+
+    const withdrawApplication = async () => {
+        try {
+            const result = await Swal.fire({
+                title: 'Are you sure?',
+                text: 'You are about to withdraw your application. This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, withdraw it!',
+            });
+
+            if (result.isConfirmed) {
+                const response = await axios.post(
+                    `${import.meta.env.REACT_APP_BASE_URL}/api/withdraw`,
+                    { jobId: job_id },
+                    { withCredentials: true }
+                );
+
+                if (response.status === 200) {
+                    setStatus((prevStatus) => ({
+                        ...prevStatus,
+                        applied: false,
+                    }));
+                    Swal.fire({
+                        title: 'Withdrawn!',
+                        text: 'Your application has been withdrawn successfully.',
+                        icon: 'success',
+                        confirmButtonColor: '#3085d6',
+                    });
+                }
+            }
+        } catch (error) {
+            console.error('Failed to withdraw application:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: 'Failed to withdraw application. Please try again.',
+                icon: 'error',
+                confirmButtonColor: '#3085d6',
+            });
+        }
+    };
 
     if (loading) return (
         <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
         </div>
-      );
+    );
 
     if (error) {
         return <div className="min-h-screen flex items-center justify-center text-red-600">{error}</div>;
@@ -61,23 +141,23 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
 
     const handleApplicationSuccess = () => {
         setStatus(prevStatus => ({
-          ...prevStatus,
-          applied: true
+            ...prevStatus,
+            applied: true
         }));
-      };
-    
-      if (application) {
+    };
+
+    if (application) {
         return (
-          <div className="container mx-auto px-4 py-6">
-            <ApplicationForm 
-              onHide={() => setApplication(false)} 
-              jobId={job_id} 
-              onApplicationSuccess={handleApplicationSuccess} 
-            />
-          </div>
+            <div className="container mx-auto px-4 py-6">
+                <ApplicationForm
+                    onHide={() => setApplication(false)}
+                    jobId={job_id}
+                    onApplicationSuccess={handleApplicationSuccess}
+                />
+            </div>
         );
-      }
-    
+    }
+
     const details = [
         { icon: faClipboardList, label: "JOB ID", value: jobDetails.job_id || "N/A" },
         { icon: faBriefcase, label: "JOB TYPE", value: jobDetails.jobtype || "N/A" },
@@ -161,8 +241,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
                                                 <br />
                                                 <span>Time: {step.details.others_duration || "N/A"}</span>
                                             </>
-                                        ) : 
-                                        (
+                                        ) : (
                                             "To be announced"
                                         )}
                                     </p>
@@ -179,11 +258,13 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
                 <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">Eligibility Criteria</h3>
                 <div className="space-y-3 sm:space-y-4">
                     {[
+                        { label: "Course Allowed", value: jobDetails.eligibility_criteria?.course_allowed },
                         { label: "Branch Allowed", value: jobDetails.eligibility_criteria?.department_allowed?.join(", ") },
                         { label: "Gender Allowed", value: jobDetails.eligibility_criteria?.gender_allowed },
                         { label: "Eligible Batch", value: jobDetails.eligibility_criteria?.eligible_batch },
                         { label: "Minimum CGPA", value: jobDetails.eligibility_criteria?.minimum_cgpa },
-                        { label: "Active Backlogs", value: jobDetails.eligibility_criteria?.active_backlogs === false ? "No active backlogs allowed" : "N/A" }
+                        { label: "Active Backlogs", value: jobDetails.eligibility_criteria?.active_backlogs === false ? "No active backlogs allowed" : "N/A" },
+                        { label: "Backlogs History", value: jobDetails.eligibility_criteria?.history_backlogs === false ? "No Backlogs History allowed" : "N/A" }
                     ].map((item, index) => (
                         <div key={index} className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
                             <p className="text-sm sm:text-base text-gray-600 font-medium">{item.label}:</p>
@@ -200,40 +281,88 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
                         </span>
                     </div>
                 </div>
-                <div className="mt-6 flex justify-end">
-                    <button
-                        className={`w-full sm:w-auto px-4 sm:px-5 py-2 rounded-lg font-semibold text-white transition-all duration-200 
-                            ${status.eligible
-                                ? status.applied
-                                    ? "bg-blue-500 cursor-not-allowed"
-                                    : "bg-green-500 hover:bg-green-600"
-                                : "bg-gray-300 cursor-not-allowed"
-                            }`}
-                        disabled={!status.eligible || status.applied}
-                        onClick={() => !status.applied && setApplication(true)}
-                    >
-                        {status.eligible
-                            ? status.applied
-                                ? "Applied"
-                                : "Apply Now"
-                            : "Not Eligible"}
-                    </button>
+                <div className="mt-6 flex justify-end space-x-4">
+                    {isdeadlineOver ? (
+                        status.applied ? (
+                            <button
+                                className="w-full sm:w-auto px-4 sm:px-5 py-2 rounded-lg font-semibold text-white bg-blue-500 cursor-not-allowed"
+                                disabled
+                            >
+                                Applied
+                            </button>
+                        ) : (
+                            <button
+                                className={`w-full sm:w-auto px-4 sm:px-5 py-2 rounded-lg font-semibold text-white transition-all duration-200 
+                                    ${status.eligible
+                                        ? "bg-gray-500 cursor-not-allowed"
+                                        : "bg-gray-300 cursor-not-allowed"
+                                    }`}
+                                disabled
+                            >
+                                {status.eligible ? "Closed" : "Not Eligible"}
+                            </button>
+                        )
+                    ) : (
+                        <>
+                            {status.applied ? (
+                                <>
+                                    <button
+                                        className="w-full sm:w-auto px-4 sm:px-5 py-2 rounded-lg font-semibold text-white bg-blue-500 hover:bg-blue-600 transition-all duration-200"
+                                        onClick={() => setApplication(true)}
+                                    >
+                                        Edit Application
+                                    </button>
+                                    <button
+                                        className="w-full sm:w-auto px-4 sm:px-5 py-2 rounded-lg font-semibold text-white bg-red-500 hover:bg-red-600 transition-all duration-200"
+                                        onClick={withdrawApplication}
+                                    >
+                                        Withdraw Application
+                                    </button>
+                                </>
+                            ) : (
+                                <button
+                                    className={`w-full sm:w-auto px-4 sm:px-5 py-2 rounded-lg font-semibold text-white transition-all duration-200 
+                                        ${status.eligible
+                                            ? "bg-green-500 hover:bg-green-600"
+                                            : "bg-gray-300 cursor-not-allowed"
+                                        }`}
+                                    disabled={!status.eligible}
+                                    onClick={() => setApplication(true)}
+                                >
+                                    {status.eligible ? "Apply Now" : "Not Eligible"}
+                                </button>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
         ),
 
         deadline: (
-            <p className="text-sm sm:text-base text-center">
-                <strong>Please Apply before: {
-                    jobDetails.deadline
-                        ? new Date(jobDetails.deadline).toLocaleDateString(undefined, {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                        })
-                        : "Not Provided"
-                }</strong>
-            </p>
+            <div className="text-center">
+                <p className="text-sm sm:text-base">
+                    <strong>Please Apply before: {
+                        jobDetails.deadline
+                            ? new Date(jobDetails.deadline).toLocaleString(undefined, {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true // Use 12-hour format (AM/PM)
+                            })
+                            : "Not Provided"
+                    }</strong>
+                </p>
+                {jobDetails.deadline && (
+                    <p className="text-lg sm:text-2xl md:text-3xl mt-2 font-bold">
+                        <span>Time Left: </span>
+                        <span style={{ color: timeLeft.includes("0d") ? "red" : "green" }}>
+                            {timeLeft || "Calculating..."}
+                        </span>
+                    </p>
+                )}
+            </div>
         ),
     };
 

@@ -49,7 +49,7 @@ export const getStudentAnalytics = async (req, res) => {
                         rejected: 0,
                         absent: 0
                     },
-                    other: {
+                    others: {
                         total: 0,
                         shortlisted: 0,
                         rejected: 0,
@@ -118,7 +118,6 @@ export const getStudentAnalytics = async (req, res) => {
         });
     }
 };
-
 
 export const Studentprofileupdate = async (req, res) => {
     try {

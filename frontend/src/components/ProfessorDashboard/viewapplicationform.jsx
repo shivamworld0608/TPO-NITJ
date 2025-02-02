@@ -6,6 +6,7 @@ const ViewApplicationForm = ({ jobId, onHide }) => {
   const [fields, setFields] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [title,setTitle]=useState("");
   const [dropdownVisible, setDropdownVisible] = useState(null);
 
   useEffect(() => {
@@ -15,6 +16,7 @@ const ViewApplicationForm = ({ jobId, onHide }) => {
           withCredentials: true,
         });
         const templateFields = response.data.fields;
+        setTitle(response.data.title);
         const viewFields = templateFields.map((field) => ({
           ...field,
           isLocked: true,
@@ -54,7 +56,7 @@ const ViewApplicationForm = ({ jobId, onHide }) => {
         </button>
       </div>
 
-      <h1 className="text-2xl font-bold mb-6 text-center">View Application Form</h1>
+      <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">{title}</h1>
 
       {fields.map((field, index) => (
         <div key={index} className="mb-6">
