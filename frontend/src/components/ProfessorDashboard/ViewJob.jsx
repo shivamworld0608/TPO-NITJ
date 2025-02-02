@@ -1,38 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Button } from "../ui/button";
-import { Users, FileText, Edit, Trash2, Plus, X, Pencil } from 'lucide-react';
-import Select from 'react-select';
-import axios from 'axios';
-import toast from 'react-hot-toast';
-import Swal from 'sweetalert2';
-import AppliedStudents from './appliedstudent';
-import CreateApplicationform from './createapplicationform';
-import ViewApplicationForm from './viewapplicationform';
-import EditApplicationForm from './editapplicationform';
-import ShortlistStudents from './shortliststudent';
-import ViewShortlistStudents from './viewshortlistedstudent';
+import { Users, FileText, Edit, Trash2, Plus, X, Pencil } from "lucide-react";
+import Select from "react-select";
+import axios from "axios";
+import toast from "react-hot-toast";
+import Swal from "sweetalert2";
+import AppliedStudents from "./appliedstudent";
+import CreateApplicationform from "./createapplicationform";
+import ViewApplicationForm from "./viewapplicationform";
+import EditApplicationForm from "./editapplicationform";
+import ShortlistStudents from "./shortliststudent";
+import ViewShortlistStudents from "./viewshortlistedstudent";
 
 const formatDateTime = (dateString) => {
-  if (!dateString) return 'N/A';
+  if (!dateString) return "N/A";
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: true
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
   });
 };
 
 const formatDate = (dateString) => {
-  if (!dateString) return 'N/A';
+  if (!dateString) return "N/A";
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric'
+  return date.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
   });
 };
 
@@ -45,44 +45,315 @@ const ViewJobDetails = ({ job, onClose }) => {
   const [editingSection, setEditingSection] = useState(null);
   const [editingStepIndex, setEditingStepIndex] = useState(null);
   const [editedJob, setEditedJob] = useState(job);
-  const [editedWorkflow, setEditedWorkflow] = useState(job.Hiring_Workflow || []);
+  const [editedWorkflow, setEditedWorkflow] = useState(
+    job.Hiring_Workflow || []
+  );
   const [viewingShortlist, setViewingShortlist] = useState(null);
   const [addingShortlist, setAddingShortlist] = useState(null);
 
-  const departmentOptions = [
-    { value: 'Computer Science & Engineering', label: 'Computer Science & Engineering' },
-    { value: 'Electronics & Communication Engineering', label: 'Electronics & Communication Engineering' },
-    { value: 'Electrical Engineering', label: 'Electrical Engineering' },
-    { value: 'Mechanical Engineering', label: 'Mechanical Engineering' },
-    { value: 'Civil Engineering', label: 'Civil Engineering' },
-    { value: 'Information Technology', label: 'Information Technology' },
-    { value: 'Chemical Engineering', label: 'Chemical Engineering' },
-    { value: 'Instrumentation and Control Engineering', label: 'Instrumentation and Control Engineering' },
-    { value: 'Biotechnology', label: 'Biotechnology' },
-    { value: 'Textile Technology', label: 'Textile Technology' },
-    { value: 'Industrial & Production Engineering', label: 'Industrial & Production Engineering' }
+  const btechdepartmentOptions = [
+    {
+      label: "Biotechnology",
+      options: [{ value: "Biotechnology", label: "Biotechnology" }],
+    },
+    {
+      label: "Chemical Engineering",
+      options: [
+        { value: "Chemical Engineering", label: "Chemical Engineering" },
+      ],
+    },
+    {
+      label: "Civil Engineering",
+      options: [{ value: "Civil Engineering", label: "Civil Engineering" }],
+    },
+    {
+      label: "Computer Science & Engineering",
+      options: [
+        {
+          value: "Computer Science & Engineering",
+          label: "Computer Science & Engineering",
+        },
+        {
+          value: "Data Science and Engineering",
+          label: "Data Science and Engineering",
+        },
+      ],
+    },
+    {
+      label: "Electrical Engineering",
+      options: [
+        { value: "Electrical Engineering", label: "Electrical Engineering" },
+      ],
+    },
+    {
+      label: "Electronics & Communication Engineering",
+      options: [
+        {
+          value: "Electronics & Communication Engineering",
+          label: "Electronics & Communication Engineering",
+        },
+        {
+          value: "Electronics and VLSI Engineering",
+          label: "Electronics and VLSI Engineering",
+        },
+      ],
+    },
+    {
+      label: "Industrial and Production Engineering",
+      options: [
+        {
+          value: "Industrial and Production Engineering",
+          label: "Industrial and Production Engineering",
+        },
+      ],
+    },
+    {
+      label: "Information Technology",
+      options: [
+        { value: "Information Technology", label: "Information Technology" },
+      ],
+    },
+    {
+      label: "Instrumentation and Control Engineering",
+      options: [
+        {
+          value: "Instrumentation and Control Engineering",
+          label: "Instrumentation and Control Engineering",
+        },
+      ],
+    },
+    {
+      label: "Mathematics and Computing",
+      options: [
+        {
+          value: "Mathematics and Computing",
+          label: "Mathematics and Computing",
+        },
+      ],
+    },
+    {
+      label: "Mechanical Engineering",
+      options: [
+        { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+      ],
+    },
+    {
+      label: "Textile Technology",
+      options: [{ value: "Textile Technology", label: "Textile Technology" }],
+    },
   ];
-  
+
+  const mtechdepartmentOptions = [
+    {
+      label: "Biotechnology",
+      options: [{ value: "Biotechnology", label: "Biotechnology" }],
+    },
+    {
+      label: "Chemical Engineering",
+      options: [
+        { value: "Chemical Engineering", label: "Chemical Engineering" },
+      ],
+    },
+    {
+      label: "Civil Engineering",
+      options: [
+        {
+          value: "Structural and Construction Engineering",
+          label: "Structural and Construction Engineering",
+        },
+        {
+          value: "Geotechnical and Geo-Environmental Engineering",
+          label: "Geotechnical and Geo-Environmental Engineering",
+        },
+      ],
+    },
+    {
+      label: "Computer Science & Engineering",
+      options: [
+        {
+          value: "Computer Science & Engineering",
+          label: "Computer Science & Engineering",
+        },
+        { value: "Information Security", label: "Information Security" },
+        {
+          value: "Data Science and Engineering",
+          label: "Data Science and Engineering",
+        },
+      ],
+    },
+    {
+      label: "Electrical Engineering",
+      options: [
+        { value: "Electric Vehicle Design", label: "Electric Vehicle Design" },
+      ],
+    },
+    {
+      label: "Electronics & Communication Engineering",
+      options: [
+        {
+          value: "Signal Processing and Machine Learning",
+          label: "Signal Processing and Machine Learning",
+        },
+        { value: "VLSI Design", label: "VLSI Design" },
+      ],
+    },
+    {
+      label: "Industrial & Production Engineering",
+      options: [
+        {
+          value: "Industrial Engineering and Data Analytics",
+          label: "Industrial Engineering and Data Analytics",
+        },
+        {
+          value: "Manufacturing Technology With Machine Learning",
+          label: "Manufacturing Technology With Machine Learning",
+        },
+      ],
+    },
+    {
+      label: "Information Technology",
+      options: [{ value: "Data Analytics", label: "Data Analytics" }],
+    },
+    {
+      label: "Instrumentation and Control Engineering",
+      options: [
+        {
+          value: "Control and Instrumentation",
+          label: "Control and Instrumentation",
+        },
+        {
+          value: "Machine Intelligence and Automation",
+          label: "Machine Intelligence and Automation",
+        },
+      ],
+    },
+    {
+      label: "Mathematics and Computing",
+      options: [
+        {
+          value: "Mathematics and Computing",
+          label: "Mathematics and Computing",
+        },
+      ],
+    },
+    {
+      label: "Mechanical Engineering",
+      options: [
+        { value: "Design Engineering", label: "Design Engineering" },
+        {
+          value: "Thermal and Energy Engineering",
+          label: "Thermal and Energy Engineering",
+        },
+      ],
+    },
+    {
+      label: "Textile Engineering",
+      options: [
+        {
+          value: "Textile Engineering and Management",
+          label: "Textile Engineering and Management",
+        },
+      ],
+    },
+    {
+      label: "Renewable Energy",
+      options: [{ value: "Renewable Energy", label: "Renewable Energy" }],
+    },
+    {
+      label: "Artificial Intelligence",
+      options: [
+        { value: "Artificial Intelligence", label: "Artificial Intelligence" },
+      ],
+    },
+    {
+      label: "Power Systems and Reliability",
+      options: [
+        {
+          value: "Power Systems and Reliability",
+          label: "Power Systems and Reliability",
+        },
+      ],
+    },
+  ];
+
+  const mbadepartmentOptions = [
+    { value: "Finance", label: "Finance" },
+    { value: "Human Resource", label: "Human Resource" },
+    { value: "Marketing", label: "Marketing" },
+  ];
+
+  const mscdepartmentOptions = [
+    { value: "Chemistry", label: "Chemistry" },
+    { value: "Mathematics", label: "Mathematics" },
+    { value: "Physics", label: "Physics" },
+  ];
+
+  const phddepartmentOptions = [
+    { value: "Biotechnology", label: "Biotechnology" },
+    { value: "Chemical Engineering", label: "Chemical Engineering" },
+    { value: "Civil Engineering", label: "Civil Engineering" },
+    {
+      value: "Computer Science and Engineering",
+      label: "Computer Science and Engineering",
+    },
+    { value: "Electrical Engineering", label: "Electrical Engineering" },
+    {
+      value: "Electronics and Communication Engineering",
+      label: "Electronics and Communication Engineering",
+    },
+    {
+      value: "Industrial and Production Engineering",
+      label: "Industrial and Production Engineering",
+    },
+    { value: "Information Technology", label: "Information Technology" },
+    {
+      value: "Instrumentation and Control Engineering",
+      label: "Instrumentation and Control Engineering",
+    },
+    { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+    { value: "Textile Technology", label: "Textile Technology" },
+  ];
+
+  const getDepartmentOptions = (course) => {
+    switch (course) {
+      case "B.Tech":
+        return btechdepartmentOptions;
+      case "M.Tech":
+        return mtechdepartmentOptions;
+      case "MBA":
+        return mbadepartmentOptions;
+      case "M.Sc":
+        return mscdepartmentOptions;
+      case "PHD":
+        return phddepartmentOptions;
+      default:
+        return [];
+    }
+  };
 
   const jobTypeOptions = [
-    { value: '', label: 'Select Job Type' },
-    { value: 'FTE', label: 'Full-Time Employment (FTE)' },
-    { value: 'Intern', label: 'Internship' },
-    { value: '6m Intern', label: '6-Month Internship' },
+    { value: "", label: "Select Job Type" },
+    { value: "2m Intern", label: "2-Month Internship" },
+    { value: "6m Intern", label: "6-Month Internship" },
+    { value: "Intern+PPO", label: "Intern + Pre Placement Offer(PPO)" },
+    { value: "Intern+FTE", label: "Intern + Full-Time Employment(FTE)" },
+    { value: "FTE", label: "Full-Time Employment(FTE)" },
   ];
 
   const jobCategoryOptions = [
-    { value: '', label: 'Select Job Category' },
-    { value: 'Tech', label: 'Tech' },
-    { value: 'Non-Tech', label: 'Non-Tech' },
+    { value: "", label: "Select Job Category" },
+    { value: "Tech", label: "Tech" },
+    { value: "Non-Tech", label: "Non-Tech" },
+    { value: "Tech+Non-Tech", label: "Tech + Non-Tech" },
   ];
-
 
   useEffect(() => {
     const checkApplicationFormExistence = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.REACT_APP_BASE_URL}/api/check-aft-exist/${job._id}`,
+          `${import.meta.env.REACT_APP_BASE_URL}/api/check-aft-exist/${
+            job._id
+          }`,
           { withCredentials: true }
         );
         setApplicationFormexist(response.data.exist);
@@ -111,32 +382,34 @@ const ViewJobDetails = ({ job, onClose }) => {
 
   const handleDeleteForm = () => {
     Swal.fire({
-      title: 'Delete Application Form',
-      text: 'This action cannot be undone. Are you sure?',
-      icon: 'warning',
+      title: "Delete Application Form",
+      text: "This action cannot be undone. Are you sure?",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Yes, delete it',
-      cancelButtonText: 'Cancel',
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel",
       customClass: {
-        popup: 'rounded-lg',
-        confirmButton: 'px-4 py-2 rounded-md',
-        cancelButton: 'px-4 py-2 rounded-md'
-      }
+        popup: "rounded-lg",
+        confirmButton: "px-4 py-2 rounded-md",
+        cancelButton: "px-4 py-2 rounded-md",
+      },
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
           await axios.put(
-            `${import.meta.env.REACT_APP_BASE_URL}/api/delete-form-template/${job._id}`,
+            `${import.meta.env.REACT_APP_BASE_URL}/api/delete-form-template/${
+              job._id
+            }`,
             {},
             { withCredentials: true }
           );
           setApplicationFormexist(false);
-          toast.success('Application form deleted successfully');
+          toast.success("Application form deleted successfully");
         } catch (error) {
-          console.error('Error deleting application form:', error);
-          toast.error('Failed to delete application form');
+          console.error("Error deleting application form:", error);
+          toast.error("Failed to delete application form");
         }
       }
     });
@@ -145,22 +418,23 @@ const ViewJobDetails = ({ job, onClose }) => {
   const handleSave = async (section) => {
     try {
       let updateData = {};
-      if (section === 'hiring_workflow') {
+      if (section === "hiring_workflow") {
         updateData = { Hiring_Workflow: editedWorkflow };
-      } else if (section === 'eligibility') {
+      } else if (section === "eligibility") {
         updateData = { eligibility_criteria: editedJob.eligibility_criteria };
-      } else if (section === 'salary') {
+      } else if (section === "salary") {
         updateData = { job_salary: editedJob.job_salary };
-      } else if (section === 'basic') {
+      } else if (section === "basic") {
         updateData = {
-          company_name:editedJob.company_name,
+          company_name: editedJob.company_name,
+          job_id: editedJob.job_id,
           job_role: editedJob.job_role,
           job_type: editedJob.job_type,
           jobdescription: editedJob.jobdescription,
           joblocation: editedJob.joblocation,
           job_category: editedJob.job_category,
           job_class: editedJob.job_class,
-          deadline: editedJob.deadline
+          deadline: editedJob.deadline,
         };
       }
 
@@ -171,24 +445,24 @@ const ViewJobDetails = ({ job, onClose }) => {
       );
 
       if (response.data.success) {
-        toast.success('Job updated successfully!');
+        toast.success("Job updated successfully!");
         Object.assign(job, editedJob);
         setEditingSection(null);
         setEditingStepIndex(null);
       }
     } catch (error) {
-      console.error('Error saving:', error);
-      toast.error('Failed to update job');
+      console.error("Error saving:", error);
+      toast.error("Failed to update job");
     }
   };
 
   const handleInputChange = (section, field, value) => {
-    if (section === 'hiring_workflow') {
+    if (section === "hiring_workflow") {
       const updatedWorkflow = [...editedWorkflow];
-      const [fieldPath, ...subFields] = field.split('.');
+      const [fieldPath, ...subFields] = field.split(".");
 
       if (subFields.length > 0) {
-        updatedWorkflow[editingStepIndex].details[subFields.join('.')] = value;
+        updatedWorkflow[editingStepIndex].details[subFields.join(".")] = value;
       } else {
         updatedWorkflow[editingStepIndex][fieldPath] = value;
       }
@@ -196,7 +470,7 @@ const ViewJobDetails = ({ job, onClose }) => {
       setEditedWorkflow(updatedWorkflow);
     } else {
       const updatedJob = { ...editedJob };
-      const fieldPath = field.split('.');
+      const fieldPath = field.split(".");
       let current = updatedJob;
 
       for (let i = 0; i < fieldPath.length - 1; i++) {
@@ -216,24 +490,43 @@ const ViewJobDetails = ({ job, onClose }) => {
       <div className="space-y-4 text-gray-700">
         <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Company Name:</strong>
-          {editingSection === 'basic' ? (
+          {editingSection === "basic" ? (
             <input
               type="text"
-              value={editedJob.company_name || ''}
-              onChange={(e) => handleInputChange('basic', 'company_name', e.target.value)}
+              value={editedJob.company_name || ""}
+              onChange={(e) =>
+                handleInputChange("basic", "company_name", e.target.value)
+              }
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           ) : (
             <span className="flex-1">{editedJob.company_name}</span>
           )}
         </div>
-       <div className="flex items-center">
-          <strong className="w-1/3 text-gray-800">Job Role:</strong>
-          {editingSection === 'basic' ? (
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Job Id:</strong>
+          {editingSection === "basic" ? (
             <input
               type="text"
-              value={editedJob.job_role || ''}
-              onChange={(e) => handleInputChange('basic', 'job_role', e.target.value)}
+              value={editedJob.job_id || ""}
+              onChange={(e) =>
+                handleInputChange("basic", "job_id", e.target.value)
+              }
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          ) : (
+            <span className="flex-1">{editedJob.job_id}</span>
+          )}
+        </div>
+        <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Job Role:</strong>
+          {editingSection === "basic" ? (
+            <input
+              type="text"
+              value={editedJob.job_role || ""}
+              onChange={(e) =>
+                handleInputChange("basic", "job_role", e.target.value)
+              }
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           ) : (
@@ -243,14 +536,18 @@ const ViewJobDetails = ({ job, onClose }) => {
 
         <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Job Type:</strong>
-          {editingSection === 'basic' ? (
+          {editingSection === "basic" ? (
             <select
-              value={editedJob.job_type || ''}
-              onChange={(e) => handleInputChange('basic', 'job_type', e.target.value)}
+              value={editedJob.job_type || ""}
+              onChange={(e) =>
+                handleInputChange("basic", "job_type", e.target.value)
+              }
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              {jobTypeOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
+              {jobTypeOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
             </select>
           ) : (
@@ -260,14 +557,18 @@ const ViewJobDetails = ({ job, onClose }) => {
 
         <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Job Category:</strong>
-          {editingSection === 'basic' ? (
+          {editingSection === "basic" ? (
             <select
-              value={editedJob.job_category || ''}
-              onChange={(e) => handleInputChange('basic', 'job_category', e.target.value)}
+              value={editedJob.job_category || ""}
+              onChange={(e) =>
+                handleInputChange("basic", "job_category", e.target.value)
+              }
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             >
-              {jobCategoryOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
+              {jobCategoryOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
               ))}
             </select>
           ) : (
@@ -277,11 +578,13 @@ const ViewJobDetails = ({ job, onClose }) => {
 
         <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Location:</strong>
-          {editingSection === 'basic' ? (
+          {editingSection === "basic" ? (
             <input
               type="text"
-              value={editedJob.joblocation || ''}
-              onChange={(e) => handleInputChange('basic', 'joblocation', e.target.value)}
+              value={editedJob.joblocation || ""}
+              onChange={(e) =>
+                handleInputChange("basic", "joblocation", e.target.value)
+              }
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           ) : (
@@ -291,10 +594,12 @@ const ViewJobDetails = ({ job, onClose }) => {
 
         <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Description:</strong>
-          {editingSection === 'basic' ? (
+          {editingSection === "basic" ? (
             <textarea
-              value={editedJob.jobdescription || ''}
-              onChange={(e) => handleInputChange('basic', 'jobdescription', e.target.value)}
+              value={editedJob.jobdescription || ""}
+              onChange={(e) =>
+                handleInputChange("basic", "jobdescription", e.target.value)
+              }
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               rows={4}
             />
@@ -302,14 +607,20 @@ const ViewJobDetails = ({ job, onClose }) => {
             <span className="flex-1">{editedJob.jobdescription}</span>
           )}
         </div>
-        
+
         <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Deadline:</strong>
-          {editingSection === 'basic' ? (
+          {editingSection === "basic" ? (
             <input
               type="datetime-local"
-              value={editedJob.deadline ? new Date(editedJob.deadline).toISOString().slice(0, 16) : ''}
-              onChange={(e) => handleInputChange('basic', 'deadline', e.target.value)}
+              value={
+                editedJob.deadline
+                  ? new Date(editedJob.deadline).toISOString().slice(0, 16)
+                  : ""
+              }
+              onChange={(e) =>
+                handleInputChange("basic", "deadline", e.target.value)
+              }
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           ) : (
@@ -324,35 +635,44 @@ const ViewJobDetails = ({ job, onClose }) => {
       <div className="space-y-4 text-gray-700">
         <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">CTC:</strong>
-          {editingSection === 'salary' ? (
+          {editingSection === "salary" ? (
             <input
               type="text"
-              value={editedJob.job_salary?.ctc || ''}
-              onChange={(e) => handleInputChange('salary', 'job_salary.ctc', e.target.value)}
+              value={editedJob.job_salary?.ctc || ""}
+              onChange={(e) =>
+                handleInputChange("salary", "job_salary.ctc", e.target.value)
+              }
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           ) : (
-            <span className="flex-1">{editedJob.job_salary?.ctc || 'N/A'}</span>
+            <span className="flex-1">{editedJob.job_salary?.ctc || "N/A"}</span>
           )}
         </div>
 
         <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Base Salary:</strong>
-          {editingSection === 'salary' ? (
+          {editingSection === "salary" ? (
             <input
               type="text"
-              value={editedJob.job_salary?.base_salary || ''}
-              onChange={(e) => handleInputChange('salary', 'job_salary.base_salary', e.target.value)}
+              value={editedJob.job_salary?.base_salary || ""}
+              onChange={(e) =>
+                handleInputChange(
+                  "salary",
+                  "job_salary.base_salary",
+                  e.target.value
+                )
+              }
               className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           ) : (
-            <span className="flex-1">{editedJob.job_salary?.base_salary || 'N/A'}</span>
+            <span className="flex-1">
+              {editedJob.job_salary?.base_salary || "N/A"}
+            </span>
           )}
         </div>
       </div>
     );
   };
-
 
   const renderEditableCard = (title, content, section) => (
     <div className="p-8 bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative mt-8">
@@ -399,7 +719,7 @@ const ViewJobDetails = ({ job, onClose }) => {
           >
             <button
               className="absolute top-4 right-4 p-2 text-gray-600 hover:text-blue-600 transition-colors"
-              onClick={() => handleEdit('hiring_workflow', index)}
+              onClick={() => handleEdit("hiring_workflow", index)}
             >
               <Pencil size={20} />
             </button>
@@ -412,27 +732,48 @@ const ViewJobDetails = ({ job, onClose }) => {
               {Object.entries(step.details || {}).map(([key, value]) => (
                 <li key={key} className="flex items-center">
                   <strong className="w-1/3 text-gray-800 capitalize">
-                    {key.replace(/_/g, ' ')}:
+                    {key.replace(/_/g, " ")}:
                   </strong>
-                  {editingStepIndex === index && editingSection === 'hiring_workflow' ? (
-                    key.toLowerCase().includes('date') ? (
+                  {editingStepIndex === index &&
+                  editingSection === "hiring_workflow" ? (
+                    key.toLowerCase().includes("date") ? (
                       <input
                         type="date"
-                        value={editedWorkflow[index].details[key] ? new Date(editedWorkflow[index].details[key]).toISOString().slice(0, 10) : ''}
-                        onChange={(e) => handleInputChange('hiring_workflow', `details.${key}`, e.target.value)}
+                        value={
+                          editedWorkflow[index].details[key]
+                            ? new Date(editedWorkflow[index].details[key])
+                                .toISOString()
+                                .slice(0, 10)
+                            : ""
+                        }
+                        onChange={(e) =>
+                          handleInputChange(
+                            "hiring_workflow",
+                            `details.${key}`,
+                            e.target.value
+                          )
+                        }
                         className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     ) : (
                       <input
                         type="text"
-                        value={editedWorkflow[index].details[key] || ''}
-                        onChange={(e) => handleInputChange('hiring_workflow', `details.${key}`, e.target.value)}
+                        value={editedWorkflow[index].details[key] || ""}
+                        onChange={(e) =>
+                          handleInputChange(
+                            "hiring_workflow",
+                            `details.${key}`,
+                            e.target.value
+                          )
+                        }
                         className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     )
                   ) : (
                     <span className="flex-1">
-                      {key.toLowerCase().includes('date') ? formatDate(value) : (value || 'N/A')}
+                      {key.toLowerCase().includes("date")
+                        ? formatDate(value)
+                        : value || "N/A"}
                     </span>
                   )}
                 </li>
@@ -440,34 +781,35 @@ const ViewJobDetails = ({ job, onClose }) => {
             </ul>
 
             <div className="mt-8 flex space-x-4">
-            <button
+              <button
                 className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
                 onClick={() => setAddingShortlist({ stepIndex: index })}
               >
                 Add Shortlisted Students
               </button>
-            <button
+              <button
                 className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
                 onClick={() => setViewingShortlist({ stepIndex: index })}
               >
                 View Shortlisted Students
               </button>
-              {editingStepIndex === index && editingSection === 'hiring_workflow' && (
-                <>
-                  <button
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
-                    onClick={() => handleSave('hiring_workflow')}
-                  >
-                    Save
-                  </button>
-                  <button
-                    className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300"
-                    onClick={handleCancel}
-                  >
-                    Cancel
-                  </button>
-                </>
-              )}
+              {editingStepIndex === index &&
+                editingSection === "hiring_workflow" && (
+                  <>
+                    <button
+                      className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
+                      onClick={() => handleSave("hiring_workflow")}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300"
+                      onClick={handleCancel}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                )}
             </div>
           </div>
         ))}
@@ -475,39 +817,71 @@ const ViewJobDetails = ({ job, onClose }) => {
     );
   };
 
-  const renderEligibilityCriteria = () =>(
+  const renderEligibilityCriteria = () => (
     <div className="space-y-4 text-gray-700">
-    <div className="flex items-center">
-<strong className="w-1/3 text-gray-800">Departments Allowed:</strong>
-{editingSection === 'eligibility' ? (
-  <div className="flex-1">
-    <Select
-      isMulti
-      options={departmentOptions}
-      value={departmentOptions.filter(option => 
-        editedJob.eligibility_criteria?.department_allowed?.includes(option.value)
-      )}
-      onChange={(selectedOptions) => {
-        const selectedValues = selectedOptions ? selectedOptions.map(option => option.value) : [];
-        handleInputChange('eligibility', 'eligibility_criteria.department_allowed', selectedValues);
-      }}
-      className="rounded-xl"
-      classNamePrefix="select"
-    />
-  </div>
-) : (
-  <span className="flex-1">
-    {editedJob.eligibility_criteria?.department_allowed?.join(', ') || 'N/A'}
-  </span>
-)}
-</div>
+      <div className="flex items-center">
+        <strong className="w-1/3 text-gray-800">Departments Allowed:</strong>
+        {editingSection === "eligibility" ? (
+          <div className="flex-1">
+            <Select
+              isMulti
+              options={getDepartmentOptions(
+                editedJob.eligibility_criteria?.course_allowed
+              )}
+              value={
+                editedJob.eligibility_criteria?.course_allowed === "B.Tech" ||
+                editedJob.eligibility_criteria?.course_allowed === "M.Tech"
+                  ? getDepartmentOptions(
+                      editedJob.eligibility_criteria?.course_allowed
+                    )
+                      .flatMap((group) => group.options)
+                      .filter((option) =>
+                        editedJob.eligibility_criteria?.department_allowed?.includes(
+                          option.value
+                        )
+                      )
+                  : getDepartmentOptions(
+                      editedJob.eligibility_criteria?.course_allowed
+                    ).filter((option) =>
+                      editedJob.eligibility_criteria?.department_allowed?.includes(
+                        option.value
+                      )
+                    )
+              }
+              onChange={(selectedOptions) => {
+                const selectedValues = selectedOptions
+                  ? selectedOptions.map((option) => option.value)
+                  : [];
+                handleInputChange(
+                  "eligibility",
+                  "eligibility_criteria.department_allowed",
+                  selectedValues
+                );
+              }}
+              isDisabled={!editedJob.eligibility_criteria?.course_allowed}
+              className="w-full border-2 p-1.5 border-gray-200 rounded-xl focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+            />
+          </div>
+        ) : (
+          <span className="flex-1">
+            {editedJob.eligibility_criteria?.department_allowed?.join(", ") ||
+              "N/A"}
+          </span>
+        )}
+      </div>
 
       <div className="flex items-center">
         <strong className="w-1/3 text-gray-800">Gender Allowed:</strong>
-        {editingSection === 'eligibility' ? (
+        {editingSection === "eligibility" ? (
           <select
-            value={editedJob.eligibility_criteria?.gender_allowed || ''}
-            onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.gender_allowed', e.target.value)}
+            value={editedJob.eligibility_criteria?.gender_allowed || ""}
+            onChange={(e) =>
+              handleInputChange(
+                "eligibility",
+                "eligibility_criteria.gender_allowed",
+                e.target.value
+              )
+            }
             className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select Gender</option>
@@ -517,34 +891,52 @@ const ViewJobDetails = ({ job, onClose }) => {
             <option value="Any">All</option>
           </select>
         ) : (
-          <span className="flex-1">{editedJob.eligibility_criteria?.gender_allowed || 'N/A'}</span>
+          <span className="flex-1">
+            {editedJob.eligibility_criteria?.gender_allowed || "N/A"}
+          </span>
         )}
       </div>
 
       <div className="flex items-center">
         <strong className="w-1/3 text-gray-800">Course Allowed:</strong>
-        {editingSection === 'eligibility' ? (
+        {editingSection === "eligibility" ? (
           <select
-            value={editedJob.eligibility_criteria?.course_allowed || ''}
-            onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.course_allowed', e.target.value)}
+            value={editedJob.eligibility_criteria?.course_allowed || ""}
+            onChange={(e) =>
+              handleInputChange(
+                "eligibility",
+                "eligibility_criteria.course_allowed",
+                e.target.value
+              )
+            }
             className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select Course</option>
             <option value="B.Tech">B.Tech</option>
             <option value="M.Tech">M.Tech</option>
             <option value="MBA">MBA</option>
+            <option value="M.Sc">M.Sc</option>
+            <option value="PHD">PHD</option>
           </select>
         ) : (
-          <span className="flex-1">{editedJob.eligibility_criteria?.course_allowed || 'N/A'}</span>
+          <span className="flex-1">
+            {editedJob.eligibility_criteria?.course_allowed || "N/A"}
+          </span>
         )}
       </div>
 
       <div className="flex items-center">
         <strong className="w-1/3 text-gray-800">Eligible Batch:</strong>
-        {editingSection === 'eligibility' ? (
+        {editingSection === "eligibility" ? (
           <select
-            value={editedJob.eligibility_criteria?.eligible_batch || ''}
-            onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.eligible_batch', e.target.value)}
+            value={editedJob.eligibility_criteria?.eligible_batch || ""}
+            onChange={(e) =>
+              handleInputChange(
+                "eligibility",
+                "eligibility_criteria.eligible_batch",
+                e.target.value
+              )
+            }
             className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           >
             <option value="">Select Batch</option>
@@ -556,54 +948,80 @@ const ViewJobDetails = ({ job, onClose }) => {
             <option value="2030">2030</option>
           </select>
         ) : (
-          <span className="flex-1">{editedJob.eligibility_criteria?.eligible_batch || 'N/A'}</span>
+          <span className="flex-1">
+            {editedJob.eligibility_criteria?.eligible_batch || "N/A"}
+          </span>
         )}
       </div>
 
       <div className="flex items-center">
-        <strong className="w-1/3 text-gray-800">Active Backlogs Allowed:</strong>
-        {editingSection === 'eligibility' ? (
+        <strong className="w-1/3 text-gray-800">
+          Active Backlogs Allowed:
+        </strong>
+        {editingSection === "eligibility" ? (
           <input
             type="checkbox"
             checked={editedJob.eligibility_criteria?.active_backlogs || false}
-            onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.active_backlogs', e.target.checked)}
+            onChange={(e) =>
+              handleInputChange(
+                "eligibility",
+                "eligibility_criteria.active_backlogs",
+                e.target.checked
+              )
+            }
             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />
         ) : (
           <span className="flex-1">
-            {editedJob.eligibility_criteria?.active_backlogs ? 'Yes' : 'No'}
+            {editedJob.eligibility_criteria?.active_backlogs ? "Yes" : "No"}
           </span>
         )}
       </div>
       <div className="flex items-center">
-        <strong className="w-1/3 text-gray-800">Backlogs History Allowed:</strong>
-        {editingSection === 'eligibility' ? (
+        <strong className="w-1/3 text-gray-800">
+          Backlogs History Allowed:
+        </strong>
+        {editingSection === "eligibility" ? (
           <input
             type="checkbox"
             checked={editedJob.eligibility_criteria?.history_backlogs || false}
-            onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.history_backlogs', e.target.checked)}
+            onChange={(e) =>
+              handleInputChange(
+                "eligibility",
+                "eligibility_criteria.history_backlogs",
+                e.target.checked
+              )
+            }
             className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />
         ) : (
           <span className="flex-1">
-            {editedJob.eligibility_criteria?.history_backlogs ? 'Yes' : 'No'}
+            {editedJob.eligibility_criteria?.history_backlogs ? "Yes" : "No"}
           </span>
         )}
       </div>
 
       <div className="flex items-center">
         <strong className="w-1/3 text-gray-800">Minimum CGPA:</strong>
-        {editingSection === 'eligibility' ? (
+        {editingSection === "eligibility" ? (
           <input
             type="number"
             min="0"
             max="10"
-            value={editedJob.eligibility_criteria?.minimum_cgpa || ''}
-            onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.minimum_cgpa', e.target.value)}
+            value={editedJob.eligibility_criteria?.minimum_cgpa || ""}
+            onChange={(e) =>
+              handleInputChange(
+                "eligibility",
+                "eligibility_criteria.minimum_cgpa",
+                e.target.value
+              )
+            }
             className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         ) : (
-          <span className="flex-1">{editedJob.eligibility_criteria?.minimum_cgpa || 'N/A'}</span>
+          <span className="flex-1">
+            {editedJob.eligibility_criteria?.minimum_cgpa || "N/A"}
+          </span>
         )}
       </div>
     </div>
@@ -632,7 +1050,7 @@ const ViewJobDetails = ({ job, onClose }) => {
     return (
       <AppliedStudents
         jobId={job._id}
-        onBack={() => setViewingAppliedStudents(false)}
+        onClose={() => setViewingAppliedStudents(false)}
       />
     );
   }
@@ -696,13 +1114,21 @@ const ViewJobDetails = ({ job, onClose }) => {
 
       {renderEditableCard("Basic Details", renderBasicDetails(), "basic")}
       {renderEditableCard("Salary Details", renderSalaryDetails(), "salary")}
-      {renderEditableCard("Eligibility Criteria", renderEligibilityCriteria(), "eligibility")}
+      {renderEditableCard(
+        "Eligibility Criteria",
+        renderEligibilityCriteria(),
+        "eligibility"
+      )}
 
-      <h3 className="text-3xl font-bold text-custom-blue mt-10 mb-8">Hiring Workflow</h3>
+      <h3 className="text-3xl font-bold text-custom-blue mt-10 mb-8">
+        Hiring Workflow
+      </h3>
       {renderHiringWorkflow()}
       <div className="p-8 bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative mt-8">
-{/*       <div className="mt-8 space-y-4"> */}
-       <h3 className="text-2xl font-semibold text-custom-blue mb-6">Application Form</h3>
+        {/*       <div className="mt-8 space-y-4"> */}
+        <h3 className="text-2xl font-semibold text-custom-blue mb-6">
+          Application Form
+        </h3>
         {applicationFormexist ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <Button
