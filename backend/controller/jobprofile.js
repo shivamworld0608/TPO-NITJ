@@ -55,7 +55,7 @@ export const createJobProfilecopy = async (req, res) => {
             interview_date: step.details?.interview_date || '',
             interview_time: step.details?.interview_time || '',
             interview_info: step.details?.interview_info || '',
-            interview_link: step.details?.interview_link || ''
+            interview_link: [],
           };
           break;
 
@@ -64,7 +64,7 @@ export const createJobProfilecopy = async (req, res) => {
             gd_date: step.details?.gd_date || '',
             gd_time: step.details?.gd_time || '',
             gd_info: step.details?.gd_info || '',
-            gd_link: step.details?.gd_link || ''
+            gd_link: [],
           };
           break;
 
@@ -290,6 +290,15 @@ export const getJobProfilesForProfessors = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+export const getspecificJobProfilesForProfessors = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const job = await JobProfile.findById(id);
+    res.status(200).json(job);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 
 export const approveJobProfile = async (req, res) => {
   try {
@@ -394,94 +403,6 @@ export const checkEligibility = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
-
-/* export const addshortlistStudents = async (req, res) => {
-  try {
-    const { jobId, stepIndex, students } = req.body;
-    const job = await JobProfile.findById(jobId);
-    if (!job) {
-      return res.status(404).json({ error: 'Job not found' });
-    }
-
-    const step = job.Hiring_Workflow[stepIndex];
-    if (!step) {
-      return res.status(400).json({ error: 'Invalid step index' });
-    }
-
-    const studentIds = [];
-    const absentIds = [];
-
-    for (const student of students) {
-      const formSubmission = await FormSubmission.findOne({
-        jobId: jobId,
-        'fields.value': student.email,
-      });
-
-      if (formSubmission) {
-        if (!step.shortlisted_students.includes(formSubmission.studentId)) {
-          studentIds.push(formSubmission.studentId);
-        } 
-        if (!step.absent_students.includes(formSubmission.studentId) && student.absent) {
-          absentIds.push(formSubmission.studentId);
-        }
-        else {
-          console.log(`Student with ID ${formSubmission.studentId} is already shortlisted.`);
-        }
-      } else {
-        console.error(`FormSubmission not found for email: ${student.email}`);
-      }
-    }
-
-    step.shortlisted_students.push(...studentIds);
-
-    if (job.Hiring_Workflow[stepIndex + 1]) {
-      const eligibleStudents = job.Hiring_Workflow[stepIndex + 1].eligible_students;
-      for (const studentId of studentIds) {
-        if (!eligibleStudents.includes(studentId)) {
-          eligibleStudents.push(studentId);
-        }
-      }
-    } else {
-      const placementData = [];
-      for (const studentId of studentIds) {
-        const student = await Student.findById(studentId);
-        if (student) {
-          student.placementstatus = job.job_class;
-          await student.save();
-          placementData.push({
-            studentId: studentId,
-            name: student.name,
-            image: student.image || '',
-            email: student.email,
-            gender: student.gender,
-            department: student.department,
-          });
-        } else {
-          console.error(`Student not found for ID: ${studentId}`);
-        }
-      }
-      const placement = new Placement({
-        company_name: job.company_name,
-        company_logo: job.company_logo,
-        placement_type: job.job_category,
-        batch: job.eligibility_criteria?.eligible_batch,
-        degree: job.eligibility_criteria?.course_allowed,
-        shortlisted_students: placementData,
-        ctc: job.job_salary?.ctc || 'N/A',
-      });
-
-      await placement.save();
-    }
-
-    await job.save();
-
-    res.status(200).json({ message: 'Students shortlisted successfully.' });
-  } catch (error) {
-    console.error('Error shortlisting students:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-}; */
-
 
 export const addshortlistStudents = async (req, res) => {
   try {
@@ -622,9 +543,11 @@ export const eligibleinthis = async (req, res) => {
       const emailField = submission.fields.find(field => field.fieldName === 'Email');
 
       return {
+        studentId:submission.studentId,
         name: nameField ? nameField.value : submission.studentId.name,
         email: emailField ? emailField.value : submission.studentId.email,
       };
+
     });
     res.status(200).json({ eligibleStudents });
   } catch (error) {
@@ -658,5 +581,134 @@ export const viewshortlisting=async(req,res)=>{
   } catch (error) {
     console.error('Error in eligibleinthis:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const updateInterviewLink = async (req, res) => {
+  try {
+    const { jobId, stepIndex, students } = req.body;
+    const jobProfile = await JobProfile.findById(jobId);
+    if (!jobProfile) {
+      return res.status(404).json({ message: "Job profile not found" });
+    }
+    const step = jobProfile.Hiring_Workflow[stepIndex];
+    if (!step) {
+      return res.status(404).json({ message: "Step not found in the hiring workflow" });
+    }
+    if (!step.details.interview_link) {
+      step.details.interview_link = [];
+    }
+    const updatePromises = students.map(async (student) => {
+      const { email, interviewLink } = student;
+      const formSubmission = await FormSubmission.findOne({
+        jobId: jobId,
+        'fields.value': email,
+      });
+
+      if (!formSubmission) {
+        return {
+          email,
+          status: 'error',
+          message: 'Student form submission not found'
+        };
+      }
+      const studentId = formSubmission.studentId;
+      const existingLinkIndex = step.details.interview_link.findIndex(
+        (link) => link.studentId.toString() === studentId.toString()
+      );
+      if (existingLinkIndex !== -1) {
+        step.details.interview_link[existingLinkIndex].interviewLink = interviewLink;
+      } else {
+        step.details.interview_link.push({
+          studentId,
+          interviewLink,
+        });
+      }
+
+      return {
+        email,
+        status: 'success',
+        message: 'Interview link updated successfully'
+      };
+    });
+    const results = await Promise.all(updatePromises);
+    jobProfile.markModified(`Hiring_Workflow.${stepIndex}.details`);
+    await jobProfile.save();
+    return res.status(200).json({
+      message: "Interview links processing completed",
+      results,
+      data: step.details.interview_link
+    });
+
+  } catch (error) {
+    console.error("Error updating interview links:", error);
+    return res.status(500).json({
+      message: "Failed to update interview links.",
+      error: error.message
+    });
+  }
+};
+export const updategdLink = async (req, res) => {
+  try {
+    const { jobId, stepIndex, students } = req.body;
+    const jobProfile = await JobProfile.findById(jobId);
+    if (!jobProfile) {
+      return res.status(404).json({ message: "Job profile not found" });
+    }
+    const step = jobProfile.Hiring_Workflow[stepIndex];
+    if (!step) {
+      return res.status(404).json({ message: "Step not found in the hiring workflow" });
+    }
+    if (!step.details.gd_link) {
+      step.details.gd_link = [];
+    }
+    const updatePromises = students.map(async (student) => {
+      const { email, gdLink } = student;
+      const formSubmission = await FormSubmission.findOne({
+        jobId: jobId,
+        'fields.value': email,
+      });
+
+      if (!formSubmission) {
+        return {
+          email,
+          status: 'error',
+          message: 'Student form submission not found'
+        };
+      }
+      const studentId = formSubmission.studentId;
+      const existingLinkIndex = step.details.gd_link.findIndex(
+        (link) => link.studentId.toString() === studentId.toString()
+      );
+      if (existingLinkIndex !== -1) {
+        step.details.gd_link[existingLinkIndex].gdLink = gdLink;
+      } else {
+        step.details.gd_link.push({
+          studentId,
+          gdLink,
+        });
+      }
+
+      return {
+        email,
+        status: 'success',
+        message: 'GD link updated successfully'
+      };
+    });
+    const results = await Promise.all(updatePromises);
+    jobProfile.markModified(`Hiring_Workflow.${stepIndex}.details`);
+    await jobProfile.save();
+    return res.status(200).json({
+      message: "GD links processing completed",
+      results,
+      data: step.details.gd_link
+    });
+
+  } catch (error) {
+    console.error("Error updating gd links:", error);
+    return res.status(500).json({
+      message: "Failed to update gd links.",
+      error: error.message
+    });
   }
 };
