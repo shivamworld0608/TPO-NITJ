@@ -44,9 +44,18 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/alogin" element={<AlumniLogin />} />
+      <Route
+          path="/"
+          element={authUser ? <Navigate to={getDashboardPath()} /> : <Home />}
+        />
+        <Route
+          path="/login"
+          element={authUser ? <Navigate to={getDashboardPath()} /> : <Login />}
+        />
+        <Route
+          path="/alogin"
+          element={authUser ? <Navigate to={getDashboardPath()} /> : <AlumniLogin />}
+        />
         {/* <Route path="/signup" element={<Signup />} /> */}
         <Route path="/placements" element={<Placement />} />
         <Route path="/recruiter" element={<Recruiter />} />
