@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Select from "react-select";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -6,96 +6,263 @@ import { FaArrowLeft } from "react-icons/fa";
 import { AlertCircle, GripVertical, X, Edit2 } from "lucide-react";
 
 const btechdepartmentOptions = [
-  { value: "Computer Science & Engineering", label: "Computer Science & Engineering" },
-  { value: "Electronics & Communication Engineering", label: "Electronics & Communication Engineering" },
-  { value: "Electrical Engineering", label: "Electrical Engineering" },
-  { value: "Mechanical Engineering", label: "Mechanical Engineering" },
-  { value: "Civil Engineering", label: "Civil Engineering" },
-  { value: "Information Technology", label: "Information Technology" },
-  { value: "Chemical Engineering", label: "Chemical Engineering" },
-  { value: "Instrumentation and Control Engineering", label: "Instrumentation and Control Engineering" },
-  { value: "Biotechnology", label: "Biotechnology" },
-  { value: "Textile Technology", label: "Textile Technology" },
-  { value: "Industrial & Production Engineering", label: "Industrial & Production Engineering" },
-];
-
-
-const mtechdepartmentOptions = [
+  {
+    label: "Biotechnology",
+    options: [{ value: "Biotechnology", label: "Biotechnology" }],
+  },
+  {
+    label: "Chemical Engineering",
+    options: [{ value: "Chemical Engineering", label: "Chemical Engineering" }],
+  },
+  {
+    label: "Civil Engineering",
+    options: [{ value: "Civil Engineering", label: "Civil Engineering" }],
+  },
   {
     label: "Computer Science & Engineering",
     options: [
-      { value: "CSE", label: "Computer Science & Engineering" },
-      { value: "CSE_IS", label: "Information Security" },
-      { value: "CSE_DS", label: "Data Science" },
-      { value: "CSE_AI", label: "Artificial Intelligence" },
+      {
+        value: "Computer Science & Engineering",
+        label: "Computer Science & Engineering",
+      },
+      {
+        value: "Data Science and Engineering",
+        label: "Data Science and Engineering",
+      },
+    ],
+  },
+  {
+    label: "Electrical Engineering",
+    options: [
+      { value: "Electrical Engineering", label: "Electrical Engineering" },
     ],
   },
   {
     label: "Electronics & Communication Engineering",
     options: [
-      { value: "ECE_SPML", label: "Signal Processing and Machine Learning" },
-      { value: "ECE_VLSI", label: "VLSI Design" },
+      {
+        value: "Electronics & Communication Engineering",
+        label: "Electronics & Communication Engineering",
+      },
+      {
+        value: "Electronics and VLSI Engineering",
+        label: "Electronics and VLSI Engineering",
+      },
     ],
   },
   {
-    label: "Electrical Engineering",
-    options: [{ value: "EE_EVD", label: "Electric Vehicle Design" }],
+    label: "Industrial and Production Engineering",
+    options: [
+      {
+        value: "Industrial and Production Engineering",
+        label: "Industrial and Production Engineering",
+      },
+    ],
   },
   {
-    label: "Civil Engineering",
+    label: "Information Technology",
     options: [
-      { value: "CE_SCE", label: "Structural and Construction Engineering" },
+      { value: "Information Technology", label: "Information Technology" },
+    ],
+  },
+  {
+    label: "Instrumentation and Control Engineering",
+    options: [
       {
-        value: "CE_GEO",
-        label: "Geotechnical – GEO-Environmental Engineering",
+        value: "Instrumentation and Control Engineering",
+        label: "Instrumentation and Control Engineering",
+      },
+    ],
+  },
+  {
+    label: "Mathematics and Computing",
+    options: [
+      {
+        value: "Mathematics and Computing",
+        label: "Mathematics and Computing",
       },
     ],
   },
   {
     label: "Mechanical Engineering",
-    options: [{ value: "ME_DE", label: "Design Engineering" }],
+    options: [
+      { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+    ],
   },
   {
-    label: "Information Technology",
-    options: [{ value: "IT_DA", label: "Data Analytics" }],
+    label: "Textile Technology",
+    options: [{ value: "Textile Technology", label: "Textile Technology" }],
+  },
+];
+
+const mtechdepartmentOptions = [
+  {
+    label: "Biotechnology",
+    options: [{ value: "Biotechnology", label: "Biotechnology" }],
   },
   {
     label: "Chemical Engineering",
-    options: [{ value: "CH", label: "Chemical Engineering" }],
+    options: [{ value: "Chemical Engineering", label: "Chemical Engineering" }],
+  },
+  {
+    label: "Civil Engineering",
+    options: [
+      {
+        value: "Structural and Construction Engineering",
+        label: "Structural and Construction Engineering",
+      },
+      {
+        value: "Geotechnical and Geo-Environmental Engineering",
+        label: "Geotechnical and Geo-Environmental Engineering",
+      },
+    ],
+  },
+  {
+    label: "Computer Science & Engineering",
+    options: [
+      {
+        value: "Computer Science & Engineering",
+        label: "Computer Science & Engineering",
+      },
+      { value: "Information Security", label: "Information Security" },
+      {
+        value: "Data Science and Engineering",
+        label: "Data Science and Engineering",
+      },
+    ],
+  },
+  {
+    label: "Electrical Engineering",
+    options: [
+      { value: "Electric Vehicle Design", label: "Electric Vehicle Design" },
+    ],
+  },
+  {
+    label: "Electronics & Communication Engineering",
+    options: [
+      {
+        value: "Signal Processing and Machine Learning",
+        label: "Signal Processing and Machine Learning",
+      },
+      { value: "VLSI Design", label: "VLSI Design" },
+    ],
   },
   {
     label: "Industrial & Production Engineering",
     options: [
-      { value: "IPE_DA", label: "Industrial Engineering & Data Analytics" },
+      {
+        value: "Industrial Engineering and Data Analytics",
+        label: "Industrial Engineering and Data Analytics",
+      },
+      {
+        value: "Manufacturing Technology With Machine Learning",
+        label: "Manufacturing Technology With Machine Learning",
+      },
+    ],
+  },
+  {
+    label: "Information Technology",
+    options: [{ value: "Data Analytics", label: "Data Analytics" }],
+  },
+  {
+    label: "Instrumentation and Control Engineering",
+    options: [
+      {
+        value: "Control and Instrumentation",
+        label: "Control and Instrumentation",
+      },
+      {
+        value: "Machine Intelligence and Automation",
+        label: "Machine Intelligence and Automation",
+      },
+    ],
+  },
+  {
+    label: "Mathematics and Computing",
+    options: [
+      {
+        value: "Mathematics and Computing",
+        label: "Mathematics and Computing",
+      },
+    ],
+  },
+  {
+    label: "Mechanical Engineering",
+    options: [
+      { value: "Design Engineering", label: "Design Engineering" },
+      {
+        value: "Thermal and Energy Engineering",
+        label: "Thermal and Energy Engineering",
+      },
     ],
   },
   {
     label: "Textile Engineering",
-    options: [{ value: "TT_TEM", label: "Textile Engineering & Management" }],
-  },
-  {
-    label: "Biotechnology",
-    options: [{ value: "BT", label: "Biotechnology" }],
+    options: [
+      {
+        value: "Textile Engineering and Management",
+        label: "Textile Engineering and Management",
+      },
+    ],
   },
   {
     label: "Renewable Energy",
-    options: [{ value: "RE", label: "Renewable Energy" }],
+    options: [{ value: "Renewable Energy", label: "Renewable Energy" }],
+  },
+  {
+    label: "Artificial Intelligence",
+    options: [
+      { value: "Artificial Intelligence", label: "Artificial Intelligence" },
+    ],
+  },
+  {
+    label: "Power Systems and Reliability",
+    options: [
+      {
+        value: "Power Systems and Reliability",
+        label: "Power Systems and Reliability",
+      },
+    ],
   },
 ];
 
 const mbadepartmentOptions = [
   { value: "Finance", label: "Finance" },
+  { value: "Human Resource", label: "Human Resource" },
   { value: "Marketing", label: "Marketing" },
-  { value: "HR", label: "HR" },
 ];
 
 const mscdepartmentOptions = [
-  { value: "Physics", label: "Physics" },
   { value: "Chemistry", label: "Chemistry" },
   { value: "Mathematics", label: "Mathematics" },
+  { value: "Physics", label: "Physics" },
 ];
 
-const phddepartmentOptions = [];
+const phddepartmentOptions = [
+  { value: "Biotechnology", label: "Biotechnology" },
+  { value: "Chemical Engineering", label: "Chemical Engineering" },
+  { value: "Civil Engineering", label: "Civil Engineering" },
+  {
+    value: "Computer Science and Engineering",
+    label: "Computer Science and Engineering",
+  },
+  { value: "Electrical Engineering", label: "Electrical Engineering" },
+  {
+    value: "Electronics and Communication Engineering",
+    label: "Electronics and Communication Engineering",
+  },
+  {
+    value: "Industrial and Production Engineering",
+    label: "Industrial and Production Engineering",
+  },
+  { value: "Information Technology", label: "Information Technology" },
+  {
+    value: "Instrumentation and Control Engineering",
+    label: "Instrumentation and Control Engineering",
+  },
+  { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+  { value: "Textile Technology", label: "Textile Technology" },
+];
 
 const jobTypeOptions = [
   { value: "", label: "Select Job Type" },
@@ -110,6 +277,7 @@ const jobCategoryOptions = [
   { value: "", label: "Select Job Category" },
   { value: "Tech", label: "Tech" },
   { value: "Non-Tech", label: "Non-Tech" },
+  { value: "Tech+Non-Tech", label: "Tech + Non-Tech" },
 ];
 
 const workflowStepOptions = [
@@ -118,7 +286,7 @@ const workflowStepOptions = [
   { value: "OA", label: "Online Assessment" },
   { value: "Interview", label: "Interview" },
   { value: "GD", label: "Group Discussion" },
-  {value: "Others", label: "Others"},
+  { value: "Others", label: "Others" },
 ];
 
 const CreateJob = ({ onJobCreated, onCancel }) => {
@@ -157,7 +325,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
-      ...(name === "course_allowed" && {  }), // Clear departments when course changes
+      ...(name === "course_allowed" && {}), // Clear departments when course changes
     });
   };
 
@@ -413,12 +581,16 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 )}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               >
-                 <option value="">Select Job Type</option>
-                  <option value="2m Intern">2-Month Internship</option>
-                  <option value="6m Intern">6-Month Internship</option>
-                  <option value="Intern+PPO">Intern + Pre Placement Offer(PPO)</option>
-                  <option value="Intern+FTE">Intern + Full-Time Employment(FTE)</option>
-                  <option value="FTE">Full-Time Employment(FTE)</option>
+                <option value="">Select Job Type</option>
+                <option value="2m Intern">2-Month Internship</option>
+                <option value="6m Intern">6-Month Internship</option>
+                <option value="Intern+PPO">
+                  Intern + Pre Placement Offer(PPO)
+                </option>
+                <option value="Intern+FTE">
+                  Intern + Full-Time Employment(FTE)
+                </option>
+                <option value="FTE">Full-Time Employment(FTE)</option>
               </select>
             </div>
             <div>
@@ -437,9 +609,9 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               >
                 <option value="">Select Job Category</option>
-                  <option value="Tech">Tech</option>
-                  <option value="Non-Tech">Non-Tech</option>
-                
+                <option value="Tech">Tech</option>
+                <option value="Non-Tech">Non-Tech</option>
+                <option value="Tech+Non-Tech">Tech + Non-Tech</option>
               </select>
             </div>
 
@@ -448,28 +620,24 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 CTC
               </label>
               <input
-                
                 type="number"
                 name="ctc"
                 value={formData.ctc}
                 onChange={handleChange}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
-
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Stipend
               </label>
               <input
-                
                 type="number"
                 name="stipend"
                 value={formData.stipend} //baceknd me ctc ko stipend me change krna h
                 onChange={handleChange}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
-
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -497,7 +665,6 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
-            
           </div>
 
           {/* Eligibility Criteria */}
@@ -620,7 +787,9 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 />
               </div>
               <div className="flex items-center">
-                <label className="block text-gray-700 font-semibold mb-2 mr-2">Backlogs History Allowed</label>
+                <label className="block text-gray-700 font-semibold mb-2 mr-2">
+                  Backlogs History Allowed
+                </label>
                 <input
                   type="checkbox"
                   name="history_backlogs"
@@ -659,9 +828,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
             </div>
 
             {/* Dynamic Step Details Form */}
-            {workflowStep.step_type === "Resume Shortlisting" && (
-              <></>
-            )}
+            {workflowStep.step_type === "Resume Shortlisting" && <></>}
 
             {workflowStep.step_type === "OA" && (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
@@ -686,13 +853,6 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   name="oa_duration"
                   placeholder="OA Duration"
                   value={workflowStep.details.oa_duration || ""}
-                  onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-                />
-                <textarea
-                  name="oa_link"
-                  placeholder="OA Link"
-                  value={workflowStep.details.oa_link || ""}
                   onChange={handleStepDetailsChange}
                   className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
@@ -747,13 +907,6 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <textarea
-                  name="interview_link"
-                  placeholder="Interview Link"
-                  value={workflowStep.details.interview_link || ""}
-                  onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-                />
-                <textarea
                   name="interview_info"
                   placeholder="Interview Info"
                   value={workflowStep.details.interview_info || ""}
@@ -782,13 +935,6 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <textarea
-                  name="gd_link"
-                  placeholder="GD Link"
-                  value={workflowStep.details.gd_link || ""}
-                  onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-                />
-                <textarea
                   name="gd_info"
                   placeholder="GD Info"
                   value={workflowStep.details.gd_info || ""}
@@ -798,11 +944,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               </div>
             )}
 
-
-
             {workflowStep.step_type === "Others" && (
               <>
-              
                 <input
                   type="string"
                   name="others_round_name"
@@ -811,50 +954,42 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   onChange={handleStepDetailsChange}
                   className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300 mt-4"
                 />
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-                <input
-                  type="date"
-                  name="others_date"
-                  placeholder="Round Date"
-                  value={workflowStep.details.others_date || ""}
-                  onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-                />
-                <input
-                  type="string"
-                  name="others_login_time"
-                  placeholder="Login Time"
-                  value={workflowStep.details.others_login_time || ""}
-                  onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-                />
-                <input
-                  type="string"
-                  name="others_duration"
-                  placeholder="Round Duration"
-                  value={workflowStep.details.others_duration || ""}
-                  onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-                />
-                <textarea
-                  name="others_link"
-                  placeholder="Round Link"
-                  value={workflowStep.details.others_link || ""}
-                  onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-                />
-                <textarea
-                  name="others_info"
-                  placeholder="Round Info"
-                  value={workflowStep.details.others_info || ""}
-                  onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-                />
-              </div>
-              
-            </>
-          )}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+                  <input
+                    type="date"
+                    name="others_date"
+                    placeholder="Round Date"
+                    value={workflowStep.details.others_date || ""}
+                    onChange={handleStepDetailsChange}
+                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  />
+                  <input
+                    type="string"
+                    name="others_login_time"
+                    placeholder="Login Time"
+                    value={workflowStep.details.others_login_time || ""}
+                    onChange={handleStepDetailsChange}
+                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  />
+                  <input
+                    type="string"
+                    name="others_duration"
+                    placeholder="Round Duration"
+                    value={workflowStep.details.others_duration || ""}
+                    onChange={handleStepDetailsChange}
+                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  />
+                  <textarea
+                    name="others_info"
+                    placeholder="Round Info"
+                    value={workflowStep.details.others_info || ""}
+                    onChange={handleStepDetailsChange}
+                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  />
+                </div>
+              </>
+            )}
 
             {/* Add/Update Workflow Step Button */}
             <button
