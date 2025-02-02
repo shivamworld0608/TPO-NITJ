@@ -39,7 +39,7 @@ export default function Gdcard(props) {
             <div className="text-sm text-gray-500 flex items-center">
               <span className="font-medium text-gray-800 mr-2">GD Link:</span>
               <a
-                href={oa_link}
+                href={gd_link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
