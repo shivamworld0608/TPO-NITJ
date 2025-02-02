@@ -73,7 +73,7 @@ const LoginSignup = ({Login}) => {
           }
         )
         .then((response) => {
-          dispatch(setAuthUser({ authUser: true, userData: response.data.user, }));
+          dispatch(setAuthUser({ authUser: true, userData: response.data.user,userType:response.data.userType }));
           if (response.data.userType === "Student") {
             navigate("/sdashboard/home");
           } else if (response.data.userType === "Recuiter") {
