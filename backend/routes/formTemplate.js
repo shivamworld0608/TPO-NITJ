@@ -13,7 +13,10 @@ import {
   getFormSubmissionstorecruiter,
   deleteFormSubmission,
   deleteAllFormSubmissions,
-  makeVisible
+  makeVisible,
+  withdrawApplication,
+  editApplication,
+  getSubmissionbystudent 
 } from '../controller/formsubmission.js';
 
 const router = express.Router();
@@ -43,5 +46,9 @@ router.patch('/form-submissions/make-visible/:jobId', makeVisible);
 //recruiter form submission
 router.get('/form-submissions/recruiter/:jobId', getFormSubmissionstorecruiter);
 
+
+router.post('/withdraw', withdrawApplication);
+router.put('/edit', editApplication);
+router.get('/get-already/:jobId', getSubmissionbystudent);
 
 export default router;

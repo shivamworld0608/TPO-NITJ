@@ -341,6 +341,7 @@ export const checkEligibility = async (req, res) => {
       eligible_batch,
       minimum_cgpa,
       active_backlogs,
+      history_backlogs,
     } = job.eligibility_criteria;
 
     if (!department_allowed.includes(student.department)) {
@@ -366,6 +367,10 @@ export const checkEligibility = async (req, res) => {
       return res.json({ eligible: false, reason: "Active backlogs do not meet criteria" });
     }
 
+    if (history_backlogs !== undefined && student.backlogs_history !== history_backlogs) {
+      return res.json({ eligible: false, reason: "Backlogs History do not meet criteria" });
+    }
+
     const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
     const studentClassIndex = jobClassOrder.indexOf(student.placementstatus);
     const jobClassIndex = jobClassOrder.indexOf(job.job_class);
@@ -380,8 +385,10 @@ export const checkEligibility = async (req, res) => {
         reason: "Student can only apply for higher job categories than their current placement status",
       });
     }
+    const currentDate = new Date();
+    const isDeadlineOver = job.deadline && currentDate > job.deadline;
     const hasApplied = job.Applied_Students.includes(studentId);
-    return res.json({ eligible: true, reason: "Eligible to apply", applied: hasApplied });
+    return res.json({ eligible: true, reason: "Eligible to apply", applied: hasApplied,isDeadlineOver });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Server error" });
@@ -480,18 +487,15 @@ export const addshortlistStudents = async (req, res) => {
   try {
     const { jobId, stepIndex, students } = req.body;
 
-    // Validate jobId and stepIndex
     if (!mongoose.Types.ObjectId.isValid(jobId)) {
       return res.status(400).json({ error: 'Invalid job ID' });
     }
 
-    // Find the job profile
     const job = await JobProfile.findById(jobId);
     if (!job) {
       return res.status(404).json({ error: 'Job not found' });
     }
 
-    // Validate stepIndex
     if (stepIndex < 0 || stepIndex >= job.Hiring_Workflow.length) {
       return res.status(400).json({ error: 'Invalid step index' });
     }
@@ -501,10 +505,9 @@ export const addshortlistStudents = async (req, res) => {
       return res.status(400).json({ error: 'Step not found' });
     }
 
-    const studentIds = []; // For newly shortlisted students
-    const absentIds = [];  // For absent students
+    const studentIds = [];
+    const absentIds = [];
 
-    // Process each student
     for (const student of students) {
       const formSubmission = await FormSubmission.findOne({
         jobId: jobId,
@@ -514,30 +517,34 @@ export const addshortlistStudents = async (req, res) => {
       if (formSubmission) {
         const studentId = formSubmission.studentId;
 
-        // If the student is marked as absent
         if (student.absent) {
-          // Remove the student from shortlisted_students if they are already there
           if (step.shortlisted_students.includes(studentId)) {
             step.shortlisted_students = step.shortlisted_students.filter(
               (id) => id.toString() !== studentId.toString()
             );
           }
-          // Add the student to absent_students if they are not already there
           if (!step.absent_students.includes(studentId)) {
             absentIds.push(studentId);
           }
-        }
-        // If the student is marked as shortlisted and not absent
-        else if (student.shortlisted) {
-          // Remove the student from absent_students if they are already there
+        } else if (student.shortlisted) {
           if (step.absent_students.includes(studentId)) {
             step.absent_students = step.absent_students.filter(
               (id) => id.toString() !== studentId.toString()
             );
           }
-          // Add the student to shortlisted_students if they are not already there
           if (!step.shortlisted_students.includes(studentId)) {
             studentIds.push(studentId);
+          }
+        } else {
+          if (step.shortlisted_students.includes(studentId)) {
+            step.shortlisted_students = step.shortlisted_students.filter(
+              (id) => id.toString() !== studentId.toString()
+            );
+          }
+          if (step.absent_students.includes(studentId)) {
+            step.absent_students = step.absent_students.filter(
+              (id) => id.toString() !== studentId.toString()
+            );
           }
         }
       } else {
@@ -545,13 +552,9 @@ export const addshortlistStudents = async (req, res) => {
       }
     }
 
-    // Add newly shortlisted students to the step
     step.shortlisted_students.push(...studentIds);
-
-    // Add absent students to the step
     step.absent_students.push(...absentIds);
 
-    // If there is a next step, add shortlisted students to its eligible_students
     if (job.Hiring_Workflow[stepIndex + 1]) {
       const nextStep = job.Hiring_Workflow[stepIndex + 1];
       for (const studentId of studentIds) {
@@ -560,7 +563,6 @@ export const addshortlistStudents = async (req, res) => {
         }
       }
     } else {
-      // If this is the final step, update placement status for shortlisted students
       const placementData = [];
       for (const studentId of studentIds) {
         const student = await Student.findById(studentId);
@@ -580,7 +582,6 @@ export const addshortlistStudents = async (req, res) => {
         }
       }
 
-      // Create a new placement record
       const placement = new Placement({
         company_name: job.company_name,
         company_logo: job.company_logo,
@@ -594,7 +595,6 @@ export const addshortlistStudents = async (req, res) => {
       await placement.save();
     }
 
-    // Save the updated job profile
     await job.save();
 
     res.status(200).json({ message: 'Students processed successfully.' });

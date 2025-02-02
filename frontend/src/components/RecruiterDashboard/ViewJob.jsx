@@ -89,6 +89,7 @@ const ViewJobDetailsr = ({ job, onClose }) => {
         updateData = { job_salary: editedJob.job_salary };
       } else if (section === 'basic') {
         updateData = {
+          company_name:editedJob.company_name,
           job_role: editedJob.job_role,
           job_type: editedJob.job_type,
           jobdescription: editedJob.jobdescription,
@@ -185,6 +186,19 @@ const ViewJobDetailsr = ({ job, onClose }) => {
   const renderBasicDetails = () => {
     return (
       <div className="space-y-4 text-gray-700">
+       <div className="flex items-center">
+          <strong className="w-1/3 text-gray-800">Company Name:</strong>
+          {editingSection === 'basic' ? (
+            <input
+              type="text"
+              value={editedJob.company_name || ''}
+              onChange={(e) => handleInputChange('basic', 'company_name', e.target.value)}
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+          ) : (
+            <span className="flex-1">{editedJob.company_name}</span>
+          )}
+        </div>
        <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Job Role:</strong>
           {editingSection === 'basic' ? (

@@ -44,6 +44,7 @@ const StudentAnalyticsDashboard = () => {
           `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/get`,
           { withCredentials: true }
         );
+        console.log("ji");
         setData(response.data.data || []);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to fetch students.");
