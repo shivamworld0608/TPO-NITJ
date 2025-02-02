@@ -12,7 +12,6 @@ const JobProfilesonp = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
-  
 
   useEffect(() => {
     const fetchJobProfiles = async () => {
