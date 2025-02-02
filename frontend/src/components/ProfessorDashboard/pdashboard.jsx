@@ -38,7 +38,7 @@ import ExperienceSharing from "./pexperiencesharing";
 import PlacementInsights from "./pplacementinsights";
 import PlacementPolicy from "./pplacementpolicy";
 import RequestHelpManager from "./Request";
-import Profile from "../StudentDashboard/profile";
+import Profile from "./pProfile.jsx";
 import Home from "./home";
 import Upload from "./pUpload.jsx";
 import JAF from "./jaf.jsx";
@@ -99,8 +99,8 @@ const Pdashboard = () => {
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
     {label:"Student",icon:faUser, path:"/pdashboard/student-analysis"},
-    {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
-    { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
+    // {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
+    // { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
     { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
     { label: "User Requests", icon: faContactCard, path: "/pdashboard/contact-request" },
     { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
@@ -177,7 +177,7 @@ const Pdashboard = () => {
             <div className="flex items-center gap-4">
               <span className="text-gray-600">👋 Hi, {userData.name}</span>
               <img
-                onClick={() => navigate("/sdashboard/profile")}
+                onClick={() => navigate("/pdashboard/profile")}
                 src={userData?.image || ProfileImage}
                 alt="Profile"
                 className="w-8 h-8 rounded-full object-cover cursor-pointer"
@@ -199,7 +199,7 @@ const Pdashboard = () => {
                 <div
                   onClick={() => {
                     setIsMenuOpen(false);
-                    navigate("/sdashboard/profile");
+                    navigate("/pdashboard/profile");
                   }}
                   className="ml-3"
                 >

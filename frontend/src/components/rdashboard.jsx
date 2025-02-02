@@ -33,7 +33,7 @@ import Sidebar from "./sidebar.jsx";
 import CreatedJobs from "./RecruiterDashboard/createdjob";
 import MailboxComponent from "./RecruiterDashboard/rmailbox";
 import Request from "./RecruiterDashboard/Request.jsx";
-import Profile from "./RecruiterDashboard/profile.jsx";
+import Profile from "./RecruiterDashboard/rprofile.jsx";
 import TeamSection from "./Developers/TeamSection.jsx";
 import JobAnnouncementForm from "./RecruiterDashboard/jaf.jsx";
 import FeedbackForm from "./RecruiterDashboard/feedback.jsx";
@@ -186,7 +186,7 @@ const RecruiterDashboards = () => {
             <div className="flex items-center gap-4">
               <span className="text-gray-600">👋 Hi, {userData.name}</span>
               <img
-                onClick={() => navigate("/rdashboard/profile")}
+                onClick={() => navigate("/rdashboard/rprofile")}
                 src={userData?.image || ProfileImage}
                 alt="Profile"
                 className="w-8 h-8 rounded-full object-cover cursor-pointer"
@@ -208,7 +208,7 @@ const RecruiterDashboards = () => {
                 <div
                   onClick={() => {
                     setIsMenuOpen(false);
-                    navigate("/rdashboard/profile");
+                    navigate("/rdashboard/rprofile");
                   }}
                   className="ml-3"
                 >
@@ -302,7 +302,7 @@ const RecruiterDashboards = () => {
               <Route path="feedback" element={<FeedbackForm/>} />
               <Route path="travel" element={<TravelPlanner/>} />
               <Route path="mailbox" element={<MailboxComponent />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path="rprofile" element={<Profile />} />
               <Route path="team" element={<TeamSection />} />
             </Routes>
         </div>
