@@ -31,9 +31,9 @@ const App = () => {
         case "Student":
           return "/sdashboard/home";
         case "Professor":
-          return "/rdashboard/home";
-        case "Recruiter":
           return "/pdashboard/home";
+        case "Recuiter":
+          return "/rdashboard/home";
         default:
           return "/";
       }
@@ -67,11 +67,11 @@ const App = () => {
         />
         <Route
           path="/rdashboard/*"
-          element={authUser && userType === "Professor" ? <Rdashboard /> : <Navigate to={getDashboardPath()} />}
+          element={authUser && userType === "Recuiter" ? <Rdashboard /> : <Navigate to={getDashboardPath()} />}
         />
         <Route
           path="/pdashboard/*"
-          element={authUser && userType === "Recruiter" ? <Pdashboard /> : <Navigate to={getDashboardPath()} />}
+          element={authUser && userType === "Professor" ? <Pdashboard /> : <Navigate to={getDashboardPath()} />}
         />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} /> {/* This will catch all unmatched routes */}
