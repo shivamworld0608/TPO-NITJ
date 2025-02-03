@@ -279,7 +279,7 @@ const AppliedStudentp = ({ jobId, onClose }) => {
                     className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-grren-700 transition-colors"
                     onClick={() => {
                       const url = submission.resumeUrl.startsWith("http")
-                        ? others_link
+                        ? submission.resumeUrl
                         : `https://${submission.resumeUrl}`;
                       window.open(url, "_blank");
                     }}

@@ -53,7 +53,12 @@ export default function Oacard(props) {
             <div className="text-sm text-gray-500 flex items-center">
               <span className="font-medium text-gray-800 mr-2">OA Link:</span>
               <a
-                href={oa_link}
+                href={
+                  typeof interview_link === "string" &&
+                  interview_link.startsWith("http")
+                    ? interview_link
+                    : `https://${interview_link || ""}`
+                }
                 target="_blank"
                 rel="noopener noreferrer"
                 className="border border-green-500 rounded-lg p-1 text-green-500  hover:bg-green-500  hover:text-white"
@@ -61,17 +66,17 @@ export default function Oacard(props) {
                 Start
               </a>
             </div>
-          ):
-          <div className="text-sm text-gray-500 flex items-center">
-          <span className="font-medium text-gray-800 mr-2">OA Link:</span>
-          <button
-            onClick={()=>alert("Test link will be available soon")}
-            className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
-          >
-            Soon
-          </button>
-        </div>
-          }
+          ) : (
+            <div className="text-sm text-gray-500 flex items-center">
+              <span className="font-medium text-gray-800 mr-2">OA Link:</span>
+              <button
+                onClick={() => alert("Test link will be available soon")}
+                className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+              >
+                Soon
+              </button>
+            </div>
+          )}
           {was_shortlisted && (
             <div className="text-sm text-gray-500 flex items-center">
               {was_shortlisted}
