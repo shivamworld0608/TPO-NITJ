@@ -55,10 +55,10 @@ export default function Otherscard(props) {
               </span>
               <a
                 href={
-                  typeof interview_link === "string" &&
-                  interview_link.startsWith("http")
-                    ? interview_link
-                    : `https://${interview_link || ""}`
+                  typeof others_link === "string" &&
+                  others_link.startsWith("http")
+                    ? others_link
+                    : `https://${others_link || ""}`
                 }
                 target="_blank"
                 rel="noopener noreferrer"
