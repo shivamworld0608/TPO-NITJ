@@ -79,7 +79,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 app.get('/check-auth', authenticate, (req, res) => {
-  res.status(200).json({ message: 'Authenticated', user: req.user });
+  res.status(200).json({ message: 'Authenticated', user: req.user, userType:req.user.userType });
 });
 
 app.use('/auth', authroutes);

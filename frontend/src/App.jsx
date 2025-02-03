@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,29 +16,63 @@ import ErrorPage from "./Pages/ErrorPage";
 import Signup from "./Pages/Signup";
 import AlumniLogin from "./Pages/ALogin";
 
-
 const App = () => {
   const dispatch = useDispatch();
-  const { authUser } = useSelector((state) => state.auth);
+  const { authUser, userType } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    console.log(authUser);
     dispatch(checkAuth());
   }, [dispatch]);
+
+  const getDashboardPath = () => {
+    if (authUser) {
+      switch (userType) {
+        case "Student":
+          return "/sdashboard/home";
+        case "Professor":
+          return "/pdashboard/home";
+        case "Recuiter":
+          return "/rdashboard/home";
+        default:
+          return "/";
+      }
+    }
+    return "/";
+  };
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login/>} />
-        <Route path="/alogin" element={<AlumniLogin/>} />
-       {/*  <Route path="/signup" element={<Signup/>} /> */}
-        <Route path="/placements" element={<Placement/>} />
-        <Route path="/recruiter" element={<Recruiter/>} />
-        <Route path="/faq" element={<FAQ/>} />
-        <Route path="/team" element={<TeamPage/>} />
-        <Route path="/sdashboard/*" element={authUser ? <Sdashboard /> : <Navigate to="/" />}/>         
-        <Route path="/rdashboard/*" element={authUser? <Rdashboard/> : <Navigate to="/" />} />
-        <Route path="/pdashboard/*" element={authUser? <Pdashboard/> : <Navigate to="/" />} />
+      <Route
+          path="/"
+          element={authUser ? <Navigate to={getDashboardPath()} /> : <Home />}
+        />
+        <Route
+          path="/login"
+          element={authUser ? <Navigate to={getDashboardPath()} /> : <Login />}
+        />
+        <Route
+          path="/alogin"
+          element={authUser ? <Navigate to={getDashboardPath()} /> : <AlumniLogin />}
+        />
+        {/* <Route path="/signup" element={<Signup />} /> */}
+        <Route path="/placements" element={<Placement />} />
+        <Route path="/recruiter" element={<Recruiter />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/team" element={<TeamPage />} />
+        <Route
+          path="/sdashboard/*"
+          element={authUser && userType === "Student" ? <Sdashboard /> : <Navigate to={getDashboardPath()} />}
+        />
+        <Route
+          path="/rdashboard/*"
+          element={authUser && userType === "Recuiter" ? <Rdashboard /> : <Navigate to={getDashboardPath()} />}
+        />
+        <Route
+          path="/pdashboard/*"
+          element={authUser && userType === "Professor" ? <Pdashboard /> : <Navigate to={getDashboardPath()} />}
+        />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} /> {/* This will catch all unmatched routes */}
       </Routes>
