@@ -53,17 +53,19 @@ export default function Otherscard(props) {
               <span className="font-medium text-gray-800 mr-2">
                 Others Link:
               </span>
-              <button
-                onClick={() => {
-                  const url = others_link.startsWith("http")
-                    ? others_link
-                    : `https://${others_link}`;
-                  window.open(url, "_blank");
-                }}
-                className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+              <a
+                href={
+                  typeof interview_link === "string" &&
+                  interview_link.startsWith("http")
+                    ? interview_link
+                    : `https://${interview_link || ""}`
+                }
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border border-green-500 rounded-lg p-1 text-green-500  hover:bg-green-500  hover:text-white"
               >
                 Start
-              </button>
+              </a>
             </div>
           )}
 

@@ -92,7 +92,7 @@ const Pdashboard = () => {
   };
 
   const menuItems = [
-    { label: "Dashboard", icon: faHome, path: "/pdashboard/dashboard" },
+    { label: "Dashboard", icon: faHome, path: "/pdashboard/home" },
     { label: "JAF",  icon: faFileWaveform, path: "/pdashboard/jaf" },
     { label: "Job Profile Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
     { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" },
@@ -284,7 +284,7 @@ const Pdashboard = () => {
           {/* Placeholder for route content */}
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="dashboard" element={<Home />} />
+            <Route path="home" element={<Home />} />
             <Route path="jaf" element={<JAF/>} />
             <Route path="job-profile-management" element={<JobManagement />} />
             <Route path="oa-management" element={<OAManagement />} />

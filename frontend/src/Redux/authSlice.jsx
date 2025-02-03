@@ -6,15 +6,18 @@ export const authSlice = createSlice({
   initialState: {
     authUser: false,
     userData: null,
+    userType: null,
   },
   reducers: {
     setAuthUser: (state, action) => {
       state.authUser = action.payload.authUser;
       state.userData = action.payload.userData;
+      state.userType = action.payload.userType;
     },
     logout: (state) => {
       state.authUser = false;
       state.userData = null;
+      state.userType = null;
     },
   },
 });
@@ -28,11 +31,11 @@ export const checkAuth = () => async (dispatch) => {
       withCredentials: true,
     });
     if (response.ok) {
-      dispatch(setAuthUser({ authUser: true, userData: response.data }));
+      dispatch(setAuthUser({ authUser: true, userData: response.data ,userType: response.data.userType}));
     }
   } catch (error) {
     console.error('Error during authentication check', error);
-    dispatch(setAuthUser({ authUser: false, userData: null }));
+    dispatch(setAuthUser({ authUser: false, userData: null , userType: null }));
   }
 };
 
