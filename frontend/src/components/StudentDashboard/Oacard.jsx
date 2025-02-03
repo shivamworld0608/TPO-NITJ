@@ -54,10 +54,10 @@ export default function Oacard(props) {
               <span className="font-medium text-gray-800 mr-2">OA Link:</span>
               <a
                 href={
-                  typeof interview_link === "string" &&
-                  interview_link.startsWith("http")
-                    ? interview_link
-                    : `https://${interview_link || ""}`
+                  typeof oa_link === "string" &&
+                  oa_link.startsWith("http")
+                    ? oa_link
+                    : `https://${oa_link || ""}`
                 }
                 target="_blank"
                 rel="noopener noreferrer"
