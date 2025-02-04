@@ -95,13 +95,13 @@ const Pdashboard = () => {
     { label: "Dashboard", icon: faHome, path: "/pdashboard/home" },
     { label: "JAF",  icon: faFileWaveform, path: "/pdashboard/jaf" },
     { label: "Job Profile Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
-    { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" },
+/*     { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" }, */
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
     {label:"Student",icon:faUser, path:"/pdashboard/student-analysis"},
     // {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
     // { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
-    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" },
+ /*    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" }, */
     { label: "User Requests", icon: faContactCard, path: "/pdashboard/contact-request" },
     { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
     

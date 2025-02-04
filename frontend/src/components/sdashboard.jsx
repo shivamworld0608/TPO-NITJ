@@ -94,7 +94,7 @@ const StudentDashboard = () => {
     { path: "/sdashboard/gd", label: "GD", icon: faComments },
     { path: "/sdashboard/others", label: "Others", icon: faClipboard },
     { path: "/sdashboard/calendar", label: "Calendar", icon: faCalendar },
-    { path: "/sdashboard/mailbox", label: "Mailbox", icon: faEnvelope },
+/*     { path: "/sdashboard/mailbox", label: "Mailbox", icon: faEnvelope }, */
     {
       path: "/sdashboard/request-help",
       label: "Request Help",
@@ -105,8 +105,8 @@ const StudentDashboard = () => {
       label: "Shared Experience",
       icon: faShareSquare,
     },
-    { path: "/sdashboard/policy-guidlines", label: "Policy & Guidlines", icon: faNoteSticky },
-    { path: "/sdashboard/resume", label: "Resume", icon: faNoteSticky },
+/*     { path: "/sdashboard/policy-guidlines", label: "Policy & Guidlines", icon: faNoteSticky }, */
+/*     { path: "/sdashboard/resume", label: "Resume", icon: faNoteSticky }, */
     { path: "/sdashboard/change-pass", label: "Change Password", icon: faHammer },
   ];
 
