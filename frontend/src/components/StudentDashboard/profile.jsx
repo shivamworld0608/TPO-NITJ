@@ -23,10 +23,10 @@ function Profile() {
     address: "",
     cgpa: "",
     gender: "",
-    course:"",
-    active_backlogs:"",
-    backlogs_history:"",
-    debarred:"",
+    course: "",
+    active_backlogs: "",
+    backlogs_history: "",
+    debarred: "",
     image: "",
   });
 
@@ -48,10 +48,10 @@ function Profile() {
         address: userData.address,
         cgpa: userData.cgpa,
         gender: userData.gender,
-        course:userData.course,
-        debarred:userData.debarred,
-        active_backlogs:userData.active_backlogs,
-        backlogs_history:userData.backlogs_history,
+        course: userData.course,
+        debarred: userData.debarred,
+        active_backlogs: userData.active_backlogs,
+        backlogs_history: userData.backlogs_history,
         image: userData.image,
       });
     }
@@ -68,20 +68,32 @@ function Profile() {
 
   const handleProfilePicUpdateToggle = () => {
     setIsUpdatingPic(!isUpdatingPic);
+    if (!isUpdatingPic) {
+      setUser((prevUser) => ({
+        ...prevUser,
+        image: userData.image,
+      }));
+      setSendImage(null);
+    }
   };
 
   const handleFileChange = (e) => {
     if (e.target.files && e.target.files[0]) {
-      setSendImage(e.target.files[0]);
+      const selectedImage = e.target.files[0];
+      setSendImage(selectedImage);
+
+      const imageURL = URL.createObjectURL(selectedImage);
+      setUser((prevUser) => ({
+        ...prevUser,
+        image: imageURL,
+      }));
     }
   };
 
   const handleProfilePicSubmit = async (e) => {
     e.preventDefault();
-    if (e.target.files && e.target.files[0]) {
-      setSendImage(e.target.files[0]);
-    }
     if (!sendImage) return;
+
     try {
       const form = new FormData();
       form.append("file", sendImage);
@@ -99,7 +111,6 @@ function Profile() {
           }
         )
         .then((response) => {
-          //I can use response.data.user.profilePic here but for quick working i am using this
           setUser((prevUser) => ({
             ...prevUser,
             image: response.data.student.image,
@@ -107,7 +118,7 @@ function Profile() {
           setIsUpdatingPic(false);
           setSendImage(null);
           dispatch(
-            setAuthUser({ authUser: true, userData: response.data.student })
+            setAuthUser({ authUser: true, userData: response.data.student, userType: "Student" })
           );
         });
     } catch (err) {
@@ -136,7 +147,7 @@ function Profile() {
           setUser({ ...user, ...formData });
           setIsEditing(false);
           dispatch(
-            setAuthUser({ authUser: true, userData: response.data.user })
+            setAuthUser({ authUser: true, userData: response.data.user, userType: "Student" })
           );
         });
     } catch (err) {
@@ -144,6 +155,7 @@ function Profile() {
       setError("Failed to update profile");
     }
   };
+
   const triggerFileInput = () => {
     fileInputRef.current.click();
     setIsUpdatingPic(!isUpdatingPic);
@@ -177,16 +189,14 @@ function Profile() {
               className="w-40 h-40 rounded-full mx-auto border-4 border-custom-blue"
             />
           </button>
-          {/* File input is now hidden, but triggered when the profile pic is clicked */}
           <input
             ref={fileInputRef}
             type="file"
-            onChange={handleProfilePicSubmit}
-            /* onChange={handleFileChange} */
+            onChange={handleFileChange}
             style={{ display: "none" }}
           />
 
-          {isUpdatingPic && (
+          {sendImage && (
             <div className="mt-4">
               <button
                 onClick={handleProfilePicSubmit}
@@ -205,23 +215,6 @@ function Profile() {
 
           {isEditing ? (
             <div>
-              {/* <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Name"
-                className="mt-2 p-2 mx-2 border border-custom-blue rounded"
-              /> */}
-         {/*      <input
-                type="email"
-                name="email"
-                readOnly
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Email"
-                className="mt-2 p-2 mx-2 border border-custom-blue rounded"
-              /> */}
               <input
                 type="string"
                 name="phone"
@@ -230,58 +223,6 @@ function Profile() {
                 placeholder="Phone"
                 className="mt-2 mx-2 p-2 border border-custom-blue rounded"
               />
-            {/*   <input
-                type="number"
-                name="rollno"
-                value={formData.rollno}
-                onChange={handleChange}
-                placeholder="Roll No."
-                className="mt-2 mx-2 p-2 border border-custom-blue rounded"
-              /> */}
-              {/* <select
-                name="department"
-                value={formData.department}
-                onChange={handleChange}
-                className="mt-2 mx-2 p-2 border border-custom-blue rounded"
-              >
-                <option value="">Select Department</option>
-                <option value="CSE">CSE</option>
-                <option value="ECE">ECE</option>
-                <option value="EE">EE</option>
-                <option value="ME">ME</option>
-                <option value="CE">CE</option>
-                <option value="IT">IT</option>
-                <option value="CH">CH</option>
-                <option value="ICE">ICE</option>
-                <option value="BT">BT</option>
-                <option value="TT">TT</option>
-                <option value="IPE">IPE</option>
-              </select> */}
-              {/* <select
-                name="year"
-                value={formData.year}
-                onChange={handleChange}
-                className="mt-2 mx-2 p-2 border border-custom-blue rounded"
-              >
-                <option value="">Select Year</option>
-                <option value="1">1st Year</option>
-                <option value="2">2nd Year</option>
-                <option value="3">3rd Year</option>
-                <option value="4">4th Year</option>
-              </select> */}
-             {/*  <select
-                name="batch"
-                value={formData.batch}
-                onChange={handleChange}
-                className="mt-2 mx-2 p-2 border border-custom-blue rounded"
-              >
-                <option value="">Select Batch</option>
-                <option value="2025">2025</option>
-                <option value="2026">2026</option>
-                <option value="2027">2027</option>
-                <option value="2028">2028</option>
-                <option value="2029">2029</option>
-              </select> */}
               <input
                 type="text"
                 name="address"
@@ -290,26 +231,6 @@ function Profile() {
                 placeholder="Address"
                 className="mt-2 p-2 mx-2 border border-custom-blue rounded"
               />
-            {/*   <input
-                type="text"
-                name="cgpa"
-                readOnly
-                value={formData.cgpa}
-                onChange={handleChange}
-                placeholder="CGPA"
-                className="mt-2 p-2 mx-2 border border-custom-blue rounded"
-              /> */}
-           {/*    <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                className="mt-2 mx-2 p-2 border border-custom-blue rounded"
-              >
-                <option value="">Select Gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
-              </select> */}
               <button
                 onClick={handleSubmit}
                 className="mt-4 mx-2 bg-custom-blue text-white px-4 py-1 border border-custom-blue-400 rounded"
@@ -338,114 +259,97 @@ function Profile() {
           )}
         </div>
 
-      {/* About Section */}
-<div className="mt-6 px-6 py-4">
-  <h5 className="mb-3 ml-4 font-bold text-custom-blue">About</h5>
-  <div className="p-4 bg-white border border-neutral-400 rounded-3xl">
-    <div className="flex flex-wrap">
-      {/* Left Column */}
-      <div className="w-full md:w-1/2 space-y-6">
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">Name: {formData.name}</p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">Gender: {formData.gender}</p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">Email: {formData.email}</p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">Mobile: {formData.phone}</p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">Batch: {formData.batch}</p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">
-            Course: {formData.course}
-          </p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">
-            Branch: {formData.department}
-          </p>
-        </div>
-      </div>
-      
-      {/* Right Column */}
-      <div className="w-full md:w-1/2 space-y-6">
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">CGPA: {formData.cgpa}</p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">
-            Branch: {formData.department}
-          </p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">
-            Course: {formData.course}
-          </p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">Active Backlogs: {formData.active_backlogs?"Yes":"No"}</p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">Backlogs History: {formData.backlogs_history?"Yes":"No"}</p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">Debarred: {formData.debarred?"Yes":"No"}</p>
-        </div>
-        <div className="flex items-center">
-          <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-            <CheckCircle2 />
-          </div>
-          <p className="font-italic tracking-tight">Address: {formData.address}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+        {/* About Section */}
+        <div className="mt-6 px-6 py-4">
+          <h5 className="mb-3 ml-4 font-bold text-custom-blue">About</h5>
+          <div className="p-4 bg-white border border-neutral-400 rounded-3xl">
+            <div className="flex flex-wrap">
+              {/* Left Column */}
+              <div className="w-full md:w-1/2 space-y-6">
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">Name: {formData.name}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">Gender: {formData.gender}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">Email: {formData.email}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">Mobile: {formData.phone}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">Batch: {formData.batch}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">
+                    Course: {formData.course}
+                  </p>
+                </div>
+              </div>
 
+              {/* Right Column */}
+              <div className="w-full md:w-1/2 space-y-6">
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">CGPA: {formData.cgpa}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">
+                    Branch: {formData.department}
+                  </p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">Active Backlogs: {formData.active_backlogs ? "Yes" : "No"}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">Backlogs History: {formData.backlogs_history ? "Yes" : "No"}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">Debarred: {formData.debarred ? "Yes" : "No"}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">Address: {formData.address}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
