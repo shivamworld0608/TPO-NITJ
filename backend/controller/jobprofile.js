@@ -1,5 +1,6 @@
 import JobProfile from "../models/jobprofile.js";
 import Student from "../models/user_model/student.js";
+import Professor from "../models/user_model/professor.js";
 import FormSubmission from '../models/FormSubmission.js';
 import Placement from '../models/placement.js';
 import mongoose from "mongoose";
@@ -28,8 +29,14 @@ export const createJobProfilecopy = async (req, res) => {
       history_backlogs,
     } = req.body;
 
-    console.log(recruiter_id);
-
+    const tpo= await Professor.findById(recruiter_id);
+    let Approved_Status;
+    if(tpo){
+      Approved_Status=true;
+    }
+    else{
+      Approved_Status=false;
+    }
     const processedWorkflow = Hiring_Workflow.map(step => {
       const processedStep = {
         step_type: step.step_type,
@@ -45,7 +52,7 @@ export const createJobProfilecopy = async (req, res) => {
             oa_login_time: step.details?.oa_login_time || '',
             oa_duration: step.details?.oa_duration || '',
             oa_info: step.details?.oa_info || '',
-            oa_link: step.details?.oa_link || ''
+            oa_link: [],
           };
           break;
 
@@ -75,7 +82,7 @@ export const createJobProfilecopy = async (req, res) => {
             others_login_time: step.details?.others_login_time || '',
             others_duration: step.details?.others_duration || '',
             others_info: step.details?.others_info || '',
-            others_link: step.details?.others_link || ''
+            others_link:[],
           };
           break;
 
@@ -122,6 +129,7 @@ export const createJobProfilecopy = async (req, res) => {
       },
       job_class,
       deadline,
+      Approved_Status,
     });
 
     const savedProfile = await jobProfile.save();
@@ -279,17 +287,20 @@ export const getJobProfiledetails = async (req, res) => {
 
 export const getJobProfilesForProfessors = async (req, res) => {
   try {
-    const approvedJobs = await JobProfile.find({ Approved_Status: true });
+    const approvedJobs = await JobProfile.find({ Approved_Status: true, completed:false });
     const notApprovedJobs = await JobProfile.find({ Approved_Status: false });
+    const completed= await JobProfile.find({completed:true});
     console.log("approvedJobs", approvedJobs);
     res.status(200).json({
       approved: approvedJobs,
       notApproved: notApprovedJobs,
+      completed:completed
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 export const getspecificJobProfilesForProfessors = async (req, res) => {
   try {
     const { id } = req.params;
@@ -312,6 +323,34 @@ export const approveJobProfile = async (req, res) => {
     );
     if (!approvedJob) return res.status(404).json({ message: "Job not found" });
     res.status(200).json({ message: "Job approved successfully", approvedJob });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+export const completedJobProfile = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const completedJob = await JobProfile.findByIdAndUpdate(
+      _id,
+      { completed: true },
+      { new: true }
+    );
+    if (!completedJob) return res.status(404).json({ message: "Job not found" });
+    res.status(200).json({ message: "Job completed successfully", completedJob });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+export const incompletedJobProfile = async (req, res) => {
+  try {
+    const { _id } = req.params;
+    const incompletedJob = await JobProfile.findByIdAndUpdate(
+      _id,
+      { completed: false },
+      { new: true }
+    );
+    if (!incompletedJob) return res.status(404).json({ message: "Job not found" });
+    res.status(200).json({ message: "Job incompleted successfully", incompletedJob });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -708,6 +747,132 @@ export const updategdLink = async (req, res) => {
     console.error("Error updating gd links:", error);
     return res.status(500).json({
       message: "Failed to update gd links.",
+      error: error.message
+    });
+  }
+};
+
+
+export const updateoaLink = async (req, res) => {
+  try {
+    const { jobId, stepIndex, students } = req.body;
+    const jobProfile = await JobProfile.findById(jobId);
+    if (!jobProfile) {
+      return res.status(404).json({ message: "Job profile not found" });
+    }
+    const step = jobProfile.Hiring_Workflow[stepIndex];
+    if (!step) {
+      return res.status(404).json({ message: "Step not found in the hiring workflow" });
+    }
+    if (!step.details.oa_link) {
+      step.details.oa_link = [];
+    }
+    const updatePromises = students.map(async (student) => {
+      const { email, oaLink } = student;
+      const formSubmission = await FormSubmission.findOne({
+        jobId: jobId,
+        'fields.value': email,
+      });
+       if (!formSubmission) {
+        return {
+          email,
+          status: 'error',
+          message: 'Student form submission not found'
+        };
+      }
+      const studentId = formSubmission.studentId;
+      const existingLinkIndex = step.details.oa_link.findIndex(
+        (link) => link.studentId.toString() === studentId.toString()
+      );
+      if (existingLinkIndex !== -1) {
+        step.details.oa_link[existingLinkIndex].oaLink = oaLink;
+      } else {
+        step.details.oa_link.push({
+          studentId,
+          oaLink,
+        });
+      }
+       return {
+        email,
+        status: 'success',
+        message: 'OA link updated successfully'
+      };
+    });
+    const results = await Promise.all(updatePromises);
+    jobProfile.markModified(`Hiring_Workflow.${stepIndex}.details`);
+    await jobProfile.save();
+    return res.status(200).json({
+      message: "OA links processing completed",
+      results,
+      data: step.details.oa_link
+    });
+   } catch (error) {
+    console.error("Error updating oa links:", error);
+    return res.status(500).json({
+      message: "Failed to update oa links.",
+      error: error.message
+    });
+  }
+};
+
+
+export const updateOthersLink = async (req, res) => {
+  try {
+    const { jobId, stepIndex, students } = req.body;
+    const jobProfile = await JobProfile.findById(jobId);
+    if (!jobProfile) {
+      return res.status(404).json({ message: "Job profile not found" });
+    }
+    const step = jobProfile.Hiring_Workflow[stepIndex];
+    if (!step) {
+      return res.status(404).json({ message: "Step not found in the hiring workflow" });
+    }
+    if (!step.details.others_link) {
+      step.details.others_link = [];
+    }
+    const updatePromises = students.map(async (student) => {
+      const { email, othersLink } = student;
+      const formSubmission = await FormSubmission.findOne({
+        jobId: jobId,
+        'fields.value': email,
+      });
+       if (!formSubmission) {
+        return {
+          email,
+          status: 'error',
+          message: 'Student form submission not found'
+        };
+      }
+      const studentId = formSubmission.studentId;
+      const existingLinkIndex = step.details.others_link.findIndex(
+        (link) => link.studentId.toString() === studentId.toString()
+      );
+      if (existingLinkIndex !== -1) {
+        step.details.others_link[existingLinkIndex].othersLink = othersLink;
+      } else {
+        step.details.others_link.push({
+          studentId,
+          othersLink,
+        });
+      }
+       return {
+        email,
+        status: 'success',
+        message: 'Others link updated successfully'
+      };
+    });
+    const results = await Promise.all(updatePromises);
+    jobProfile.markModified(`Hiring_Workflow.${stepIndex}.details`);
+    await jobProfile.save();
+    return res.status(200).json({
+      message: "Others links processing completed",
+      results,
+      data: step.details.others_link
+    });
+   } catch (error) {
+    console.error("Error updating others links:", error);
+    return res.status(500).json({
+      message: "Failed to update others links.",
       error: error.message
     });
   }

@@ -19,6 +19,12 @@ import {
   getSubmissionbystudent 
 } from '../controller/formsubmission.js';
 
+
+import {
+  gdrive
+} from '../controller/googledrive.js'
+import upload from '../utils/multer.js'
+
 const router = express.Router();
 
 // for recruiter and recruiter
@@ -32,6 +38,7 @@ router.put('/form-templates/:jobId', updateFormTemplate); // TPO configures auto
 router.get('/form-templates/:jobId', getFormTemplate); // Fetch specific form template
 router.get('/students', getStudent);
 router.post('/form-submissions', submitForm);
+router.post('/upload-resume', upload.single('file'), gdrive);
 
 
 //professor form template edit, delete, create

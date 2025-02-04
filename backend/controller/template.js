@@ -1,4 +1,5 @@
 import FormTemplate from '../models/FormTemplate.js';
+import FormSubmission from '../models/FormSubmission.js';
 import Student from '../models/user_model/student.js';
 
 export const checkapplicationformtemplateexists = async (req, res) => {
@@ -38,7 +39,7 @@ export const deleteFormTemplate = async (req, res) => {
   }
 };
 
-export const updateFormTemplate = async (req, res) => {
+/* export const updateFormTemplate = async (req, res) => {
   try {
     const { jobId } = req.params;
     const {title, fields } = req.body;
@@ -53,6 +54,49 @@ export const updateFormTemplate = async (req, res) => {
       return res.status(404).json({ message: 'Form Template not found' });
     }
     res.status(200).json({ message: 'Form Template updated successfully', formTemplate });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update form template', error: err.message });
+  }
+}; */
+
+export const updateFormTemplate = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const { title, fields } = req.body;
+    const existingFormTemplate = await FormTemplate.findOne({ jobId });
+
+    if (!existingFormTemplate) {
+      return res.status(404).json({ message: 'Form Template not found' });
+    }
+    const updatedFormTemplate = await FormTemplate.findOneAndUpdate(
+      { jobId },
+      { title, fields },
+      { new: true }
+    );
+    const oldFields = existingFormTemplate.fields;
+    const newFields = updatedFormTemplate.fields;
+
+    const fieldNameChanges = [];
+
+    oldFields.forEach((oldField, index) => {
+      const newField = newFields[index];
+      if (oldField.fieldName !== newField.fieldName) {
+        fieldNameChanges.push({
+          oldFieldName: oldField.fieldName,
+          newFieldName: newField.fieldName
+        });
+      }
+    });
+
+    if (fieldNameChanges.length > 0) {
+      for (const change of fieldNameChanges) {
+        await FormSubmission.updateMany(
+          { jobId, 'fields.fieldName': change.oldFieldName },
+          { $set: { 'fields.$.fieldName': change.newFieldName } }
+        );
+      }
+    }
+    res.status(200).json({ message: 'Form Template updated successfully', formTemplate: updatedFormTemplate });
   } catch (err) {
     res.status(500).json({ message: 'Failed to update form template', error: err.message });
   }

@@ -14,6 +14,8 @@ import ShortlistStudents from "./shortliststudent";
 import ViewShortlistStudents from "./viewshortlistedstudent";
 import InterviewLinkManager from "./interviewlink";
 import GDLinkManager from "./gdlink";
+import OaLinkManager from "./oalink";
+import OthersLinkManager from "./otherslink";
 
 const formatDateTime = (dateString) => {
   if (!dateString) return "N/A";
@@ -54,6 +56,9 @@ const ViewJobDetails = ({ job, onClose }) => {
   const [addingShortlist, setAddingShortlist] = useState(null);
   const [addingInterviewLink, setAddingInterviewLink] = useState(null);
   const [addingGDLink, setAddingGDLink] = useState(null);
+  const [addingOALink, setAddingOALink] = useState(null);
+  const [addingOthersLink,setAddingOthersLink]=useState(null);
+
 
   const btechdepartmentOptions = [
     {
@@ -709,19 +714,60 @@ const ViewJobDetails = ({ job, onClose }) => {
     </div>
   );
 
-  if (addingInterviewLink) {
+  if (addingOthersLink) {
     return (
-      <InterviewLinkManager
+      <OthersLinkManager
         jobId={job._id}
-        stepIndex={addingInterviewLink.stepIndex}
-        onClose={() => setAddingInterviewLink(null)}
-        interviewLinks={
-          job.Hiring_Workflow[addingInterviewLink.stepIndex]?.details
-            .interview_link || []
+        stepIndex={addingOthersLink.stepIndex}
+        onClose={() => setAddingOthersLink(null)}
+        othersLinks={
+          job.Hiring_Workflow[addingOthersLink.stepIndex]?.details.others_link || []
         }
+        onUpdateLinks={(updatedLinks) => {
+          const updatedWorkflow = [...job.Hiring_Workflow];
+          updatedWorkflow[addingOthersLink.stepIndex].details.others_link = updatedLinks;
+          setEditedWorkflow(updatedWorkflow);
+        }}
       />
     );
   }
+
+  if (addingOALink) {
+    return (
+      <OaLinkManager
+        jobId={job._id}
+        stepIndex={addingOALink.stepIndex}
+        onClose={() => setAddingOALink(null)}
+        oaLinks={
+          job.Hiring_Workflow[addingOALink.stepIndex]?.details.oa_link || []
+        }
+        onUpdateLinks={(updatedLinks) => {
+          const updatedWorkflow = [...job.Hiring_Workflow];
+          updatedWorkflow[addingOALink.stepIndex].details.oa_link = updatedLinks;
+          setEditedWorkflow(updatedWorkflow);
+        }}
+      />
+    );
+  }
+    if (addingInterviewLink) {
+      return (
+        <InterviewLinkManager
+          jobId={job._id}
+          stepIndex={addingInterviewLink.stepIndex}
+          onClose={() => setAddingInterviewLink(null)}
+          interviewLinks={
+            job.Hiring_Workflow[addingInterviewLink.stepIndex]?.details
+              .interview_link || []
+          }
+          onUpdateLinks={(updatedLinks) => {
+            const updatedWorkflow = [...job.Hiring_Workflow];
+            updatedWorkflow[addingInterviewLink.stepIndex].details.interview_link = updatedLinks;
+            setEditedWorkflow(updatedWorkflow);
+          }}
+        />
+      );
+    }
+
   if (addingGDLink) {
     return (
       <GDLinkManager
@@ -764,7 +810,11 @@ const ViewJobDetails = ({ job, onClose }) => {
                   (step.step_type === "Interview" &&
                     key.toLowerCase().includes("interview_link")) ||
                   (step.step_type === "GD" &&
-                    key.toLowerCase().includes("gd_link"))
+                    key.toLowerCase().includes("gd_link")) ||
+                    (step.step_type === "OA" &&
+                      key.toLowerCase().includes("oa_link"))||
+                    (step.step_type === "Others" &&
+                      key.toLowerCase().includes("others_link"))
                 ) {
                   return null;
                 }
@@ -822,6 +872,26 @@ const ViewJobDetails = ({ job, onClose }) => {
             </ul>
 
             <div className="mt-8 flex space-x-4">
+            {step.step_type === "Others" && (
+  <button
+    className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+    onClick={() =>
+      setAddingOthersLink({ stepIndex: index, type: "Others" })
+    }
+  >
+    Manage Other Assessment Links
+  </button>
+)}
+            {step.step_type === "OA" && (
+  <button
+    className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+    onClick={() =>
+      setAddingOALink({ stepIndex: index, type: "OA" })
+    }
+  >
+    Manage OA Links
+  </button>
+)}
               {step.step_type === "GD" && (
                 <button
                   className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
@@ -1114,6 +1184,7 @@ const ViewJobDetails = ({ job, onClose }) => {
     return (
       <AppliedStudents
         jobId={job._id}
+        company_name={editedJob.company_name}
         onClose={() => setViewingAppliedStudents(false)}
       />
     );

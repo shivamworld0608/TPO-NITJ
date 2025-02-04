@@ -8,7 +8,7 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
   const [fields, setFields] = useState([]);
 
   // Student properties for auto-fill
-  const studentProperties = ['gender', 'department', 'cgpa','name'];
+  const studentProperties = ['gender', 'department', 'cgpa','name','email'];
 
   const addField = () => {
     setFields([...fields, { 

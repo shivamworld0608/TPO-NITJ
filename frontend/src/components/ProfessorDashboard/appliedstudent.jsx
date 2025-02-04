@@ -6,7 +6,7 @@ import Swal from "sweetalert2";
 import { UserX, X } from "lucide-react";
 import { Button } from "../ui/button";
 
-const AppliedStudentp = ({ jobId, onClose }) => {
+const AppliedStudentp = ({ jobId, onClose, company_name }) => {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,6 +14,7 @@ const AppliedStudentp = ({ jobId, onClose }) => {
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
+        console.log("jobid", jobId);
         const response = await axios.get(
           `${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/${jobId}`,
           { withCredentials: true }
@@ -47,9 +48,9 @@ const AppliedStudentp = ({ jobId, onClose }) => {
         acc[field.fieldName] = field.value;
         return acc;
       }, {});
-      return { ...formattedFields, Resume: submission.resumeUrl };
+      return { College_Mail_ID: submission.studentId?submission.studentId.email:"NA", ...formattedFields, Resume: submission.resumeUrl };
     });
-    exportToExcel(data, "Professor_Submissions");
+    exportToExcel(data, company_name);
   };
 
   const handleRemove = async (submissionId) => {
@@ -65,22 +66,14 @@ const AppliedStudentp = ({ jobId, onClose }) => {
       if (result.isConfirmed) {
         try {
           await axios.delete(
-            `${
-              import.meta.env.REACT_APP_BASE_URL
-            }/api/form-submissions/${submissionId}`,
+            `${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/${submissionId}`,
             { withCredentials: true }
           );
-          setSubmissions(
-            submissions.filter((submission) => submission._id !== submissionId)
-          );
+          setSubmissions(submissions.filter((submission) => submission._id !== submissionId));
           Swal.fire("Removed!", "The student has been removed.", "success");
         } catch (err) {
           console.error(err);
-          Swal.fire(
-            "Error!",
-            "There was an error removing the student.",
-            "error"
-          );
+          Swal.fire("Error!", "There was an error removing the student.", "error");
         }
       }
     });
@@ -99,20 +92,14 @@ const AppliedStudentp = ({ jobId, onClose }) => {
       if (result.isConfirmed) {
         try {
           await axios.delete(
-            `${
-              import.meta.env.REACT_APP_BASE_URL
-            }/api/form-submissions/delete-all/${jobId}`,
+            `${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/delete-all/${jobId}`,
             { withCredentials: true }
           );
           setSubmissions([]);
           Swal.fire("Removed!", "All students have been removed.", "success");
         } catch (err) {
           console.error(err);
-          Swal.fire(
-            "Error!",
-            "There was an error removing the students.",
-            "error"
-          );
+          Swal.fire("Error!", "There was an error removing the students.", "error");
         }
       }
     });
@@ -135,29 +122,31 @@ const AppliedStudentp = ({ jobId, onClose }) => {
             isVisible: true,
           }));
           await axios.patch(
-            `${
-              import.meta.env.REACT_APP_BASE_URL
-            }/api/form-submissions/make-visible/${jobId}`,
+            `${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/make-visible/${jobId}`,
             { isVisible: true },
             { withCredentials: true }
           );
           setSubmissions(updatedSubmissions);
-          Swal.fire(
-            "Made Visible!",
-            "All students are now visible to the recruiter.",
-            "success"
-          );
+          Swal.fire("Made Visible!", "All students are now visible to the recruiter.", "success");
         } catch (err) {
           console.error(err);
-          Swal.fire(
-            "Error!",
-            "There was an error making the students visible.",
-            "error"
-          );
+          Swal.fire("Error!", "There was an error making the students visible.", "error");
         }
       }
     });
   };
+
+  const getUniqueFieldNames = () => {
+    const fieldNames = new Set();
+    submissions.forEach((submission) => {
+      submission.fields.forEach((field) => {
+        fieldNames.add(field.fieldName);
+      });
+    });
+    return Array.from(fieldNames);
+  };
+
+  const uniqueFieldNames = getUniqueFieldNames();
 
   if (loading) {
     return (
@@ -198,7 +187,7 @@ const AppliedStudentp = ({ jobId, onClose }) => {
         <Button
           variant="ghost"
           size="icon"
-          onClick={onClose} // Corrected this line
+          onClick={onClose}
           className="rounded-full hover:bg-gray-100"
         >
           <X className="h-5 w-5" />
@@ -221,8 +210,16 @@ const AppliedStudentp = ({ jobId, onClose }) => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
-      <h1 className="text-2xl font-bold mb-6 text-center">Students Applied</h1>
+    <div className="max-w-7xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-4">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={onClose}
+        className="rounded-full hover:bg-gray-100"
+      >
+        <X className="h-5 w-5" />
+      </Button>
+      <h1 className="text-2xl font-bold mb-6 text-center">Students <span className="text-custom-blue">Applied</span></h1>
       <div className="flex flex-wrap gap-4 mb-6">
         <button
           className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
@@ -247,12 +244,15 @@ const AppliedStudentp = ({ jobId, onClose }) => {
         <table className="min-w-full bg-white border-collapse border border-gray-300">
           <thead>
             <tr>
-              {submissions[0]?.fields.map((field, index) => (
+              <th className="border border-gray-300 px-4 py-2 bg-gray-50">
+                College Mail Id
+              </th>
+              {uniqueFieldNames.map((fieldName, index) => (
                 <th
                   key={index}
                   className="border border-gray-300 px-4 py-2 bg-gray-50"
                 >
-                  {field.fieldName}
+                  {fieldName}
                 </th>
               ))}
               <th className="border border-gray-300 px-4 py-2 bg-gray-50">
@@ -266,20 +266,26 @@ const AppliedStudentp = ({ jobId, onClose }) => {
           <tbody>
             {submissions.map((submission, index) => (
               <tr key={index} className="hover:bg-gray-50">
-                {submission.fields.map((field, fieldIndex) => (
-                  <td
-                    key={fieldIndex}
-                    className="border border-gray-300 px-4 py-2"
-                  >
-                    {field.value}
-                  </td>
-                ))}
+                <td className="border border-gray-300 px-4 py-2">
+                  {submission.studentId?submission.studentId.email:"NA"}
+                </td>
+                {uniqueFieldNames.map((fieldName, fieldIndex) => {
+                  const field = submission.fields.find((f) => f.fieldName === fieldName);
+                  return (
+                    <td
+                      key={fieldIndex}
+                      className="border border-gray-300 px-4 py-2"
+                    >
+                      {field ? field.value : ""}
+                    </td>
+                  );
+                })}
                 <td className="border border-gray-300 px-4 py-2">
                   <button
-                    className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-grren-700 transition-colors"
+                    className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
                     onClick={() => {
                       const url = submission.resumeUrl.startsWith("http")
-                        ? others_link
+                        ? submission.resumeUrl
                         : `https://${submission.resumeUrl}`;
                       window.open(url, "_blank");
                     }}

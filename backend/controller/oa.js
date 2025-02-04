@@ -2,62 +2,6 @@ import Student from "../models/user_model/student.js";
 import JobProfile from "../models/jobprofile.js";
 import mongoose from "mongoose";
 
-/* export const getTodayShortlistsGroupedByCompany = async (req, res) => {
-    try {
-      const startOfDay = moment().startOf('day');
-      const endOfDay = moment().endOf('day');
-      const oas = await OA.find({
-        $expr: {
-          $and: [
-            {
-              $gte: [
-                { $dateFromString: { dateString: "$result_date" } },
-                new Date(startOfDay.toISOString())
-              ]
-            },
-            {
-              $lte: [
-                { $dateFromString: { dateString: "$result_date" } },
-                new Date(endOfDay.toISOString())
-              ]
-            }
-          ]
-        }
-      });
-  
-      if (oas.length === 0) {
-        return res.status(200).json({ 
-          message: 'No oas with results today',
-          data: [] 
-        });
-      }
-  
-      const result = oas.map((oa) => ({
-        company_name: oa.company_name,
-        company_logo: oa.company_logo,
-        shortlisted_students: oa.shortlisted_students?.map((student) => ({
-          name: student.name,
-          email: student.email,
-          rollno: student.rollno,
-        })) || [],
-      }));
-  
-      return res.status(200).json({
-        message: 'Today\'s shortlisted students grouped by company',
-        data: result,
-      });
-  
-    } catch (error) {
-      console.error('Error fetching today\'s shortlists:', error);
-      console.error('Error details:', error.stack);
-      res.status(500).json({ 
-        message: 'Internal server error',
-        error: error.message 
-      });
-    }
-  };
- */
-
 export const getEligibleUpcomingOAs = async (req, res) => {
   try {
     const studentId = req.user.userId;
@@ -79,15 +23,32 @@ export const getEligibleUpcomingOAs = async (req, res) => {
             step.eligible_students.some((id) => id.equals(studentObjectId)) &&
             new Date(step.details.oa_date) > new Date()
         )
-        .map((step) => ({
-          company_name: job.company_name,
-          company_logo: job.company_logo,
-          oa_date: step.details.oa_date,
-          oa_login_time: step.details.oa_login_time || step.details.login_time,
-          oa_duration: step.details.oa_duration,
-          oa_info: step.details.oa_info,
-          oa_link: step.details.oa_link,
-        }));
+        .map((step) => {
+          const oaLinks = Array.isArray(step.details.oa_link)
+            ? step.details.oa_link
+            : [];
+
+          const studentOALink = oaLinks.find((link) => {
+            if (!link.studentId) return false;
+
+            const linkStudentId =
+              typeof link.studentId === "string"
+                ? new mongoose.Types.ObjectId(link.studentId)
+                : link.studentId;
+
+            return linkStudentId.equals(studentObjectId);
+          })?.interviewLink || "No link available";
+
+          return {
+            company_name: job.company_name,
+            company_logo: job.company_logo,
+            oa_date: step.details.oa_date,
+            oa_login_time: step.details.oa_login_time || step.details.login_time,
+            oa_duration: step.details.oa_duration,
+            oa_info: step.details.oa_info,
+            oa_link: studentOALink,
+          };
+        });
     });
 
     res.status(200).json({ upcomingOAs });
@@ -118,19 +79,36 @@ export const getEligiblePastOAs = async (req, res) => {
             step.eligible_students.some((id) => id.equals(studentObjectId)) &&
             new Date(step.details.oa_date) < new Date()
         )
-        .map((step) => ({
-          company_name: job.company_name,
-          company_logo: job.company_logo,
-          oa_date: step.details.oa_date,
-          oa_login_time: step.details.oa_login_time || step.details.login_time,
-          oa_duration: step.details.oa_duration,
-          oa_info: step.details.oa_info,
-          oa_link: step.details.oa_link,
-          was_shortlisted:
-            step.shortlisted_students?.length === 0
-              ? "Result yet to be declared"
-              : step.shortlisted_students.some((id) => id.toString() === studentId) || false,
-        }));
+        .map((step) => {
+          const oaLinks = Array.isArray(step.details.oa_link)
+            ? step.details.oa_link
+            : [];
+
+          const studentOALink = oaLinks.find((link) => {
+            if (!link.studentId) return false;
+
+            const linkStudentId =
+              typeof link.studentId === "string"
+                ? new mongoose.Types.ObjectId(link.studentId)
+                : link.studentId;
+
+            return linkStudentId.equals(studentObjectId);
+          })?.interviewLink || "No link available";
+
+          return {
+            company_name: job.company_name,
+            company_logo: job.company_logo,
+            oa_date: step.details.oa_date,
+            oa_login_time: step.details.oa_login_time || step.details.login_time,
+            oa_duration: step.details.oa_duration,
+            oa_info: step.details.oa_info,
+            oa_link: studentOALink,
+            was_shortlisted:
+              step.shortlisted_students?.length === 0
+                ? "Result yet to be declared"
+                : step.shortlisted_students.some((id) => id.toString() === studentId) || false,
+          };
+        });
     });
 
     pastOAs.sort((a, b) => new Date(b.oa_date) - new Date(a.oa_date));
@@ -140,5 +118,4 @@ export const getEligiblePastOAs = async (req, res) => {
     res.status(500).json({ message: "Server error while fetching past OAs." });
   }
 };
-
 

@@ -53,10 +53,15 @@ export default function Oacard(props) {
             <div className="text-sm text-gray-500 flex items-center">
               <span className="font-medium text-gray-800 mr-2">OA Link:</span>
               <a
-                href={oa_link}
+                href={
+                  typeof oa_link === "string" &&
+                  oa_link.startsWith("http")
+                    ? oa_link
+                    : `https://${oa_link || ""}`
+                }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border border-green-500 rounded-lg p-1 text-green-500  hover:bg-green-500  hover:text-white"
+                className="border border-green-500 rounded-lg p-1 text-green-500 hover:bg-green-500 hover:text-white"
               >
                 Start
               </a>

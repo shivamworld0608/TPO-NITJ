@@ -4,7 +4,6 @@ const JobProfileSchema = new mongoose.Schema(
   {
     recruiter_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Recuiter",
     },
     job_id: {
       type: String,
@@ -136,6 +135,14 @@ const JobProfileSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    completed:{
+      type:Boolean,
+      default:false
+    },
+    show:{
+      type:Boolean,
+      default:false
+    }
   },
   { timestamps: true }
 );

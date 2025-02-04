@@ -18,10 +18,12 @@ import {
   IconButton,
 } from '@mui/material';
 import { Add as AddIcon, Delete as DeleteIcon, Notes as NotesIcon, Edit as EditIcon } from '@mui/icons-material';
-import {   FormControlLabel, Grid } from '@mui/material';
+import { FormControlLabel, Grid } from '@mui/material';
 
 const ConversationLog = () => {
   const [conversations, setConversations] = useState([]);
+  const [filteredConversations, setFilteredConversations] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [newConversation, setNewConversation] = useState({
     companyName: '',
     contactNo: '',
@@ -46,9 +48,17 @@ const ConversationLog = () => {
     fetchConversations();
   }, []);
 
+  useEffect(() => {
+    const filtered = conversations.filter(conversation =>
+      conversation.companyName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredConversations(filtered);
+  }, [searchTerm, conversations]);
+
   const fetchConversations = async () => {
-    const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/conversations`,{ withCredentials: true });
+    const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/conversations`, { withCredentials: true });
     setConversations(response.data);
+    setFilteredConversations(response.data);
   };
 
   const handleInputChange = (e) => {
@@ -62,7 +72,7 @@ const ConversationLog = () => {
   };
 
   const handleAddConversation = async () => {
-    await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/conversations`, newConversation,{ withCredentials: true });
+    await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/conversations`, newConversation, { withCredentials: true });
     fetchConversations();
     setNewConversation({
       companyName: '',
@@ -75,12 +85,12 @@ const ConversationLog = () => {
   };
 
   const handleUpdateConversation = async (id, updatedConversation) => {
-    await axios.put(`${import.meta.env.REACT_APP_BASE_URL}/conversations/${id}`, updatedConversation,{ withCredentials: true });
+    await axios.put(`${import.meta.env.REACT_APP_BASE_URL}/conversations/${id}`, updatedConversation, { withCredentials: true });
     fetchConversations();
   };
 
   const handleDeleteConversation = async (id) => {
-    await axios.delete(`${import.meta.env.REACT_APP_BASE_URL}/conversations/${id}`,{ withCredentials: true });
+    await axios.delete(`${import.meta.env.REACT_APP_BASE_URL}/conversations/${id}`, { withCredentials: true });
     fetchConversations();
   };
 
@@ -144,282 +154,256 @@ const ConversationLog = () => {
     handleCloseEditDialog();
   };
 
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
     <>
-    <div className="flex justify-center items-center">
-    <h1 className="text-3xl  font-bold text-gray-800">Conversation <span className='text-custom-blue'>Log</span></h1>
-  </div>
-    <div style={{ padding: '20px' }}>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-        <IconButton color="primary" onClick={handleOpenAddDialog}>
-          <AddIcon fontSize="large" />
-        </IconButton>
-        <h2 style={{ margin: 0, fontWeight: 'bold' }}>Add New <span className='text-custom-blue'>Conversation</span></h2>
-      
+      <div className="flex justify-center items-center">
+        <h1 className="text-3xl font-bold text-gray-800">Conversation <span className='text-custom-blue'>Log</span></h1>
       </div>
+      <div style={{ padding: '20px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+          <IconButton color="primary" onClick={handleOpenAddDialog}>
+            <AddIcon fontSize="large" />
+          </IconButton>
+          <h2 style={{ margin: 0, fontWeight: 'bold' }}>Add New <span className='text-custom-blue'>Conversation</span></h2>
+        </div>
 
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Company Name</TableCell>
-              <TableCell>Contact No.</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Contacted</TableCell>
-              <TableCell>Notes</TableCell>
-              <TableCell>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {conversations.map((conversation) => (
-              <TableRow key={conversation._id}>
-                <TableCell>{conversation.companyName}</TableCell>
-                <TableCell>{conversation.contactNo}</TableCell>
-                <TableCell>{conversation.email}</TableCell>
-                <TableCell>
-                  <Checkbox
-                    checked={conversation.contacted}
-                    onChange={(e) => {
-                      const updatedConversation = { ...conversation, contacted: e.target.checked };
-                      handleUpdateConversation(conversation._id, updatedConversation);
-                    }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleOpenNotesDialog(conversation._id, conversation.notes)}>
-                    <NotesIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell style={{ display: 'flex', gap: '10px' }}>
-                  <IconButton onClick={() => handleOpenEditDialog(conversation)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDeleteConversation(conversation._id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
+        {/* Search Input Field */}
+        <TextField
+          label="Search by Company Name"
+          variant="outlined"
+          fullWidth
+          value={searchTerm}
+          onChange={handleSearchChange}
+          style={{ marginBottom: '20px' }}
+        />
+
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Company Name</TableCell>
+                <TableCell>Contact No.</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Contacted</TableCell>
+                <TableCell>Notes</TableCell>
+                <TableCell>Actions</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {filteredConversations.map((conversation) => (
+                <TableRow key={conversation._id}>
+                  <TableCell>{conversation.companyName}</TableCell>
+                  <TableCell>{conversation.contactNo}</TableCell>
+                  <TableCell>{conversation.email}</TableCell>
+                  <TableCell>
+                    <Checkbox
+                      checked={conversation.contacted}
+                      onChange={(e) => {
+                        const updatedConversation = { ...conversation, contacted: e.target.checked };
+                        handleUpdateConversation(conversation._id, updatedConversation);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => handleOpenNotesDialog(conversation._id, conversation.notes)}>
+                      <NotesIcon />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell style={{ display: 'flex', gap: '10px' }}>
+                    <IconButton onClick={() => handleOpenEditDialog(conversation)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton onClick={() => handleDeleteConversation(conversation._id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
 
-      {/* Add Conversation Dialog */}
-     
-<Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth="sm" fullWidth>
-  <DialogTitle sx={{ fontSize: '1.5rem', fontWeight: 'bold', textAlign: 'center', pb: 1 }}>
-    Add New Conversation
-  </DialogTitle>
-  <DialogContent>
-    <Grid container spacing={2} sx={{ mt: 1 }}>
-      <Grid item xs={12}>
-        <TextField
-          name="companyName"
-          label="Company Name"
-          value={newConversation.companyName}
-          onChange={handleInputChange}
-          fullWidth
-          variant="outlined"
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          name="contactNo"
-          label="Contact No."
-          value={newConversation.contactNo}
-          onChange={handleInputChange}
-          fullWidth
-          variant="outlined"
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          name="email"
-          label="Email"
-          value={newConversation.email}
-          onChange={handleInputChange}
-          fullWidth
-          variant="outlined"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              name="contacted"
-              checked={newConversation.contacted}
-              onChange={handleCheckboxChange}
-              color="primary"
+        {/* Add Conversation Dialog */}
+        <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth="sm" fullWidth>
+          <DialogTitle sx={{ fontSize: '1.5rem', fontWeight: 'bold', textAlign: 'center', pb: 1 }}>
+            Add New Conversation
+          </DialogTitle>
+          <DialogContent>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid item xs={12}>
+                <TextField
+                  name="companyName"
+                  label="Company Name"
+                  value={newConversation.companyName}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="contactNo"
+                  label="Contact No."
+                  value={newConversation.contactNo}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="email"
+                  label="Email"
+                  value={newConversation.email}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="contacted"
+                      checked={newConversation.contacted}
+                      onChange={handleCheckboxChange}
+                      color="primary"
+                    />
+                  }
+                  label="Contacted"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  name="notes"
+                  label="Notes"
+                  multiline
+                  rows={4}
+                  value={newConversation.notes}
+                  onChange={handleInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
+            <Button onClick={handleCloseAddDialog} color="secondary" variant="outlined">
+              Cancel
+            </Button>
+            <Button onClick={handleAddConversation} color="primary" variant="contained">
+              Add
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* Notes Dialog */}
+        <Dialog open={openNotesDialog} onClose={handleCloseNotesDialog} maxWidth="sm" fullWidth>
+          <DialogTitle sx={{ fontSize: '1.5rem', fontWeight: 'bold', textAlign: 'center', pb: 1 }}>
+            Edit Conversation Notes
+          </DialogTitle>
+          <DialogContent sx={{ px: 3, py: 2 }}>
+            <TextField
+              fullWidth
+              multiline
+              rows={6}
+              value={selectedNotes}
+              onChange={(e) => setSelectedNotes(e.target.value)}
+              variant="outlined"
+              placeholder="Enter your notes here..."
+              sx={{ mt: 1, '& .MuiOutlinedInput-root': { borderRadius: '10px' } }}
             />
-          }
-          label="Contacted"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          name="notes"
-          label="Notes"
-          multiline
-          rows={4}
-          value={newConversation.notes}
-          onChange={handleInputChange}
-          fullWidth
-          variant="outlined"
-        />
-      </Grid>
-    </Grid>
-  </DialogContent>
-  <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
-    <Button onClick={handleCloseAddDialog} color="secondary" variant="outlined">
-      Cancel
-    </Button>
-    <Button onClick={handleAddConversation} color="primary" variant="contained">
-      Add
-    </Button>
-  </DialogActions>
-</Dialog>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
+            <Button onClick={handleCloseNotesDialog} color="secondary" variant="outlined" sx={{ borderRadius: '8px' }}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveNotes} color="primary" variant="contained" sx={{ borderRadius: '8px' }}>
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
 
-
-      {/* Notes Dialog */}
-
-<Dialog open={openNotesDialog} onClose={handleCloseNotesDialog} maxWidth="sm" fullWidth>
-  <DialogTitle sx={{ 
-      fontSize: '1.5rem', 
-      fontWeight: 'bold', 
-      textAlign: 'center', 
-      pb: 1 
-    }}>
-    Edit Conversation Notes
-  </DialogTitle>
-  <DialogContent sx={{ px: 3, py: 2 }}>
-    <TextField
-      fullWidth
-      multiline
-      rows={6}
-      value={selectedNotes}
-      onChange={(e) => setSelectedNotes(e.target.value)}
-      variant="outlined"
-      placeholder="Enter your notes here..."
-      sx={{ 
-        mt: 1, 
-        '& .MuiOutlinedInput-root': { borderRadius: '10px' } 
-      }}
-    />
-  </DialogContent>
-  <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
-    <Button 
-      onClick={handleCloseNotesDialog} 
-      color="secondary" 
-      variant="outlined"
-      sx={{ borderRadius: '8px' }}
-    >
-      Cancel
-    </Button>
-    <Button 
-      onClick={handleSaveNotes} 
-      color="primary" 
-      variant="contained"
-      sx={{ borderRadius: '8px' }}
-    >
-      Save
-    </Button>
-  </DialogActions>
-</Dialog>
-
-
-      {/* Edit Conversation Dialog */}
-    
-<Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="sm" fullWidth>
-  <DialogTitle sx={{ 
-      fontSize: '1.5rem', 
-      fontWeight: 'bold', 
-      textAlign: 'center', 
-      pb: 1 
-    }}>
-    Edit Conversation
-  </DialogTitle>
-  <DialogContent>
-    <Grid container spacing={2} sx={{ mt: 1 }}>
-      <Grid item xs={12}>
-        <TextField
-          name="companyName"
-          label="Company Name"
-          value={editingConversation.companyName}
-          onChange={handleEditInputChange}
-          fullWidth
-          variant="outlined"
-          sx={{ borderRadius: '10px' }}
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          name="contactNo"
-          label="Contact No."
-          value={editingConversation.contactNo}
-          onChange={handleEditInputChange}
-          fullWidth
-          variant="outlined"
-        />
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-          name="email"
-          label="Email"
-          value={editingConversation.email}
-          onChange={handleEditInputChange}
-          fullWidth
-          variant="outlined"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              name="contacted"
-              checked={editingConversation.contacted}
-              onChange={handleEditCheckboxChange}
-              color="primary"
-            />
-          }
-          label="Contacted"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          name="notes"
-          label="Notes"
-          multiline
-          rows={4}
-          value={editingConversation.notes}
-          onChange={handleEditInputChange}
-          fullWidth
-          variant="outlined"
-          sx={{ borderRadius: '10px' }}
-        />
-      </Grid>
-    </Grid>
-  </DialogContent>
-  <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
-    <Button 
-      onClick={handleCloseEditDialog} 
-      color="secondary" 
-      variant="outlined"
-      sx={{ borderRadius: '8px' }}
-    >
-      Cancel
-    </Button>
-    <Button 
-      onClick={handleSaveEdit} 
-      color="primary" 
-      variant="contained"
-      sx={{ borderRadius: '8px' }}
-    >
-      Save
-    </Button>
-  </DialogActions>
-</Dialog>
-
-    </div>
+        {/* Edit Conversation Dialog */}
+        <Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="sm" fullWidth>
+          <DialogTitle sx={{ fontSize: '1.5rem', fontWeight: 'bold', textAlign: 'center', pb: 1 }}>
+            Edit Conversation
+          </DialogTitle>
+          <DialogContent>
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid item xs={12}>
+                <TextField
+                  name="companyName"
+                  label="Company Name"
+                  value={editingConversation.companyName}
+                  onChange={handleEditInputChange}
+                  fullWidth
+                  variant="outlined"
+                  sx={{ borderRadius: '10px' }}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="contactNo"
+                  label="Contact No."
+                  value={editingConversation.contactNo}
+                  onChange={handleEditInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  name="email"
+                  label="Email"
+                  value={editingConversation.email}
+                  onChange={handleEditInputChange}
+                  fullWidth
+                  variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="contacted"
+                      checked={editingConversation.contacted}
+                      onChange={handleEditCheckboxChange}
+                      color="primary"
+                    />
+                  }
+                  label="Contacted"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  name="notes"
+                  label="Notes"
+                  multiline
+                  rows={4}
+                  value={editingConversation.notes}
+                  onChange={handleEditInputChange}
+                  fullWidth
+                  variant="outlined"
+                  sx={{ borderRadius: '10px' }}
+                />
+              </Grid>
+            </Grid>
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
+            <Button onClick={handleCloseEditDialog} color="secondary" variant="outlined" sx={{ borderRadius: '8px' }}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveEdit} color="primary" variant="contained" sx={{ borderRadius: '8px' }}>
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </>
   );
 };
