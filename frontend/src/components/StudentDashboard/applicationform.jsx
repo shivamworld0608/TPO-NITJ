@@ -1,7 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { toast } from 'react-hot-toast';
-import { FaArrowLeft } from 'react-icons/fa';
+import { toast } from "react-hot-toast";
+import { FaArrowLeft, FaSpinner, FaFileUpload } from "react-icons/fa";
+import { UserX, X } from "lucide-react";
+
+const NoApplicationForm = ({ onClose, jobId }) => {
+  return (
+    <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10 relative">
+      <div className="absolute top-4 left-4"></div>
+      <button
+        className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+        onClick={onClose}
+      >
+        <X className="h-6 w-6" />
+      </button>
+
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <UserX className="w-24 h-24 text-gray-400 mb-4" />
+        <h2 className="text-2xl font-semibold text-gray-700 mb-2">
+          No Application Form Available
+        </h2>
+        <p className="text-gray-500 text-center mb-6">
+          The application form for is currently unavailable.
+          <br />
+          Please contact the hiring team or try again later.
+        </p>
+        <div className="w-32 h-1 bg-blue-500 rounded-full"></div>
+      </div>
+    </div>
+  );
+};
 
 const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
   const [fields, setFields] = useState([]);
@@ -10,6 +38,7 @@ const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [existingSubmission, setExistingSubmission] = useState(null);
+const [noFormAvailable, setNoFormAvailable] = useState(false);
 
   useEffect(() => {
     const fetchFormData = async () => {
@@ -19,6 +48,12 @@ const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
           withCredentials: true,
         });
         const templateFields = templateResponse.data.fields;
+
+        // Check if template is empty or invalid
+        if (!templateFields || templateFields.length === 0) {
+          setNoFormAvailable(true);
+          return;
+        }
 
         // Fetch student data
         const studentResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/students`, {
@@ -48,7 +83,12 @@ const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
 
         setFields(populatedFields);
       } catch (err) {
-        setError('Failed to load form data.');
+        if (err.response && err.response.status === 404) {
+          setNoFormAvailable(true);
+        } else {
+          setError("Failed to load form data.");
+          toast.error("Unable to fetch application form.");
+        }
       } finally {
         setLoading(false);
       }
@@ -167,6 +207,11 @@ const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
       setIsSubmitting(false);
     }
   };
+
+  // Handle no form available scenario
+  if (noFormAvailable) {
+    return <NoApplicationForm onClose={onHide} jobId={jobId} />;
+  }
 
   if (loading)
     return (
