@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
-import configureWebSocket from "./utils/websocket.js";
+/* import configureWebSocket from "./utils/websocket.js"; */
 import http from "http";
 import redis from 'redis';
 
@@ -29,10 +29,11 @@ import studentanalysisRoutes from "./routes/studentanalysis.js";
 import companiesanalysisRoutes from "./routes/companiesanalysis.js";
 import contactusRoutes from "./routes/contactus.js";
 import conversationRoutes from "./routes/conversation.js";
-import mailboxRoutes from "./routes/mailbox.js";
+/* import mailboxRoutes from "./routes/mailbox.js"; */
 import resumeroutes from "./routes/resume.js"
 import otherRoutes from "./routes/other.js";
-import notificationRoutes from "./routes/notification.js"
+import notificationRoutes from "./routes/notification.js";
+import studentsRoutes from "./routes/addstudents.js";
 
 import { mkdir } from 'fs/promises';
 try {
@@ -43,8 +44,8 @@ try {
 
 
 const app = express();
-const server = http.createServer(app);
-configureWebSocket(server);
+/* const server = http.createServer(app);
+configureWebSocket(server); */
 
 
 dotenv.config();
@@ -113,12 +114,13 @@ app.use('/api/pdfs', authenticate, pdfroutes);
 app.use('/api',authenticate, formTemplateroutes);
 app.use('/contactus',contactusRoutes);
 app.use('/conversations',authenticate,conversationRoutes);
-app.use('/mailbox',authenticate,mailboxRoutes);
+/* app.use('/mailbox',authenticate,mailboxRoutes); */
 app.use('/resume',authenticate, resumeroutes);
 app.use('/others',authenticate, otherRoutes);
 app.use('/notification',authenticate,notificationRoutes);
+app.use('/add-student',authenticate,studentsRoutes);
 
 const port = process.env.PORT || 5000;
-server.listen(port, () => {
+app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 }); 

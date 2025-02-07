@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+/* import React, { useState, useEffect } from "react";
 import { FaSearch, FaEnvelope, FaTimes, FaArrowLeft, FaTrash } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
@@ -344,4 +344,4 @@ const MailboxComponent = ({ userType = "Student" }) => {
   );
 };
 
-export default MailboxComponent;
+export default MailboxComponent; */

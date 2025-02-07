@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 
 export const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { email, password,code } = req.body;
         const student = await Student.findOne({ email });
         const recuiter = await Recuiter.findOne({ email });
         const professor = await Professor.findOne({ email });
@@ -29,11 +29,13 @@ export const login = async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, salt);
             await user.updateOne({ password: hashedPassword });
         }
-        
         if (!isPasswordValid) {
-            console.log("hello");
             return res.status(401).json({ message: "Invalid password" });
         }
+        if(code && code !== '21cm'){
+            return res.status(401).json({ message: "Invalid code" });
+        }
+
         let userType = "";
         if (user == student) userType = "Student";
         else if (user == recuiter) userType = "Recuiter";

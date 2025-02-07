@@ -25,7 +25,7 @@ import Home from "./StudentDashboard/home";
 import JobApplications from "./StudentDashboard/jobprofile";
 import Interviews from "./StudentDashboard/interviews";
 import GD from "./StudentDashboard/gd";
-import MailboxComponent from "./StudentDashboard/mailbox";
+// import MailboxComponent from "./StudentDashboard/mailbox";
 import OnlineAssessment from "./StudentDashboard/oa";
 import PDFDownloadCards from "./StudentDashboard/policy";
 import CalendarComponent from "./StudentDashboard/calender";
@@ -293,7 +293,7 @@ const StudentDashboard = () => {
             <Route path="gd" element={<GD />} />
             <Route path="others" element={<Others />} />
             <Route path="calendar" element={<CalendarComponent />} />
-            <Route path="mailbox" element={<MailboxComponent />} />
+            {/* <Route path="mailbox" element={<MailboxComponent />} /> */}
             <Route path="shared-experience" element={<SharedExperience />} />
             <Route path="profile" element={<Profile />} />
             <Route path="request-help" element={<Request />} />

@@ -1,4 +1,4 @@
-import express from "express";
+/* import express from "express";
 import {
   sendMailToProfessors,
   sendMailToStudents,
@@ -14,4 +14,4 @@ router.post("/send-to-students", sendMailToStudents);
 router.post("/send-to-recruiters", sendMailToRecruiters);
 router.get("/fetch/:email", fetchMails);
 
-export default router;
+export default router; */

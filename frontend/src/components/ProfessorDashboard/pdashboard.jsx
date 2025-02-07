@@ -33,7 +33,7 @@ import JobManagement from "./pjobmanagement";
 import OAManagement from "./poamanagement";
 import InterviewManagement from "./pinterviewmanagement";
 import PNotifications from "./pnotifications";
-import Mailbox from "./pmailbox";
+// import Mailbox from "./pmailbox";
 import ExperienceSharing from "./pexperiencesharing";
 import PlacementInsights from "./pplacementinsights";
 import PlacementPolicy from "./pplacementpolicy";
@@ -46,6 +46,7 @@ import TeamSection from "../Developers/TeamSection.jsx";
 import StudentAnalyticsDashboard from "./studentanalysis.jsx";
 import ContactRequests from "./contactus.jsx";
 import ConversationLog from "./conversation.jsx";
+import AddStudentForm from "./addstudents.jsx";
 import { FaRegComment } from "react-icons/fa";
 
 
@@ -103,6 +104,7 @@ const Pdashboard = () => {
     // { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
  /*    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" }, */
     { label: "User Requests", icon: faContactCard, path: "/pdashboard/contact-request" },
+    { label: "Add students", icon: faContactCard, path: "/pdashboard/add-students" },
     { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
     
   ];
@@ -290,7 +292,7 @@ const Pdashboard = () => {
             <Route path="oa-management" element={<OAManagement />} />
             <Route path="interview-management" element={<InterviewManagement />} />
             <Route path="notifications" element={<PNotifications />} />
-            <Route path="pmailbox" element={<Mailbox />} />
+            {/* <Route path="pmailbox" element={<Mailbox />} /> */}
             <Route path="help-requests" element={<RequestHelpManager />} />
             <Route path="company-analysis" element={<StudentAnalyticsDashboard />} />
             <Route path="student-analysis" element={<StudentAnalyticsDashboard />} />
@@ -298,6 +300,7 @@ const Pdashboard = () => {
             <Route path="contact-request" element={<ContactRequests />} />
             <Route path="conversation" element={<ConversationLog />} />
             <Route path="placement-insights" element={<PlacementInsights />} />
+            <Route path="add-students" element={<AddStudentForm/>} />
             <Route path="placement-policy" element={<PlacementPolicy />} />
             <Route path="profile" element={<Profile />} />
             <Route path="team" element={<TeamSection />} />

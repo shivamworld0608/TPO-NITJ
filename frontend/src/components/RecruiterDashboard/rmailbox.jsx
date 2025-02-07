@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/* import React, { useState } from "react";
 import { FaSearch, FaEnvelope, FaTimes, FaArrowLeft } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
@@ -176,7 +176,7 @@ const MailboxComponent = () => {
 
   return (
     <div className="p-6 w-full flex flex-col space-y-4">
-     {/*  <div className="bg-white p-6 "> */}
+  
         <h1 className="font-bold text-3xl lg:text-4xl text-center tracking-wide mb-4">
         Mail
         <span className="bg-custom-blue text-transparent bg-clip-text">
@@ -307,9 +307,9 @@ const MailboxComponent = () => {
             )}
           </div>
         )}
-      {/* </div> */}
     </div>
   );
 };
 
 export default MailboxComponent;
+ */

@@ -34,7 +34,7 @@ const NoApplicationForm = ({ onClose, jobId }) => {
 
 const ApplicationForm = ({ jobId, onHide, onApplicationSuccess }) => {
   const [fields, setFields] = useState([]);
-  const [resumeFile, setResumeFile] = useState(null); // Store the file object
+  const [resumeFile, setResumeFile] = useState(null); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
