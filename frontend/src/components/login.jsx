@@ -9,10 +9,12 @@ import { Eye, EyeOff, User } from "lucide-react";
 const LoginSignup = ({Login}) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [code, setCode] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [codeError, setCodeError] = useState("");
   const [isLogin, setIsLogin] = useState(Login);
   const [userType, setUserType] = useState("Student");
   const [rollno, setRollno] = useState("");
@@ -28,6 +30,7 @@ const LoginSignup = ({Login}) => {
   useEffect(() => {
     setName("");
     setEmail("");
+    setCode("");
     setPassword("");
     setRollno("");
     setDepartment("");
@@ -37,6 +40,7 @@ const LoginSignup = ({Login}) => {
     setError("");
     setEmailError("");
     setPasswordError("");
+    setCodeError("");
   }, [userType]);
 
   const validateEmail = (email) => {
@@ -65,7 +69,7 @@ const LoginSignup = ({Login}) => {
     try {
       await toast
         .promise(
-          axios.post(`${import.meta.env.REACT_APP_BASE_URL}/auth/login`, { email, password }, { withCredentials: true }),
+          axios.post(`${import.meta.env.REACT_APP_BASE_URL}/auth/login`, { email, password,code }, { withCredentials: true }),
           {
             loading: "Logging in...",
             success: "Login successful!",
@@ -158,6 +162,15 @@ const LoginSignup = ({Login}) => {
               required
             />
             {emailError && <p className="text-red-500 text-xs">{emailError}</p>}
+            <input
+              className="w-full px-4 py-3 rounded-md font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-custom-blue"
+              type="text"
+              placeholder="Enter your code"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              required
+            />
+            {codeError && <p className="text-red-500 text-xs">{codeError}</p>}
             <div className="relative w-full">
             <input
               className="w-full px-4 py-3 rounded-md font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-custom-blue"
