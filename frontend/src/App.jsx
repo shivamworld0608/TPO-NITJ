@@ -13,7 +13,7 @@ import Pdashboard from "./Pages/Pdashboard";
 import TeamPage from "./Pages/TeamPage";
 import FAQ from "./Pages/Faqs";
 import ErrorPage from "./Pages/ErrorPage";
-import Signup from "./Pages/Signup";
+/* import Signup from "./Pages/Signup"; */
 import AlumniLogin from "./Pages/ALogin";
 
 const App = () => {

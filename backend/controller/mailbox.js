@@ -1,4 +1,4 @@
-import Mail from "../models/mail.js";
+/* import Mail from "../models/mail.js";
 import Student from "../models/user_model/student.js";
 import Professor from "../models/user_model/professor.js";
 import Recuiter from "../models/user_model/recuiter.js";
@@ -132,18 +132,6 @@ export const sendMailToRecruiters = async (req, res) => {
     }
   };
 
-// Fetch mails for a user
-/* export const fetchMails = async (req, res) => {
-  const { email } = req.params;
-
-  try {
-    const mails = await Mail.find({ recipients: email });
-    res.status(200).json(mails);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching mails", error });
-  }
-}; */
-
 
 // controllers/mailController.js
 export const fetchMails = async (req, res) => {
@@ -187,3 +175,4 @@ export const deleteMail = async (req, res) => {
     res.status(500).json({ message: "Error deleting mail", error });
   }
 };
+ */
