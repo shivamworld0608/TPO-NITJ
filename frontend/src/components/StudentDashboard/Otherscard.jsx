@@ -10,6 +10,7 @@ export default function Otherscard(props) {
     others_info,
     others_link,
     was_shortlisted,
+    isLinkVisible,
   } = props;
 
   const [showModal, setShowModal] = useState(false);
@@ -48,27 +49,50 @@ export default function Otherscard(props) {
             <span className="font-medium text-gray-800 mr-2">Time:</span>
             <span className="font-medium text-gray-500">{others_time}</span>
           </div>
-          {others_link && (
+          {isLinkVisible ? (
+            others_link ? (
+              <div className="text-sm text-gray-500 flex items-center">
+                <span className="font-medium text-gray-800 mr-2">
+                  Others Link:
+                </span>
+                <a
+                  href={
+                    typeof others_link === "string" &&
+                    others_link.startsWith("http")
+                      ? others_link
+                      : `https://${others_link || ""}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-green-500 rounded-lg p-1 text-green-500 hover:bg-green-500 hover:text-white"
+                >
+                  Join
+                </a>
+              </div>
+            ) : (
+              <div className="text-sm text-gray-500 flex items-center">
+                <span className="font-medium text-gray-800 mr-2">
+                  Others Link:
+                </span>
+                <button
+                  onClick={() => alert("Others link will be available soon")}
+                  className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+                >
+                  Soon
+                </button>
+              </div>
+            )
+          ) : (
             <div className="text-sm text-gray-500 flex items-center">
-              <span className="font-medium text-gray-800 mr-2">
-                Others Link:
-              </span>
-              <a
-                href={
-                  typeof others_link === "string" &&
-                  others_link.startsWith("http")
-                    ? others_link
-                    : `https://${others_link || ""}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-green-500 rounded-lg p-1 text-green-500 hover:bg-green-500 hover:text-white"
-              >
-                Join
-              </a>
-            </div>
+                <span className="font-medium text-gray-800 mr-2">Others Link:</span>
+                <button
+                  onClick={() => alert("Link Visibility is off")}
+                  className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+                >
+                  Soon
+                </button>
+              </div>
           )}
-
           {was_shortlisted && (
             <div className="text-sm text-gray-500 flex items-center">
               {was_shortlisted}

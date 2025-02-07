@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import configureWebSocket from "./utils/websocket.js";
 import http from "http";
+import redis from 'redis';
 
 
 import authroutes from "./routes/auth.js";
@@ -30,7 +31,8 @@ import contactusRoutes from "./routes/contactus.js";
 import conversationRoutes from "./routes/conversation.js";
 import mailboxRoutes from "./routes/mailbox.js";
 import resumeroutes from "./routes/resume.js"
-import otherRoutes from "./routes/other.js"
+import otherRoutes from "./routes/other.js";
+import notificationRoutes from "./routes/notification.js"
 
 import { mkdir } from 'fs/promises';
 try {
@@ -44,11 +46,20 @@ const app = express();
 const server = http.createServer(app);
 configureWebSocket(server);
 
+
 dotenv.config();
 app.use(cors({credentials: true, origin: process.env.CLIENT_URL}));
-
 app.use(cookieParser());
 app.use(express.json());
+
+/* const client = redis.createClient();
+client.on('error', (err) => console.log('Redis Client Error', err)); */
+
+// Connect to Redis (using async/await pattern)
+/* (async () => {
+  await client.connect();
+  console.log('Connected to Redis');
+})(); */
 
 const authenticate = (req, res, next) => {
     console.log("authenticating");
@@ -105,6 +116,7 @@ app.use('/conversations',authenticate,conversationRoutes);
 app.use('/mailbox',authenticate,mailboxRoutes);
 app.use('/resume',authenticate, resumeroutes);
 app.use('/others',authenticate, otherRoutes);
+app.use('/notification',authenticate,notificationRoutes);
 
 const port = process.env.PORT || 5000;
 server.listen(port, () => {

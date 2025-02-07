@@ -69,6 +69,7 @@ const Others = () => {
               others_login_time={others.others_time}
               others_info={others.others_info}
               others_link={others.others_link}
+              isLinkVisible={others.isLinkVisible}
             />
           ))}
         </div>
@@ -91,6 +92,7 @@ const Others = () => {
               others_info={others.others_info}
               others_link={others.others_link}
               was_shortlisted={others.was_shortlisted}
+              isLinkVisible={others.isLinkVisible}
             />
           ))}
         </div>

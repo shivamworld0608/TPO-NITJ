@@ -8,6 +8,7 @@ export default function InterviewCard({
   interview_link,
   interview_type,
   was_selected,
+  isLinkVisible,
 }) {
   const [showModal, setShowModal] = useState(false);
 
@@ -50,38 +51,53 @@ export default function InterviewCard({
             <span>{interview_time || "Not Provided"}</span>
           </div>
 
-          {interview_link ? (
-            <div className="text-sm text-gray-500 flex items-center">
-              <span className="font-medium text-gray-800 mr-2">
-                Interview Link:
-              </span>
-              <a
-                href={
-                  typeof interview_link === "string" &&
-                  interview_link.startsWith("http")
-                    ? interview_link
-                    : `https://${interview_link || ""}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-green-500 rounded-lg p-1 text-green-500 hover:bg-green-500 hover:text-white"
-              >
-                Join
-              </a>
-            </div>
+          {isLinkVisible ? (
+            interview_link ? (
+              <div className="text-sm text-gray-500 flex items-center">
+                <span className="font-medium text-gray-800 mr-2">
+                  Interview Link:
+                </span>
+                <a
+                  href={
+                    typeof interview_link === "string" &&
+                    interview_link.startsWith("http")
+                      ? interview_link
+                      : `https://${interview_link || ""}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-green-500 rounded-lg p-1 text-green-500 hover:bg-green-500 hover:text-white"
+                >
+                  Join
+                </a>
+              </div>
+            ) : (
+              <div className="text-sm text-gray-500 flex items-center">
+                <span className="font-medium text-gray-800 mr-2">
+                  Interview Link:
+                </span>
+                <button
+                  onClick={() => alert("Interview link will be available soon")}
+                  className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+                >
+                  Soon
+                </button>
+              </div>
+            )
           ) : (
             <div className="text-sm text-gray-500 flex items-center">
-              <span className="font-medium text-gray-800 mr-2">
-                Interview Link:
-              </span>
-              <button
-                onClick={() => alert("Interview link will be available soon")}
-                className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
-              >
-                Soon
-              </button>
-            </div>
+            <span className="font-medium text-gray-800 mr-2">
+              Interview Link:
+            </span>
+            <button
+              onClick={() => alert("Link visibility is off")}
+              className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+            >
+              Soon
+            </button>
+          </div>
           )}
+
           <div className="text-sm text-gray-500 flex items-center">
             <span className="font-medium text-gray-800 mr-2">
               Selection Status:

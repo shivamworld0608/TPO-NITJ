@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { FaSearch, FaEnvelope, FaTimes, FaArrowLeft } from "react-icons/fa";
+import { FaSearch, FaEnvelope, FaTimes, FaArrowLeft, FaTrash } from "react-icons/fa";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
 import io from "socket.io-client";
+import { useSelector } from "react-redux";
 import axios from "axios";
 
-const socket = io(`${import.meta.env.REACT_APP_BASE_URL}`); // WebSocket server URL
+const socket = io(`${import.meta.env.REACT_APP_BASE_URL}`);
 
-const MailboxComponent = ({ userEmail, userType }) => {
+const MailboxComponent = ({ userType = "Student" }) => {
+  const { userData } = useSelector((state) => state.auth);
+  const userEmail = userData.email;
   const [messages, setMessages] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isComposing, setIsComposing] = useState(false);
@@ -16,13 +19,12 @@ const MailboxComponent = ({ userEmail, userType }) => {
     sender: userEmail,
     subject: "",
     body: "",
-    metadata: {}, // Add metadata for filtering
+    metadata: {},
   });
   const [selectedMessage, setSelectedMessage] = useState(null);
-  const [filterType, setFilterType] = useState("all"); // Track the selected filter type
-  const [filterValue, setFilterValue] = useState(""); // Track the filter value
+  const [filterType, setFilterType] = useState("all");
+  const [filterValue, setFilterValue] = useState("");
 
-  // Fetch initial emails
   useEffect(() => {
     const fetchMails = async () => {
       try {
@@ -38,7 +40,6 @@ const MailboxComponent = ({ userEmail, userType }) => {
 
     fetchMails();
 
-    // Listen for new mails via WebSocket
     socket.on("newMail", (mail) => {
       if (mail.recipients.includes(userEmail)) {
         setMessages((prev) => [...prev, mail]);
@@ -50,26 +51,17 @@ const MailboxComponent = ({ userEmail, userType }) => {
     };
   }, [userEmail]);
 
-  // Handle sending a new email
   const handleSendMessage = async () => {
     try {
       const payload = {
         ...newMessage,
-        senderType: userType, // Use the userType prop (Student, Professor, Recruiter)
-        metadata: {
-          filter: filterType, // e.g., "batch", "course", "department"
-          value: filterValue, // e.g., "2023", "B.Tech", "Computer Science"
-        },
+        senderType: userType,
+        metadata: userType === "Professor" ? { filter: filterType, value: filterValue } : {},
       };
 
       let endpoint = "";
-      if (userType === "Student") {
-        endpoint = "/mailbox/send-to-professors"; // Students can only send to professors
-      } else if (userType === "Professor") {
-        endpoint = "/mailbox/send-to-students"; // Professors can send to students or recruiters
-      } else if (userType === "Recruiter") {
-        endpoint = "/mailbox/send-to-students"; // Recruiters can send to students
-      }
+      if (userType === "Student") endpoint = "/mailbox/send-to-professors";
+      else if (userType === "Professor" || userType === "Recruiter") endpoint = "/mailbox/send-to-students";
 
       const response = await axios.post(
         `${import.meta.env.REACT_APP_BASE_URL}${endpoint}`,
@@ -77,17 +69,18 @@ const MailboxComponent = ({ userEmail, userType }) => {
         { withCredentials: true }
       );
 
-      socket.emit("sendMail", response.data.mail); // Notify via WebSocket
+      socket.emit("sendMail", response.data.mail);
       setIsComposing(false);
       setNewMessage({ sender: userEmail, subject: "", body: "", metadata: {} });
-      setFilterType("all"); // Reset filter type
-      setFilterValue(""); // Reset filter value
+      if (userType === "Professor") {
+        setFilterType("all");
+        setFilterValue("");
+      }
     } catch (error) {
       console.error("Error sending mail:", error);
     }
   };
 
-  // Handle deleting an email
   const handleDeleteMessage = async (id) => {
     try {
       await axios.delete(
@@ -100,7 +93,6 @@ const MailboxComponent = ({ userEmail, userType }) => {
     }
   };
 
-  // Handle marking an email as read
   const handleMarkAsRead = async (id) => {
     try {
       await axios.patch(
@@ -118,7 +110,6 @@ const MailboxComponent = ({ userEmail, userType }) => {
     }
   };
 
-  // Handle filtering messages
   const filteredMessages = messages.filter((message) => {
     const matchesSearch =
       message.sender.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -129,31 +120,31 @@ const MailboxComponent = ({ userEmail, userType }) => {
   });
 
   return (
-    <div className="p-6 w-full flex flex-col space-y-4">
-      <h1 className="font-bold text-3xl lg:text-4xl text-center tracking-wide mb-4">
-        Mail
-        <span className="bg-custom-blue text-transparent bg-clip-text">Box</span>
+    <div className="p-6 w-full flex flex-col space-y-4 max-w-7xl mx-auto">
+      <h1 className="font-bold text-3xl lg:text-4xl text-center tracking-wide mb-6">
+        Mail<span className="bg-custom-blue text-transparent bg-clip-text">Box</span>
       </h1>
-      <div className="mb-4 flex flex-col lg:flex-row items-center gap-y-4">
-        <div className="flex items-center gap-2 w-full">
-          <FaSearch className="text-custom-blue" />
+      
+      <div className="mb-6 flex flex-col lg:flex-row items-center gap-y-4">
+        <div className="flex items-center gap-2 w-full max-w-xl">
+          <FaSearch className="text-custom-blue text-lg" />
           <input
             type="text"
-            className="p-2 border border-gray-300 rounded-2xl w-full lg:w-1/2"
-            placeholder="Search Messages"
+            className="p-3 border border-gray-200 rounded-xl w-full focus:ring-2 focus:ring-custom-blue focus:border-transparent"
+            placeholder="Search messages..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <div className="flex items-center sm:gap-4 gap-1">
+        <div className="flex items-center gap-2 flex-wrap justify-center">
           {["All", "Inbox", "Sent", "Pending", "Draft"].map((filter) => (
             <button
               key={filter}
               onClick={() => setSelectedFilter(filter)}
-              className={`flex-1 sm:px-4 p-2 rounded-3xl ${
+              className={`px-4 py-2 rounded-xl transition-colors ${
                 selectedFilter === filter
                   ? "bg-custom-blue text-white"
-                  : "bg-gray-200 text-gray-700"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
               {filter}
@@ -161,82 +152,94 @@ const MailboxComponent = ({ userEmail, userType }) => {
           ))}
           <button
             onClick={() => setIsComposing(true)}
-            className="bg-custom-blue text-white px-4 py-2 rounded-3xl hover:bg-blue-600"
+            className="bg-custom-blue text-white px-4 py-2 rounded-xl hover:bg-blue-600 flex items-center gap-2"
           >
-            <FontAwesomeIcon icon={faPenToSquare} className="p-0.5" />
+            <FontAwesomeIcon icon={faPenToSquare} />
+            Compose
           </button>
         </div>
       </div>
 
       {isComposing && (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="p-6 bg-white shadow-md rounded-md w-1/3">
-            <div className="flex justify-between">
-              <h3 className="text-xl font-semibold mb-4">Compose Message</h3>
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl">
+            <div className="p-6 border-b border-gray-200 flex justify-between items-center">
+              <h3 className="text-xl font-semibold">New Message</h3>
               <button
                 onClick={() => setIsComposing(false)}
-                className="text-gray-500 mb-4"
+                className="text-gray-400 hover:text-gray-600 p-2 rounded-full hover:bg-gray-100"
               >
-                <FaTimes className="text-custom-blue" />
+                <FaTimes className="w-5 h-5" />
               </button>
             </div>
-            <input
-              type="text"
-              name="subject"
-              placeholder="Subject"
-              className="w-full p-2 border rounded-md mb-2"
-              value={newMessage.subject}
-              onChange={(e) =>
-                setNewMessage({ ...newMessage, subject: e.target.value })
-              }
-            />
-            <textarea
-              name="body"
-              placeholder="Message Body"
-              className="w-full p-2 border rounded-md mb-4"
-              value={newMessage.body}
-              onChange={(e) =>
-                setNewMessage({ ...newMessage, body: e.target.value })
-              }
-            />
-            {userType === "Professor" && (
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Filter Students
-                </label>
-                <select
-                  className="w-full p-2 border rounded-md mb-2"
-                  value={filterType}
-                  onChange={(e) => setFilterType(e.target.value)}
-                >
-                  <option value="all">All Students</option>
-                  <option value="batch">By Batch</option>
-                  <option value="course">By Course</option>
-                  <option value="department">By Department</option>
-                </select>
-                {filterType !== "all" && (
-                  <input
-                    type="text"
-                    placeholder={`Enter ${filterType}`}
-                    className="w-full p-2 border rounded-md"
-                    value={filterValue}
-                    onChange={(e) => setFilterValue(e.target.value)}
-                  />
-                )}
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                <input
+                  type="text"
+                  name="subject"
+                  placeholder="Enter subject"
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-transparent"
+                  value={newMessage.subject}
+                  onChange={(e) => setNewMessage({ ...newMessage, subject: e.target.value })}
+                />
               </div>
-            )}
-            <div className="flex justify-end">
-              <button
-                onClick={handleSendMessage}
-                className="bg-custom-blue text-white px-4 py-2 rounded-md hover:bg-blue-600"
-              >
-                Send
-              </button>
+              
+              {userType === "Professor" && (
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Filter Students By</label>
+                    <select
+                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-transparent"
+                      value={filterType}
+                      onChange={(e) => setFilterType(e.target.value)}
+                    >
+                      <option value="all">All Students</option>
+                      <option value="batch">Batch</option>
+                      <option value="course">Course</option>
+                      <option value="department">Department</option>
+                    </select>
+                  </div>
+                  {filterType !== "all" && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+                      </label>
+                      <input
+                        type="text"
+                        placeholder={`Enter ${filterType}`}
+                        className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-transparent"
+                        value={filterValue}
+                        onChange={(e) => setFilterValue(e.target.value)}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                <textarea
+                  name="body"
+                  placeholder="Write your message here..."
+                  className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-transparent h-48"
+                  value={newMessage.body}
+                  onChange={(e) => setNewMessage({ ...newMessage, body: e.target.value })}
+                />
+              </div>
+            </div>
+            <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
               <button
                 onClick={() => setIsComposing(false)}
-                className="ml-4 text-gray-500"
+                className="px-6 py-2 text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
               >
                 Cancel
+              </button>
+              <button
+                onClick={handleSendMessage}
+                className="px-6 py-2 bg-custom-blue text-white rounded-lg hover:bg-blue-600"
+              >
+                Send Message
               </button>
             </div>
           </div>
@@ -244,69 +247,96 @@ const MailboxComponent = ({ userEmail, userType }) => {
       )}
 
       {selectedMessage ? (
-        <div className="p-6 bg-white shadow-md rounded-md mb-4">
-          <button
-            onClick={() => setSelectedMessage(null)}
-            className="text-gray-500 mb-4"
-          >
-            <FaArrowLeft className="mr-2 text-custom-blue" /> Back
-          </button>
-          <h3 className="text-xl font-semibold mb-4">
-            {selectedMessage.subject}
-          </h3>
-          <p className="text-gray-500 mb-4">{selectedMessage.sender}</p>
-          <p>{selectedMessage.body}</p>
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <div className="flex justify-between items-center mb-6">
+            <button
+              onClick={() => setSelectedMessage(null)}
+              className="text-custom-blue hover:text-blue-600 flex items-center gap-2"
+            >
+              <FaArrowLeft className="w-5 h-5" />
+              <span className="font-medium">Back to Inbox</span>
+            </button>
+            <button
+              onClick={() => handleDeleteMessage(selectedMessage._id)}
+              className="text-red-500 hover:text-red-600 p-2 rounded-full hover:bg-red-50"
+            >
+              <FaTrash className="w-5 h-5" />
+            </button>
+          </div>
+          
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">{selectedMessage.subject}</h2>
+            <div className="flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-gray-700">{selectedMessage.sender}</span>
+                <span className="text-gray-400">•</span>
+                <span className="text-gray-500">{selectedMessage.senderType}</span>
+              </div>
+              <span className="text-sm text-gray-500">
+                {new Date(selectedMessage.timestamp).toLocaleString()}
+              </span>
+            </div>
+          </div>
+
+          <div className="text-gray-700 leading-relaxed whitespace-pre-wrap border-t border-gray-100 pt-6">
+            {selectedMessage.body}
+          </div>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {filteredMessages.length > 0 ? (
             filteredMessages.map((message) => (
               <div
                 key={message._id}
-                className={`flex items-center p-4 mb-4 rounded-md border transition-all duration-300 ${
-                  message.read
-                    ? "bg-gray-100 border-gray-300"
-                    : "bg-white border-custom-blue hover:border-blue-500"
+                className={`group flex items-center p-4 rounded-xl border border-gray-200 hover:border-custom-blue hover:shadow-md transition-all cursor-pointer ${
+                  !message.read ? "bg-white border-custom-blue/30 shadow-sm" : "bg-gray-50"
                 }`}
-                onClick={() => setSelectedMessage(message)}
+                onClick={() => {
+                  if (!message.read) handleMarkAsRead(message._id);
+                  setSelectedMessage(message);
+                }}
               >
-                <div className="flex-shrink-0">
-                  <FaEnvelope className="text-custom-blue" />
+                <div className="flex-shrink-0 mr-4 relative">
+                  <FaEnvelope
+                    className={`w-5 h-5 ${message.read ? "text-gray-400" : "text-custom-blue"}`}
+                  />
+                  {!message.read && (
+                    <div className="absolute top-0 right-0 w-2 h-2 bg-custom-blue rounded-full" />
+                  )}
                 </div>
-                <div className="ml-3 flex-1">
-                  <p className="font-semibold">{message.sender}</p>
-                  <p className="text-sm">{message.subject}</p>
-                  <p className="text-xs text-gray-500">
-                    {message.body.substring(0, 50)}...
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    {new Date(message.timestamp).toLocaleString()}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between mb-1">
+                    <span
+                      className={`text-sm font-medium truncate ${
+                        !message.read ? "text-custom-blue" : "text-gray-900"
+                      }`}
+                    >
+                      {message.sender}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {new Date(message.timestamp).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-900 font-medium truncate">{message.subject}</p>
+                  <p className="text-xs text-gray-500 truncate">
+                    {message.body.substring(0, 80)}...
                   </p>
                 </div>
-                {!message.read && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleMarkAsRead(message._id);
-                    }}
-                    className="ml-3 text-custom-blue hover:text-blue-400"
-                  >
-                    Mark as Read
-                  </button>
-                )}
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDeleteMessage(message._id);
                   }}
-                  className="ml-3 text-red-500 hover:text-red-600"
+                  className="ml-4 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-600 p-2 rounded-full hover:bg-red-50"
                 >
-                  <FaTimes />
+                  <FaTrash className="w-4 h-4" />
                 </button>
               </div>
             ))
           ) : (
-            <div className="text-center text-gray-500">No messages found.</div>
+            <div className="text-center py-12 text-gray-500">
+              No messages found in {selectedFilter.toLowerCase()}
+            </div>
           )}
         </div>
       )}

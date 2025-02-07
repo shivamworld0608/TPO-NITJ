@@ -5,6 +5,7 @@ export const getEligibleUpcomingGDs = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const studentObjectId = new mongoose.Types.ObjectId(studentId);
+
     const jobsWithGDs = await JobProfile.find({
       "Hiring_Workflow.eligible_students": studentObjectId,
     })
@@ -19,6 +20,7 @@ export const getEligibleUpcomingGDs = async (req, res) => {
           const isGD = step.step_type === "GD";
           const isEligible = step.eligible_students.some((id) => id.equals(studentObjectId));
           const isFutureDate = new Date(step.details.gd_date) > new Date();
+
           return isGD && isEligible && isFutureDate;
         })
         .map((step) => {
@@ -35,7 +37,10 @@ export const getEligibleUpcomingGDs = async (req, res) => {
                 : link.studentId;
 
             return linkStudentId.equals(studentObjectId);
-          })?.gdLink || "No link available";
+          });
+
+          // Check visibility
+          const isLinkVisible = studentGDLink?.visibility !== false;
 
           return {
             company_name: job.company_name,
@@ -44,10 +49,12 @@ export const getEligibleUpcomingGDs = async (req, res) => {
             gd_date: step.details.gd_date,
             gd_time: step.details.gd_time,
             gd_info: step.details.gd_info,
-            gd_link: studentGDLink,
+            gd_link: isLinkVisible ? studentGDLink?.gdLink || "No link available" : "Link not visible",
+            isLinkVisible, // Add this field to indicate visibility
           };
         });
     });
+
     res.status(200).json({ upcomingGDs });
   } catch (error) {
     console.error("Error fetching upcoming GDs:", error);
@@ -90,7 +97,10 @@ export const getEligiblePastGDs = async (req, res) => {
                 : link.studentId;
 
             return linkStudentId.equals(studentObjectId);
-          })?.gdLink || "No link available";
+          });
+
+          // Check visibility
+          const isLinkVisible = studentGDLink?.visibility !== false;
 
           return {
             company_name: job.company_name,
@@ -99,7 +109,8 @@ export const getEligiblePastGDs = async (req, res) => {
             gd_date: step.details.gd_date,
             gd_time: step.details.gd_time,
             gd_info: step.details.gd_info,
-            gd_link: studentGDLink,
+            gd_link: isLinkVisible ? studentGDLink?.gdLink || "No link available" : "Link not visible",
+            isLinkVisible, // Add this field to indicate visibility
             was_shortlisted:
               step.shortlisted_students?.length === 0
                 ? "Result yet to be declared"

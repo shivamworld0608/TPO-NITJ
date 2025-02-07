@@ -14,6 +14,104 @@ const JobProfilesonp = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState({
+    batchEligible: "",
+    courseEligible: "",
+    branchEligible: "",
+    minCGPA: "",
+  });
+
+  const btechdepartmentOptions = [
+    {
+      label: "Biotechnology",
+      options: [{ value: "Biotechnology", label: "Biotechnology" }],
+    },
+    {
+      label: "Chemical Engineering",
+      options: [
+        { value: "Chemical Engineering", label: "Chemical Engineering" },
+      ],
+    },
+    {
+      label: "Civil Engineering",
+      options: [{ value: "Civil Engineering", label: "Civil Engineering" }],
+    },
+    {
+      label: "Computer Science & Engineering",
+      options: [
+        {
+          value: "Computer Science & Engineering",
+          label: "Computer Science & Engineering",
+        },
+        {
+          value: "Data Science and Engineering",
+          label: "Data Science and Engineering",
+        },
+      ],
+    },
+    {
+      label: "Electrical Engineering",
+      options: [
+        { value: "Electrical Engineering", label: "Electrical Engineering" },
+      ],
+    },
+    {
+      label: "Electronics & Communication Engineering",
+      options: [
+        {
+          value: "Electronics & Communication Engineering",
+          label: "Electronics & Communication Engineering",
+        },
+        {
+          value: "Electronics and VLSI Engineering",
+          label: "Electronics and VLSI Engineering",
+        },
+      ],
+    },
+    {
+      label: "Industrial and Production Engineering",
+      options: [
+        {
+          value: "Industrial and Production Engineering",
+          label: "Industrial and Production Engineering",
+        },
+      ],
+    },
+    {
+      label: "Information Technology",
+      options: [
+        { value: "Information Technology", label: "Information Technology" },
+      ],
+    },
+    {
+      label: "Instrumentation and Control Engineering",
+      options: [
+        {
+          value: "Instrumentation and Control Engineering",
+          label: "Instrumentation and Control Engineering",
+        },
+      ],
+    },
+    {
+      label: "Mathematics and Computing",
+      options: [
+        {
+          value: "Mathematics and Computing",
+          label: "Mathematics and Computing",
+        },
+      ],
+    },
+    {
+      label: "Mechanical Engineering",
+      options: [
+        { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+      ],
+    },
+    {
+      label: "Textile Technology",
+      options: [{ value: "Textile Technology", label: "Textile Technology" }],
+    },
+  ];
 
   useEffect(() => {
     const fetchJobProfiles = async () => {
@@ -62,10 +160,10 @@ const JobProfilesonp = () => {
     }
   };
 
-  const handleComplete = async (jobId,jobdescription) => {
+  const handleComplete = async (jobId) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
-      text: "Do you want to mark it as complete ?",
+      text: "Do you want to mark it as complete?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, mark it!",
@@ -86,14 +184,15 @@ const JobProfilesonp = () => {
           completed: [...prev.completed, prev.approved.find((job) => job._id === jobId)],
         }));
       } catch (err) {
-        Swal.fire("Error", "Failed to approve the job.", "error");
+        Swal.fire("Error", "Failed to complete the job.", "error");
       }
     }
   };
+
   const handleInComplete = async (jobId) => {
     const confirm = await Swal.fire({
       title: "Are you sure?",
-      text: "Do you want to mark it as incomplete ?",
+      text: "Do you want to mark it as incomplete?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, mark it!",
@@ -114,7 +213,7 @@ const JobProfilesonp = () => {
           approved: [...prev.approved, prev.completed.find((job) => job._id === jobId)],
         }));
       } catch (err) {
-        Swal.fire("Error", "Failed to approve the job.", "error");
+        Swal.fire("Error", "Failed to mark the job as incomplete.", "error");
       }
     }
   };
@@ -149,9 +248,9 @@ const JobProfilesonp = () => {
 
   const JobCard = ({ job, showActions }) => (
     <Card className="bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative">
-       {job.Approved_Status&& !job.completed && (
+      {job.Approved_Status && !job.completed && (
         <div className="absolute top-2 right-2 text-green-600">
-          <Check className="w-7 h-7 bg-green-100 rounded rounded-3xl p-1" onClick={() => handleComplete(job._id,job)}/>
+          <Check className="w-7 h-7 bg-green-100 rounded rounded-3xl p-1" onClick={() => handleComplete(job._id)} />
         </div>
       )}
       {job.completed && (
@@ -163,10 +262,7 @@ const JobProfilesonp = () => {
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
             {job.company_logo ? (
-              <img
-                src={job.company_logo}
-                className="w-14 h-14 object-contain"
-              />
+              <img src={job.company_logo} className="w-14 h-14 object-contain" />
             ) : (
               <span className="text-lg font-bold text-custom-blue">
                 {job.company_name?.[0]?.toUpperCase() || "N"}
@@ -230,6 +326,46 @@ const JobProfilesonp = () => {
     </Card>
   );
 
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+
+  const filterJobs = (jobs) => {
+    return jobs.filter((job) => {
+      const { batchEligible, courseEligible, branchEligible, minCGPA } = filters;
+      const { eligible_batch, course_allowed, department_allowed, minimum_cgpa } = job.eligibility_criteria;
+
+      return (
+        (!batchEligible || eligible_batch === batchEligible) &&
+        (!courseEligible || course_allowed === courseEligible) &&
+        (!branchEligible || department_allowed.includes(branchEligible)) &&
+        (!minCGPA || minimum_cgpa >= parseFloat(minCGPA))
+      );
+    });
+  };
+
+  const filteredApprovedJobs = filterJobs(
+    jobProfiles.approved.filter((job) =>
+      job.company_name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
+  const filteredNotApprovedJobs = filterJobs(
+    jobProfiles.notApproved.filter((job) =>
+      job.company_name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
+  const filteredCompletedJobs = filterJobs(
+    jobProfiles.completed.filter((job) =>
+      job.company_name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  );
+
   if (loading) return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
@@ -243,19 +379,6 @@ const JobProfilesonp = () => {
         <p>{error}</p>
       </div>
     </div>
-  );
-
-  // Filter job profiles based on the search term
-  const filteredApprovedJobs = jobProfiles.approved.filter(job =>
-    job.company_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const filteredNotApprovedJobs = jobProfiles.notApproved.filter(job =>
-    job.company_name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const filteredCompletedJobs = jobProfiles.completed.filter(job =>
-    job.company_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -275,6 +398,74 @@ const JobProfilesonp = () => {
           <h1 className="text-4xl font-bold text-center mb-8 text-custom-blue">
             Job Profiles Dashboard
           </h1>
+
+          {/* Filter Section */}
+          <div className="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
+            <h3 className="text-lg font-semibold mb-4">Filter Jobs</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Batch Eligible</label>
+                <input
+                  type="text"
+                  name="batchEligible"
+                  value={filters.batchEligible}
+                  onChange={handleFilterChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-blue"
+                  placeholder="e.g., 2023"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Course Eligible</label>
+                <select
+                  name="courseEligible"
+                  value={filters.courseEligible}
+                  onChange={handleFilterChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-blue"
+                >
+                  <option value="">Select Course</option>
+                  <option value="B.Tech">B.Tech</option>
+                  <option value="M.Tech">M.Tech</option>
+                  <option value="MBA">MBA</option>
+                  <option value="M.Sc">M.Sc</option>
+                  <option value="PHD">PHD</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Branch Eligible</label>
+                <select
+                  name="branchEligible"
+                  value={filters.branchEligible}
+                  onChange={handleFilterChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-blue"
+                >
+                  <option value="">Select Branch</option>
+                  {btechdepartmentOptions.map((dept) => (
+                    <optgroup key={dept.label} label={dept.label}>
+                      {dept.options.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Minimum CGPA</label>
+                <input
+                  type="number"
+                  name="minCGPA"
+                  value={filters.minCGPA}
+                  onChange={handleFilterChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-custom-blue"
+                  placeholder="e.g., 7.5"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                />
+              </div>
+            </div>
+          </div>
 
           <Tabs defaultValue="approved" className="w-full">
             <TabsList className="grid w-full grid-cols-3 mb-8 space-x-4">

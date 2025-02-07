@@ -21,8 +21,6 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
           console.log(response.data);
           const updatedStudents = response.data.eligibleStudents.map((student) => ({
             ...student,
-            shortlisted: false,
-            absent: false,
           }));
           setStudents(updatedStudents);
         } catch (err) {

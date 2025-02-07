@@ -89,16 +89,27 @@ const StudentDashboard = () => {
     averagePackage: 0,
   });
   const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState([]);
 
-  const notifications = [
-    "TPO meeting scheduled for 2023-11-10 at 10:00 AM ",
-    "New internship opportunities at Company Google",
-    "New internship opportunities at Company Amazon",
-    "New internship opportunities at Company Microsoft",
-    "New Placement opportunities at Company Expedia",
-    "New Placement opportunities at Company Apple",
-    "New Placement opportunities at Company GS",
-  ];
+  const fetchNotifications = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(
+        `${import.meta.env.REACT_APP_BASE_URL}/notification`,
+        { withCredentials: true }
+      );
+      setNotifications(response.data);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
 
   const [placements,setPlacements]=useState([]);
 
@@ -209,7 +220,7 @@ const StudentDashboard = () => {
           onMouseLeave={() => setIsHovered(false)}
           className={`h-[calc(100%-48px)] ${
             items.length > 2
-              ? "scrollbar-thin scrollbar-thumb-[#3b82f6] scrollbar-track-transparent hover:scrollbar-track-gray-100"
+              ? "scrollbar-thin scrollbar-thumb-custom-blue scrollbar-track-transparent hover:scrollbar-track-gray-100"
               : ""
           } overflow-y-auto [&::-webkit-scrollbar]{width:4px} [&::-webkit-scrollbar-thumb]{min-height:40px}`}
         >
@@ -217,16 +228,67 @@ const StudentDashboard = () => {
             {isLoading ? (
               <CardSkeleton />
             ) : (
-              items.map((notification, index) => (
-                <div
-                  key={index}
-                  className="px-4 py-3 hover:bg-blue-50 transition-colors duration-200 border-l-2 border-transparent hover:border-blue-500"
-                >
-                  <p className="text-sm text-gray-800 leading-relaxed">
-                    {notification}
-                  </p>
-                </div>
-              ))
+              <div className="space-y-2 px-1 py-1">
+  {notifications.length > 0 ? (
+    notifications.map((notification) => {
+      const notificationDate = new Date(notification.timestamp);
+      const today = new Date();
+      const isToday = 
+        notificationDate.getDate() === today.getDate() &&
+        notificationDate.getMonth() === today.getMonth() &&
+        notificationDate.getFullYear() === today.getFullYear();
+      
+       return ( <div
+        key={notification._id}
+        className="px-4 py-3 bg-white rounded-lg hover:bg-blue-50 transition-colors duration-200 border-l-3 border hover:border-custom-blue relative"
+      >
+        <div className="flex items-center">
+          <p className="text-sm text-gray-800 flex-grow">{notification.message}</p>
+          {isToday && (
+            <span className="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+              New
+            </span>
+          )}
+        </div>
+        <p className="text-xs text-gray-500 mt-1">
+          {new Date(notification.timestamp).toLocaleString('en-US', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+          })}
+        </p>
+      </div>
+    )})
+  ) : (
+    <div className="min-h-[250px] flex items-center justify-center">
+      <div className="p-6 bg-white rounded-lg text-center w-full max-w-md mx-auto">
+        {/* Icon */}
+        <div className="flex justify-center mb-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-12 w-12 text-custom-blue animate-bounce"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+            />
+          </svg>
+        </div>
+        {/* Message */}
+        <p className="text-sm text-gray-800 font-medium">No notifications available.</p>
+        <p className="text-xs text-gray-500 mt-1">You're all caught up!</p>
+      </div>
+    </div>
+  )}
+</div>
             )}
           </div>
         </div>
@@ -288,7 +350,7 @@ const StudentDashboard = () => {
             <div
               className={`p-4 h-[calc(100%-48px)] ${
                 internships.length > 2
-                  ? "overflow-y-auto scrollbar-thin scrollbar-thumb-[#3b82f6] scrollbar-track-gray-200"
+                  ? "overflow-y-auto scrollbar-thin scrollbar-thumb-custom-blue scrollbar-track-gray-200"
                   : "overflow-y-hidden"
               }`}
             >

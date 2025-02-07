@@ -5,6 +5,7 @@ export const getEligibleUpcomingInterviews = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const studentObjectId = new mongoose.Types.ObjectId(studentId);
+
     const jobsWithInterviews = await JobProfile.find({
       "Hiring_Workflow.eligible_students": studentObjectId,
     })
@@ -19,13 +20,6 @@ export const getEligibleUpcomingInterviews = async (req, res) => {
           const isInterview = step.step_type === "Interview";
           const isEligible = step.eligible_students.some((id) => id.equals(studentObjectId));
           const isFutureDate = new Date(step.details.interview_date) > new Date();
-
-          console.log("Step:", step.step_type, {
-            isInterview,
-            isEligible,
-            isFutureDate,
-            interviewDate: step.details.interview_date,
-          });
 
           return isInterview && isEligible && isFutureDate;
         })
@@ -43,7 +37,10 @@ export const getEligibleUpcomingInterviews = async (req, res) => {
                 : link.studentId;
 
             return linkStudentId.equals(studentObjectId);
-          })?.interviewLink || "No link available";
+          });
+
+          // Check visibility
+          const isLinkVisible = studentInterviewLink?.visibility !== false;
 
           return {
             company_name: job.company_name,
@@ -52,10 +49,12 @@ export const getEligibleUpcomingInterviews = async (req, res) => {
             interview_date: step.details.interview_date,
             interview_time: step.details.interview_time,
             interview_info: step.details.interview_info,
-            interview_link: studentInterviewLink,
+            interview_link: isLinkVisible ? studentInterviewLink?.interviewLink || "No link available" : "Link not visible",
+            isLinkVisible, // Add this field to indicate visibility
           };
         });
     });
+
     res.status(200).json({ upcomingInterviews });
   } catch (error) {
     console.error("Error fetching upcoming Interviews:", error);
@@ -85,24 +84,23 @@ export const getEligiblePastInterviews = async (req, res) => {
             new Date(step.details.interview_date) < new Date()
         )
         .map((step) => {
-          
           const interviewLinks = Array.isArray(step.details.interview_link)
             ? step.details.interview_link
             : [];
 
-          
           const studentInterviewLink = interviewLinks.find((link) => {
-            if (!link.studentId) return false; 
+            if (!link.studentId) return false;
 
-            
             const linkStudentId =
               typeof link.studentId === "string"
                 ? new mongoose.Types.ObjectId(link.studentId)
                 : link.studentId;
 
-            
             return linkStudentId.equals(studentObjectId);
-          })?.interviewLink || "No link available";
+          });
+
+          // Check visibility
+          const isLinkVisible = studentInterviewLink?.visibility !== false;
 
           return {
             company_name: job.company_name,
@@ -111,7 +109,8 @@ export const getEligiblePastInterviews = async (req, res) => {
             interview_date: step.details.interview_date,
             interview_time: step.details.interview_time,
             interview_info: step.details.interview_info,
-            interview_link: studentInterviewLink,
+            interview_link: isLinkVisible ? studentInterviewLink?.interviewLink || "No link available" : "Link not visible",
+            isLinkVisible, // Add this field to indicate visibility
             was_shortlisted:
               step.shortlisted_students?.length === 0
                 ? "Result yet to be declared"
@@ -119,6 +118,7 @@ export const getEligiblePastInterviews = async (req, res) => {
           };
         });
     });
+
     pastInterviews.sort((a, b) => new Date(b.interview_date) - new Date(a.interview_date));
     res.status(200).json({ pastInterviews });
   } catch (error) {
