@@ -21,7 +21,7 @@ const PlacementSchema = new mongoose.Schema(
       enum:['B.Tech','M.Tech','MBA']
     },
     ctc:{
-      type:Number,
+      type:String,
     },
     shortlisted_students: [
       {
@@ -45,7 +45,15 @@ const PlacementSchema = new mongoose.Schema(
         },
         department: {
           type: String,
-          enum: ['CSE', 'ECE', 'EE', 'ME', 'CE', 'IT', 'CH','ICE','BT','TT','IPE','DS','VLSI','AI','HM'],
+          enum: [ "Biotechnology","Chemical Engineering","Civil Engineering","Computer Science & Engineering","Data Science and Engineering","Electrical Engineering",
+            "Electronics & Communication Engineering","Electronics and VLSI Engineering","Industrial and Production Engineering",
+            "Information Technology","Instrumentation and Control Engineering","Mathematics and Computing","Mechanical Engineering",
+            "Textile Technology","Structural and Construction Engineering","Geotechnical and Geo-Environmental Engineering",
+            "Information Security","Electric Vehicle Design","Signal Processing and Machine Learning","VLSI Design","Industrial Engineering and Data Analytics",
+            "Manufacturing Technology With Machine Learning","Data Analytics","Control and Instrumentation","Machine Intelligence and Automation",
+            "Mathematics and Computing","Design Engineering","Thermal and Energy Engineering","Textile Engineering and Management","Renewable Energy",
+            "Artificial Intelligence","Power Systems and Reliability","Finance","Human Resource","Marketing","Chemistry","Mathematics",
+            "Physics"],
         },
       }
     ]

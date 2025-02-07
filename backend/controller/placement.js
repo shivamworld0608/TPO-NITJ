@@ -1,7 +1,6 @@
 import Placement from '../models/placement.js'; // Adjust the path as needed
 import moment from 'moment'; // For date handling
 
-// // Get placements added today
 export const getTodayPlacements = async (req, res) => {
   try {
     const startOfDay = moment().startOf('day').toDate();
@@ -130,33 +129,9 @@ export const getFilteredPlacements = async (req, res) => {
 };
 
 
-
-/* export const getLastSevenDaysPlacements = async(req,res) => {
-  try {
-    console.log("hello");
-    const startOfLastSevenDays = moment().subtract(7, "days").startOf("day").toDate();
-    const endOfToday = moment().endOf("day").toDate();
-
-    const placements = await Placement.find({
-      createdAt: { $gte: startOfLastSevenDays, $lte: endOfToday },
-    });
-   console.log(placements);
-    res.status(200).json(placements);
-  } catch (error) {
-    console.error("Error fetching placements from the last seven days:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-}; */
-
-export const getLastSevenDaysPlacements = async(req, res) => {
+export const getLastSevenDaysPlacements = async (req, res) => {
   try {
     const allPlacements = await Placement.find({});
-    if (allPlacements.length > 0) {
-      console.log("Sample placement dates:", {
-        createdAt: allPlacements[0].createdAt,
-        dateType: typeof allPlacements[0].createdAt
-      });
-    }
     const today = new Date();
     const startOfLastSevenDays = new Date(today);
     startOfLastSevenDays.setDate(today.getDate() - 7);
@@ -168,16 +143,39 @@ export const getLastSevenDaysPlacements = async(req, res) => {
     const placements = await Placement.find({
       $expr: {
         $and: [
-          { $gte: [{ $dateFromString: { dateString: "$createdAt" }}, startOfLastSevenDays] },
-          { $lte: [{ $dateFromString: { dateString: "$createdAt" }}, endOfToday] }
-        ]
-      }
+          {
+            $gte: [
+              {
+                $cond: {
+                  if: { $eq: [{ $type: "$createdAt" }, "date"] },
+                  then: "$createdAt",
+                  else: { $dateFromString: { dateString: "$createdAt" } },
+                },
+              },
+              startOfLastSevenDays,
+            ],
+          },
+          {
+            $lte: [
+              {
+                $cond: {
+                  if: { $eq: [{ $type: "$createdAt" }, "date"] },
+                  then: "$createdAt",
+                  else: { $dateFromString: { dateString: "$createdAt" } },
+                },
+              },
+              endOfToday,
+            ],
+          },
+        ],
+      },
     }).sort({ createdAt: -1 });
+
     res.status(200).json(placements);
   } catch (error) {
     console.error("Error with details:", {
       message: error.message,
-      stack: error.stack
+      stack: error.stack,
     });
     res.status(500).json({ error: "Internal server error" });
   }

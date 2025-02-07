@@ -1,13 +1,12 @@
-import Header from "../components/header";
-import Footer from "../components/footer";
-import HeroSection from "../components/herosection";
 import Pdashboard from "../components/ProfessorDashboard/pdashboard";
-import RequestHelpManager from "../components/ProfessorDashboard/Request";
-
+import LowConnectivityWarning from "../components/LowConnectivityWarning";
 
 const PDashboard = () => {
   return (
     <>
+           <div style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000 }}>
+        <LowConnectivityWarning />
+      </div>
       <div className="mt-3"><Pdashboard /></div>
     </>
   );

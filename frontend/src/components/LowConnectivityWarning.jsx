@@ -105,10 +105,10 @@ const LowConnectivityWarning = () => {
       -translate-x-1/2 
       flex 
       items-center 
-      p-3 
+      p-2 
       rounded-lg 
       shadow-lg 
-      text-white 
+      text-white
       z-50 
       animate-bounce 
       ${severityColors[warning.severity]}
