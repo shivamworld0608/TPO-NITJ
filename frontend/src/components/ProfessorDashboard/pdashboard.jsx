@@ -33,7 +33,7 @@ import JobManagement from "./pjobmanagement";
 import OAManagement from "./poamanagement";
 import InterviewManagement from "./pinterviewmanagement";
 import PNotifications from "./pnotifications";
-import Mailbox from "./pmailbox";
+// import Mailbox from "./pmailbox";
 import ExperienceSharing from "./pexperiencesharing";
 import PlacementInsights from "./pplacementinsights";
 import PlacementPolicy from "./pplacementpolicy";
@@ -292,7 +292,7 @@ const Pdashboard = () => {
             <Route path="oa-management" element={<OAManagement />} />
             <Route path="interview-management" element={<InterviewManagement />} />
             <Route path="notifications" element={<PNotifications />} />
-            <Route path="pmailbox" element={<Mailbox />} />
+            {/* <Route path="pmailbox" element={<Mailbox />} /> */}
             <Route path="help-requests" element={<RequestHelpManager />} />
             <Route path="company-analysis" element={<StudentAnalyticsDashboard />} />
             <Route path="student-analysis" element={<StudentAnalyticsDashboard />} />

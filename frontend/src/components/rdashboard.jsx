@@ -31,7 +31,7 @@ import NITJlogo from "../assets/nitj-logo.png";
 import RHome from "./RecruiterDashboard/rhome.jsx"
 import Sidebar from "./sidebar.jsx";
 import CreatedJobs from "./RecruiterDashboard/createdjob";
-import MailboxComponent from "./RecruiterDashboard/rmailbox";
+// import MailboxComponent from "./RecruiterDashboard/rmailbox";
 import Request from "./RecruiterDashboard/Request.jsx";
 import Profile from "./RecruiterDashboard/rprofile.jsx";
 import TeamSection from "./Developers/TeamSection.jsx";
@@ -100,11 +100,11 @@ const RecruiterDashboards = () => {
     },
     { path: "/rdashboard/travel", label: "Travel planner", icon: faPlane },
     { path: "/rdashboard/feedback", label: "Feedback", icon: faComment },
-
+/* 
     { path: "/rdashboard/rmailbox", 
       label: "Mailbox", 
       icon: faEnvelope 
-    },
+    }, */
     {
       path: "/rdashboard/guidelines",
       label: "Policy Guidelines",
@@ -301,7 +301,7 @@ const RecruiterDashboards = () => {
               <Route path="request-help" element={<Request />} />
               <Route path="feedback" element={<FeedbackForm/>} />
               <Route path="travel" element={<TravelPlanner/>} />
-              <Route path="mailbox" element={<MailboxComponent />} />
+              {/* <Route path="mailbox" element={<MailboxComponent />} /> */}
               <Route path="rprofile" element={<Profile />} />
               <Route path="team" element={<TeamSection />} />
             </Routes>
