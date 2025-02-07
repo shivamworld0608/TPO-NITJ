@@ -37,7 +37,8 @@ export const getEligibleUpcomingOAs = async (req, res) => {
                 : link.studentId;
 
             return linkStudentId.equals(studentObjectId);
-          })?.interviewLink || "No link available";
+          });
+          const isLinkVisible = studentOALink?.visibility !== false;
 
           return {
             company_name: job.company_name,
@@ -46,7 +47,8 @@ export const getEligibleUpcomingOAs = async (req, res) => {
             oa_login_time: step.details.oa_login_time || step.details.login_time,
             oa_duration: step.details.oa_duration,
             oa_info: step.details.oa_info,
-            oa_link: studentOALink,
+            oa_link: isLinkVisible ? studentOALink?.interviewLink || "No link available" : "Link not visible",
+            isLinkVisible,
           };
         });
     });
@@ -93,7 +95,9 @@ export const getEligiblePastOAs = async (req, res) => {
                 : link.studentId;
 
             return linkStudentId.equals(studentObjectId);
-          })?.interviewLink || "No link available";
+          });
+
+          const isLinkVisible = studentOALink?.visibility !== false;
 
           return {
             company_name: job.company_name,
@@ -102,7 +106,8 @@ export const getEligiblePastOAs = async (req, res) => {
             oa_login_time: step.details.oa_login_time || step.details.login_time,
             oa_duration: step.details.oa_duration,
             oa_info: step.details.oa_info,
-            oa_link: studentOALink,
+            oa_link: isLinkVisible ? studentOALink?.interviewLink || "No link available" : "Link not visible",
+            isLinkVisible,
             was_shortlisted:
               step.shortlisted_students?.length === 0
                 ? "Result yet to be declared"
@@ -118,4 +123,3 @@ export const getEligiblePastOAs = async (req, res) => {
     res.status(500).json({ message: "Server error while fetching past OAs." });
   }
 };
-

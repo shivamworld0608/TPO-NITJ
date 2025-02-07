@@ -2,8 +2,15 @@ import React, { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa";
 
 export default function Gdcard(props) {
-  const { company_name, gd_date, gd_time, gd_info, gd_link, was_shortlisted } =
-    props;
+  const {
+    company_name,
+    gd_date,
+    gd_time,
+    gd_info,
+    gd_link,
+    was_shortlisted,
+    isLinkVisible,
+  } = props;
 
   const [showModal, setShowModal] = useState(false);
 
@@ -35,23 +42,44 @@ export default function Gdcard(props) {
             <span className="font-medium text-gray-800 mr-2">GD Time:</span>
             <span className="font-medium text-gray-500">{gd_time}</span>
           </div>
-          {gd_link && (
+          {isLinkVisible ? (
+            gd_link ? (
+              <div className="text-sm text-gray-500 flex items-center">
+                <span className="font-medium text-gray-800 mr-2">GD Link:</span>
+                <a
+                  href={
+                    typeof gd_link === "string" && gd_link.startsWith("http")
+                      ? gd_link
+                      : `https://${gd_link || ""}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-green-500 rounded-lg p-1 text-green-500 hover:bg-green-500 hover:text-white"
+                >
+                  Start
+                </a>
+              </div>
+            ) : (
+              <div className="text-sm text-gray-500 flex items-center">
+                <span className="font-medium text-gray-800 mr-2">GD Link:</span>
+                <button
+                  onClick={() => alert("GD link will be available soon")}
+                  className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+                >
+                  Soon
+                </button>
+              </div>
+            )
+          ) : (
             <div className="text-sm text-gray-500 flex items-center">
-              <span className="font-medium text-gray-800 mr-2">GD Link:</span>
-              <a
-                href={
-                  typeof gd_link === "string" &&
-                  gd_link.startsWith("http")
-                    ? gd_link
-                    : `https://${gd_link || ""}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-green-500 rounded-lg p-1 text-green-500  hover:bg-green-500  hover:text-white"
-              >
-                Start
-              </a>
-            </div>
+                <span className="font-medium text-gray-800 mr-2">GD Link:</span>
+                <button
+                  onClick={() => alert("Link Visibility is off")}
+                  className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+                >
+                  Soon
+                </button>
+              </div>
           )}
           {was_shortlisted && (
             <div className="text-sm text-gray-500 flex items-center">

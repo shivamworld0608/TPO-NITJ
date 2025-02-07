@@ -54,6 +54,7 @@ const InterviewsData = () => {
               interview_type={job.interview_type}
               interview_info={job.interview_info}
               interview_link={job.interview_link}
+              isLinkVisible={job.isLinkVisible}
             />
           ))}
         </div>
@@ -77,6 +78,7 @@ const InterviewsData = () => {
               interview_type={job.interview_type}
               interview_info={job.interview_info}
               interview_link={job.interview_link}
+              isLinkVisible={job.isLinkVisible}
               was_selected={job.was_selected}
             />
           ))}

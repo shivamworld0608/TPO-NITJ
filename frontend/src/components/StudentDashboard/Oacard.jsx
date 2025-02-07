@@ -11,6 +11,7 @@ export default function Oacard(props) {
     oa_info,
     oa_link,
     was_shortlisted,
+    isLinkVisible,
   } = props;
 
   const [showModal, setShowModal] = useState(false);
@@ -49,33 +50,44 @@ export default function Oacard(props) {
             <span className="font-medium text-gray-800 mr-2">OA Duration:</span>
             <span className="font-medium text-gray-500">{oa_duration}</span>
           </div>
-          {oa_link ? (
-            <div className="text-sm text-gray-500 flex items-center">
-              <span className="font-medium text-gray-800 mr-2">OA Link:</span>
-              <a
-                href={
-                  typeof oa_link === "string" &&
-                  oa_link.startsWith("http")
-                    ? oa_link
-                    : `https://${oa_link || ""}`
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border border-green-500 rounded-lg p-1 text-green-500 hover:bg-green-500 hover:text-white"
-              >
-                Start
-              </a>
-            </div>
+          {isLinkVisible ? (
+            oa_link ? (
+              <div className="text-sm text-gray-500 flex items-center">
+                <span className="font-medium text-gray-800 mr-2">OA Link:</span>
+                <a
+                  href={
+                    typeof oa_link === "string" && oa_link.startsWith("http")
+                      ? oa_link
+                      : `https://${oa_link || ""}`
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="border border-green-500 rounded-lg p-1 text-green-500 hover:bg-green-500 hover:text-white"
+                >
+                  Start
+                </a>
+              </div>
+            ) : (
+              <div className="text-sm text-gray-500 flex items-center">
+                <span className="font-medium text-gray-800 mr-2">OA Link:</span>
+                <button
+                  onClick={() => alert("Test link will be available soon")}
+                  className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+                >
+                  Soon
+                </button>
+              </div>
+            )
           ) : (
             <div className="text-sm text-gray-500 flex items-center">
-              <span className="font-medium text-gray-800 mr-2">OA Link:</span>
-              <button
-                onClick={() => alert("Test link will be available soon")}
-                className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
-              >
-                Soon
-              </button>
-            </div>
+                <span className="font-medium text-gray-800 mr-2">OA Link:</span>
+                <button
+                  onClick={() => alert("Link Visibility is off")}
+                  className="border border-custom-blue rounded-lg p-1 text-custom-blue hover:bg-custom-blue hover:text-white"
+                >
+                  Soon
+                </button>
+              </div>
           )}
           {was_shortlisted && (
             <div className="text-sm text-gray-500 flex items-center">

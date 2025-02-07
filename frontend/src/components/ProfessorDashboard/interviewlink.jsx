@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks,onUpdateLinks }) => {
+const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpdateLinks }) => {
   const [students, setStudents] = useState([]);
   const [commonLink, setCommonLink] = useState('');
   const [loading, setLoading] = useState(false);
+  const [allLinksVisible, setAllLinksVisible] = useState(false);
 
   useEffect(() => {
     const fetchEligibleStudents = async () => {
@@ -21,11 +22,10 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks,onUpda
           return {
             ...student,
             interviewLink: studentLink ? studentLink.interviewLink : '',
+            visibility: studentLink ? studentLink.visibility : false
           };
         });
-
         setStudents(updatedStudents);
-        console.log(students);
       } catch (err) {
         console.error('Error fetching eligible students:', err);
         toast.error('Failed to fetch eligible students');
@@ -36,6 +36,12 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks,onUpda
 
     fetchEligibleStudents();
   }, [jobId, stepIndex, interviewLinks]);
+
+  const handleToggleVisibility = (index) => {
+    const updatedStudents = [...students];
+    updatedStudents[index].visibility = !updatedStudents[index].visibility;
+    setStudents(updatedStudents);
+  };
 
   const handleCommonLinkChange = (e) => {
     setCommonLink(e.target.value);
@@ -55,8 +61,23 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks,onUpda
     setStudents(updatedStudents);
   };
 
+  const toggleAllVisibility = () => {
+    const updatedStudents = students.map(student => ({
+      ...student,
+      visibility: !allLinksVisible
+    }));
+    setStudents(updatedStudents);
+    setAllLinksVisible(!allLinksVisible);
+  };
+
   const handleSubmit = async () => {
-    const studentsWithLinks = students.filter(student => student.interviewLink.trim() !== '');
+    const studentsWithLinks = students
+    .filter(student => student.interviewLink.trim() !== '')
+    .map(student => ({
+      email: student.email,
+      interviewLink: student.interviewLink,
+      visibility: student.visibility
+    }));
     if (studentsWithLinks.length === 0) {
       toast.error('No interview links have been provided');
       return;
@@ -83,9 +104,9 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks,onUpda
 
   return (
     <div className="max-w-4xl mx-auto bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl">
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Common Interview Link</label>
-        <div className="flex space-x-4">
+      <div className="flex justify-between items-center mb-6">
+        
+        <div className="flex space-x-4 w-2/3">
           <input
             type="text"
             value={commonLink}
@@ -100,6 +121,27 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks,onUpda
             Apply to All
           </button>
         </div>
+        <div className="flex items-center space-x-4">
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={allLinksVisible}
+              onChange={toggleAllVisibility}
+              className="hidden"
+            />
+            <div className={`
+              w-12 h-6 rounded-full relative transition-colors duration-300
+              ${allLinksVisible ? 'bg-green-500' : 'bg-gray-300'}
+            `}>
+              <span className={`
+                absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full 
+                transition-transform duration-300
+                ${allLinksVisible ? 'translate-x-6' : ''}
+              `}></span>
+            </div>
+            <span className="ml-2 text-sm">Visibility</span>
+          </label>
+        </div>
       </div>
 
       <div className="overflow-x-auto mb-6">
@@ -108,7 +150,8 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks,onUpda
             <tr>
               <th className="px-4 py-2 border">Name</th>
               <th className="px-4 py-2 border">Email</th>
-              <th className="px-4 py-2 border">Unique Interview Link</th>
+              <th className="px-4 py-2 border">Interview Link</th>
+              <th className="px-4 py-2 border">Visibility</th>
             </tr>
           </thead>
           <tbody>
@@ -124,6 +167,26 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks,onUpda
                     className="p-2 border border-gray-300 rounded-lg w-full"
                     placeholder="Enter unique interview link"
                   />
+                </td>
+                <td className="px-4 py-4 flex justify-center items-center">
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={student.visibility}
+                      onChange={() => handleToggleVisibility(index)}
+                      className="hidden"
+                    />
+                    <div className={`
+                      w-12 h-6 rounded-full relative transition-colors duration-300
+                      ${student.visibility ? 'bg-green-500' : 'bg-gray-300'}
+                    `}>
+                      <span className={`
+                        absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full 
+                        transition-transform duration-300
+                        ${student.visibility ? 'translate-x-6' : ''}
+                      `}></span>
+                    </div>
+                  </label>
                 </td>
               </tr>
             ))}

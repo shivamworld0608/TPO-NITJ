@@ -6,6 +6,7 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
   const [students, setStudents] = useState([]);
   const [commonLink, setCommonLink] = useState('');
   const [loading, setLoading] = useState(false);
+  const [allLinksVisible, setAllLinksVisible] = useState(false);
 
   useEffect(() => {
     const fetchEligibleStudents = async () => {
@@ -21,11 +22,10 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
           return {
             ...student,
             othersLink: studentLink ? studentLink.othersLink : '',
+            visibility: studentLink ? studentLink.visibility : false
           };
         });
-
         setStudents(updatedStudents);
-        console.log(students);
       } catch (err) {
         console.error('Error fetching eligible students:', err);
         toast.error('Failed to fetch eligible students');
@@ -36,6 +36,12 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
 
     fetchEligibleStudents();
   }, [jobId, stepIndex, othersLinks]);
+
+  const handleToggleVisibility = (index) => {
+    const updatedStudents = [...students];
+    updatedStudents[index].visibility = !updatedStudents[index].visibility;
+    setStudents(updatedStudents);
+  };
 
   const handleCommonLinkChange = (e) => {
     setCommonLink(e.target.value);
@@ -55,8 +61,23 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
     setStudents(updatedStudents);
   };
 
+  const toggleAllVisibility = () => {
+    const updatedStudents = students.map(student => ({
+      ...student,
+      visibility: !allLinksVisible
+    }));
+    setStudents(updatedStudents);
+    setAllLinksVisible(!allLinksVisible);
+  };
+
   const handleSubmit = async () => {
-    const studentsWithLinks = students.filter(student => student.othersLink.trim() !== '');
+    const studentsWithLinks = students
+      .filter(student => student.othersLink.trim() !== '')
+      .map(student => ({
+        email: student.email,
+        othersLink: student.othersLink,
+        visibility: student.visibility
+      }));
     if (studentsWithLinks.length === 0) {
       toast.error('No Others links have been provided');
       return;
@@ -71,7 +92,6 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
       );
       toast.success('Others links set successfully!');
       onUpdateLinks(studentsWithLinks);
-  
       onClose();
     } catch (error) {
       console.error('Error setting Others links:', error);
@@ -83,9 +103,8 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
 
   return (
     <div className="max-w-4xl mx-auto bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl">
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Common Others Link</label>
-        <div className="flex space-x-4">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex space-x-4 w-2/3">
           <input
             type="text"
             value={commonLink}
@@ -100,6 +119,27 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
             Apply to All
           </button>
         </div>
+        <div className="flex items-center space-x-4">
+          <label className="inline-flex items-center cursor-pointer">
+            <input
+              type="checkbox"
+              checked={allLinksVisible}
+              onChange={toggleAllVisibility}
+              className="hidden"
+            />
+            <div className={`
+              w-12 h-6 rounded-full relative transition-colors duration-300
+              ${allLinksVisible ? 'bg-green-500' : 'bg-gray-300'}
+            `}>
+              <span className={`
+                absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full 
+                transition-transform duration-300
+                ${allLinksVisible ? 'translate-x-6' : ''}
+              `}></span>
+            </div>
+            <span className="ml-2 text-sm">Visibility</span>
+          </label>
+        </div>
       </div>
 
       <div className="overflow-x-auto mb-6">
@@ -108,7 +148,8 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
             <tr>
               <th className="px-4 py-2 border">Name</th>
               <th className="px-4 py-2 border">Email</th>
-              <th className="px-4 py-2 border">Unique Others Link</th>
+              <th className="px-4 py-2 border">Others Link</th>
+              <th className="px-4 py-2 border">Visibility</th>
             </tr>
           </thead>
           <tbody>
@@ -124,6 +165,26 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
                     className="p-2 border border-gray-300 rounded-lg w-full"
                     placeholder="Enter unique Others link"
                   />
+                </td>
+                <td className="px-4 py-4 flex justify-center items-center">
+                  <label className="inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={student.visibility}
+                      onChange={() => handleToggleVisibility(index)}
+                      className="hidden"
+                    />
+                    <div className={`
+                      w-12 h-6 rounded-full relative transition-colors duration-300
+                      ${student.visibility ? 'bg-green-500' : 'bg-gray-300'}
+                    `}>
+                      <span className={`
+                        absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full 
+                        transition-transform duration-300
+                        ${student.visibility ? 'translate-x-6' : ''}
+                      `}></span>
+                    </div>
+                  </label>
                 </td>
               </tr>
             ))}

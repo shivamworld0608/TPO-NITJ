@@ -1,7 +1,11 @@
+import Student from "../models/user_model/student.js";
+import JobProfile from "../models/jobprofile.js";
+import mongoose from "mongoose";
 export const getEligibleUpcomingOthers = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const studentObjectId = new mongoose.Types.ObjectId(studentId);
+
     const jobsWithOthers = await JobProfile.find({
       "Hiring_Workflow.eligible_students": studentObjectId,
     })
@@ -32,7 +36,10 @@ export const getEligibleUpcomingOthers = async (req, res) => {
                 : link.studentId;
 
             return linkStudentId.equals(studentObjectId);
-          })?.interviewLink || "No link available";
+          });
+
+          // Check visibility
+          const isLinkVisible = studentOthersLink?.visibility !== false;
 
           return {
             company_name: job.company_name,
@@ -41,7 +48,8 @@ export const getEligibleUpcomingOthers = async (req, res) => {
             others_round_name: step.details.others_round_name,
             others_time: step.details.others_time,
             others_info: step.details.others_info,
-            others_link: studentOthersLink,
+            others_link: isLinkVisible ? studentOthersLink?.interviewLink || "No link available" : "Link not visible",
+            isLinkVisible, // Add this field to indicate visibility
           };
         });
     });
@@ -57,6 +65,7 @@ export const getEligiblePastOthers = async (req, res) => {
   try {
     const studentId = req.user.userId;
     const studentObjectId = new mongoose.Types.ObjectId(studentId);
+
     const jobsWithOthers = await JobProfile.find({
       "Hiring_Workflow.eligible_students": studentObjectId,
     })
@@ -87,7 +96,10 @@ export const getEligiblePastOthers = async (req, res) => {
                 : link.studentId;
 
             return linkStudentId.equals(studentObjectId);
-          })?.interviewLink || "No link available";
+          });
+
+          // Check visibility
+          const isLinkVisible = studentOthersLink?.visibility !== false;
 
           return {
             company_name: job.company_name,
@@ -96,7 +108,8 @@ export const getEligiblePastOthers = async (req, res) => {
             others_round_name: step.details.others_round_name,
             others_time: step.details.others_time,
             others_info: step.details.others_info,
-            others_link: studentOthersLink,
+            others_link: isLinkVisible ? studentOthersLink?.interviewLink || "No link available" : "Link not visible",
+            isLinkVisible, // Add this field to indicate visibility
             was_shortlisted:
               step.shortlisted_students?.length === 0
                 ? "Result yet to be declared"
@@ -104,6 +117,7 @@ export const getEligiblePastOthers = async (req, res) => {
           };
         });
     });
+
     pastOthers.sort((a, b) => new Date(b.others_date) - new Date(a.others_date));
     res.status(200).json({ pastOthers });
   } catch (error) {

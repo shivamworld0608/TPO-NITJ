@@ -16,9 +16,11 @@ import {
   DialogContent,
   DialogActions,
   IconButton,
+  FormControlLabel,
+  Grid,
+  CircularProgress,
 } from '@mui/material';
-import { Add as AddIcon, Delete as DeleteIcon, Notes as NotesIcon, Edit as EditIcon } from '@mui/icons-material';
-import { FormControlLabel, Grid } from '@mui/material';
+import { Add as AddIcon, Delete as DeleteIcon, Notes as NotesIcon, Edit as EditIcon, PushPin, PushPinOutlined } from '@mui/icons-material';
 
 const ConversationLog = () => {
   const [conversations, setConversations] = useState([]);
@@ -30,6 +32,8 @@ const ConversationLog = () => {
     email: '',
     contacted: false,
     notes: '',
+    color: '#ffffff',
+    pinned: false,
   });
   const [openNotesDialog, setOpenNotesDialog] = useState(false);
   const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -42,7 +46,13 @@ const ConversationLog = () => {
     email: '',
     contacted: false,
     notes: '',
+    color: '#ffffff',
+    pinned: false,
   });
+  const [loading, setLoading] = useState(false);
+
+  // Fixed colors for the color picker
+  const colors = ['#ffffff', '#ffcccc', '#ccffcc', '#ccccff'];
 
   useEffect(() => {
     fetchConversations();
@@ -52,13 +62,21 @@ const ConversationLog = () => {
     const filtered = conversations.filter(conversation =>
       conversation.companyName.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    setFilteredConversations(filtered);
+    // Sort conversations: pinned ones come first
+    const sorted = filtered.sort((a, b) => (b.pinned - a.pinned));
+    setFilteredConversations(sorted);
   }, [searchTerm, conversations]);
 
   const fetchConversations = async () => {
-    const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/conversations`, { withCredentials: true });
-    setConversations(response.data);
-    setFilteredConversations(response.data);
+    setLoading(true);
+    try {
+      const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/conversations`, { withCredentials: true });
+      setConversations(response.data);
+    } catch (error) {
+      console.error('Error fetching conversations:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -72,26 +90,40 @@ const ConversationLog = () => {
   };
 
   const handleAddConversation = async () => {
-    await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/conversations`, newConversation, { withCredentials: true });
-    fetchConversations();
-    setNewConversation({
-      companyName: '',
-      contactNo: '',
-      email: '',
-      contacted: false,
-      notes: '',
-    });
-    setOpenAddDialog(false);
+    try {
+      await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/conversations`, newConversation, { withCredentials: true });
+      fetchConversations();
+      setNewConversation({
+        companyName: '',
+        contactNo: '',
+        email: '',
+        contacted: false,
+        notes: '',
+        color: '#ffffff',
+        pinned: false,
+      });
+      setOpenAddDialog(false);
+    } catch (error) {
+      console.error('Error adding conversation:', error);
+    }
   };
 
   const handleUpdateConversation = async (id, updatedConversation) => {
-    await axios.put(`${import.meta.env.REACT_APP_BASE_URL}/conversations/${id}`, updatedConversation, { withCredentials: true });
-    fetchConversations();
+    try {
+      await axios.put(`${import.meta.env.REACT_APP_BASE_URL}/conversations/${id}`, updatedConversation, { withCredentials: true });
+      fetchConversations();
+    } catch (error) {
+      console.error('Error updating conversation:', error);
+    }
   };
 
   const handleDeleteConversation = async (id) => {
-    await axios.delete(`${import.meta.env.REACT_APP_BASE_URL}/conversations/${id}`, { withCredentials: true });
-    fetchConversations();
+    try {
+      await axios.delete(`${import.meta.env.REACT_APP_BASE_URL}/conversations/${id}`, { withCredentials: true });
+      fetchConversations();
+    } catch (error) {
+      console.error('Error deleting conversation:', error);
+    }
   };
 
   const handleOpenNotesDialog = (id, notes) => {
@@ -136,6 +168,8 @@ const ConversationLog = () => {
       email: '',
       contacted: false,
       notes: '',
+      color: '#ffffff',
+      pinned: false,
     });
   };
 
@@ -156,6 +190,18 @@ const ConversationLog = () => {
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
+  };
+
+  const handleColorChange = (color, conversationId) => {
+    const updatedConversation = conversations.find((c) => c._id === conversationId);
+    updatedConversation.color = color;
+    handleUpdateConversation(conversationId, updatedConversation);
+  };
+
+  const handlePinConversation = (conversationId) => {
+    const updatedConversation = conversations.find((c) => c._id === conversationId);
+    updatedConversation.pinned = !updatedConversation.pinned;
+    handleUpdateConversation(conversationId, updatedConversation);
   };
 
   return (
@@ -181,51 +227,81 @@ const ConversationLog = () => {
           style={{ marginBottom: '20px' }}
         />
 
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Company Name</TableCell>
-                <TableCell>Contact No.</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Contacted</TableCell>
-                <TableCell>Notes</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {filteredConversations.map((conversation) => (
-                <TableRow key={conversation._id}>
-                  <TableCell>{conversation.companyName}</TableCell>
-                  <TableCell>{conversation.contactNo}</TableCell>
-                  <TableCell>{conversation.email}</TableCell>
-                  <TableCell>
-                    <Checkbox
-                      checked={conversation.contacted}
-                      onChange={(e) => {
-                        const updatedConversation = { ...conversation, contacted: e.target.checked };
-                        handleUpdateConversation(conversation._id, updatedConversation);
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => handleOpenNotesDialog(conversation._id, conversation.notes)}>
-                      <NotesIcon />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell style={{ display: 'flex', gap: '10px' }}>
-                    <IconButton onClick={() => handleOpenEditDialog(conversation)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDeleteConversation(conversation._id)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '200px' }}>
+            <CircularProgress />
+          </div>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Company Name</TableCell>
+                  <TableCell>Contact No.</TableCell>
+                  <TableCell>Email</TableCell>
+                  <TableCell>Contacted</TableCell>
+                  <TableCell>Notes</TableCell>
+                  <TableCell>Color</TableCell>
+                  <TableCell>Pinned</TableCell>
+                  <TableCell>Actions</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {filteredConversations.map((conversation) => (
+                  <TableRow key={conversation._id} style={{ backgroundColor: conversation.color }}>
+                    <TableCell>{conversation.companyName}</TableCell>
+                    <TableCell>{conversation.contactNo}</TableCell>
+                    <TableCell>{conversation.email}</TableCell>
+                    <TableCell>
+                      <Checkbox
+                        checked={conversation.contacted}
+                        onChange={(e) => {
+                          const updatedConversation = { ...conversation, contacted: e.target.checked };
+                          handleUpdateConversation(conversation._id, updatedConversation);
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handleOpenNotesDialog(conversation._id, conversation.notes)}>
+                        <NotesIcon />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>
+                      <div style={{ display: 'flex', gap: '5px' }}>
+                        {colors.map((color) => (
+                          <div
+                            key={color}
+                            style={{
+                              width: '20px',
+                              height: '20px',
+                              backgroundColor: color,
+                              border: conversation.color === color ? '2px solid black' : '1px solid #ccc',
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => handleColorChange(color, conversation._id)}
+                          />
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => handlePinConversation(conversation._id)}>
+                        {conversation.pinned ? <PushPin /> : <PushPinOutlined />}
+                      </IconButton>
+                    </TableCell>
+                    <TableCell style={{ display: 'flex', gap: '10px' }}>
+                      <IconButton onClick={() => handleOpenEditDialog(conversation)}>
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton onClick={() => handleDeleteConversation(conversation._id)}>
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
 
         {/* Add Conversation Dialog */}
         <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth="sm" fullWidth>
@@ -287,6 +363,36 @@ const ConversationLog = () => {
                   onChange={handleInputChange}
                   fullWidth
                   variant="outlined"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <div style={{ display: 'flex', gap: '5px' }}>
+                  {colors.map((color) => (
+                    <div
+                      key={color}
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        backgroundColor: color,
+                        border: newConversation.color === color ? '2px solid black' : '1px solid #ccc',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => setNewConversation({ ...newConversation, color })}
+                    />
+                  ))}
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="pinned"
+                      checked={newConversation.pinned}
+                      onChange={handleCheckboxChange}
+                      color="primary"
+                    />
+                  }
+                  label="Pinned"
                 />
               </Grid>
             </Grid>
@@ -392,6 +498,36 @@ const ConversationLog = () => {
                   sx={{ borderRadius: '10px' }}
                 />
               </Grid>
+              <Grid item xs={12}>
+                <div style={{ display: 'flex', gap: '5px' }}>
+                  {colors.map((color) => (
+                    <div
+                      key={color}
+                      style={{
+                        width: '20px',
+                        height: '20px',
+                        backgroundColor: color,
+                        border: editingConversation.color === color ? '2px solid black' : '1px solid #ccc',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => setEditingConversation({ ...editingConversation, color })}
+                    />
+                  ))}
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="pinned"
+                      checked={editingConversation.pinned}
+                      onChange={handleEditCheckboxChange}
+                      color="primary"
+                    />
+                  }
+                  label="Pinned"
+                />
+              </Grid>
             </Grid>
           </DialogContent>
           <DialogActions sx={{ justifyContent: 'space-between', px: 3, pb: 2 }}>
@@ -407,5 +543,4 @@ const ConversationLog = () => {
     </>
   );
 };
-
 export default ConversationLog;

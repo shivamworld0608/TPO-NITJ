@@ -12,7 +12,7 @@ export const getAllConversations = async (req, res) => {
 export const createConversation = async (req, res) => {
   const { companyName, contactNo, email, contacted, notes } = req.body;
   try {
-    const newConversation = new Conversation({ companyName, contactNo, email, contacted, notes });
+    const newConversation = new Conversation({ companyName, contactNo, email, contacted, notes,pinned,color });
     await newConversation.save();
     res.status(201).json(newConversation);
   } catch (error) {
@@ -22,11 +22,11 @@ export const createConversation = async (req, res) => {
 
 export const updateConversation = async (req, res) => {
   const { id } = req.params;
-  const { companyName, contactNo, email, contacted, notes } = req.body;
+  const { companyName, contactNo, email, contacted, notes,pinned,color } = req.body;
   try {
     const updatedConversation = await Conversation.findByIdAndUpdate(
       id,
-      { companyName, contactNo, email, contacted, notes },
+      { companyName, contactNo, email, contacted, notes, pinned, color },
       { new: true }
     );
     res.status(200).json(updatedConversation);

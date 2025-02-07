@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { toast } from "react-hot-toast";
+import { toast } from 'react-hot-toast';
+import LowConnectivityWarning from "../LowConnectivityWarning"
 import { FaArrowLeft, FaSpinner, FaFileUpload } from "react-icons/fa";
 import { UserX, X } from "lucide-react";
 
@@ -223,6 +224,10 @@ const [noFormAvailable, setNoFormAvailable] = useState(false);
   if (error) return <p>{error}</p>;
 
   return (
+    <>
+    <div className="fixed top-0 left-0 w-full z-50">
+    <LowConnectivityWarning />
+  </div>
     <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
       <div className="mb-6">
         <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={onHide}>
@@ -293,6 +298,7 @@ const [noFormAvailable, setNoFormAvailable] = useState(false);
         {isSubmitting ? 'Submitting...' : existingSubmission ? 'Update Application' : 'Submit'}
       </button>
     </div>
+    </>
   );
 };
 

@@ -102,8 +102,11 @@ function Profile() {
           axios.put(
             `${import.meta.env.REACT_APP_BASE_URL}/profile/update-picture`,
             form,
-            { withCredentials: true }
-          ),
+            {  headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+            withCredentials: true 
+          }),
           {
             loading: "Updating profile picture...",
             success: "Profile picture updated successfully!",

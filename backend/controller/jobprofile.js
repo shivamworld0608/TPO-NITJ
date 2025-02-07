@@ -3,6 +3,7 @@ import Student from "../models/user_model/student.js";
 import Professor from "../models/user_model/professor.js";
 import FormSubmission from '../models/FormSubmission.js';
 import Placement from '../models/placement.js';
+import Notification from "../models/notification.js"; 
 import mongoose from "mongoose";
 export const createJobProfilecopy = async (req, res) => {
   try {
@@ -86,6 +87,10 @@ export const createJobProfilecopy = async (req, res) => {
           };
           break;
 
+        case 'Resume Shortlisting':
+          processedStep.details = {};
+          break;
+
         default:
           throw new Error(`Invalid step type: ${step.step_type}`);
       }
@@ -133,8 +138,15 @@ export const createJobProfilecopy = async (req, res) => {
     });
 
     const savedProfile = await jobProfile.save();
-    console.log(savedProfile);
-    
+
+    const notification = new Notification({
+      type: "JOB_CREATED",
+      message: `New job profile created for ${company_name} - ${job_role}`,
+      jobId: savedProfile._id,
+    });
+
+    await notification.save();
+
     return res.status(201).json({ 
       message: "Job profile created successfully!", 
       data: savedProfile 
@@ -443,6 +455,7 @@ export const checkEligibility = async (req, res) => {
   }
 };
 
+
 export const addshortlistStudents = async (req, res) => {
   try {
     const { jobId, stepIndex, students } = req.body;
@@ -485,6 +498,18 @@ export const addshortlistStudents = async (req, res) => {
           }
           if (!step.absent_students.includes(studentId)) {
             absentIds.push(studentId);
+          }
+          for (let i = stepIndex + 1; i < job.Hiring_Workflow.length; i++) {
+            const nextStep = job.Hiring_Workflow[i];
+            nextStep.eligible_students = nextStep.eligible_students.filter(
+              (id) => id.toString() !== studentId.toString()
+            );
+            nextStep.shortlisted_students = nextStep.shortlisted_students.filter(
+              (id) => id.toString() !== studentId.toString()
+            );
+            nextStep.absent_students = nextStep.absent_students.filter(
+              (id) => id.toString() !== studentId.toString()
+            );
           }
         } else if (student.shortlisted) {
           if (step.absent_students.includes(studentId)) {
@@ -556,6 +581,14 @@ export const addshortlistStudents = async (req, res) => {
     }
 
     await job.save();
+    
+    const notification = new Notification({
+      type: "STUDENT_SHORTLISTED",
+      message: `${students.length} students shortlisted for ${job.company_name} - ${job.job_role}`,
+      jobId: job._id,
+    });
+
+    await notification.save();
 
     res.status(200).json({ message: 'Students processed successfully.' });
   } catch (error) {
@@ -564,7 +597,6 @@ export const addshortlistStudents = async (req, res) => {
   }
 };
 
-
 export const eligibleinthis = async (req, res) => {
   try {
     const { jobId, stepIndex } = req.body;
@@ -572,22 +604,38 @@ export const eligibleinthis = async (req, res) => {
     if (!jobProfile) {
       return res.status(404).json({ error: 'Job profile not found' });
     }
-    const eligible_studentsid = jobProfile.Hiring_Workflow[stepIndex]?.eligible_students;
+
+    const step = jobProfile.Hiring_Workflow[stepIndex];
+    if (!step) {
+      return res.status(404).json({ error: 'Step not found' });
+    }
+
+    const eligible_studentsid = step.eligible_students;
+    const shortlisted_studentsid = step.shortlisted_students || [];
+    const absent_studentsid = step.absent_students || [];
+
     const submissions = await FormSubmission.find({
       studentId: { $in: eligible_studentsid },
       jobId,
     });
+
     const eligibleStudents = submissions.map(submission => {
       const nameField = submission.fields.find(field => field.fieldName === 'Name');
       const emailField = submission.fields.find(field => field.fieldName === 'Email');
 
+      const studentId = submission.studentId;
+      const isShortlisted = shortlisted_studentsid.includes(studentId);
+      const isAbsent = absent_studentsid.includes(studentId);
+
       return {
-        studentId:submission.studentId,
+        studentId,
         name: nameField ? nameField.value : submission.studentId.name,
         email: emailField ? emailField.value : submission.studentId.email,
+        shortlisted: isShortlisted,
+        absent: isAbsent,
       };
-
     });
+
     res.status(200).json({ eligibleStudents });
   } catch (error) {
     console.error('Error in eligibleinthis:', error);
@@ -638,7 +686,7 @@ export const updateInterviewLink = async (req, res) => {
       step.details.interview_link = [];
     }
     const updatePromises = students.map(async (student) => {
-      const { email, interviewLink } = student;
+      const { email, interviewLink, visibility } = student;
       const formSubmission = await FormSubmission.findOne({
         jobId: jobId,
         'fields.value': email,
@@ -657,10 +705,12 @@ export const updateInterviewLink = async (req, res) => {
       );
       if (existingLinkIndex !== -1) {
         step.details.interview_link[existingLinkIndex].interviewLink = interviewLink;
+        step.details.interview_link[existingLinkIndex].visibility = visibility; // Update visibility
       } else {
         step.details.interview_link.push({
           studentId,
           interviewLink,
+          visibility: visibility // Add visibility field
         });
       }
 
@@ -687,6 +737,8 @@ export const updateInterviewLink = async (req, res) => {
     });
   }
 };
+
+
 export const updategdLink = async (req, res) => {
   try {
     const { jobId, stepIndex, students } = req.body;
@@ -702,7 +754,7 @@ export const updategdLink = async (req, res) => {
       step.details.gd_link = [];
     }
     const updatePromises = students.map(async (student) => {
-      const { email, gdLink } = student;
+      const { email, gdLink, visibility } = student;
       const formSubmission = await FormSubmission.findOne({
         jobId: jobId,
         'fields.value': email,
@@ -721,10 +773,12 @@ export const updategdLink = async (req, res) => {
       );
       if (existingLinkIndex !== -1) {
         step.details.gd_link[existingLinkIndex].gdLink = gdLink;
+        step.details.gd_link[existingLinkIndex].visibility = visibility;
       } else {
         step.details.gd_link.push({
           studentId,
           gdLink,
+          visibility
         });
       }
 
@@ -768,7 +822,7 @@ export const updateoaLink = async (req, res) => {
       step.details.oa_link = [];
     }
     const updatePromises = students.map(async (student) => {
-      const { email, oaLink } = student;
+      const { email, oaLink, visibility } = student;
       const formSubmission = await FormSubmission.findOne({
         jobId: jobId,
         'fields.value': email,
@@ -786,10 +840,12 @@ export const updateoaLink = async (req, res) => {
       );
       if (existingLinkIndex !== -1) {
         step.details.oa_link[existingLinkIndex].oaLink = oaLink;
+        step.details.oa_link[existingLinkIndex].visibility = visibility;
       } else {
         step.details.oa_link.push({
           studentId,
           oaLink,
+          visibility
         });
       }
        return {
@@ -815,7 +871,6 @@ export const updateoaLink = async (req, res) => {
   }
 };
 
-
 export const updateOthersLink = async (req, res) => {
   try {
     const { jobId, stepIndex, students } = req.body;
@@ -831,7 +886,7 @@ export const updateOthersLink = async (req, res) => {
       step.details.others_link = [];
     }
     const updatePromises = students.map(async (student) => {
-      const { email, othersLink } = student;
+      const { email, othersLink, visibility } = student;
       const formSubmission = await FormSubmission.findOne({
         jobId: jobId,
         'fields.value': email,
@@ -849,10 +904,12 @@ export const updateOthersLink = async (req, res) => {
       );
       if (existingLinkIndex !== -1) {
         step.details.others_link[existingLinkIndex].othersLink = othersLink;
+        step.details.others_link[existingLinkIndex].visibility = visibility;
       } else {
         step.details.others_link.push({
           studentId,
           othersLink,
+          visibility
         });
       }
        return {

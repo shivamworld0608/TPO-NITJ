@@ -293,9 +293,30 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
           : "overflow-y-hidden"
       }`}>
         {placements.length === 0 ? (
-          <div className="text-center text-gray-500">
-            No recent placements found
-          </div>
+           <div className="min-h-[250px] flex items-center justify-center">
+      <div className="p-6 bg-white rounded-lg text-center w-full max-w-md mx-auto">
+        {/* Icon */}
+        <div className="flex justify-center mb-3">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-12 w-12 text-custom-blue animate-bounce"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+            />
+          </svg>
+        </div>
+        {/* Message */}
+        <p className="text-sm text-gray-800 font-medium">No Recent Placements</p>
+        <p className="text-xs text-gray-500 mt-1">You're all caught up!</p>
+      </div>
+    </div>
         ) : (
           <div className="space-y-4">
             {placements.map((placement, index) => (

@@ -95,7 +95,7 @@ const Pdashboard = () => {
     { label: "Dashboard", icon: faHome, path: "/pdashboard/home" },
     { label: "JAF",  icon: faFileWaveform, path: "/pdashboard/jaf" },
     { label: "Job Profile Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
-/*     { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" }, */
+/* { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" }, */
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
     {label:"Student",icon:faUser, path:"/pdashboard/student-analysis"},
