@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
-import { FaArrowLeft } from 'react-icons/fa';
 import LowConnectivityWarning from "../LowConnectivityWarning"
 import { FaArrowLeft, FaSpinner, FaFileUpload } from "react-icons/fa";
 import { UserX, X } from "lucide-react";
