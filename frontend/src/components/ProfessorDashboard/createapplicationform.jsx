@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FaArrowLeft } from "react-icons/fa";
+import { Button } from "../ui/button";
+import { ArrowLeft, Plus, Save } from 'lucide-react';
+
 
 const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
@@ -18,6 +21,11 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
       studentPropertyPath: '',
       options: [] 
     }]);
+  };
+
+
+  const removeField = (index) => {
+    setFields(fields.filter((_, i) => i !== index));
   };
 
   const handleFieldChange = (index, key, value) => {
@@ -92,16 +100,22 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
         />
       </div>
 
-      <button
-        className="mb-6 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200"
-        onClick={addField}
-      >
-        Add Field
-      </button>
+
 
       <div className="space-y-6">
         {fields.map((field, index) => (
           <div key={index} className="p-4 border border-gray-200 rounded-lg shadow-sm">
+               <div className="flex justify-between items-center">
+                          <h3 className="font-medium">Field {index + 1}</h3>
+                          <Button
+                            variant="destructive"
+                            className='text-red-500'
+                            size="sm"
+                            onClick={() => removeField(index)}
+                          >
+                            Remove
+                          </Button>
+                        </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <input
                 type="text"
@@ -191,12 +205,28 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
         ))}
       </div>
 
-      <button
-        className="mt-6 w-full bg-green-500 text-white py-3 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition-colors duration-200"
-        onClick={handleSubmit}
-      >
-        Create Form Template
-      </button>
+
+      <div className="flex flex-col space-y-4 mt-3">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={addField}
+            className="w-full bg-custom-blue text-white"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add New Field
+          </Button>
+
+          <Button
+            onClick={handleSubmit}
+            className="w-full bg-green-500 text-white"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            Create Form Template
+          </Button>
+        </div>
+
+
     </div>
   );
 };
