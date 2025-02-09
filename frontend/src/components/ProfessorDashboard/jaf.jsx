@@ -47,9 +47,9 @@ const JAF = () => {
           `${import.meta.env.REACT_APP_BASE_URL}/jaf/get`,
           { withCredentials: true }
         );
-        console.log(response.data);
+ 
         setJAFProfiles(response.data);
-        console.log("jaf", JAFProfiles);
+ 
       } catch (err) {
         setError(err.response?.data?.error || "Failed to fetch jaf profiles.");
       } finally {

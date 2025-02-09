@@ -3,7 +3,7 @@ import JobProfile from "../models/jobprofile.js";
 
 export const getAllJobProfiles = async (req, res) => {
   try {
-    console.log("hello");
+ 
     const jobProfiles = await JobProfile.find().populate("Applied_Students");
     res.status(200).json(jobProfiles);
   } catch (error) {

@@ -22,7 +22,7 @@ const App = () => {
   const { authUser, userType } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    console.log(authUser);
+ 
     dispatch(checkAuth());
   }, [dispatch]);
 

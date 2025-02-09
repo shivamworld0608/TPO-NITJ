@@ -144,10 +144,10 @@ const JobAnnouncementForm = () => {
         ? [...new Set([...currentValues, value])]
         : currentValues.filter((item) => item !== value);
 
-      console.log("Field:", field);
-      console.log("Value:", value);
-      console.log("Checked:", checked);
-      console.log("New Values:", newValues);
+ 
+ 
+ 
+ 
 
       return { ...prevState, [field]: newValues };
     });
@@ -265,7 +265,7 @@ const JobAnnouncementForm = () => {
   };
 
   const handleSubmit = async (e) => {
-    console.log(formData);
+ 
     
     e.preventDefault();
     const result = await Swal.fire({
@@ -286,7 +286,7 @@ const JobAnnouncementForm = () => {
           { withCredentials: true }
         );
         toast.success("JAF form submitted successfully😊");
-        console.log(response.data);
+ 
       } catch (error) {
         toast.error("Error in submitting JAF form");
         console.error("Submission error:", error);
@@ -810,7 +810,7 @@ const JobAnnouncementForm = () => {
                       <Checkbox
                         checked={formData.jobLocation.includes("India")}
                         onChange={(checked) => {
-                          console.log("Checkbox clicked", checked);
+ 
                           handleCheckboxChange(
                             "jobLocation",
                             "India",

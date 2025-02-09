@@ -25,7 +25,7 @@ const Others = () => {
           { withCredentials: true }
         );
         setPreviousJobs(pastResponse.data.pastOthers || []);
-        console.log(upcomingJobs);
+ 
 
       } catch (error) {
         console.error("Error fetching assessments:", error);

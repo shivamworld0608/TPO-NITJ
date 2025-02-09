@@ -43,13 +43,13 @@ export const deleteFormTemplate = async (req, res) => {
   try {
     const { jobId } = req.params;
     const {title, fields } = req.body;
-    console.log(title, jobId, fields);
+ 
     const formTemplate = await FormTemplate.findOneAndUpdate(
       { jobId },
       { title,fields },
       { new: true }
     );
-    console.log("formTemplate", formTemplate);
+ 
     if (!formTemplate) {
       return res.status(404).json({ message: 'Form Template not found' });
     }

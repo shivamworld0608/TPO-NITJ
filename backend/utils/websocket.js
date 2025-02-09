@@ -8,14 +8,14 @@ const configureWebSocket = (server) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("A user connected");
+ 
 
     socket.on("sendMail", (mail) => {
       io.emit("newMail", mail);
     });
 
     socket.on("disconnect", () => {
-      console.log("A user disconnected");
+ 
     });
   });
 };

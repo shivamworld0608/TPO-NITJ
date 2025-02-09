@@ -31,7 +31,7 @@ export const sendMailToProfessors = async (req, res) => {
 // Send mail to students (professor-specific)
 export const sendMailToStudents = async (req, res) => {
   const { sender, subject, body, senderType, metadata } = req.body;
-  console.log("heii");
+ 
   try {
     let query = {};
     if (metadata.batch && metadata.batch.length > 0) {
@@ -53,7 +53,7 @@ export const sendMailToStudents = async (req, res) => {
     const students = Object.keys(query).length > 0
       ? await Student.find(query, { email: 1 })
       : await Student.find({}, { email: 1 });
-    console.log(`${students.length} students found`);
+ 
     
     const recipients = students.map((student) => student.email);
     
@@ -95,9 +95,9 @@ export const sendMailToStudents = async (req, res) => {
       await mail.save();
     }
     catch(error) {
-      console.log(error);
+ 
     }
-    console.log("reached here");
+ 
     res.status(201).json({ message: "Mail sent to selected students", mail });
   } catch (error) {
     res.status(500).json({ message: "Error sending mail", error });

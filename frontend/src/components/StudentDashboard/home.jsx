@@ -137,7 +137,7 @@ const StudentDashboard = () => {
       const response = await axios.get(apiUrl);
       setStats(response.data);
     } catch (error) {
-      console.log(error);
+ 
     } finally {
       // Simulate minimum loading time for better UX
       setTimeout(() => setLoading(false), 800);
@@ -148,10 +148,10 @@ const StudentDashboard = () => {
     try {
       const response=await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/placements/last-seven-days`,{withCredentials:true});
       setPlacements(response.data);
-      console.log("recent response:",response);
+ 
   }
   catch(error){
-    console.log(error);
+ 
   }
 }
 

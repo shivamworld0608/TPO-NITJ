@@ -2,31 +2,31 @@ import React, { useState } from 'react';
 import { FaHome } from "react-icons/fa";
 
 const FAQ = () => {
-  console.log("Rendering FAQ component");
+ 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  console.log("Rendering FAQ component");
+ 
 
   const handleOpenModal = () => {
-    console.log("Opening modal");
+ 
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    console.log("Closing modal");
+ 
     setIsModalOpen(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Submitting form");
+ 
     // Add form submission logic here
     handleCloseModal();
   };
 
   return (
     <div className="faq-page bg-gradient-to-b min-h-screen relative">
-      {console.log("Rendering Header section")}
+ 
       {/* Header */}
       <header className="faq-header bg-gradient-to-r to-gray-900 py-4 px-6 flex flex-col mb-2">
       <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
@@ -37,7 +37,7 @@ const FAQ = () => {
       </h1>
       </header>
 
-      {console.log("Rendering Main Content")}
+ 
       {/* Main Content */}
       <div className="flex flex-wrap justify-center gap-11 m-[3%] max-w-10xl lg:mx-auto">
         <div className="w-full max-w-md bg-white border border-gray-200 rounded-lg shadow shadow-sky-500 px-3 py-5">
@@ -204,7 +204,7 @@ const FAQ = () => {
         </div>
       </div>
 
-      {console.log("Rendering Ask Question Button")}
+ 
       {/* Ask Question Button */}
       <button
         className="faq-button bg-gradient-to-r from-blue-500 to-blue-700 text-white px-8 py-3 rounded-full text-lg font-semibold shadow-md hover:opacity-90 fixed bottom-6 right-6 z-10"

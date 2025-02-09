@@ -98,7 +98,7 @@ export const getFilteredPlacements = async (req, res) => {
       }
     }
 
-    console.log(filters);
+ 
 
     const placements = await Placement.find(filters);
 
