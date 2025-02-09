@@ -3,6 +3,8 @@ import axios from "axios";
 import JobCard from "./JobCard";
 import Jobdetail from "./Jobdetail";
 import BouncingLoader from "../BouncingLoader";
+import LowConnectivityWarning from "../LowConnectivityWarning"
+
 import NoDataFound from "../NoData";
 
 const JobApplications = () => {
@@ -128,7 +130,13 @@ const JobApplications = () => {
   };
 
   return (
+
+
     <>
+
+<div className="fixed top-0 left-0 w-full z-50">
+    <LowConnectivityWarning />
+  </div>
       <div className="flex sm:flex-row flex-col justify-between items-center p-4 rounded-t-lg">
         <h2 className="text-3xl font-bold text-custom-blue capitalize">
           <span className="text-black">{activeTab}</span> Jobs
