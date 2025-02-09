@@ -34,6 +34,8 @@ import resumeroutes from "./routes/resume.js"
 import otherRoutes from "./routes/other.js";
 import notificationRoutes from "./routes/notification.js";
 import studentsRoutes from "./routes/addstudents.js";
+import nodemailerRoutes from "./routes/nodemailer.js";
+import adminRoutes from "./routes/admin.js";
 
 import { mkdir } from 'fs/promises';
 try {
@@ -119,6 +121,8 @@ app.use('/resume',authenticate, resumeroutes);
 app.use('/others',authenticate, otherRoutes);
 app.use('/notification',authenticate,notificationRoutes);
 app.use('/add-student',authenticate,studentsRoutes);
+app.use('/nodemailer',authenticate,nodemailerRoutes);
+app.use('/admin',authenticate,adminRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

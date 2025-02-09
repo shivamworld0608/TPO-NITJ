@@ -10,6 +10,7 @@ import Recruiter from "./Pages/Recruiter";
 import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
+import AdminDashboard from "./Pages/Admindashboard";
 import TeamPage from "./Pages/TeamPage";
 import FAQ from "./Pages/Faqs";
 import ErrorPage from "./Pages/ErrorPage";
@@ -34,6 +35,8 @@ const App = () => {
           return "/pdashboard/home";
         case "Recuiter":
           return "/rdashboard/home";
+        case "Admin":
+          return "/admindashboard/home";
         default:
           return "/";
       }
@@ -72,6 +75,10 @@ const App = () => {
         <Route
           path="/pdashboard/*"
           element={authUser && userType === "Professor" ? <Pdashboard /> : <Navigate to={getDashboardPath()} />}
+        />
+        <Route
+        path="/admindashboard/*"
+        element={authUser && userType === "Admin" ? <AdminDashboard /> : <Navigate to={getDashboardPath()} />}
         />
         <Route path="/error" element={<ErrorPage />} />
         <Route path="*" element={<ErrorPage />} /> {/* This will catch all unmatched routes */}

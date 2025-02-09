@@ -10,11 +10,14 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: 'ascending' });
+
+  const itemsPerPage = 15;
 
   useEffect(() => {
     const fetchSubmissions = async () => {
       try {
-        console.log("jobid", jobId);
         const response = await axios.get(
           `${import.meta.env.REACT_APP_BASE_URL}/api/form-submissions/${jobId}`,
           { withCredentials: true }
@@ -136,6 +139,77 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
     });
   };
 
+  const handleSendEmails = async () => {
+    const emails = submissions
+      .map((submission) => (submission.studentId ? submission.studentId.email : null))
+      .filter((email) => email);
+  
+    if (emails.length === 0) {
+      Swal.fire("No Emails!", "No valid email addresses found.", "warning");
+      return;
+    }
+    const contactInfo = `
+      \n\n\n
+      Dr Rajeev Trehan 
+      Head, Placement (Mobile No.: +91-8146500951)
+      Dr Ajay Gupta
+      Head, Training (Mobile No.: +91-9501030373)
+      Dr Om Prakash Verma
+      Head, Internship (Mobile No.: +91-7579279839)
+      Dr Shefali Arora Chouhan
+      Coordinator Placement (Mobile No.: +91-9888813400)
+      Centre of Training and Placement
+      Dr. B. R. Ambedkar National Institute of Technology, Jalandhar 
+      Punjab (India)-144008
+      Email ID: ctp@nitj.ac.in/ hctp@nitj.ac.in
+    `;
+  
+    Swal.fire({
+      title: "Draft Email",
+      html:
+        `<div class="swal2-input-group">
+          <input id="swal-input1" class="swal2-input" placeholder="Enter email subject">
+        </div>` +
+        `<div class="swal2-input-group">
+          <textarea id="swal-input2" class="swal2-textarea" placeholder="Write your email here"></textarea>
+        </div>`,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: "Send Email",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      customClass: {
+        popup: "custom-swal-popup",
+        title: "custom-swal-title",
+        input: "custom-swal-input",
+        textarea: "custom-swal-textarea",
+        confirmButton: "custom-swal-confirm-button",
+        cancelButton: "custom-swal-cancel-button",
+      },
+      preConfirm: () => {
+        return {
+          subject: document.getElementById("swal-input1").value,
+          text: document.getElementById("swal-input2").value + contactInfo, // Append contact info
+        };
+      },
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.post(
+            `${import.meta.env.REACT_APP_BASE_URL}/nodemailer/send-emails`,
+            { emails, subject: result.value.subject, text: result.value.text },
+            { withCredentials: true }
+          );
+          Swal.fire("Emails Sent!", "All emails have been sent successfully.", "success");
+        } catch (err) {
+          console.error(err);
+          Swal.fire("Error!", "There was an error sending the emails.", "error");
+        }
+      }
+    });
+  };
+
   const getUniqueFieldNames = () => {
     const fieldNames = new Set();
     submissions.forEach((submission) => {
@@ -147,6 +221,40 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
   };
 
   const uniqueFieldNames = getUniqueFieldNames();
+
+  // Sorting Logic
+  const sortedSubmissions = React.useMemo(() => {
+    let sortableItems = [...submissions];
+    if (sortConfig.key !== null) {
+      sortableItems.sort((a, b) => {
+        const aValue = a.fields.find((field) => field.fieldName === sortConfig.key)?.value || "";
+        const bValue = b.fields.find((field) => field.fieldName === sortConfig.key)?.value || "";
+        if (aValue < bValue) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [submissions, sortConfig]);
+
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = sortedSubmissions.slice(indexOfFirstItem, indexOfLastItem);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const requestSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
 
   if (loading) {
     return (
@@ -219,7 +327,7 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
       >
         <X className="h-5 w-5" />
       </Button>
-      <h1 className="text-2xl font-bold mb-6 text-center">Students <span className="text-custom-blue">Applied</span></h1>
+      <h1 className="text-3xl font-bold mb-6 text-center">Students <span className="text-custom-blue">Applied</span></h1>
       <div className="flex flex-wrap gap-4 mb-6">
         <button
           className="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"
@@ -239,6 +347,15 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
         >
           Make All Visible to Recruiter
         </button>
+        <button
+          className="bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors"
+          onClick={handleSendEmails}
+        >
+          Send Emails to All Students
+        </button>
+        <div className="text-2xl text-custom-blue font-semibold mb-4 ml-auto">
+          {submissions.length} <span className="text-black text-2xl">Students</span>
+        </div>
       </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border-collapse border border-gray-300">
@@ -250,9 +367,15 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
               {uniqueFieldNames.map((fieldName, index) => (
                 <th
                   key={index}
-                  className="border border-gray-300 px-4 py-2 bg-gray-50"
+                  className="border border-gray-300 px-4 py-2 bg-gray-50 cursor-pointer"
+                  onClick={() => requestSort(fieldName)}
                 >
                   {fieldName}
+                  {sortConfig.key === fieldName && (
+                    <span className="ml-2">
+                      {sortConfig.direction === 'ascending' ? '▲' : '▼'}
+                    </span>
+                  )}
                 </th>
               ))}
               <th className="border border-gray-300 px-4 py-2 bg-gray-50">
@@ -264,7 +387,7 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
             </tr>
           </thead>
           <tbody>
-            {submissions.map((submission, index) => (
+            {currentItems.map((submission, index) => (
               <tr key={index} className="hover:bg-gray-50">
                 <td className="border border-gray-300 px-4 py-2">
                   {submission.studentId?submission.studentId.email:"NA"}
@@ -305,6 +428,19 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div className="flex justify-center mt-4">
+        {Array.from({ length: Math.ceil(submissions.length / itemsPerPage) }, (_, i) => (
+          <button
+            key={i + 1}
+            onClick={() => paginate(i + 1)}
+            className={`mx-1 px-4 py-2 rounded-lg ${
+              currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'
+            }`}
+          >
+            {i + 1}
+          </button>
+        ))}
       </div>
     </div>
   );

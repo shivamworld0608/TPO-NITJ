@@ -123,7 +123,6 @@ export const getFormSubmissions = async (req, res) => {
       const submissions = await FormSubmission.find({ jobId })
         .populate('studentId', 'name email rollno department');
 
-     console.log(submissions);
       res.status(200).json(submissions);
     } catch (error) {
       console.error('Error fetching submissions:', error);

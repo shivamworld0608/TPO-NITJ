@@ -7,18 +7,6 @@ import axios from "axios";
 import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
 import {
   faHome,
-  faUser,
-  faBuilding,
-  faFileWaveform,
-  faEnvelope,
-  faBriefcaseClock,
-  faQuestionCircle,
-  faShareAlt,
-  faChartBar,
-  faUpload,
-  faContactCard,
-  faComment,
-  
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -28,29 +16,10 @@ import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import ProfileImage from "../../assets/chillguy.png";
 import NITJlogo from "../../assets/nitj-logo.png";
 
-
-import JobManagement from "./pjobmanagement";
-import OAManagement from "./poamanagement";
-import InterviewManagement from "./pinterviewmanagement";
-import PNotifications from "./pnotifications";
-// import Mailbox from "./pmailbox";
-import ExperienceSharing from "./pexperiencesharing";
-import PlacementInsights from "./pplacementinsights";
-import PlacementPolicy from "./pplacementpolicy";
-import RequestHelpManager from "./Request";
-import Profile from "./pProfile.jsx";
-import Home from "./home";
-import Upload from "./pUpload.jsx";
-import JAF from "./jaf.jsx";
-import TeamSection from "../Developers/TeamSection.jsx";
-import StudentAnalyticsDashboard from "./studentanalysis.jsx";
-import ContactRequests from "./contactus.jsx";
-import ConversationLog from "./conversation.jsx";
-import AddStudentForm from "./addstudents.jsx";
-import { FaRegComment } from "react-icons/fa";
+import AdminJobProfileManager from "./jobprofiles";
 
 
-const Pdashboard = () => {
+const Admindashboard = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
@@ -93,20 +62,7 @@ const Pdashboard = () => {
   };
 
   const menuItems = [
-    { label: "Dashboard", icon: faHome, path: "/pdashboard/home" },
-    { label: "JAF",  icon: faFileWaveform, path: "/pdashboard/jaf" },
-    { label: "Job Profile Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
-/* { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" }, */
-    { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
-    { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
-    {label:"Student",icon:faUser, path:"/pdashboard/student-analysis"},
-    // {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
-    // { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
- /*    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" }, */
-    { label: "User Requests", icon: faContactCard, path: "/pdashboard/contact-request" },
-    { label: "Add students", icon: faContactCard, path: "/pdashboard/add-students" },
-    { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
-    
+    { label: "Job Profiles Management", icon: faHome, path: "/admindashboard/home" },
   ];
 
 
@@ -285,26 +241,7 @@ const Pdashboard = () => {
         <div className="container mx-auto p-4 min-h-[calc(100vh-theme(spacing.16)-theme(spacing.16))]">
           {/* Placeholder for route content */}
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="home" element={<Home />} />
-            <Route path="jaf" element={<JAF/>} />
-            <Route path="job-profile-management" element={<JobManagement />} />
-            <Route path="oa-management" element={<OAManagement />} />
-            <Route path="interview-management" element={<InterviewManagement />} />
-            <Route path="notifications" element={<PNotifications />} />
-            {/* <Route path="pmailbox" element={<Mailbox />} /> */}
-            <Route path="help-requests" element={<RequestHelpManager />} />
-            <Route path="company-analysis" element={<StudentAnalyticsDashboard />} />
-            <Route path="student-analysis" element={<StudentAnalyticsDashboard />} />
-            <Route path="experience-sharing" element={<ExperienceSharing />} />
-            <Route path="contact-request" element={<ContactRequests />} />
-            <Route path="conversation" element={<ConversationLog />} />
-            <Route path="placement-insights" element={<PlacementInsights />} />
-            <Route path="add-students" element={<AddStudentForm/>} />
-            <Route path="placement-policy" element={<PlacementPolicy />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="team" element={<TeamSection />} />
-            <Route path="uploads" element={<Upload />} />
+            <Route path="/home" element={<AdminJobProfileManager />} />
             </Routes>
         </div>
 
@@ -332,4 +269,4 @@ const Pdashboard = () => {
 };
 
 
-export default Pdashboard;
+export default Admindashboard;

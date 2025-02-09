@@ -200,3 +200,82 @@
     border-radius: 6px;
 }
 
+/* Custom SweetAlert2 Popup Styles */
+.custom-swal-popup {
+	border-radius: 12px;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+	background: linear-gradient(145deg, #ffffff, #f9f9f9);
+	padding: 2rem;
+  }
+  
+  .custom-swal-title {
+	font-size: 1.5rem;
+	font-weight: 600;
+	color: #2c3e50;
+	margin-bottom: 1.5rem;
+  }
+  
+  .custom-swal-input,
+  .custom-swal-textarea {
+	width: 100%;
+	padding: 0.75rem;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	font-size: 1rem;
+	color: #333;
+	margin-bottom: 1rem;
+	transition: border-color 0.3s ease;
+  }
+  
+  .custom-swal-input:focus,
+  .custom-swal-textarea:focus {
+	border-color: #3085d6;
+	outline: none;
+  }
+  
+  .custom-swal-textarea {
+	resize: vertical;
+	min-height: 120px;
+  }
+  
+  .custom-swal-confirm-button {
+	background-color: #3085d6;
+	border: none;
+	border-radius: 8px;
+	padding: 0.75rem 1.5rem;
+	font-size: 1rem;
+	font-weight: 500;
+	color: white;
+	transition: background-color 0.3s ease;
+  }
+  
+  .custom-swal-confirm-button:hover {
+	background-color: #2573c0;
+  }
+  
+  .custom-swal-cancel-button {
+	background-color: #d33;
+	border: none;
+	border-radius: 8px;
+	padding: 0.75rem 1.5rem;
+	font-size: 1rem;
+	font-weight: 500;
+	color: white;
+	transition: background-color 0.3s ease;
+  }
+  
+  .custom-swal-cancel-button:hover {
+	background-color: #b52a2a;
+  }
+  
+  .swal2-input-group {
+	margin-bottom: 1.5rem;
+  }
+  
+  .swal2-label {
+	display: block;
+	font-size: 0.9rem;
+	font-weight: 500;
+	color: #555;
+	margin-bottom: 0.5rem;
+  }
