@@ -294,7 +294,7 @@ const MailboxComponent = ({ userType = "Professor" }) => {
         { withCredentials: true }
       );
       socket.emit("sendMail", response.data.mail);
-      console.log("hello");
+ 
       setIsComposing(false);
       
       setNewMessage({

@@ -123,7 +123,7 @@ export const psignup = async (req, res) => {
 
 export const rsignup = async (req, res) => {
     try {
-        console.log("salt generated");
+ 
         const {name, email, password, company, designation } = req.body;
         const recuiter = await Recuiter.findOne({ email });
         if (recuiter) {
@@ -152,7 +152,7 @@ export const rsignup = async (req, res) => {
 
 export const asignup = async (req, res) => {
     try {
-        console.log("salt generated");
+ 
         const {name, email, password, company, designation } = req.body;
         const recuiter = await Recuiter.findOne({ email });
         if (recuiter) {

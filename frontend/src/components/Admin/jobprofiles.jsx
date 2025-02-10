@@ -40,7 +40,7 @@ const AdminJobProfileManager = () => {
 
   const fetchJobProfiles = async () => {
     try {
-      console.log("Fetching job profiles...");
+ 
       const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/admin/jobprofiles`,{withCredentials:true});
       setJobProfiles(response.data);
       setFilteredProfiles(response.data);

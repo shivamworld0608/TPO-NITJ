@@ -103,7 +103,7 @@ const LoginSignup = ({ Login }) => {
       signupData.rollno = rollno;
       signupData.department = department;
     } else {
-      console.log("Invalid User Type");
+ 
     }
 
     const apiEndpoint = userType === "Alumni" ? "/auth/alumni/signup" : "";

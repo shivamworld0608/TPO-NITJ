@@ -35,7 +35,7 @@ async function uploadFile(auth, filePath, folderId) {
       fields: 'id',
     });
 
-    console.log('File uploaded successfully. File ID:', response.data.id);
+ 
     return response.data;
   } catch (error) {
     throw new Error(`Error uploading file to Google Drive: ${error.message}`);

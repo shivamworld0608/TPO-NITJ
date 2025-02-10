@@ -187,17 +187,17 @@ const Insights = () => {
         Object.entries(updatedFilters).filter(([_, value]) => value !== "")
       ).toString();
 
-      console.log(queryParams);
+ 
 
       const apiUrl = `${
         import.meta.env.REACT_APP_BASE_URL
       }/placements/filter?${queryParams}`;
 
       const response = await axios.get(apiUrl);
-      // console.log(response.data);
+ 
       setPlacements(response.data);
     } catch (error) {
-      console.log(error);
+ 
     }
   };
 
