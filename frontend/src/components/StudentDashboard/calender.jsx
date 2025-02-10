@@ -7,7 +7,7 @@ import Jobdetail from "./Jobdetail";
 
 
 const CalendarComponent = () => {
-  const [currentDate, setCurrentDate] = useState(new Date(2025, 0));
+  const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -97,6 +97,15 @@ const CalendarComponent = () => {
     ).padStart(2, "0")}`;
   };
 
+  const isToday = (year, month, day) => {
+    const today = new Date();
+    return (
+      year === today.getFullYear() &&
+      month === today.getMonth() &&
+      day === today.getDate()
+    );
+  };
+
   const renderCalendar = () => {
     const daysInMonth = getDaysInMonth(currentDate);
     const firstDay = getFirstDayOfMonth(currentDate);
@@ -130,14 +139,22 @@ const CalendarComponent = () => {
         day
       );
       const dayEvents = events[dateString] || [];
+      const isCurrentDay = isToday(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        day
+      );
 
       days.push(
         <div
           key={day}
-          className="sm:h-32 h-20 border border-gray-200 sm:p-2 pl-1 pt-1 overflow-y-auto cursor-pointer"
-          onClick={() => (!isWideScreen && dayEvents.length > 0 ? onDateClick(dayEvents) : null)}
+          className={`sm:h-32 h-20 border border-gray-200 sm:p-2 pl-1 pt-1 overflow-y-auto cursor-pointer ${
+            isCurrentDay ? "bg-blue-100": ""
+          }`}          onClick={() => (!isWideScreen && dayEvents.length > 0 ? onDateClick(dayEvents) : null)}
         >
           <div className="font-bold mb-1">{day}</div>
+         { isCurrentDay ? <div className="text-xs text-blue-800">Today</div> : ""}
+
           {isWideScreen
             ? dayEvents.map((event, idx) => (
                 <div
