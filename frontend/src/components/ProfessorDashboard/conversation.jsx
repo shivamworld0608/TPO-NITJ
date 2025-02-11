@@ -91,6 +91,7 @@ const ConversationLog = () => {
 
   const handleAddConversation = async () => {
     try {
+      console.log(newConversation);
       await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/conversations`, newConversation, { withCredentials: true });
       fetchConversations();
       setNewConversation({
@@ -104,6 +105,7 @@ const ConversationLog = () => {
       });
       setOpenAddDialog(false);
     } catch (error) {
+
       console.error('Error adding conversation:', error);
     }
   };
