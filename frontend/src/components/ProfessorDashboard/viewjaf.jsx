@@ -1054,7 +1054,7 @@ function ViewJAF({ jaf: initialJAF }) {
                           onChange={
                             edit
                               ? (checked) => {
-                                  console.log("Checkbox clicked", checked);
+ 
                                   handleCheckboxChange(
                                     "jobLocation",
                                     "India",

@@ -325,7 +325,7 @@ export const getspecificJobProfilesForProfessors = async (req, res) => {
 export const approveJobProfile = async (req, res) => {
   try {
     const { _id } = req.params;
-    console.log("id", _id);
+ 
     const approvedJob = await JobProfile.findByIdAndUpdate(
       _id,
       { Approved_Status: true },

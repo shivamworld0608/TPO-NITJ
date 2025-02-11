@@ -52,13 +52,13 @@ const ChangePasswordForm = () => {
     setSubmitStatus(null);
 
     try {
-      console.log("hello");
+ 
       const response = await axios.post(
         `${import.meta.env.REACT_APP_BASE_URL}/profile/change-pass`,
          formData,
         { withCredentials: true }
       );
-      console.log("hi");
+ 
       setSubmitStatus('success');
       setFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (error) {

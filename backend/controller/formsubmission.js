@@ -52,16 +52,16 @@ export const submitForm = async (req, res) => {
 
 export const withdrawApplication = async (req, res) => {
   try {
-    console.log("hello");
+ 
     const studentId = req.user.userId;
     const { jobId } = req.body;
-    console.log(jobId);
+ 
 
     // Delete the form submission
     const deletedSubmission = await FormSubmission.findOneAndDelete({ jobId, studentId });
     
     if (!deletedSubmission) {
-      console.log("checking 2");
+ 
       return res.status(404).json({ message: 'Application not found' });
     }
 
@@ -135,7 +135,7 @@ export const getFormSubmissions = async (req, res) => {
       try {
         const submissions = await FormSubmission.find({ jobId, visible: true })
         .populate('studentId', 'name email rollno department');
-        console.log(submissions);
+ 
         res.status(200).json(submissions);
       } catch (error) {
         console.error('Error fetching submissions:', error);

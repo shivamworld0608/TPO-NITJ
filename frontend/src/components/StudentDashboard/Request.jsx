@@ -32,7 +32,7 @@ const Request = () => {
         `${import.meta.env.REACT_APP_BASE_URL}/reqhelp/get-own-issue`,
         { withCredentials: true }
       );
-      console.log(response);
+ 
       setResolvedIssues(response.data.resolved || []);
       setUnresolvedIssues(response.data.unresolved || []);
     } catch (error) {

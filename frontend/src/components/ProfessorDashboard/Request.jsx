@@ -18,7 +18,7 @@ const RequestHelpManager = () => {
         { withCredentials: true }
       );
       setIssues(response.data.data||[]);
-      console.log(issues);
+ 
     } catch (error) {
       console.error("Error fetching issues:", error);
     } finally {
@@ -28,7 +28,7 @@ const RequestHelpManager = () => {
 
   const resolveIssueDetail = async (issueId, detailId) => {
     try {
-    console.log(issueId,detailId);
+ 
       await axios.put(
         `${import.meta.env.REACT_APP_BASE_URL}/reqhelp/resolve/${issueId}/${detailId}`,
         {},

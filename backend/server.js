@@ -55,26 +55,26 @@ app.use(cookieParser());
 app.use(express.json());
 
 /* const client = redis.createClient();
-client.on('error', (err) => console.log('Redis Client Error', err)); */
+ 
 
 // Connect to Redis (using async/await pattern)
 /* (async () => {
   await client.connect();
-  console.log('Connected to Redis');
+ 
 })(); */
 
 const authenticate = (req, res, next) => {
-    console.log("authenticating");
+ 
     const token = req.cookies?.token;
     if (!token) {
-      console.log("No token provided");
+ 
         return res.status(401).json({ message: 'No token provided' });
     }
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decoded;
       next();
-      console.log("Authenticated");
+ 
     }
     catch (err) {
       return res.status(401).json({ message: 'Invalid or Expired token' });
@@ -84,10 +84,10 @@ const authenticate = (req, res, next) => {
 
 mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
-    console.log("connected to database");
+ 
 })
 .catch((err)=>{
-    console.log(err);
+ 
 })
 
 
@@ -125,5 +125,5 @@ app.use('/admin',authenticate,adminRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+ 
 }); 

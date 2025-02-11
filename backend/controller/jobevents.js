@@ -11,7 +11,7 @@ export const getJobEvents = async (req, res) => {
           message: 'Both startDate and endDate are required'
         });
       }
-      console.log('Fetching events for date range:', { startDate, endDate });
+ 
       
     
     // Convert dates to match the deadline field format
@@ -26,7 +26,7 @@ export const getJobEvents = async (req, res) => {
       Approved_Status: true // Only fetch approved jobs
     }).select('job_id company_name job_role job_type deadline company_logo');
 
-    console.log(`Found ${jobs.length} jobs`);
+ 
 
     // Transform jobs into calendar events format
     const events = jobs.reduce((acc, job) => {

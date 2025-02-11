@@ -57,7 +57,7 @@ export const createJobAnnouncementForm = async (req, res) => {
       data: savedJobAnnouncement
     });
   } catch (error) {
-    console.log(error);
+ 
     res.status(400).json({
       message: 'Error creating Job Announcement Form',
       error: error.message
@@ -78,9 +78,9 @@ export const getjaf= async (req, res) => {
 
 export const approveJAF = async (req, res) => {
   try {
-    console.log("Approving JAF...");
+ 
     const { _id } = req.params;
-    console.log("id", _id);
+ 
     const approvedJAF = await JobAnnouncementForm.findByIdAndUpdate(
       _id,
       { approved_status: true },

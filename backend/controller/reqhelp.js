@@ -122,7 +122,7 @@ export const getAllIssues = async (req, res) => {
 export const getUnresolvedIssues = async (req, res) => {
     try {
       const issues = await Issue.find({ "details.status": "Pending" });
-      console.log(issues);
+ 
       const populateDetails = async (issueList) => {
         return Promise.all(
           issueList.map(async (issue) => {

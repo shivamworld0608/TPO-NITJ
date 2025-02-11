@@ -87,7 +87,7 @@ const ResumeBuilder = () => {
     try {
       const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/resume`, formData, { withCredentials: true });
 
-      console.log("Upload successful:", response.data);
+ 
     } catch (error) {
       console.error("Upload failed:", error);
     }
@@ -99,8 +99,8 @@ const ResumeBuilder = () => {
         withCredentials: true,
       });
       setFormData(response.data.data);
-      // console.log(formData)
-      console.log('Fetched Form Data:', response.data);
+ 
+ 
     } catch (error) {
       console.error('Error fetching resume data:', error.response ? error.response.data : error.message);
       return null;
@@ -117,7 +117,7 @@ const ResumeBuilder = () => {
       );
 
       if (response.status === 200) {
-        console.log("Resume deleted successfully");
+ 
       }
 
       return response.data;
