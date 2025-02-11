@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 /* import configureWebSocket from "./utils/websocket.js"; */
 import http from "http";
-import redis from 'redis';
 
 
 import authroutes from "./routes/auth.js";

@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const studentSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
   },
   email: {
     type: String,
@@ -23,18 +22,16 @@ const studentSchema = new mongoose.Schema({
   department: {
     type: String,
     enum: [
-      'Computer Science & Engineering',
-      'Electronics & Communication Engineering',
-      'Electrical Engineering',
-      'Mechanical Engineering',
-      'Civil Engineering',
-      'Information Technology',
-      'Chemical Engineering',
-      'Instrumentation and Control Engineering',
-      'Biotechnology',
-      'Textile Technology',
-      'Industrial & Production Engineering'
-  ]
+              "Biotechnology","Chemical Engineering","Civil Engineering","Computer Science & Engineering","Data Science and Engineering","Electrical Engineering",
+              "Electronics & Communication Engineering","Electronics and VLSI Engineering","Industrial and Production Engineering",
+              "Information Technology","Instrumentation and Control Engineering","Mathematics and Computing","Mechanical Engineering",
+              "Textile Technology","Structural and Construction Engineering","Geotechnical and Geo-Environmental Engineering",
+              "Information Security","Electric Vehicle Design","Signal Processing and Machine Learning","VLSI Design","Industrial Engineering and Data Analytics",
+              "Manufacturing Technology With Machine Learning","Data Analytics","Control and Instrumentation","Machine Intelligence and Automation",
+              "Mathematics and Computing","Design Engineering","Thermal and Energy Engineering","Textile Engineering and Management","Renewable Energy",
+              "Artificial Intelligence","Power Systems and Reliability","Finance","Human Resource","Marketing","Chemistry","Mathematics",
+              "Physics",
+          ]
   },
   year: {
     type: String,
@@ -84,7 +81,11 @@ const studentSchema = new mongoose.Schema({
         type: String,
         enum: ['No Intern','2m Intern', '6m Intern', '11m Intern'],
         default:'No Intern',
-  }
+  },
+  account_deactivate:{
+       type:Boolean,
+       default:false,
+   },
 }, { timestamps: true });
 
 const Student = mongoose.model('Student', studentSchema);
