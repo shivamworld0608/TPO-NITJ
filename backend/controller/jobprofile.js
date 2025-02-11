@@ -5,6 +5,18 @@ import FormSubmission from '../models/FormSubmission.js';
 import Placement from '../models/placement.js';
 import Notification from "../models/notification.js"; 
 import mongoose from "mongoose";
+
+export const getAllCompanies = async (req, res) => {
+  try {
+    const companies = await JobProfile.find().select('company_name -_id'); // Fetch only company_name, exclude _id
+    res.status(200).json(companies);
+  } catch (error) {
+    console.error('Error fetching companies:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 export const createJobProfilecopy = async (req, res) => {
   try {
     const recruiter_id = req.user.userId;
