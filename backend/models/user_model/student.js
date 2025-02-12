@@ -86,6 +86,9 @@ const studentSchema = new mongoose.Schema({
        type:Boolean,
        default:false,
    },
+   otp:{
+    type:String
+   }
 }, { timestamps: true });
 
 const Student = mongoose.model('Student', studentSchema);
