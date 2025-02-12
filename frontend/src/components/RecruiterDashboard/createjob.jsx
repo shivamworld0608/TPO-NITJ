@@ -293,7 +293,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
   const [formData, setFormData] = useState({
     job_id: "",
     company_name: "",
-    company_logo: "",
+    // company_logo: "",
     job_role: "",
     jobdescription: "",
     joblocation: "",
@@ -519,7 +519,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
-            <div>
+            {/* <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Company Logo (URL)
               </label>
@@ -530,7 +530,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 onChange={handleChange}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
-            </div>
+            </div> */}
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Job Role<span className="text-red-500"> *</span>
