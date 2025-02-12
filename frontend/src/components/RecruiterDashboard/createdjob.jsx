@@ -1,6 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import { Card, CardContent } from '../ui/card';
+import { Button } from '../ui/button';
+import { 
+  Building2, 
+  MapPin, 
+  IndianRupee, 
+  Calendar, 
+  Briefcase,
+  Plus,
+  Trash2,
+  Eye,
+  GraduationCap
+} from 'lucide-react';
+import { Alert, AlertDescription } from '../ui/alert';
 import CreateJob from './createjob';
 import ViewJobDetails from './ViewJob';
 
@@ -10,17 +22,20 @@ const CreatedJobs = () => {
   const [error, setError] = useState(null);
   const [isCreatingJob, setIsCreatingJob] = useState(false);
   const [viewingJobDetails, setViewingJobDetails] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortBy, setSortBy] = useState('newest');
 
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get(
+        const response = await fetch(
           `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/recruiter/getjobs`,
-          { withCredentials: true }
+          { credentials: 'include' }
         );
-        setJobs(response.data.jobs||[]);
+        const data = await response.json();
+        setJobs(data.jobs || []);
       } catch (error) {
-        setError('Error fetching jobs');
+        setError('Failed to fetch jobs. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -30,42 +45,77 @@ const CreatedJobs = () => {
   }, []);
 
   const deleteJob = async (jobId) => {
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'You won’t be able to undo this action!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!',
-    });
-
-    if (result.isConfirmed) {
-      try {
-        await axios.delete(
-          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/deletejob/${jobId}`,
-          { withCredentials: true }
-        );
+    try {
+      const response = await fetch(
+        `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/deletejob/${jobId}`,
+        {
+          method: 'DELETE',
+          credentials: 'include'
+        }
+      );
+      
+      if (response.ok) {
         setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
-        Swal.fire('Deleted!', 'The job has been deleted.', 'success');
-      } catch (error) {
-        console.error('Error deleting job:', error.message);
-        Swal.fire('Failed!', 'Failed to delete the job. Please try again.', 'error');
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error deleting job:', error);
+      return false;
+    }
+  };
+
+  const handleDeleteJob = async (jobId) => {
+    const confirmation = window.confirm('Are you sure you want to delete this job?');
+    if (confirmation) {
+      const success = await deleteJob(jobId);
+      if (success) {
+        showNotification('Job deleted successfully', 'success');
+      } else {
+        showNotification('Failed to delete job', 'error');
       }
     }
   };
 
+  const showNotification = (message, type) => {
+    return (
+      <Alert variant={type === 'error' ? 'destructive' : 'default'}>
+        <AlertDescription>{message}</AlertDescription>
+      </Alert>
+    );
+  };
 
-  if (loading) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  );
-  if (error) return <div>{error}</div>;
+  const filteredAndSortedJobs = jobs
+    .filter(job => 
+      job.job_role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      job.company_name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortBy === 'newest') {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      }
+      return new Date(a.deadline) - new Date(b.deadline);
+    });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <Alert variant="destructive" className="m-4">
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
 
   if (viewingJobDetails) {
     return (
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto p-4">
         <ViewJobDetails
           job={viewingJobDetails}
           onClose={() => setViewingJobDetails(null)}
@@ -76,11 +126,12 @@ const CreatedJobs = () => {
 
   if (isCreatingJob) {
     return (
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto p-4">
         <CreateJob
           onJobCreated={(newJob) => {
             setJobs((prevJobs) => [...prevJobs, newJob]);
             setIsCreatingJob(false);
+            showNotification('Job created successfully', 'success');
           }}
           onCancel={() => setIsCreatingJob(false)}
         />
@@ -89,100 +140,119 @@ const CreatedJobs = () => {
   }
 
   return (
-    <div className="flex-1 ml-0 transition-all duration-300">
-  {/* Header Section */}
-  <div className="p-6">
-    <div className="flex flex-col sm:flex-row justify-between items-center">
-      <h1 className="text-4xl font-bold text-custom-blue mb-4 sm:mb-0">Your Created Jobs</h1>
-      <button
-        className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-6 py-2 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-        onClick={() => setIsCreatingJob(true)}
-      >
-        Create Job
-      </button>
-    </div>
-  </div>
-
-  {/* Job List Section */}
-  <div className="p-6">
-    {jobs.length === 0 ? (
-      <div className="text-center text-gray-600 py-10">
-        <p className="text-lg">No jobs found. Please create a job first.</p>
-      </div>
-    ) : (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {jobs.map((job) => (
-          <div
-            key={job._id}
-            className="relative bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-200 hover:scale-105 transform"
-          >
-            {/* Header Section */}
-            <div className="flex items-center gap-4 mb-6">
-              {/* Company Logo */}
-              <img
-                src={job.company_logo || "default-logo.png"}
-                alt={job.company_name}
-                className="w-16 h-16 rounded-full object-cover border border-gray-300 shadow-sm"
-              />
-              {/* Job Title and Company Name */}
-              <div>
-                <h2 className="font-semibold text-lg text-gray-900 truncate">{job.job_role}</h2>
-                <p className="text-sm text-gray-500">{job.company_name}</p>
-              </div>
-            </div>
-
-            {/* Job Details */}
-            <div className="text-gray-600 text-sm space-y-2 mb-4">
-              <p>
-                <strong>Location:</strong> {job.joblocation || "Not specified"}
-              </p>
-              <p>
-                <strong>Salary:</strong> {job.job_salary.ctc || "Competitive"} LPA
-              </p>
-              <p>
-                <strong>Class:</strong> {job.job_class || "Not specified"}
-              </p>
-              <p>
-                <strong>Posted on:</strong> {new Date(job.createdAt).toLocaleDateString() || "N/A"}
-              </p>
-              <p>
-                <strong>Application Deadline:</strong> {new Date(job.deadline).toLocaleDateString() || "N/A"}
-              </p>
-            </div>
-
-            {/* Job Tags */}
-            <div className="flex gap-3 flex-wrap mb-6">
-              <span className="text-xs bg-blue-100 text-blue-800 py-1 px-4 rounded-full font-medium">
-                {job.job_type || "Full-time"}
-              </span>
-              {job.isRemote && (
-                <span className="text-xs bg-green-100 text-green-800 py-1 px-4 rounded-full font-medium">
-                  Remote
-                </span>
-              )}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row sm:flex-wrap gap-3">
-              <button
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-transform duration-200 transform hover:scale-105 flex items-center gap-2"
-                onClick={() => deleteJob(job._id)}
-              >
-                <i className="fas fa-trash-alt"></i> Delete
-              </button>
-              <button
-                className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-transform duration-200 transform hover:scale-105 flex items-center gap-2"
-                onClick={() => setViewingJobDetails(job)}
-              >
-                <i className="fas fa-eye"></i> View Job Profile
-              </button>
-            </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 className="text-3xl font-bold text-gray-900"><span>Job </span><span className='text-custom-blue'>Listings</span></h1>
+            <Button
+              onClick={() => setIsCreatingJob(true)}
+              className="bg-custom-blue hover:bg-blue-700 text-white flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Post New Job
+            </Button>
           </div>
-        ))}
+
+          {/* Search and Filter */}
+          <div className="mt-6 flex flex-col md:flex-row gap-4">
+            <input
+              type="text"
+              placeholder="Search jobs by title or company..."
+              className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <select
+              className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+            >
+              <option value="newest">Newest First</option>
+              <option value="deadline">Deadline</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Job Cards */}
+        {filteredAndSortedJobs.length === 0 ? (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold text-gray-600">No jobs found</h3>
+            <p className="text-gray-500 mt-2">Try adjusting your search or create a new job listing</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredAndSortedJobs.map((job) => (
+              <Card key={job._id} className="hover:shadow-lg transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                        <Building2 className="w-6 h-6 text-blue-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-lg text-gray-900">{job.job_role}</h3>
+                        <p className="text-gray-600">{job.company_name}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 space-y-2">
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <MapPin className="w-4 h-4" />
+                      <span>{job.joblocation || "Remote"}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <IndianRupee className="w-4 h-4" />
+                      <span>{job.job_salary.ctc || "Competitive"} LPA</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <GraduationCap className="w-4 h-4" />
+                      <span>{job.job_class}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <Calendar className="w-4 h-4" />
+                      <span>Deadline: {new Date(job.deadline).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex gap-2 flex-wrap">
+                    <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                      {job.job_type || "Full-time"}
+                    </span>
+                    {job.isRemote && (
+                      <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                        Remote
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="mt-6 flex gap-3">
+                    <Button
+                      variant="outline"
+                      className="flex-1 flex items-center justify-center gap-2 hover:bg-custom-blue hover:text-white"
+                      onClick={() => setViewingJobDetails(job)}
+                    >
+                      <Eye className="w-4 h-4" />
+                      View
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      className="flex-1 flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white"
+                      onClick={() => handleDeleteJob(job._id)}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      Delete
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
-    )}
-  </div>
-</div>
+    </div>
   );
 };
 
