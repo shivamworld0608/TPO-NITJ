@@ -5,6 +5,7 @@ const loginAttemptSchema = new mongoose.Schema({
     attempts: { type: Number, default: 0 },
     timestamp: { type: Date, default: Date.now },
     otp: { type: String, default: null },
+    otpExpires: { type: Date },
     isLocked: { type: Boolean, default: false },
 });
 

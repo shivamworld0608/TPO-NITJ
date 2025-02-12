@@ -81,16 +81,9 @@ const LoginSignup = ({ Login }) => {
         {
           loading: "Logging in...",
           success: "Login successful!",
-          error: "Invalid Email or Password",
+          error: "Invalid Credentials",
         }
       );
-      console.log(response);
-      if (response.data.message === "Account locked. Please check your email for OTP.") {
-        setShowOTPVerification(true);
-        return;
-    }
-
-    console.log(showOTPVerification);
   
       dispatch(
         setAuthUser({
@@ -108,7 +101,13 @@ const LoginSignup = ({ Login }) => {
         navigate("/pdashboard/dashboard");
       }
     } catch (error) {
-        setError(error.response?.data?.message || "An error occurred.");
+      if (error.response?.data?.message === "Account locked. Please check your email for OTP.") {
+        toast.error("Account Locked");
+        setShowOTPVerification(true);
+        return;
+    } else{
+      setError(error.response?.data?.message || "An error occurred.");
+    }
     } finally {
       setIsSubmitting(false);
     }
