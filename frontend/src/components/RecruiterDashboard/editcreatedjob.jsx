@@ -6,7 +6,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
   const [formData, setFormData] = useState({
     job_role: job.job_role,
     company_name: job.company_name,
-    company_logo: job.company_logo,
+    // company_logo: job.company_logo,
     jobdescription: job.jobdescription,
     joblocation: job.joblocation,
     jobtype: job.jobtype,
@@ -98,7 +98,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
             />
           </label>
 
-          <label className="block mb-4">
+          {/* <label className="block mb-4">
             Company Logo URL:
             <input
               type="text"
@@ -107,7 +107,7 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
               onChange={handleChange}
               className="w-full p-2 border rounded"
             />
-          </label>
+          </label> */}
 
           <label className="block mb-4">
             Job Description:

@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, Trash2, Save } from 'lucide-react';
 import axios from 'axios';
+import { toast, ToastContainer } from "react-toastify";  // Ensure this is correct
+import "react-toastify/dist/ReactToastify.css";  // Ensure this is included for the CSS
+
 import { jsPDF } from "jspdf";
 import Resume from './downloadresume';
 
 const ResumeBuilder = () => {
   const [mode, setMode] = useState('view');
+  const [showPopup, setShowPopup] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     contact: {
@@ -86,21 +90,38 @@ const ResumeBuilder = () => {
   const uploadResume = async () => {
     try {
       const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/resume`, formData, { withCredentials: true });
-
- 
+      console.log("Upload successful:", response.data);
+      return true;
     } catch (error) {
       console.error("Upload failed:", error);
+      return false;
     }
   };
 
+  const handleSaveClick = async () => {
+    const success = await uploadResume();  // Wait for upload result
+    if (success) {
+      toast.success("Resume saved successfully!", {
+        position: "top-right",  // Use a direct string for the position
+        autoClose: 3000,
+        hideProgressBar: true,
+      });      
+    } else {
+      toast.error("Failed to save the resume. Please try again.", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: true,
+      });
+    }
+  };  
   const HandleformData = async () => {
     try {
       const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/resume/getresumedata`, {
         withCredentials: true,
       });
       setFormData(response.data.data);
- 
- 
+      // console.log(formData)
+      console.log('Fetched Form Data:', response.data);
     } catch (error) {
       console.error('Error fetching resume data:', error.response ? error.response.data : error.message);
       return null;
@@ -117,7 +138,7 @@ const ResumeBuilder = () => {
       );
 
       if (response.status === 200) {
- 
+        console.log("Resume deleted successfully");
       }
 
       return response.data;
@@ -134,8 +155,13 @@ const ResumeBuilder = () => {
   useEffect(() => {
     HandleformData();
 
-  },[]);
-
+  }, []);
+  const handleOutsideClick = (e) => {
+    if (e.target.id === "popupOverlay") {
+      setShowPopup(false);
+    }
+  };
+ 
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
@@ -154,19 +180,68 @@ const ResumeBuilder = () => {
         >
           Create/Update
         </button>
-        <button
-          onClick={deleteResume}
-          className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-700 flex items-center gap-2"
+        {/* Delete Button */}
+      <button
+        onClick={() => setShowPopup(true)}
+        className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-red-700 flex items-center gap-2"
+      >
+        <Save className="w-5 h-5" />
+        Delete
+      </button>
+
+      {/* Confirmation Popup */}
+      {showPopup && (
+        <div
+          id="popupOverlay"
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+          onClick={handleOutsideClick}
         >
-          <Save className="w-5 h-5" />
-          Delete
-        </button>
+          <div div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="bg-white p-6 rounded-2xl shadow-xl w-96 text-center"
+          >
+            {/* Warning Icon */}
+            <div className="flex justify-center mb-3">
+              <div className="bg-red-100 p-3 rounded-full">
+                <Save className="w-8 h-8 text-red-600" />
+              </div>
+            </div>
+
+            {/* Popup Text */}
+            <p className="text-lg font-semibold text-gray-800 mb-4">
+              Are you sure you want to delete this resume?
+            </p>
+
+            {/* Buttons */}
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => setShowPopup(false)}
+                className="bg-gray-300 text-gray-800 px-5 py-2 rounded-lg hover:bg-gray-400 transition-all"
+              >
+                No
+              </button>
+              <button
+                onClick={() => {
+                  deleteResume();
+                  setShowPopup(false);
+                }}
+                className="bg-red-600 text-white px-5 py-2 rounded-lg hover:bg-red-700 transition-all"
+              >
+                Yes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       </div>
       {
-        mode=='view' && (<Resume resumeData={formData} />)
+        mode == 'view' && (<Resume resumeData={formData} />)
       }
 
-      {  mode !== 'view' && (<form className="max-w-4xl mx-auto space-y-6" onSubmit={(e) => e.preventDefault()}>
+      {mode !== 'view' && (<form className="max-w-4xl mx-auto space-y-6" onSubmit={(e) => e.preventDefault()}>
         {/* Basic Information */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
@@ -733,14 +808,18 @@ const ResumeBuilder = () => {
         </div>
         {/* Download Button */}
         <div className="">
-        {mode !== 'view' &&  (<button
-            onClick={uploadResume}
-            className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 flex items-center gap-2"
-          >
-            <Save className="w-5 h-5" />
-            Save
-          </button>)}
-        </div>
+      {mode !== 'view' && (
+        <button
+          onClick={handleSaveClick}
+          className="bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg hover:bg-green-700 flex items-center gap-2"
+        >
+          <Save className="w-5 h-5" />
+          Save
+        </button>
+      )}
+      {/* Ensure ToastContainer is rendered */}
+      <ToastContainer />
+    </div>
         <div>
         </div>
 

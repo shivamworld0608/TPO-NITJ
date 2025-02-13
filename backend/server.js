@@ -6,7 +6,6 @@ import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 /* import configureWebSocket from "./utils/websocket.js"; */
 import http from "http";
-import redis from 'redis';
 
 
 import authroutes from "./routes/auth.js";
@@ -36,6 +35,7 @@ import notificationRoutes from "./routes/notification.js";
 import studentsRoutes from "./routes/addstudents.js";
 import nodemailerRoutes from "./routes/nodemailer.js";
 import adminRoutes from "./routes/admin.js";
+import captchaRoutes from "./routes/captcha.js";
 
 import { mkdir } from 'fs/promises';
 try {
@@ -123,6 +123,7 @@ app.use('/notification',authenticate,notificationRoutes);
 app.use('/add-student',authenticate,studentsRoutes);
 app.use('/nodemailer',authenticate,nodemailerRoutes);
 app.use('/admin',authenticate,adminRoutes);
+app.use('/captcha',captchaRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
