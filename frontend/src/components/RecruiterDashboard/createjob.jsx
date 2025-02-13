@@ -320,6 +320,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -463,6 +464,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
   };
 
   const handleSubmit = async (e) => {
+      if (isSubmitting) return;
+      setIsSubmitting(true);
     e.preventDefault();
     setIsSubmitting(true);
     try {

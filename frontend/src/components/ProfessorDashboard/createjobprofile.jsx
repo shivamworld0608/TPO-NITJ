@@ -319,6 +319,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
 
   const [editingIndex, setEditingIndex] = useState(null);
   const [draggedIndex, setDraggedIndex] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -463,6 +465,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       const response = await axios.post(
         `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/createjobcopy`,
@@ -476,6 +480,9 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
       onCancel();
     } catch (error) {
       toast.error("Error creating job application.");
+    }
+    finally {
+      isSubmitting(false);
     }
   };
 
@@ -1052,8 +1059,11 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
           <button
             type="submit"
             className="mt-10 w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold text-lg rounded-2xl hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+            disabled={isSubmitting}
+            isSubmitting={isSubmitting}
           >
-            Create Job
+            {isSubmitting ? "Creating Job..." : "Create Job"}
+            
           </button>
         </form>
       </div>

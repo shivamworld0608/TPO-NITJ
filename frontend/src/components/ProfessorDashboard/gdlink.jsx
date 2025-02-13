@@ -7,6 +7,8 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
   const [commonLink, setCommonLink] = useState('');
   const [loading, setLoading] = useState(false);
   const [allLinksVisible, setAllLinksVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   useEffect(() => {
     const fetchEligibleStudents = async () => {
@@ -71,6 +73,8 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const studentsWithLinks = students
       .filter(student => student.gdLink.trim() !== '')
       .map(student => ({
@@ -80,6 +84,7 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
       }));
     if (studentsWithLinks.length === 0) {
       toast.error('No GD links have been provided');
+      setIsSubmitting(false);
       return;
     }
   
@@ -91,6 +96,7 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
         { withCredentials: true }
       );
       toast.success('GD links set successfully!');
+      
       onUpdateLinks(studentsWithLinks);
       onClose();
     } catch (error) {
@@ -98,6 +104,7 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
       toast.error('Failed to set GD links.');
     } finally {
       setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -193,7 +200,7 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
       </div>
       <div className="mt-8 flex space-x-4">
         <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={handleSubmit} disabled={loading}>
-          {loading ? 'Submitting...' : 'Submit'}
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
         <button className="bg-gray-500 text-white px-4 py-2 rounded-lg" onClick={onClose} disabled={loading}>
           Cancel

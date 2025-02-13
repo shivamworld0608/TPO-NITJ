@@ -12,12 +12,16 @@ const FeedbackForm = () => {
   });
 
   const [comment, setComment] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+  
 
   const handleRatingChange = (field, value) => {
     setRatings((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = async (e) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     e.preventDefault();
     try {
       const feedbackData = { 
@@ -42,6 +46,9 @@ const FeedbackForm = () => {
       // Handle submission error
       alert(error.response?.data?.error || "Failed to submit feedback");
       console.error("Submission error:", error);
+    }
+    finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -112,8 +119,9 @@ const FeedbackForm = () => {
       <button
         type="submit"
         className="w-full bg-custom-blue text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
+        disabled={isSubmitting}
       >
-        Submit Feedback
+        {isSubmitting ? "Submitting..." : "Submit Feedback"}
       </button>
     </form>
   );
