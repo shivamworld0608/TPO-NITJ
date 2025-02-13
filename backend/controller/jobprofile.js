@@ -433,12 +433,16 @@ export const checkEligibility = async (req, res) => {
       return res.json({ eligible: false, reason: "CGPA below required minimum" });
     }
 
-    if (active_backlogs !== undefined && student.active_backlogs !== active_backlogs) {
-      return res.json({ eligible: false, reason: "Active backlogs do not meet criteria" });
+    if (active_backlogs !== undefined) {
+      if (active_backlogs === false && student.active_backlogs !== false) {
+        return res.json({ eligible: false, reason: "Active backlogs do not meet criteria" });
+      }
     }
-
-    if (history_backlogs !== undefined && student.backlogs_history !== history_backlogs) {
-      return res.json({ eligible: false, reason: "Backlogs History do not meet criteria" });
+    
+    if (history_backlogs !== undefined) {
+      if (history_backlogs === false && student.backlogs_history !== false) {
+        return res.json({ eligible: false, reason: "Backlogs History do not meet criteria" });
+      }
     }
 
     const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
