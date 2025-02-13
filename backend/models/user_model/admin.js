@@ -8,6 +8,9 @@ const adminSchema = new mongoose.Schema({
   password: {
     type: String,
   },
+  otp:{
+   type:String
+  }
 }, { timestamps: true });
 
 const Admin = mongoose.model('Admin', adminSchema);

@@ -4,7 +4,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import ApplicationForm from "./applicationform";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from "sweetalert2";
-import { faBriefcase, faMapMarkerAlt, faDollarSign, faCalendarAlt, faClipboardList, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import {faMapMarkerAlt, faIndianRupee,faInfoCircle, faIdCard, faTasks, faTags, faUserTie} from '@fortawesome/free-solid-svg-icons';
 
 const Jobdetail = ({ job_id, onBack, onShow }) => {
     const [activeInfo, setActiveInfo] = useState("jobDescription");

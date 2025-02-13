@@ -5,6 +5,18 @@ import FormSubmission from '../models/FormSubmission.js';
 import Placement from '../models/placement.js';
 import Notification from "../models/notification.js"; 
 import mongoose from "mongoose";
+
+export const getAllCompanies = async (req, res) => {
+  try {
+    const companies = await JobProfile.find().select('company_name -_id'); // Fetch only company_name, exclude _id
+    res.status(200).json(companies);
+  } catch (error) {
+    console.error('Error fetching companies:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
 export const createJobProfilecopy = async (req, res) => {
   try {
     const recruiter_id = req.user.userId;
@@ -421,12 +433,16 @@ export const checkEligibility = async (req, res) => {
       return res.json({ eligible: false, reason: "CGPA below required minimum" });
     }
 
-    if (active_backlogs !== undefined && student.active_backlogs !== active_backlogs) {
-      return res.json({ eligible: false, reason: "Active backlogs do not meet criteria" });
+    if (active_backlogs !== undefined) {
+      if (active_backlogs === false && student.active_backlogs !== false) {
+        return res.json({ eligible: false, reason: "Active backlogs do not meet criteria" });
+      }
     }
-
-    if (history_backlogs !== undefined && student.backlogs_history !== history_backlogs) {
-      return res.json({ eligible: false, reason: "Backlogs History do not meet criteria" });
+    
+    if (history_backlogs !== undefined) {
+      if (history_backlogs === false && student.backlogs_history !== false) {
+        return res.json({ eligible: false, reason: "Backlogs History do not meet criteria" });
+      }
     }
 
     const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];

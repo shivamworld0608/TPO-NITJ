@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { useDispatch, useSelector } from 'react-redux';
 import { checkAuth } from './Redux/authSlice';
 import Home from "./Pages/LandingPage";
-import Login from "./Pages/Login";
+import Login from "./Pages/Login"; 
+import Forgotpassword from "./Pages/ForgotPassword"; 
 import Placement from "./Pages/Placement";
 import Recruiter from "./Pages/Recruiter";
 import Sdashboard from "./Pages/Sdashboard";
@@ -50,6 +51,10 @@ const App = () => {
       <Route
           path="/"
           element={authUser ? <Navigate to={getDashboardPath()} /> : <Home />}
+        />
+        <Route
+          path="/forgot-password"
+          element={<Forgotpassword />}
         />
         <Route
           path="/login"
