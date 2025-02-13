@@ -110,7 +110,7 @@ app.use("/job-events",jobEventroutes);
 app.use("/feedback",authenticate,feedbackRoutes);
 app.use("/jaf",authenticate,jafRoutes);
 app.use("/travel-planner",authenticate,travelplannerRoutes);
-app.use("/student-analysis",authenticate,studentanalysisRoutes);
+app.use("/student-analysis",studentanalysisRoutes);
 app.use("/companies-analysis",authenticate,companiesanalysisRoutes);
 app.use('/api/pdfs', authenticate, pdfroutes);
 app.use('/api',authenticate, formTemplateroutes);
