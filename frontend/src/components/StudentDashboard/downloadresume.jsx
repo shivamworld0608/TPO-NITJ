@@ -20,180 +20,150 @@ const Resume = ({ resumeData }) => {
     pdf.save(`${resumeData.name}_Resume.pdf`);
   };
 
-  const handleMakeBold = () => {
-    // This will toggle the bold formatting for the selected text.
-    document.execCommand("bold", false, null);
-  };
-
-  const handleAddLink = () => {
-    const url = prompt("Enter the URL:");
-    if (url) {
-      document.execCommand("createLink", false, url);
-    }
-  };
-
   return (
-    <div>
-      <button
-        type="button"
-        onMouseDown={(e) => e.preventDefault()}
-        onClick={handleDownloadPDF}
-        className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-colors mb-6"
-      >
-        Download PDF
-      </button>
+    <div className="bg-white min-h-screen flex items-center justify-center py-12 px-4">
+      <div className="w-full max-w-4xl">
+        <button
+          onClick={handleDownloadPDF}
+          className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700 transition-colors mb-6"
+        >
+          Download PDF
+        </button>
 
-      <button
-        type="button"
-        onMouseDown={(e) => e.preventDefault()}
-        onClick={handleMakeBold}
-        className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-700 transition-colors mb-6 ml-2"
-      >
-        Bold
-      </button>
-
-      <button
-        type="button"
-        onMouseDown={(e) => e.preventDefault()}
-        onClick={handleAddLink}
-        className="flex items-center gap-2 bg-purple-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-purple-700 transition-colors mb-6 ml-2"
-      >
-        Add Link
-      </button>
-
-      <div
-        ref={resumeRef}
-        className="max-w-4xl mx-auto p-8 bg-white"
-        contentEditable={true}
-        suppressContentEditableWarning={true}
-      >
-        {/* Header */}
-        <header className="mb-6 text-center">
-          <h1 className="text-3xl font-bold mb-1 font-serif">{resumeData.name}</h1>
-          <div className="flex flex-wrap gap-4 text-sm justify-center ">
-            {resumeData.contact.github && (
-              <a href={resumeData.contact.github} className="text-gray-600">GitHub</a>
-            )}
-            {resumeData.contact.linkedin && (
-              <a href={resumeData.contact.linkedin} className="text-gray-600">LinkedIn</a>
-            )}
-            {resumeData.contact.email && (
-              <span className="text-gray-600">{resumeData.contact.email}</span>
-            )}
-            {resumeData.contact.phone && (
-              <span className="text-gray-600">{resumeData.contact.phone}</span>
-            )}
+        <div
+          ref={resumeRef}
+          className="bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-200 space-y-6 p-8"
+        >
+          {/* Header */}
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">{resumeData.name}</h1>
+            <div className="flex justify-center gap-6 mt-4 text-gray-600">
+              {resumeData.contact.github && (
+                <a href={resumeData.contact.github} className="flex items-center gap-2 hover:text-blue-600">
+                  GitHub
+                </a>
+              )}
+              {resumeData.contact.linkedin && (
+                <a href={resumeData.contact.linkedin} className="flex items-center gap-2 hover:text-blue-600">
+                  LinkedIn
+                </a>
+              )}
+              {resumeData.contact.email && (
+                <div className="flex items-center gap-2">
+                  {resumeData.contact.email}
+                </div>
+              )}
+              {resumeData.contact.phone && (
+                <div className="flex items-center gap-2">
+                  {resumeData.contact.phone}
+                </div>
+              )}
+            </div>
           </div>
-        </header>
 
-        {/* Education Section */}
-        {resumeData.education.length > 0 && (
-          <section className="mb-6">
-            <h2 className="text-xl font-bold mb-1 border-b border-black pb-2 font-serif">EDUCATION</h2>
-            {resumeData.education.map((edu, index) => (
-              <div key={index} className="mb-4 font-serif">
-                <h3 className="font-bold tracking-wide">{edu.institution}</h3>
-                <p>{edu.degree} - {edu.percentage} | {edu.duration}</p>
-              </div>
-            ))}
-          </section>
-        )}
+          {/* Education */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Education</h2>
+            <div className="space-y-4 text-gray-700 text-base">
+              {resumeData.education.map((edu, index) => (
+                <div key={index}>
+                  <h3 className="font-semibold">{edu.institution}</h3>
+                  <p>{edu.degree} | {edu.percentage} | {edu.duration}</p>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        {/* Work Experience */}
-        {resumeData.experience.length > 0 && (
-          <section className="mb-6">
-            <h2 className="text-xl font-bold mb-1 border-b border-black pb-1 font-serif">WORK EXPERIENCE</h2>
-            {resumeData.experience.map((exp, index) => (
-              <div key={index} className="mb-4">
-                <h3 className="font-bold tracking-wide">{exp.title} at {exp.company}</h3>
-                <ul className="list-disc ml-5 font-serif">
-                  {exp.description.map((desc, i) => (
-                    <li key={i}>{desc}</li>
-                  ))}
-                  <li>Tech Stack: {exp.techStack.join(", ")}</li>
-                </ul>
-              </div>
-            ))}
-          </section>
-        )}
+          {/* Work Experience */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Work Experience</h2>
+            <div className="space-y-4 text-gray-700 text-base">
+              {resumeData.experience.map((exp, index) => (
+                <div key={index}>
+                  <h3 className="font-semibold">{exp.title} at {exp.company}</h3>
+                  <ul className="list-disc pl-4 space-y-2">
+                    {exp.description.map((desc, i) => (
+                      <li key={i}>{desc}</li>
+                    ))}
+                    <li>Tech Stack: {exp.techStack.join(", ")}</li>
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        {/* Projects */}
-        {resumeData.projects.length > 0 && (
-          <section className="mb-6">
-            <h2 className="text-xl font-bold mb-1 border-b border-black pb-1 font-serif">PROJECTS</h2>
-            {resumeData.projects.map((proj, index) => (
-              <div key={index} className="mb-4">
-                <h3 className="font-bold tracking-wide">{proj.name}</h3>
-                <a href={proj.link} className="text-blue-600">Website Link</a>
-                <ul className="list-disc ml-5 font-serif">
-                  {proj.description.map((desc, i) => (
-                    <li key={i}>{desc}</li>
-                  ))}
-                  <li>Tech Stack: {proj.techStack.join(", ")}</li>
-                </ul>
-              </div>
-            ))}
-          </section>
-        )}
+          {/* Projects */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Projects</h2>
+            <div className="space-y-4 text-gray-700 text-base">
+              {resumeData.projects.map((proj, index) => (
+                <div key={index}>
+                  <h3 className="font-semibold">{proj.name}</h3>
+                  <p><a href={proj.link} className="text-blue-600 hover:underline">Website Link</a></p>
+                  <ul className="list-disc pl-4 space-y-2">
+                    {proj.description.map((desc, i) => (
+                      <li key={i}>{desc}</li>
+                    ))}
+                    <li>Tech Stack: {proj.techStack.join(", ")}</li>
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
 
-        {/* Skills */}
-        {resumeData.skills.length > 0 && (
-          <section className="mb-6">
-            <h2 className="text-xl font-bold mb-1 border-b border-black pb-1 font-serif">SKILLS</h2>
-            {resumeData.skills.map((category, index) => (
-              <p key={index} className="font-serif">
-                {category.category}: {category.skills.join(", ")}
-              </p>
-            ))}
-          </section>
-        )}
+          {/* Skills */}
+          <div>
+  <h2 className="text-2xl font-bold text-gray-900 mb-4">Skills</h2>
+  <div className="space-y-3 text-gray-700 text-base">
+    {resumeData.skills.map((category, index) => (
+      <div key={index} className="flex">
+        <p className="font-bold">{category.category} :</p>
+        <div className="flex flex-wrap gap-2">
+          {category.skills.map((skill, i) => (
+            <p key={i} className=" px-2 py-1 ">{skill}</p>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
 
-        {/* Achievements */}
-        {resumeData.achievements.length > 0 && (
-          <section className="mb-6">
-            <h2 className="text-xl font-bold mb-1 border-b border-black pb-1 font-serif">ACHIEVEMENTS</h2>
-            {resumeData.achievements.map((ach, index) => (
-              <p key={index}>
-                {ach.title} - {ach.description}{" "}
-                {ach.link && (
-                  <a href={ach.link} className="text-blue-600 font-serif">
-                    Link
-                  </a>
-                )}
-              </p>
-            ))}
-          </section>
-        )}
 
-        {/* Area of Interest */}
-        {resumeData.interests.length > 0 && (
-          <section className="mb-6">
-            <h2 className="text-xl font-bold mb-1 border-b border-black pb-1 font-serif">AREA OF INTEREST</h2>
-            <p className="font-serif">{resumeData.interests.join(", ")}</p>
-          </section>
-        )}
+          {/* Achievements */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Achievements</h2>
+            <div className="space-y-2 text-gray-700 text-base">
+              {resumeData.achievements.map((ach, index) => (
+                <div key={index} className="flex items-center gap-2">
+                  <span className="font-semibold">{ach.title}</span> {ach.description} 
+                  {ach.link && <a href={ach.link} className="text-blue-600 hover:underline">Link</a>}
+                </div>
+              ))}
+            </div>
+          </div>
 
-        {/* Course Work */}
-        {resumeData.coursework.length > 0 && (
-          <section className="mb-6">
-            <h2 className="text-xl font-bold mb-1 border-b border-black pb-1 font-serif">COURSE WORK</h2>
-            <p className="font-serif">{resumeData.coursework.join(", ")}</p>
-          </section>
-        )}
+          {/* Interests */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Area of Interest</h2>
+            <p className="text-gray-700 text-base">{resumeData.interests.join(", ")}</p>
+          </div>
 
-        {/* Positions of Responsibility */}
-        {resumeData.responsibilities.length > 0 && (
-          <section>
-            <h2 className="text-xl font-bold mb-1 border-b border-black pb-1 font-serif">POSITIONS OF RESPONSIBILITY</h2>
-            <ul className="list-disc ml-5 font-serif">
+          {/* Coursework */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Course Work</h2>
+            <p className="text-gray-700 text-base">{resumeData.coursework.join(", ")}</p>
+          </div>
+
+          {/* Positions of Responsibility */}
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">Positions of Responsibility</h2>
+            <ul className="list-disc pl-4 space-y-2 text-gray-700 text-base">
               {resumeData.responsibilities.map((res, index) => (
-                <li key={index}>
-                  {res.role}: {res.description}
-                </li>
+                <li key={index}>{res.role}: {res.description}</li>
               ))}
             </ul>
-          </section>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );

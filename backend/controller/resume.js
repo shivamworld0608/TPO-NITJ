@@ -6,7 +6,7 @@ export const CreateOrUpdateResume = async (req, res) => {
       const resumeData = { ...req.body, student_id: studentId };
 
       let existingResume = await Resume.findOne({ student_id: studentId });
-     console.log("helo");
+
       if (existingResume) {
           existingResume = await Resume.findOneAndUpdate(
               { student_id: studentId },
