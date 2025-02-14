@@ -7,6 +7,8 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpd
   const [commonLink, setCommonLink] = useState('');
   const [loading, setLoading] = useState(false);
   const [allLinksVisible, setAllLinksVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   useEffect(() => {
     const fetchEligibleStudents = async () => {
@@ -71,6 +73,8 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpd
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const studentsWithLinks = students
     .filter(student => student.interviewLink.trim() !== '')
     .map(student => ({
@@ -80,6 +84,7 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpd
     }));
     if (studentsWithLinks.length === 0) {
       toast.error('No interview links have been provided');
+      setIsSubmitting(false);
       return;
     }
   
@@ -99,6 +104,7 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpd
       toast.error('Failed to set interview links.');
     } finally {
       setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -195,7 +201,7 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpd
       </div>
       <div className="mt-8 flex space-x-4">
         <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={handleSubmit} disabled={loading}>
-          {loading ? 'Submitting...' : 'Submit'}
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
         <button className="bg-gray-500 text-white px-4 py-2 rounded-lg" onClick={onClose} disabled={loading}>
           Cancel

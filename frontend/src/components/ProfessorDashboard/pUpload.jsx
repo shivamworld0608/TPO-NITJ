@@ -20,6 +20,8 @@ const PDFUploadModal = ({
   }) => {
     const [title, setTitle] = useState('');
     const [titleError, setTitleError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
   
     const handleTitleChange = (e) => {
       const newTitle = e.target.value;
@@ -83,10 +85,12 @@ const PDFUploadModal = ({
             <Button 
               type="submit" 
               onClick={handleUpload}
-              disabled={!!titleError || !title.trim()}
+
+              disabled={!!titleError || !title.trim() || isSubmitting}
             >
               <Upload className="mr-2 h-4 w-4" />
-              Upload
+              {isSubmitting ? 'Uploading...' : 'Upload'}
+              
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -42,6 +42,9 @@ const JobAnnouncementForm = () => {
     approved_status:false,
   });
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+  
+
   const bTechPrograms = [
     { name: "Computer Science & Engineering", type: "Circuital" },
     { name: "Electronics & Communication Engineering", type: "Circuital" },
@@ -265,7 +268,8 @@ const JobAnnouncementForm = () => {
   };
 
   const handleSubmit = async (e) => {
- 
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     
     e.preventDefault();
     const result = await Swal.fire({
@@ -290,6 +294,9 @@ const JobAnnouncementForm = () => {
       } catch (error) {
         toast.error("Error in submitting JAF form");
         console.error("Submission error:", error);
+      }
+      finally {
+        setIsSubmitting(false);
       }
     }
   };
@@ -1075,8 +1082,10 @@ const JobAnnouncementForm = () => {
             <Button
               type="submit"
               className="bg-custom-blue hover:bg-blue-700 text-white px-8 py-2"
+              disabled={isSubmitting}
+
             >
-              Submit Form
+              { isSubmitting ? "Submitting..." : "Submit Form" }
             </Button>
           </div>
         </CardContent>

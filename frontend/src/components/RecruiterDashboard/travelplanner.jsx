@@ -47,12 +47,17 @@ function TravelPlanner() {
   });
 
   const [wantFood, setWantFood] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const [foodDetails, setFoodDetails] = useState({
     tableRows: [{ date: "", breakfast: "", lunch: "", dinner: "", snacks: "" }],
     notes: "",
   });
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
     const bookingDetails = {
       visitorDetails,
       wantVehicle,
@@ -81,7 +86,12 @@ function TravelPlanner() {
         toast.success("Booking form submitted successfully 😊");
       } catch (error) {
         toast.error("Some error in submitting");
+        setIsSubmitting(false);
       }
+      finally {
+        setIsSubmitting(false);
+      }
+
     }
   };
 
@@ -502,8 +512,9 @@ function TravelPlanner() {
             <button
               className="w-full mt-6 py-4 px-6 bg-custom-blue text-white rounded-lg font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:ring-offset-2 transition-colors text-lg"
               onClick={handleSubmit}
+              disabled={isSubmitting}
             >
-              Confirm Booking
+              {isSubmitting ? "Submitting..." : "Confirm Booking"}
             </button>
           </div>
         );

@@ -4,11 +4,12 @@ import { FaHome } from "react-icons/fa";
 const FAQ = () => {
  
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
  
 
   const handleOpenModal = () => {
- 
     setIsModalOpen(true);
   };
 
@@ -18,10 +19,15 @@ const FAQ = () => {
   };
 
   const handleSubmit = (e) => {
+    // setIsSubmitting(true);
     e.preventDefault();
+
  
     // Add form submission logic here
     handleCloseModal();
+
+    // setIsSubmitting{false};
+
   };
 
   return (
@@ -217,7 +223,7 @@ const FAQ = () => {
         <div className="modal fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
           <div className="modal-content bg-white rounded-lg shadow-lg w-96 p-6 relative">
             <h2 className="text-2xl font-bold mb-4">Ask a New Question</h2>
-            <form onSubmit={handleSubmit}>
+            <form >
               <label htmlFor="question" className="block text-sm font-medium text-gray-700">Your Question</label>
               <textarea
                 id="question"
@@ -237,9 +243,12 @@ const FAQ = () => {
                 <button
                   type="submit"
                   className="px-4 py-2 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                  onClick={handleSubmit}
+                  disabled={isSubmitting}
+
                 >
-                  Submit
-                </button>
+        {isSubmitting ? 'Submitting...' : 'Submit'}
+        </button>
               </div>
             </form>
           </div>

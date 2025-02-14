@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 
 const AddStudentForm = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [studentData, setStudentData] = useState({
     name: '',
     email: '',
@@ -28,6 +29,9 @@ const AddStudentForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(isSubmitting) return;
+    setIsSubmitting(true);
+    set
     try {
       const response = await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/add-student`,studentData, {withCredentials: true});
           setStudentData({
@@ -49,12 +53,15 @@ const AddStudentForm = () => {
       toast.error("Email already registered");
       console.error('Error:', error);
     }
+    finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-6 text-center">Add Student</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form  className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Name</label>
           <input
@@ -191,9 +198,11 @@ const AddStudentForm = () => {
         <div>
           <button
             type="submit"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
             className="w-full bg-custom-blue text-white py-2 px-4 rounded-md hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >
-            Add Student
+            {isSubmitting ? 'Adding Student...' : 'Add Student'}
           </button>
         </div>
       </form>
