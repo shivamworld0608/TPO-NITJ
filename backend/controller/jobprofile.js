@@ -5,6 +5,9 @@ import FormSubmission from '../models/FormSubmission.js';
 import Placement from '../models/placement.js';
 import Notification from "../models/notification.js"; 
 import mongoose from "mongoose";
+import Feedback from "../models/Feedback.js";
+import JobAnnouncementForm from "../models/jaf.js";
+import axios from "axios";
 
 export const getAllCompanies = async (req, res) => {
   try {
@@ -314,10 +317,24 @@ export const getJobProfilesForProfessors = async (req, res) => {
     const approvedJobs = await JobProfile.find({ Approved_Status: true, completed:false });
     const notApprovedJobs = await JobProfile.find({ Approved_Status: false });
     const completed= await JobProfile.find({completed:true});
+    const feedbacks = await Feedback.find({});
+    const feedbackByCompany = feedbacks.reduce((acc, feedback) => {
+      acc[feedback.company] = feedback;
+      return acc;
+    }, {});
+
+/*     const jafs = await JobAnnouncementForm.find({});
+    const jafByCompany = jafs.reduce((acc, jaf) => {
+      acc[jaf.organizationName] = jaf;
+      return acc;
+    }, {}); */
+
     res.status(200).json({
       approved: approvedJobs,
       notApproved: notApprovedJobs,
-      completed:completed
+      completed:completed,
+      feedbackByCompany,
+   /*    jafByCompany  */
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -400,6 +417,20 @@ export const checkEligibility = async (req, res) => {
     const studentId = req.user.userId;
     const { _id } = req.params;
     const student = await Student.findById({_id:studentId});
+    const rollNumbers=[student.rollno];
+    const response=await axios.post(`${process.env.ERP_SERVER}`,{rollNumbers});
+    const erpStudents = response.data.data.students;
+    if (!erpStudents || !erpStudents.length) {
+      return res.status(404).json({ message: "Updated student details not found in ERP" });
+    }
+    const erpData = erpStudents[0];
+    const updatedStudent = {
+      ...student.toObject(),
+      cgpa: erpData.cgpa,
+      batch: erpData.batch,
+      active_backlogs: erpData.active_backlogs,
+      backlogs_history: erpData.backlogs_history,
+    };
     const job = await JobProfile.findById(_id);
     if (!student || !job) {
       return res.status(404).json({ message: "Student or Job Application not found" });
@@ -414,44 +445,44 @@ export const checkEligibility = async (req, res) => {
       history_backlogs,
     } = job.eligibility_criteria;
 
-    if (!department_allowed.includes(student.department)) {
+    if (!department_allowed.includes(updatedStudent.department)) {
       return res.json({ eligible: false, reason: "Department not eligible" });
     }
 
-    if (gender_allowed !== "Any" && gender_allowed !== student.gender) {
+    if (gender_allowed !== "Any" && gender_allowed !== updatedStudent.gender) {
       return res.json({ eligible: false, reason: "Gender not eligible" });
     }
 
-    if (course_allowed && course_allowed !== student.course) {
+    if (course_allowed && course_allowed !== updatedStudent.course) {
       return res.json({ eligible: false, reason: "Course not eligible" });
     }
-    if (eligible_batch && eligible_batch !== student.batch) {
+    if (eligible_batch && eligible_batch !== updatedStudent.batch) {
       return res.json({ eligible: false, reason: "Batch not eligible" });
     }
 
-    if (minimum_cgpa && student.cgpa < minimum_cgpa) {
+    if (minimum_cgpa && updatedStudent.cgpa < minimum_cgpa) {
       return res.json({ eligible: false, reason: "CGPA below required minimum" });
     }
 
     if (active_backlogs !== undefined) {
-      if (active_backlogs === false && student.active_backlogs !== false) {
+      if (active_backlogs === false && updatedStudent.active_backlogs !== false) {
         return res.json({ eligible: false, reason: "Active backlogs do not meet criteria" });
       }
     }
     
     if (history_backlogs !== undefined) {
-      if (history_backlogs === false && student.backlogs_history !== false) {
+      if (history_backlogs === false && updatedStudent.backlogs_history !== false) {
         return res.json({ eligible: false, reason: "Backlogs History do not meet criteria" });
       }
     }
 
     const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
-    const studentClassIndex = jobClassOrder.indexOf(student.placementstatus);
+    const studentClassIndex = jobClassOrder.indexOf(updatedStudent.placementstatus);
     const jobClassIndex = jobClassOrder.indexOf(job.job_class);
 
     if (
       studentClassIndex !== -1 &&
-      student.placementstatus !== "notplaced" &&
+      updatedStudent.placementstatus !== "notplaced" &&
       jobClassIndex <= studentClassIndex
     ) {
       return res.json({

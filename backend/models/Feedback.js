@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
 
 const FeedbackSchema = new mongoose.Schema({
+  company:{
+    type:String,
+  },
   technicalSkill: {
     type: Number,
     min: 1,

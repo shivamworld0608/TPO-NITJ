@@ -1,4 +1,5 @@
 import Feedback from '../models/Feedback.js';
+import Recuiter from '../models/user_model/recuiter.js';
 
 export const createFeedback = async (req, res) => {
   try {
@@ -8,8 +9,12 @@ export const createFeedback = async (req, res) => {
       overallExperience, 
       comment 
     } = req.body;
-
+    const userId=req.user.userId;
+    const recruiter=await Recuiter.findById(userId).select('company');
+    const company=recruiter.company;
+    console.log(recruiter.company);
     const newFeedback = new Feedback({
+      company,
       technicalSkill,
       communicationSkill,
       overallExperience,
