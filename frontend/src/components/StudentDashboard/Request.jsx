@@ -11,12 +11,12 @@ const Request = () => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const availableIssues = [
-    "Job Profile",
+   /*  "Job Profile", */
     "Eligibility Issue",
     "Application Form Issue",
-    "OA Issue",
+/*     "OA Issue",
     "Interview Issue",
-    "GD Issue",
+    "GD Issue", */
     "Login/Signup Issue",
     "Profile Issue",
     "Other"

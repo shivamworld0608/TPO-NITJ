@@ -6,17 +6,17 @@ const FeedbackSchema = new mongoose.Schema({
   },
   technicalSkill: {
     type: Number,
-    min: 1,
+    min: 0,
     max: 5,
   },
   communicationSkill: {
     type: Number,
-    min: 1,
+    min: 0,
     max: 5,
   },
   overallExperience: {
     type: Number,
-    min: 1,
+    min: 0,
     max: 5,
   },
   comment: {

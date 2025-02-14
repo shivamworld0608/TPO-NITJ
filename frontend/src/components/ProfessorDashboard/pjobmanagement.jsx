@@ -2,18 +2,20 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import ViewJobDetails from "./ViewJob";
+import ViewJAF from "./viewjaf";
 import CreateJob from "./createjobprofile";
 import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Building2, MapPin, DollarSign, Calendar, Briefcase, Plus, Search, Check, X, ArrowLeft ,Star,MessageCircle} from "lucide-react";
+import { Building2, MapPin, DollarSign, Calendar, Briefcase, Plus, Search, Check, X, ArrowLeft, Star, MessageCircle, FileText } from "lucide-react";
 
 const JobProfilesonp = () => {
-  const [jobProfiles, setJobProfiles] = useState({ approved: [], notApproved: [], completed: [], feedbackByCompany: {} });
+  const [jobProfiles, setJobProfiles] = useState({ approved: [], notApproved: [], completed: [], feedbackByCompany: {}, jafByCompany: {} });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [showJAF, setShowJAF] = useState(false);
   const [filters, setFilters] = useState({
     batchEligible: "",
     courseEligible: "",
@@ -370,8 +372,8 @@ const JobProfilesonp = () => {
       </CardFooter>
     </Card>
   );
+
   const FeedbackCard = ({ feedback }) => {
-    // Function to render star ratings
     const renderStars = (rating) => {
       return Array.from({ length: 5 }, (_, index) => (
         <Star
@@ -382,8 +384,7 @@ const JobProfilesonp = () => {
         />
       ));
     };
-  
-    // Function to truncate long comments and add a "Read More" button
+
     const truncateComment = (comment, maxLength = 100) => {
       if (comment.length <= maxLength) return comment;
       return (
@@ -391,27 +392,25 @@ const JobProfilesonp = () => {
           {comment.slice(0, maxLength)}...
           <button
             className="text-custom-blue hover:underline ml-1"
-            onClick={() => alert(feedback.comment)} // Replace with a modal or expand functionality
+            onClick={() => alert(feedback.comment)}
           >
             Read More
           </button>
         </>
       );
     };
-  
+
     return (
       <Card className="bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300">
         <CardContent className="py-6">
           <div className="space-y-4">
-            {/* Feedback Date */}
             <div className="flex items-center space-x-2">
               <Calendar className="w-4 h-4 text-custom-blue" />
               <p className="text-xs text-gray-700">
                 {new Date(feedback.createdAt).toLocaleDateString()}
               </p>
             </div>
-  
-            {/* Ratings */}
+
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
                 <p className="text-sm text-gray-700">Technical Skills:</p>
@@ -432,8 +431,7 @@ const JobProfilesonp = () => {
                 </div>
               </div>
             </div>
-  
-            {/* Comment */}
+
             <div className="flex items-start space-x-2">
               <MessageCircle className="w-5 h-5 text-custom-blue flex-shrink-0" />
               <p className="text-sm text-gray-700">
@@ -445,7 +443,6 @@ const JobProfilesonp = () => {
       </Card>
     );
   };
-
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -522,17 +519,41 @@ const JobProfilesonp = () => {
         <ViewJobDetails onClose={() => setSelectedJob(null)} job={selectedJob} />
       ) : showCreateJob ? (
         <CreateJob onJobCreated={() => setShowCreateJob(false)} onCancel={() => setShowCreateJob(false)} />
-      ) : selectedCompany ? (
+      ) :  showJAF ? (
+        jobProfiles.jafByCompany[selectedCompany] ? (
+          <ViewJAF jaf={jobProfiles.jafByCompany[selectedCompany]} onClose={() => setShowJAF(false)} />
+        ) : (
+          <div className="flex items-center justify-center h-[calc(100vh-200px)]">
+  <div className="text-center text-gray-500">
+    <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
+    <p>JAF not created for this Company</p>
+  </div>
+</div>
+        )) : selectedCompany ? (
         <>
-          <button
-            className="absolute top-8 left-4 text-gray-500 m-3 rounded-full"
-            onClick={() => setSelectedCompany(null)}
-          >
-            <ArrowLeft className="w-5 h-5" />
-          </button>
-          <h1 className="text-4xl font-bold text-center mb-8">
-            <span className="text-custom-blue">{selectedCompany}</span> Job Profiles
-          </h1>
+          <div className="relative mb-10">
+  <button
+    className="absolute top-0 left-4 text-gray-500 m-3 rounded-full"
+    onClick={() => setSelectedCompany(null)}
+  >
+    <ArrowLeft className="w-5 h-5" />
+  </button>
+  
+  <h1 className="text-4xl font-bold text-center">
+    <span className="text-custom-blue">{selectedCompany}</span> Job Profiles
+  </h1>
+  
+  <button
+    onClick={() => setShowJAF(true)}
+    className="absolute top-0 right-4 group inline-flex items-center gap-2 bg-white border-2 border-custom-blue px-4 py-2 rounded-lg 
+               hover:bg-custom-blue transition-all duration-300 shadow-md
+               text-custom-blue hover:text-white font-medium"
+  >
+    <FileText className="w-5 h-5 transition-transform group-hover:scale-110" />
+    <span>View JAF</span>
+  </button>
+</div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {groupedApprovedJobs[selectedCompany]?.map((job) => (
               <JobCard key={job._id} job={job} showActions={false} />
@@ -544,13 +565,12 @@ const JobProfilesonp = () => {
               <JobCard key={job._id} job={job} showActions={false} />
             ))}
           </div>
+
           {jobProfiles.feedbackByCompany[selectedCompany] && (
             <div className="mt-8">
               <h2 className="text-2xl font-bold text-custom-blue mb-4">Company Feedback</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-               
-                  <FeedbackCard feedback={jobProfiles.feedbackByCompany[selectedCompany]} />
-              
+                <FeedbackCard feedback={jobProfiles.feedbackByCompany[selectedCompany]} />
               </div>
             </div>
           )}
@@ -567,7 +587,6 @@ const JobProfilesonp = () => {
             Job Profiles Dashboard
           </h1>
 
-          {/* Filter Section */}
           <div className="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-semibold mb-4">Filter Jobs</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -648,7 +667,6 @@ const JobProfilesonp = () => {
               </TabsTrigger>
             </TabsList>
 
-            {/* Search Input */}
             <div className="mb-6">
               <div className="relative">
                 <input

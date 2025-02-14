@@ -191,7 +191,7 @@ const SharedExperience = () => {
               {eligible && (
                 <div
                   onClick={() => setShowEditor(true)}
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 border-dashed border-4 border-gray-300 rounded-xl flex items-center justify-center cursor-pointer shadow-lg hover:shadow-2xl transition-transform hover:scale-105 duration-300 text-white text-6xl p-5 h-auto w-56"
+                  className="bg-custom-blue border-dashed border-4 border-gray-300 rounded-xl flex items-center justify-center cursor-pointer shadow-lg hover:shadow-2xl transition-transform hover:scale-105 duration-300 text-white text-6xl p-5 h-auto w-56"
                 >
                   <FaPlus />
                 </div>

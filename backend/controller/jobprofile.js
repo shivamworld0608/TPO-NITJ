@@ -323,18 +323,18 @@ export const getJobProfilesForProfessors = async (req, res) => {
       return acc;
     }, {});
 
-/*     const jafs = await JobAnnouncementForm.find({});
+   const jafs = await JobAnnouncementForm.find({});
     const jafByCompany = jafs.reduce((acc, jaf) => {
       acc[jaf.organizationName] = jaf;
       return acc;
-    }, {}); */
-
+    }, {});
+   console.log(jafByCompany);
     res.status(200).json({
       approved: approvedJobs,
       notApproved: notApprovedJobs,
       completed:completed,
       feedbackByCompany,
-   /*    jafByCompany  */
+      jafByCompany
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
