@@ -52,7 +52,6 @@ const ViewShortlistStudents = ({ jobId, stepIndex, onClose }) => {
         </button>
       </div>
 
-      {/* Shortlisted Students Table */}
       {students.length > 0 && (
         <div className="overflow-x-auto mb-6">
           <table className="w-full text-sm text-left text-gray-500 border-collapse">

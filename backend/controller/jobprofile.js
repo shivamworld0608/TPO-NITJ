@@ -1,6 +1,7 @@
 import JobProfile from "../models/jobprofile.js";
 import Student from "../models/user_model/student.js";
 import Professor from "../models/user_model/professor.js";
+import Recuiter from "../models/user_model/recuiter.js";
 import FormSubmission from '../models/FormSubmission.js';
 import Placement from '../models/placement.js';
 import Notification from "../models/notification.js"; 
@@ -241,12 +242,56 @@ export const getJobsByRecruiter = async (req, res) => {
 
 export const updateJob = async (req, res) => {
   try {
+    const userId=req.user.userId;
     const { _id } = req.params;
+    const recuiter=await Recuiter.findById(userId);
+    const proffesor=await Professor.findById(userId);
+    const user=recuiter||proffesor;
     const job = await JobProfile.findById(_id);
     if (!job) {
       return res.status(404).json({ success: false, message: 'Job not found' });
     }
+    const oldJob = { ...job.toObject() };
     const updatedJob = await JobProfile.findByIdAndUpdate(_id, req.body, { new: true });
+    const detectChanges = (oldValue, newValue, key) => {
+      if (Array.isArray(oldValue) && Array.isArray(newValue)) {
+        const added = newValue.filter((item) => !oldValue.includes(item));
+        const removed = oldValue.filter((item) => !newValue.includes(item));
+        if (added.length > 0 || removed.length > 0) {
+          return {
+            [key]: {
+              added: added.length > 0 ? added : undefined,
+              removed: removed.length > 0 ? removed : undefined,
+            },
+          };
+        }
+      } else if (oldValue !== newValue) {
+        return {
+          [key]: {
+            oldValue,
+            newValue,
+          },
+        };
+      }
+      return null;
+    };
+    const changes = {};
+    for (const key in req.body) {
+      const change = detectChanges(oldJob[key], req.body[key], key);
+      if (change) {
+        Object.assign(changes, change);
+      }
+    }
+    if (Object.keys(changes).length > 0) {
+      updatedJob.auditLogs.push({
+        editedBy: user._id,
+        email: user.email,
+        changes: changes,
+        timestamp: new Date(),
+      });
+
+      await updatedJob.save();
+    }
     res.status(200).json({ success: true, message: 'Job updated successfully', job: updatedJob });
   } catch (error) {
     console.error('Error updating job:', error.message);

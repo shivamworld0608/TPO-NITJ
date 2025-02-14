@@ -16,6 +16,7 @@ import InterviewLinkManager from "./interviewlink";
 import GDLinkManager from "./gdlink";
 import OaLinkManager from "./oalink";
 import OthersLinkManager from "./otherslink";
+import AuditLogs from "../AuditLogs";
 
 const formatDateTime = (dateString) => {
   if (!dateString) return "N/A";
@@ -1309,6 +1310,7 @@ const ViewJobDetails = ({ job, onClose }) => {
           )
         )}
       </div>
+      <AuditLogs logs={job.auditLogs || []} />
     </div>
   );
 };

@@ -142,8 +142,26 @@ const JobProfileSchema = new mongoose.Schema(
     show:{
       type:Boolean,
       default:false
-    }
+    },
+    auditLogs: [
+      {
+        editedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+        },
+        email: {
+          type: String,
+        },
+        changes: {
+          type: mongoose.Schema.Types.Mixed,
+        },
+        timestamp: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
+
   { timestamps: true }
 );
 
