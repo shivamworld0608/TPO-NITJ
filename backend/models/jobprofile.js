@@ -10,7 +10,7 @@ const JobProfileSchema = new mongoose.Schema(
     },
     job_type: {
       type: String,
-      enum:['2m Intern','6m Intern','Intern+PPO','Intern+FTE','FTE'],
+      enum:['2m Intern','6m Intern','11m Intern','Intern+PPO','Intern+FTE','FTE'],
     },
     company_name: {
       type: String,

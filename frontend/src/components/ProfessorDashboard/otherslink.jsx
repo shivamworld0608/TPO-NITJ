@@ -7,6 +7,8 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
   const [commonLink, setCommonLink] = useState('');
   const [loading, setLoading] = useState(false);
   const [allLinksVisible, setAllLinksVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   useEffect(() => {
     const fetchEligibleStudents = async () => {
@@ -71,6 +73,8 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const studentsWithLinks = students
       .filter(student => student.othersLink.trim() !== '')
       .map(student => ({
@@ -80,6 +84,7 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
       }));
     if (studentsWithLinks.length === 0) {
       toast.error('No Others links have been provided');
+      setIsSubmitting(false);
       return;
     }
   
@@ -98,6 +103,7 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
       toast.error('Failed to set Others links.');
     } finally {
       setLoading(false);
+      isSubmitting(false);
     }
   };
 
@@ -192,8 +198,8 @@ const OthersLinkManager = ({ jobId, stepIndex, onClose, othersLinks, onUpdateLin
         </table>
       </div>
       <div className="mt-8 flex space-x-4">
-        <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={handleSubmit} disabled={loading}>
-          {loading ? 'Submitting...' : 'Submit'}
+        <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={handleSubmit} disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
         <button className="bg-gray-500 text-white px-4 py-2 rounded-lg" onClick={onClose} disabled={loading}>
           Cancel

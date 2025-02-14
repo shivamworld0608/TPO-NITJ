@@ -58,6 +58,8 @@ const ViewJobDetails = ({ job, onClose }) => {
   const [addingGDLink, setAddingGDLink] = useState(null);
   const [addingOALink, setAddingOALink] = useState(null);
   const [addingOthersLink,setAddingOthersLink]=useState(null);
+  const [isDeleting, setisDeleting] = useState(false);
+
 
 
   const btechdepartmentOptions = [
@@ -390,6 +392,8 @@ const ViewJobDetails = ({ job, onClose }) => {
   };
 
   const handleDeleteForm = () => {
+    if(isDeleting) return;
+    setisDeleting(true);
     Swal.fire({
       title: "Delete Application Form",
       text: "This action cannot be undone. Are you sure?",
@@ -419,6 +423,9 @@ const ViewJobDetails = ({ job, onClose }) => {
         } catch (error) {
           console.error("Error deleting application form:", error);
           toast.error("Failed to delete application form");
+        }
+        finally {
+          setisDeleting(false);
         }
       }
     });
@@ -1283,9 +1290,11 @@ const ViewJobDetails = ({ job, onClose }) => {
             <Button
               className="bg-red-500 hover:bg-red-600 text-white"
               onClick={handleDeleteForm}
+              disabled={isDeleting}
+
             >
               <Trash2 className="mr-2 h-4 w-4" />
-              Delete Form
+              {isDeleting ? "Deleting..." : "Delete Form"}
             </Button>
           </div>
         ) : (

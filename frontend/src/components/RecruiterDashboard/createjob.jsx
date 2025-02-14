@@ -482,6 +482,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
   };
 
   const handleSubmit = async (e) => {
+      if (isSubmitting) return;
+      setIsSubmitting(true);
     e.preventDefault();
     setIsSubmitting(true);
     try {

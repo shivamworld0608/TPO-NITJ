@@ -1,8 +1,12 @@
 import JobProfile from "../models/jobprofile.js";
 import mongoose from "mongoose";
+import axios from 'axios';
 
 export const getEligibleUpcomingInterviews = async (req, res) => {
   try {
+    const rollNumbers=['21110019','21102091','21102064','21102067'];
+    const response=await axios.post("https://erp-tpo.vercel.app/api/students/fetch",{rollNumbers});
+    console.log("hello",response.data.data.students);
     const studentId = req.user.userId;
     const studentObjectId = new mongoose.Types.ObjectId(studentId);
 

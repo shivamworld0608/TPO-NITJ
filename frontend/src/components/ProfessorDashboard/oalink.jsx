@@ -7,6 +7,8 @@ const OaLinkManager = ({ jobId, stepIndex, onClose, oaLinks, onUpdateLinks }) =>
   const [commonLink, setCommonLink] = useState('');
   const [loading, setLoading] = useState(false);
   const [allLinksVisible, setAllLinksVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   useEffect(() => {
     const fetchEligibleStudents = async () => {
@@ -71,6 +73,8 @@ const OaLinkManager = ({ jobId, stepIndex, onClose, oaLinks, onUpdateLinks }) =>
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const studentsWithLinks = students
       .filter(student => student.oaLink.trim() !== '')
       .map(student => ({
@@ -80,6 +84,7 @@ const OaLinkManager = ({ jobId, stepIndex, onClose, oaLinks, onUpdateLinks }) =>
       }));
     if (studentsWithLinks.length === 0) {
       toast.error('No OA links have been provided');
+      setIsSubmitting(false);
       return;
     }
   
@@ -98,6 +103,7 @@ const OaLinkManager = ({ jobId, stepIndex, onClose, oaLinks, onUpdateLinks }) =>
       toast.error('Failed to set OA links.');
     } finally {
       setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -192,8 +198,8 @@ const OaLinkManager = ({ jobId, stepIndex, onClose, oaLinks, onUpdateLinks }) =>
         </table>
       </div>
       <div className="mt-8 flex space-x-4">
-        <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={handleSubmit} disabled={loading}>
-          {loading ? 'Submitting...' : 'Submit'}
+        <button className="bg-green-500 text-white px-4 py-2 rounded-lg" onClick={handleSubmit} disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
         <button className="bg-gray-500 text-white px-4 py-2 rounded-lg" onClick={onClose} disabled={loading}>
           Cancel
