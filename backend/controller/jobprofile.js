@@ -242,62 +242,89 @@ export const getJobsByRecruiter = async (req, res) => {
 
 export const updateJob = async (req, res) => {
   try {
-    const userId=req.user.userId;
+    const userId = req.user.userId;
     const { _id } = req.params;
-    const recuiter=await Recuiter.findById(userId);
-    const proffesor=await Professor.findById(userId);
-    const user=recuiter||proffesor;
+    const recruiter = await Recuiter.findById(userId);
+    const professor = await Professor.findById(userId);
+    const user = recruiter || professor;
     const job = await JobProfile.findById(_id);
+
     if (!job) {
       return res.status(404).json({ success: false, message: 'Job not found' });
     }
-    const oldJob = { ...job.toObject() };
-    const updatedJob = await JobProfile.findByIdAndUpdate(_id, req.body, { new: true });
-    const detectChanges = (oldValue, newValue, key) => {
-      if (Array.isArray(oldValue) && Array.isArray(newValue)) {
-        const added = newValue.filter((item) => !oldValue.includes(item));
-        const removed = oldValue.filter((item) => !newValue.includes(item));
-        if (added.length > 0 || removed.length > 0) {
-          return {
-            [key]: {
-              added: added.length > 0 ? added : undefined,
-              removed: removed.length > 0 ? removed : undefined,
-            },
-          };
+
+    const oldJob = job.toObject();
+    const updateData = req.body;
+
+    // This function compares only the keys in newObj (updateData).
+    const detectNestedChanges = (oldObj, newObj) => {
+      let diff = {};
+
+      Object.keys(newObj).forEach(key => {
+        const oldValue = oldObj ? oldObj[key] : undefined;
+        const newValue = newObj[key];
+
+        // If both values are arrays, compare added/removed items.
+        if (Array.isArray(newValue) && Array.isArray(oldValue)) {
+          const added = newValue.filter(item => !oldValue.includes(item));
+          const removed = oldValue.filter(item => !newValue.includes(item));
+          if (added.length > 0 || removed.length > 0) {
+            diff[key] = { added, removed };
+          }
         }
-      } else if (oldValue !== newValue) {
-        return {
-          [key]: {
-            oldValue,
-            newValue,
-          },
-        };
-      }
-      return null;
+        // If both values are objects (but not arrays), compare recursively.
+        else if (
+          newValue &&
+          typeof newValue === 'object' &&
+          !Array.isArray(newValue)
+        ) {
+          const nestedDiff = detectNestedChanges(oldValue, newValue);
+          if (Object.keys(nestedDiff).length > 0) {
+            diff[key] = nestedDiff;
+          }
+        }
+        // For all other types, log the change if values differ.
+        else if (oldValue !== newValue) {
+          diff[key] = { oldValue, newValue };
+        }
+      });
+
+      return diff;
     };
-    const changes = {};
-    for (const key in req.body) {
-      const change = detectChanges(oldJob[key], req.body[key], key);
-      if (change) {
-        Object.assign(changes, change);
-      }
-    }
+
+    // Compute differences only for the fields present in updateData.
+    const changes = detectNestedChanges(oldJob, updateData);
+
     if (Object.keys(changes).length > 0) {
+      // Update the job document.
+      const updatedJob = await JobProfile.findByIdAndUpdate(
+        _id,
+        updateData,
+        { new: true }
+      );
+
+      // Log only the actual changes.
       updatedJob.auditLogs.push({
         editedBy: user._id,
         email: user.email,
-        changes: changes,
+        changes,
         timestamp: new Date(),
       });
 
       await updatedJob.save();
     }
-    res.status(200).json({ success: true, message: 'Job updated successfully', job: updatedJob });
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Job updated successfully', 
+      job: await JobProfile.findById(_id) 
+    });
   } catch (error) {
     console.error('Error updating job:', error.message);
     res.status(500).json({ success: false, error: 'Server Error' });
   }
 };
+
 
 export const deleteJob = async (req, res) => {
   try {
