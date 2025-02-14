@@ -4,6 +4,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { FaArrowLeft } from "react-icons/fa";
 import { AlertCircle, GripVertical, X, Edit2 } from "lucide-react";
+import CompanySearchDropdown from "./CompanySearchDropdown";
 
 const btechdepartmentOptions = [
   {
@@ -320,7 +321,24 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/`,
+          { withCredentials: true }
+        );
+        setCompanies(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching companies:", error);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -481,7 +499,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
       onCancel();
     } catch (error) {
       toast.error("Error creating job application.");
-    }finally {
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -513,7 +531,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
-            <div>
+            {/* <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Company Name<span className="text-red-500"> *</span>
               </label>
@@ -524,6 +542,16 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 value={formData.company_name}
                 onChange={handleChange}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+              />
+            </div> */}
+            <div>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Company Name<span className="text-red-500"> *</span>
+              </label>
+              <CompanySearchDropdown
+                companies={companies}
+                value={formData.company_name}
+                onChange={handleChange}
               />
             </div>
             {/* <div>
