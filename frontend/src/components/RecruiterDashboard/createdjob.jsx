@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
+import Swal from 'sweetalert2';
 import { 
   Building2, 
   MapPin, 
@@ -15,6 +16,7 @@ import {
 import { Alert, AlertDescription } from '../ui/alert';
 import CreateJob from './createjob';
 import ViewJobDetails from './ViewJob';
+import axios from 'axios';
 
 const CreatedJobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -66,13 +68,27 @@ const CreatedJobs = () => {
   };
 
   const handleDeleteJob = async (jobId) => {
-    const confirmation = window.confirm('Are you sure you want to delete this job?');
-    if (confirmation) {
-      const success = await deleteJob(jobId);
-      if (success) {
-        showNotification('Job deleted successfully', 'success');
-      } else {
-        showNotification('Failed to delete job', 'error');
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won’t be able to undo this action!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(
+          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/deletejob/${jobId}`,
+          { withCredentials: true }
+        );
+        setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
+        Swal.fire('Deleted!', 'The job has been deleted.', 'success');
+      } catch (error) {
+        console.error('Error deleting job:', error.message);
+        Swal.fire('Failed!', 'Failed to delete the job. Please try again.', 'error');
       }
     }
   };
@@ -100,7 +116,7 @@ const CreatedJobs = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-16 h-16 border-4 border-custom-blue border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -160,12 +176,12 @@ const CreatedJobs = () => {
             <input
               type="text"
               placeholder="Search jobs by title or company..."
-              className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="flex-1 p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-transparent"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             <select
-              className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-transparent"
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
             >
@@ -189,7 +205,7 @@ const CreatedJobs = () => {
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                        <Building2 className="w-6 h-6 text-blue-600" />
+                        <Building2 className="w-6 h-6 text-custom-blue" />
                       </div>
                       <div>
                         <h3 className="font-semibold text-lg text-gray-900">{job.job_role}</h3>
@@ -218,7 +234,7 @@ const CreatedJobs = () => {
                   </div>
 
                   <div className="mt-4 flex gap-2 flex-wrap">
-                    <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                    <span className="px-3 py-1 bg-blue-100 text-custom-blue rounded-full text-sm">
                       {job.job_type || "Full-time"}
                     </span>
                     {job.isRemote && (
@@ -231,15 +247,15 @@ const CreatedJobs = () => {
                   <div className="mt-6 flex gap-3">
                     <Button
                       variant="outline"
-                      className="flex-1 flex items-center justify-center gap-2 hover:bg-custom-blue hover:text-white"
+                      className="flex-1 flex items-center justify-center gap-2 hover:bg-custom-blue hover:text-white border-custom-blue"
                       onClick={() => setViewingJobDetails(job)}
                     >
                       <Eye className="w-4 h-4" />
                       View
                     </Button>
                     <Button
-                      variant="destructive"
-                      className="flex-1 flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white"
+                      variant="outline"
+                      className="flex-1 flex items-center justify-center gap-2 hover:bg-red-500 hover:text-white border-red-500"
                       onClick={() => handleDeleteJob(job._id)}
                     >
                       <Trash2 className="w-4 h-4" />

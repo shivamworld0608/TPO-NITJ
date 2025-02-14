@@ -319,6 +319,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
 
   const [editingIndex, setEditingIndex] = useState(null);
   const [draggedIndex, setDraggedIndex] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -463,6 +464,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     try {
       const response = await axios.post(
         `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/createjobcopy`,
@@ -476,6 +478,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
       onCancel();
     } catch (error) {
       toast.error("Error creating job application.");
+    }finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -488,7 +492,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
         <FaArrowLeft />
       </button>
       <div className="max-w-6xl mx-auto p-8 bg-white rounded-2xl shadow-2xl mt-10 transform transition-all duration-300 hover:shadow-3xl">
-        <h1 className="text-4xl font-extrabold text-center bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent mb-8">
+        <h1 className="text-4xl font-extrabold text-center text-custom-blue bg-clip-text mb-8">
           Create Job Application
         </h1>
         <form onSubmit={handleSubmit}>
@@ -503,7 +507,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 name="job_id"
                 value={formData.job_id}
                 onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
             <div>
@@ -516,7 +520,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 name="company_name"
                 value={formData.company_name}
                 onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
             {/* <div>
@@ -541,7 +545,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 name="job_role"
                 value={formData.job_role}
                 onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
             <div className="md:col-span-2 lg:col-span-3">
@@ -552,7 +556,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 name="jobdescription"
                 value={formData.jobdescription}
                 onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 rows={4}
               />
             </div>
@@ -565,7 +569,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 name="joblocation"
                 value={formData.joblocation}
                 onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
             <div>
@@ -579,7 +583,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 defaultValue={jobTypeOptions.find(
                   (option) => option.value === formData.job_type
                 )}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               >
                 <option value="">Select Job Type</option>
                 <option value="2m Intern">2-Month Internship</option>
@@ -606,7 +610,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 defaultValue={jobCategoryOptions.find(
                   (option) => option.value === formData.job_category
                 )}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               >
                 <option value="">Select Job Category</option>
                 <option value="Tech">Tech</option>
@@ -624,7 +628,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 name="ctc"
                 value={formData.ctc}
                 onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
             <div>
@@ -636,7 +640,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 name="stipend"
                 value={formData.stipend} //baceknd me ctc ko stipend me change krna h
                 onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
             <div>
@@ -649,7 +653,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 name="base_salary"
                 value={formData.base_salary}
                 onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
             <div>
@@ -662,14 +666,14 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 name="deadline"
                 value={formData.deadline}
                 onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
           </div>
 
           {/* Eligibility Criteria */}
           <div className="mt-8">
-            <h2 className="text-2xl font-bold text-blue-600 mb-6">
+            <h2 className="text-2xl font-bold text-custom-blue mb-6">
               Eligibility Criteria
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -682,7 +686,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   name="course_allowed"
                   value={formData.course_allowed}
                   onChange={handleChange}
-                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 >
                   <option value="">Select Course</option>
                   <option value="B.Tech">B.Tech</option>
@@ -714,7 +718,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   isMulti
                   onChange={handleDepartmentChange}
                   isDisabled={!formData.course_allowed}
-                  className="w-full border-2 p-1.5 border-gray-200 rounded-xl  focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300 "
+                  className="w-full border-2 p-1.5 border-gray-200 rounded-xl  focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300 "
                 />
                 {!formData.course_allowed && ( // Check if no course is selected
                   <p className="text-red-500 text-sm mt-2">
@@ -731,7 +735,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   name="gender_allowed"
                   value={formData.gender_allowed}
                   onChange={handleChange}
-                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 >
                   <option value="">Select Gender</option>
                   <option value="Male">Male</option>
@@ -749,7 +753,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   name="eligible_batch"
                   value={formData.eligible_batch}
                   onChange={handleChange}
-                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 >
                   <option value="">Select Batch</option>
                   <option value="2025">2025</option>
@@ -771,7 +775,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   onChange={handleChange}
                   min="0"
                   max="10"
-                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
               </div>
               <div className="flex items-center">
@@ -783,7 +787,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   name="active_backlogs"
                   checked={formData.active_backlogs}
                   onChange={handleChange}
-                  className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 transition-all duration-300"
+                  className="form-checkbox h-5 w-5 text-custom-blue rounded focus:ring-custom-blue transition-all duration-300"
                 />
               </div>
               <div className="flex items-center">
@@ -795,7 +799,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   name="history_backlogs"
                   checked={formData.history_backlogs}
                   onChange={handleChange}
-                  className="form-checkbox h-5 w-5 text-blue-600 rounded focus:ring-blue-500 transition-all duration-300"
+                  className="form-checkbox h-5 w-5 text-custom-blue rounded focus:ring-custom-blue transition-all duration-300"
                 />
               </div>
             </div>
@@ -803,7 +807,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
 
           {/* Hiring Workflow */}
           <div className="mt-8">
-            <h2 className="text-2xl font-bold text-blue-600 mb-6">
+            <h2 className="text-2xl font-bold text-custom-blue mb-6">
               Hiring Workflow{" "}
               <span className="text-red-500 text-sm">
                 (You can reorder rounds by dragging. And please ensure your
@@ -823,7 +827,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 value={workflowStepOptions.find(
                   (option) => option.value === workflowStep.step_type
                 )}
-                className="w-full border-2 border-gray-200 rounded-xl p-1.5 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                className="w-full border-2 border-gray-200 rounded-xl p-1.5 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
 
@@ -838,7 +842,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   placeholder="OA Date"
                   value={workflowStep.details.oa_date || ""}
                   onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <input
                   type="string"
@@ -846,7 +850,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   placeholder="Login Time"
                   value={workflowStep.details.oa_login_time || ""}
                   onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <input
                   type="string"
@@ -854,14 +858,14 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   placeholder="OA Duration"
                   value={workflowStep.details.oa_duration || ""}
                   onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <textarea
                   name="oa_info"
                   placeholder="OA Info"
                   value={workflowStep.details.oa_info || ""}
                   onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
               </div>
             )}
@@ -873,7 +877,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                     name="interview_type"
                     value={workflowStep.details.interview_type || ""}
                     onChange={handleStepDetailsChange}
-                    className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                    className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                   >
                     <option value="">Select Interview Type</option>
                     <option value="Technical Interview 1">
@@ -896,7 +900,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   placeholder="Interview Date"
                   value={workflowStep.details.interview_date || ""}
                   onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <input
                   type="time"
@@ -904,14 +908,14 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   placeholder="Interview Time"
                   value={workflowStep.details.interview_time || ""}
                   onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <textarea
                   name="interview_info"
                   placeholder="Interview Info"
                   value={workflowStep.details.interview_info || ""}
                   onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
               </div>
             )}
@@ -924,7 +928,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   placeholder="GD Date"
                   value={workflowStep.details.gd_date || ""}
                   onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <input
                   type="string"
@@ -932,14 +936,14 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   placeholder="GD Time"
                   value={workflowStep.details.gd_time || ""}
                   onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
                 <textarea
                   name="gd_info"
                   placeholder="GD Info"
                   value={workflowStep.details.gd_info || ""}
                   onChange={handleStepDetailsChange}
-                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                  className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
               </div>
             )}
@@ -952,7 +956,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   placeholder="Name of Round"
                   value={workflowStep.details.others_round_name}
                   onChange={handleStepDetailsChange}
-                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300 mt-4"
+                  className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300 mt-4"
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
@@ -962,7 +966,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                     placeholder="Round Date"
                     value={workflowStep.details.others_date || ""}
                     onChange={handleStepDetailsChange}
-                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                   />
                   <input
                     type="string"
@@ -970,7 +974,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                     placeholder="Login Time"
                     value={workflowStep.details.others_login_time || ""}
                     onChange={handleStepDetailsChange}
-                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                   />
                   <input
                     type="string"
@@ -978,14 +982,14 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                     placeholder="Round Duration"
                     value={workflowStep.details.others_duration || ""}
                     onChange={handleStepDetailsChange}
-                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                   />
                   <textarea
                     name="others_info"
                     placeholder="Round Info"
                     value={workflowStep.details.others_info || ""}
                     onChange={handleStepDetailsChange}
-                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                    className="border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                   />
                 </div>
               </>
@@ -1016,7 +1020,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="font-semibold text-blue-600">
+                    <h3 className="font-semibold text-custom-blue">
                       Round {index + 1}:{" "}
                       {
                         workflowStepOptions.find(
@@ -1031,7 +1035,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                     <button
                       type="button"
                       onClick={() => editWorkflowStep(index)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded-full"
+                      className="p-2 text-custom-blue hover:bg-blue-50 rounded-full"
                     >
                       <Edit2 size={20} />
                     </button>
@@ -1051,9 +1055,10 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="mt-10 w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold text-lg rounded-2xl hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
+            className="mt-10 w-full px-8 py-4 bg-custom-blue text-white font-semibold text-lg rounded-2xl hover:bg-blue-700 transition-all duration-300"
+            disabled={isSubmitting}
           >
-            Create Job
+            {isSubmitting ? "Creating..." : "Create Job"}
           </button>
         </form>
       </div>

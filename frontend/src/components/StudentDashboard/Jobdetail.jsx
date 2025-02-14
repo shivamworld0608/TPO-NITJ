@@ -4,7 +4,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import ApplicationForm from "./applicationform";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Swal from "sweetalert2";
-import { faBriefcase, faMapMarkerAlt, faDollarSign, faCalendarAlt, faClipboardList, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import {faMapMarkerAlt, faClipboardList,faInfoCircle, faBriefcase, faDollarSign, faTags, faUserTie} from '@fortawesome/free-solid-svg-icons';
 
 const Jobdetail = ({ job_id, onBack, onShow }) => {
     const [activeInfo, setActiveInfo] = useState("jobDescription");
@@ -160,9 +160,9 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
 
     const details = [
         { icon: faClipboardList, label: "JOB ID", value: jobDetails.job_id || "N/A" },
-        { icon: faBriefcase, label: "JOB TYPE", value: jobDetails.jobtype || "N/A" },
+        { icon: faBriefcase, label: "JOB TYPE", value: jobDetails.job_type || "N/A" },
         { icon: faClipboardList, label: "JOB CATEGORY", value: jobDetails.job_category || "N/A" },
-        { icon: faBriefcase, label: "JOB ROLE", value: jobDetails.jobrole || "N/A" },
+        { icon: faBriefcase, label: "JOB ROLE", value: jobDetails.job_role || "N/A" },
         { icon: faDollarSign, label: "CTC", value: jobDetails.job_salary?.ctc || "N/A" },
         { icon: faDollarSign, label: "BASE SALARY", value: jobDetails.job_salary?.base_salary || "N/A" },
         { icon: faMapMarkerAlt, label: "LOCATION", value: jobDetails.joblocation || "N/A" },

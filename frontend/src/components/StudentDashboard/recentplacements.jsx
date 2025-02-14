@@ -249,7 +249,7 @@ const PlacementDetailsDownload = ({ placement }) => {
           </div>
         </div>
         <Download 
-          className="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200" 
+          className="w-5 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200" 
         />
       </div>
     </div>
@@ -259,9 +259,9 @@ const PlacementDetailsDownload = ({ placement }) => {
 const RecentPlacements = ({ placements = [], loading = false }) => {
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
-        <div className="px-4 py-3 bg-custom-blue text-white">
-          <h2 className="text-lg font-medium">Recent Placements</h2>
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[400px]">
+        <div className="px-6 py-4 bg-gradient-to-r from-custom-blue to-purple-600 text-white">
+          <h2 className="text-xl font-semibold">Recent Placements</h2>
         </div>
         <CardSkeleton />
       </div>
@@ -272,10 +272,10 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
   if (!Array.isArray(placements)) {
     return (
       <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
-        <div className="px-4 py-3 bg-custom-blue text-white">
-          <h2 className="text-lg font-medium">Recent Placements</h2>
+        <div className="px-6 py-4 bg-gradient-to-r from-custom-blue to-purple-600 text-white">
+          <h2 className="text-xl font-semibold">Recent Placements</h2>
         </div>
-        <div className="p-4 text-center text-gray-500">
+        <div className="p-6 text-center text-gray-600">
           No placement data available
         </div>
       </div>
@@ -284,46 +284,65 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
-      <div className="px-4 py-3 bg-custom-blue text-white">
-        <h2 className="text-lg font-medium">Recent Placements</h2>
+      {/* Header */}
+      <div className="px-6 py-4 bg-gradient-to-r from-custom-blue to-purple-600 text-white">
+        <h2 className="text-xl font-semibold">Recent Placements</h2>
       </div>
-      <div className={`p-4 h-[calc(100%-48px)] ${
-        placements.length > 2
-          ? "overflow-y-auto scrollbar-thin scrollbar-thumb-[#3b82f6] scrollbar-track-gray-200 scrollbar-thumb-height-10"
-          : "overflow-y-hidden"
-      }`}>
+
+      {/* Timeline Content */}
+      <div
+        className={`p-6 h-[calc(100%-72px)] ${
+          placements.length > 2
+            ? "overflow-y-auto scrollbar-thin scrollbar-thumb-[#3b82f6] scrollbar-track-gray-200"
+            : "overflow-y-hidden"
+        }`}
+      >
         {placements.length === 0 ? (
-           <div className="min-h-[250px] flex items-center justify-center">
-      <div className="p-6 bg-white rounded-lg text-center w-full max-w-md mx-auto">
-        {/* Icon */}
-        <div className="flex justify-center mb-3">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-12 w-12 text-custom-blue animate-bounce"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-            />
-          </svg>
-        </div>
-        {/* Message */}
-        <p className="text-sm text-gray-800 font-medium">No Recent Placements</p>
-        <p className="text-xs text-gray-500 mt-1">You're all caught up!</p>
-      </div>
-    </div>
+          <div className="min-h-[300px] flex items-center justify-center">
+            <div className="p-6 bg-white rounded-lg text-center w-full max-w-md mx-auto shadow-sm">
+              {/* Icon */}
+              <div className="flex justify-center mb-3">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 text-custom-blue animate-bounce"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
+                  />
+                </svg>
+              </div>
+              {/* Message */}
+              <p className="text-sm text-gray-800 font-medium">
+                No Recent Placements
+              </p>
+              <p className="text-xs text-gray-500 mt-1">You're all caught up!</p>
+            </div>
+          </div>
         ) : (
-          <div className="space-y-4">
+          <div className="relative">
+            {/* Timeline Line */}
+            <div className="absolute left-4 top-0 h-full w-0.5 bg-gray-200"></div>
+
+            {/* Placements as Timeline Items */}
             {placements.map((placement, index) => (
-              <PlacementDetailsDownload 
-                key={placement._id || index} 
-                placement={placement}
-              />
+              <div
+                key={placement._id || index}
+                className="group relative pl-8 pb-6"
+              >
+                {/* Timeline Dot */}
+                <div className="absolute left-0 top-1 h-3 w-3 bg-custom-blue rounded-full border-2 border-white transform -translate-x-1/2"></div>
+
+                {/* Placement Details */}
+                <div className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border-l-4 border-custom-blue hover:border-purple-600">
+                  <PlacementDetailsDownload placement={placement} />
+                </div>
+              </div>
             ))}
           </div>
         )}

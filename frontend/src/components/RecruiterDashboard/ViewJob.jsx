@@ -155,19 +155,19 @@ const ViewJobDetailsr = ({ job, onClose }) => {
   const renderEditableCard = (title, content, section) => (
     <div className="p-8 bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative mt-8">
       <button
-        className="absolute top-4 right-4 p-2 text-gray-600 hover:text-blue-600 transition-colors"
+        className="absolute top-4 right-4 p-2 text-gray-600 hover:text-custom-blue transition-colors"
         onClick={() => handleEdit(section)}
       >
         <Pencil size={20} />
       </button>
 
-      <h3 className="text-2xl font-semibold text-blue-800 mb-6">{title}</h3>
+      <h3 className="text-2xl font-semibold text-custom-blue mb-6">{title}</h3>
       {content}
 
       {editingSection === section && (
         <div className="mt-8 flex space-x-4">
           <button
-            className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
+            className="bg-custom-blue  text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
             onClick={() => handleSave(section)}
           >
             Save
@@ -193,7 +193,7 @@ const ViewJobDetailsr = ({ job, onClose }) => {
               type="text"
               value={editedJob.company_name || ''}
               onChange={(e) => handleInputChange('basic', 'company_name', e.target.value)}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-custom-blue focus:border-custom-blue"
             />
           ) : (
             <span className="flex-1">{editedJob.company_name}</span>
@@ -419,7 +419,7 @@ const ViewJobDetailsr = ({ job, onClose }) => {
               type="checkbox"
               checked={editedJob.eligibility_criteria?.active_backlogs || false}
               onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.active_backlogs', e.target.checked)}
-              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              className="w-5 h-5 text-custom-blue border-gray-300 rounded focus:ring-blue-500"
             />
           ) : (
             <span className="flex-1">
@@ -434,7 +434,7 @@ const ViewJobDetailsr = ({ job, onClose }) => {
               type="checkbox"
               checked={editedJob.eligibility_criteria?.history_backlogs || false}
               onChange={(e) => handleInputChange('eligibility', 'eligibility_criteria.history_backlogs', e.target.checked)}
-              className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              className="w-5 h-5 text-custom-blue border-gray-300 rounded focus:ring-blue-500"
             />
           ) : (
             <span className="flex-1">
@@ -482,7 +482,7 @@ const ViewJobDetailsr = ({ job, onClose }) => {
               <Pencil size={20} />
             </button>
 
-            <h3 className="text-2xl font-semibold text-blue-800 mb-6">
+            <h3 className="text-2xl font-semibold text-custom-blue mb-6">
               {step.step_type}
             </h3>
 
@@ -528,7 +528,7 @@ const ViewJobDetailsr = ({ job, onClose }) => {
               {editingStepIndex === index && editingSection === 'hiring_workflow' && (
                 <>
                   <button
-                    className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
+                    className="bg-custom-blue text-white px-8 py-3 rounded-2xl hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
                     onClick={() => handleSave('hiring_workflow')}
                   >
                     Save
@@ -569,9 +569,9 @@ const ViewJobDetailsr = ({ job, onClose }) => {
   return (
     <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-6xl mx-auto">
      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-4xl font-bold text-blue-800">Job Details</h2>
+        <h2 className="text-4xl font-bold text-custom-blue">Job Details</h2>
         <button
-        className="mt-8 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+        className="mt-8 bg-custom-blue text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
         onClick={() => setViewingAppliedStudents(true)}
       >
         View Applied Students
@@ -602,7 +602,7 @@ const ViewJobDetailsr = ({ job, onClose }) => {
         "eligibility"
       )}
 
-      <h3 className="text-3xl font-bold text-blue-800 mt-10 mb-8">
+      <h3 className="text-3xl font-bold text-custom-blue mt-10 mb-8">
         Hiring Workflow
       </h3>
       {renderHiringWorkflow()}
