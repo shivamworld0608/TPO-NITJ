@@ -22,6 +22,8 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
     deadline: job.deadline.split('T')[0],
   });
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -59,6 +61,8 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
   };
 
   const handleSubmit = async (e) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     e.preventDefault();
     try {
       const response = await axios.put(`${import.meta.env.REACT_APP_BASE_URL}/jobprofile/updatejob/${job._id}`, formData, { withCredentials: true });
@@ -68,6 +72,9 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
     } catch (error) {
       console.error('Error updating job:', error.message);
       alert('Failed to update the job');
+    }
+    finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -310,8 +317,9 @@ const EditJobModal = ({ job, onClose, onJobUpdated }) => {
             <button
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded"
+              disabled={isSubmitting}
             >
-              Save Changes
+              {isSubmitting ? 'Updating...' : 'Save Changes'}
             </button>
           </div>
         </form>

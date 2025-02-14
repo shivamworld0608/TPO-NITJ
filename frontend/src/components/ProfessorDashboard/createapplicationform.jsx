@@ -9,6 +9,8 @@ import { ArrowLeft, Plus, Save } from 'lucide-react';
 const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
   const [fields, setFields] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const studentProperties = ['gender', 'department', 'cgpa','name','email'];
 
@@ -58,6 +60,8 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
   };
 
   const handleSubmit = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       await axios.post(
         `${import.meta.env.REACT_APP_BASE_URL}/api/form-templates`, 
@@ -72,6 +76,9 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
     } catch (err) {
       console.error(err);
       toast.error('Failed to create form template');
+    }
+    finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -219,10 +226,11 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
 
           <Button
             onClick={handleSubmit}
+            disabled={isSubmitting}
             className="w-full bg-green-500 text-white"
           >
             <Save className="w-4 h-4 mr-2" />
-            Create Form Template
+            {isSubmitting ? 'Creating Form Template...' : 'Create Form Template'}
           </Button>
         </div>
 

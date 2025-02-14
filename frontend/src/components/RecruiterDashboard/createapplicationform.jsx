@@ -4,6 +4,8 @@ import toast from 'react-hot-toast';
 const RecruiterFormTemplate = ({jobId}) => {
   const [title, setTitle] = useState('');
   const [fields, setFields] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   const addField = () => {
     setFields([...fields, { fieldName: '', fieldType: 'text', isRequired: false, options: [] }]);
@@ -38,6 +40,10 @@ const RecruiterFormTemplate = ({jobId}) => {
     setFields(updatedFields);
   };
   const handleSubmit = async () => {
+
+    if(isSubmitting) return;
+    setIsSubmitting(true);
+
     try {
       await axios.post(`${import.meta.env.REACT_APP_BASE_URL}/api/form-templates`, {title, fields, jobId },{withCredentials: true});
       toast.success('Form template created successfully!');
@@ -46,6 +52,9 @@ const RecruiterFormTemplate = ({jobId}) => {
     } catch (err) {
       console.error(err);
       toast.error('Failed to create form template');
+    }
+    finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -157,8 +166,9 @@ const RecruiterFormTemplate = ({jobId}) => {
   <button
     className="mt-10 w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-4 rounded-xl hover:from-green-600 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
     onClick={handleSubmit}
+    disabled={isSubmitting}
   >
-    Submit
+    {isSubmitting ? "Submitting..." : "Submit"}
   </button>
 </div>
   );

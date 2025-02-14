@@ -11,7 +11,10 @@ function Profile() {
   const [error, setError] = useState("");
   const [sendImage, setSendImage] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   const [isUpdatingPic, setIsUpdatingPic] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -91,6 +94,8 @@ function Profile() {
   };
 
   const handleProfilePicSubmit = async (e) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     e.preventDefault();
     if (!sendImage) return;
 
@@ -126,11 +131,17 @@ function Profile() {
         });
     } catch (err) {
       console.error(err);
+      setIsSubmitting(false);
       setError("Failed to update profile picture");
+    }
+    finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleSubmit = async (e) => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     e.preventDefault();
     try {
       await toast
@@ -155,7 +166,11 @@ function Profile() {
         });
     } catch (err) {
       console.error(err);
+      setIsSubmitting(false);
       setError("Failed to update profile");
+    }
+    finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -203,9 +218,11 @@ function Profile() {
             <div className="mt-4">
               <button
                 onClick={handleProfilePicSubmit}
+                disabled={isSubmitting}
                 className="bg-green-500 text-white px-4 py-1 border border-green-400 rounded"
               >
-                Upload
+                {isSubmitting ? "Uploading..." : "Upload"}
+                
               </button>
               <button
                 onClick={handleProfilePicUpdateToggle}
@@ -236,9 +253,10 @@ function Profile() {
               />
               <button
                 onClick={handleSubmit}
+                disabled={isSubmitting}
                 className="mt-4 mx-2 bg-custom-blue text-white px-4 py-1 border border-custom-blue-400 rounded"
               >
-                Save
+                {isSubmitting ? "Saving..." : "Save"}
               </button>
               <button
                 onClick={handleEditToggle}
