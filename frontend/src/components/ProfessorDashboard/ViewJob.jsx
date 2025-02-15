@@ -61,6 +61,24 @@ const ViewJobDetails = ({ job, onClose }) => {
   const [addingOthersLink,setAddingOthersLink]=useState(null);
   const [isDeleting, setisDeleting] = useState(false);
 
+  const [editingAllowed, setEditingAllowed] = useState(false);
+   
+  const handleToggleEditing = async () => {
+    try {
+      const response = await axios.put(
+        `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/toggle-editing`,
+        {company:editedJob.company_name},
+        { withCredentials: true }
+      );
+      if (response.data.success) {
+        setEditingAllowed(response.data.editing_allowed);
+        toast.success(`Editing ${response.data.editing_allowed ? "Enabled" : "Disabled"}`);
+      }
+    } catch (error) {
+      console.error("Error toggling editing:", error);
+      toast.error("Failed to toggle editing");
+    }
+  };
 
 
   const btechdepartmentOptions = [
@@ -379,6 +397,25 @@ const ViewJobDetails = ({ job, onClose }) => {
       checkApplicationFormExistence();
     }
   }, [job]);
+
+  useEffect(() => {
+  const fetchRecruiterData = async () => {
+    try {
+      console.log("ghj");
+      const response = await axios.get(
+        `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/editing-allowed-status/${editedJob.company_name}`,
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      if (response.data.editing_allowed !== undefined) {
+        setEditingAllowed(response.data.editing_allowed);
+      }
+    } catch (error) {
+      console.error("Error fetching recruiter data:", error);
+    }
+  };
+  fetchRecruiterData();
+}, []);
 
   const handleEdit = (section, index = null) => {
     setEditingSection(section);
@@ -1236,23 +1273,43 @@ const ViewJobDetails = ({ job, onClose }) => {
     <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-4xl font-bold text-custom-blue">Job Details</h2>
-        <div className="flex space-x-4">
-          {job.Approved_Status && (
-            <button
-              className="bg-gradient-to-r from-[#0369A0] to-[#024873] text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-              onClick={() => setViewingAppliedStudents(true)}
-            >
-              <Users className="mr-2 h-4 w-4 inline" />
-              View Applied Students
-            </button>
-          )}
-          <button
-            className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-            onClick={onClose}
-          >
-            Close
-          </button>
-        </div>
+        <div className="flex items-center space-x-4">
+    {job.Approved_Status && (
+      <button
+        className="bg-gradient-to-r from-[#0369A0] to-[#024873] text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+        onClick={() => setViewingAppliedStudents(true)}
+      >
+        <Users className="mr-2 h-4 w-4 inline" />
+        View Applied Students
+      </button>
+    )}
+    
+    <label className="inline-flex items-center cursor-pointer py-3">
+      <input
+        type="checkbox"
+        checked={editingAllowed}
+        onChange={handleToggleEditing}
+        className="hidden"
+      />
+      <div className={`
+        w-14 h-8 rounded-full relative transition-colors duration-300
+        ${editingAllowed ? 'bg-green-500' : 'bg-red-500'}
+      `}>
+        <span className={`
+          absolute top-1 left-1 w-6 h-6 bg-white rounded-full 
+          transition-transform duration-300
+          ${editingAllowed ? 'translate-x-6' : ''}
+        `}></span>
+      </div>
+    </label>
+
+    <button
+      className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+      onClick={onClose}
+    >
+      Close
+    </button>
+  </div>
       </div>
 
       {renderEditableCard("Basic Details", renderBasicDetails(), "basic")}

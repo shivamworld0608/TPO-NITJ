@@ -32,7 +32,7 @@ const AuditLogs = ({ logs }) => {
   const formatSingleValue = (value) => {
     if (value === null || value === undefined) return "N/A";
     if (typeof value === "object") {
-      if (value instanceof Date) return format(value, "MM/dd/yyyy, h:mm:ss a");
+      if (value instanceof Date) return format(value, "d MMM, yyyy, h:mm a");
       return Object.entries(value)
         .map(([k, v]) => `${k}: ${formatSingleValue(v)}`)
         .join(", ");
@@ -149,10 +149,10 @@ const AuditLogs = ({ logs }) => {
       </div>
 
       {isVisible && (
-        <div className="p-8 bg-white border-x border-b border-gray-200 rounded-b-2xl shadow-lg">
+        <div className="p-6 bg-white border-x border-b border-gray-200 rounded-b-2xl shadow-lg">
           <div className="space-y-4">
             {logs.map((log, index) => (
-              <div key={index} className="p-4 bg-gray-50 rounded-lg shadow-sm">
+              <div key={index} className="p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 relative mt-2">
                 <button
                   onClick={() => toggleLog(index)}
                   className="w-full flex justify-between items-center cursor-pointer hover:bg-gray-100 p-2 rounded-md transition-colors duration-200"
@@ -164,7 +164,7 @@ const AuditLogs = ({ logs }) => {
                         {log.email}
                       </p>
                       <p className="text-xs text-gray-500">
-                        {format(new Date(log.timestamp), "MM/dd/yyyy, h:mm:ss a")}
+                        {format(new Date(log.timestamp), "d MMM, yyyy, h:mm a")}
                       </p>
                     </div>
                   </div>
