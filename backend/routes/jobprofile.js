@@ -1,12 +1,12 @@
 import express from "express";
 const router=express.Router();
 
-import {incompletedJobProfile,updateInterviewLink,updategdLink,updateOthersLink, updateoaLink , checkEligibility, getJobProfiletostudent,getJobProfiledetails, getJobsByRecruiter,createJobProfile,createJobProfilecopy,updateJob,deleteJob,getJobProfilesForProfessors,approveJobProfile,rejectJobProfile,addshortlistStudents,eligibleinthis,viewshortlisting,getspecificJobProfilesForProfessors, completedJobProfile, getAllCompanies } from "../controller/jobprofile.js";
+import {toggleEditingAllowed,getEditingAllowedStatus,incompletedJobProfile,updateInterviewLink,updategdLink,updateOthersLink, updateoaLink , checkEligibility, getJobProfiletostudent,getJobProfiledetails, getJobsByRecruiter,createJobProfile,createJobProfilecopy,updateJob,deleteJob,getJobProfilesForProfessors,approveJobProfile,rejectJobProfile,addshortlistStudents,eligibleinthis,viewshortlisting,getspecificJobProfilesForProfessors, completedJobProfile, getAllCompanies } from "../controller/jobprofile.js";
 
 router.get("/", getAllCompanies);
 router.get("/eligibility/:_id/", checkEligibility);
 router.get("/getjobs", getJobProfiletostudent);
-router.get("/:_id", getJobProfiledetails);
+
 
 
 router.post("/createjob", createJobProfile);
@@ -33,4 +33,9 @@ router.post("/set-oa-links",updateoaLink );
 router.post("/set-others-links",updateOthersLink );
 
 
+router.get("/editing-allowed-status/:company",getEditingAllowedStatus );
+router.put("/toggle-editing",toggleEditingAllowed );
+
+
+router.get("/:_id", getJobProfiledetails);
 export default router;

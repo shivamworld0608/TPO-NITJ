@@ -240,6 +240,40 @@ export const getJobsByRecruiter = async (req, res) => {
   }
 };
 
+export const toggleEditingAllowed = async (req, res) => {
+  try {
+    const {company}=req.body;
+    const recruiter = await Recuiter.findOne({ company });
+    if (!recruiter) {
+      return res.status(404).json({ success: false, message: "Recruiter not found" });
+    }
+    recruiter.editing_allowed = !recruiter.editing_allowed;
+    await recruiter.save();
+    res.status(200).json({ 
+      success: true, 
+      editing_allowed: recruiter.editing_allowed 
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const getEditingAllowedStatus = async (req, res) => {
+  console.log("hello");
+  try {
+    const {company}=req.params.company;
+    const recruiter = await Recuiter.findOne({ company });
+    if (!recruiter) {
+      return res.status(404).json({ success: false, message: "Recruiter not found" });
+    }
+    res.status(200).json({ success: true, editing_allowed: recruiter.editing_allowed  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
 export const updateJob = async (req, res) => {
   try {
     const userId = req.user.userId;
@@ -400,7 +434,6 @@ export const getJobProfilesForProfessors = async (req, res) => {
       acc[jaf.organizationName] = jaf;
       return acc;
     }, {});
-   console.log(jafByCompany);
     res.status(200).json({
       approved: approvedJobs,
       notApproved: notApprovedJobs,
