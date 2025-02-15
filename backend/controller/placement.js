@@ -39,29 +39,45 @@ export const getPlacementInsights = async (req, res) => {
     .sort({ createdAt: -1 });
 
     const uniqueStudents = new Set();
-    let totalCtc = 0;
-    let totalStudents = 0;
-    const companiesVisited = new Set();
-    
-    allPlacements.forEach((placement) => {
-      companiesVisited.add(placement.company_name);
-      totalStudents += placement.shortlisted_students.length;
-      placement.shortlisted_students.forEach((student) => {        
-        uniqueStudents.add(student.email); // Ensure students are counted only once
-        totalCtc += placement.ctc; // Add the CTC to the total sum
-      });
-    });
-    
-    const averagePackage = totalStudents > 0 ? (totalCtc / totalStudents).toFixed(2) : 0;
+let totalCtc = BigInt(0); // Use BigInt for totalCtc
+let totalStudents = 0;
+const companiesVisited = new Set();
 
-    totalStudents = uniqueStudents.size; // Total unique students placed
-    const totalCompanies = companiesVisited.size; // Total unique companies visited
-    
-    res.json({
-      totalStudentsPlaced: totalStudents,
-      companiesVisited: totalCompanies,
-      averagePackage: averagePackage,
-    });
+allPlacements.forEach((placement) => {
+  companiesVisited.add(placement.company_name);
+  totalStudents += placement.shortlisted_students.length;
+  totalCtc += BigInt(Math.round(placement.ctc)); 
+
+  // Track unique students
+  placement.shortlisted_students.forEach((student) => {
+    uniqueStudents.add(student.email);
+  });
+});
+
+// Calculate average package
+let averagePackage = 0;
+if (totalStudents > 0) {
+  // Perform division using BigInt
+  const averagePackageBigInt = totalCtc / BigInt(companiesVisited.size);
+
+  // Convert BigInt back to a regular number
+  averagePackage = Number(averagePackageBigInt);
+
+  // Format to 2 decimal places
+  averagePackage = parseFloat(averagePackage.toFixed(2));
+}
+
+// Update totalStudents to reflect unique students
+totalStudents = uniqueStudents.size;
+
+// Total unique companies visited
+const totalCompanies = companiesVisited.size;
+
+res.json({
+  totalStudentsPlaced: totalStudents,
+  companiesVisited: totalCompanies,
+  averagePackage: averagePackage,
+});
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
