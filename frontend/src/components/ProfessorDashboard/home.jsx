@@ -390,7 +390,7 @@ const Home = () => {
           {/* Recent Internships Card */}
           <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-2xl h-[320px]">
   {/* Header */}
-  <div className="px-6 py-4 bg-gradient-to-r from-custom-blue to-purple-600 text-white">
+  <div className="px-6 py-4 bg-custom-blue text-white">
     <h2 className="text-xl font-semibold">Recent Internships</h2>
   </div>
 
