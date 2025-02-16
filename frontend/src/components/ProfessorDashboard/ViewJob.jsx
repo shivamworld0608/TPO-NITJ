@@ -17,6 +17,7 @@ import GDLinkManager from "./gdlink";
 import OaLinkManager from "./oalink";
 import OthersLinkManager from "./otherslink";
 import AuditLogs from "../AuditLogs";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 const formatDateTime = (dateString) => {
   if (!dateString) return "N/A";
@@ -41,7 +42,7 @@ const formatDate = (dateString) => {
   });
 };
 
-const ViewJobDetails = ({ job, onClose }) => {
+const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
   const [viewingAppliedStudents, setViewingAppliedStudents] = useState(false);
   const [applicationFormexist, setApplicationFormexist] = useState(null);
   const [selectedJobForForm, setSelectedJobForForm] = useState(null);
@@ -60,18 +61,19 @@ const ViewJobDetails = ({ job, onClose }) => {
   const [addingOALink, setAddingOALink] = useState(null);
   const [addingOthersLink,setAddingOthersLink]=useState(null);
   const [isDeleting, setisDeleting] = useState(false);
-
-  const [editingAllowed, setEditingAllowed] = useState(false);
+  const [editingAllowed, setEditingAllowed] = useState(editedJob.recruiter_editing_allowed || false);
    
   const handleToggleEditing = async () => {
     try {
+      console.log(job.recruiter_editing_allowed);
       const response = await axios.put(
         `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/toggle-editing`,
-        {company:editedJob.company_name},
+        {_id:editedJob._id},
         { withCredentials: true }
       );
       if (response.data.success) {
         setEditingAllowed(response.data.editing_allowed);
+        oneditingAllowedUpdate(response.data.editing_allowed);
         toast.success(`Editing ${response.data.editing_allowed ? "Enabled" : "Disabled"}`);
       }
     } catch (error) {
@@ -397,25 +399,6 @@ const ViewJobDetails = ({ job, onClose }) => {
       checkApplicationFormExistence();
     }
   }, [job]);
-
-  useEffect(() => {
-  const fetchRecruiterData = async () => {
-    try {
-      console.log("ghj");
-      const response = await axios.get(
-        `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/editing-allowed-status/${editedJob.company_name}`,
-        { withCredentials: true }
-      );
-      console.log(response.data);
-      if (response.data.editing_allowed !== undefined) {
-        setEditingAllowed(response.data.editing_allowed);
-      }
-    } catch (error) {
-      console.error("Error fetching recruiter data:", error);
-    }
-  };
-  fetchRecruiterData();
-}, []);
 
   const handleEdit = (section, index = null) => {
     setEditingSection(section);
@@ -1283,25 +1266,41 @@ const ViewJobDetails = ({ job, onClose }) => {
         View Applied Students
       </button>
     )}
-    
-    <label className="inline-flex items-center cursor-pointer py-3">
-      <input
-        type="checkbox"
-        checked={editingAllowed}
-        onChange={handleToggleEditing}
-        className="hidden"
-      />
-      <div className={`
-        w-14 h-8 rounded-full relative transition-colors duration-300
-        ${editingAllowed ? 'bg-green-500' : 'bg-red-500'}
-      `}>
-        <span className={`
-          absolute top-1 left-1 w-6 h-6 bg-white rounded-full 
-          transition-transform duration-300
-          ${editingAllowed ? 'translate-x-6' : ''}
-        `}></span>
-      </div>
-    </label>
+
+<TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <label className="inline-flex items-center cursor-pointer py-3 relative group">
+              <input
+                type="checkbox"
+                checked={editingAllowed}
+                onChange={handleToggleEditing}
+                className="hidden"
+              />
+              <div className={`
+                w-14 h-8 rounded-full relative transition-colors duration-300
+                ${editingAllowed ? 'bg-green-500' : 'bg-red-500'}
+              `}>
+                <span className={`
+                  absolute top-1 left-1 w-6 h-6 bg-white rounded-full 
+                  transition-transform duration-300
+                  ${editingAllowed ? 'translate-x-6' : ''}
+                `}></span>
+              </div>
+            </label>
+          </TooltipTrigger>
+          <TooltipContent className="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-xl">
+            <p className="text-sm font-medium">
+              {editingAllowed ? 'Disable Recruiter Editing' : 'Enable Recruiter Editing'}
+            </p>
+            <p className="text-xs text-gray-300 mt-1">
+              {editingAllowed 
+                ? 'Click to prevent recruiter from editing job details' 
+                : 'Click to allow recruiter to edit job details'}
+            </p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
     <button
       className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"

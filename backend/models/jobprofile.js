@@ -143,6 +143,10 @@ const JobProfileSchema = new mongoose.Schema(
       type:Boolean,
       default:false
     },
+    recruiter_editing_allowed:{
+      type:Boolean,
+      default:false
+    },
     auditLogs: [
       {
         editedBy: {

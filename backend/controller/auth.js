@@ -76,19 +76,15 @@ const generateOTP = () => {
     res.status(200).json({ message: "OTP verified successfully" });
   };
 
-  export const LockedResendOTP = async (req, res) => {
+export const LockedResendOTP = async (req, res) => {
     try {
         const { email } = req.body;
         const loginAttempt = await LoginAttempt.findOne({ email });
-
         if (!loginAttempt || !loginAttempt.isLocked) {
             return res.status(400).json({ message: "Account not locked" });
         }
-
-        // Generate new OTP
         const newOTP = Math.floor(100000 + Math.random() * 900000).toString();
-        const otpExpires = Date.now() + 300000;
-
+        const otpExpires = new Date(Date.now() + 5 * 60 * 1000);
         loginAttempt.otp = newOTP;
         loginAttempt.otpExpires = otpExpires;
         await loginAttempt.save();
@@ -105,8 +101,6 @@ const generateOTP = () => {
               subject: 'Security OTP for Account Unlock',
               text: `Your new OTP is: ${newOTP}`,
           };
-
-          console.log("will send mail now");
           await transporter.sendMail(mailOptions);
 
         res.status(200).json({ message: "New OTP sent" });
@@ -127,11 +121,9 @@ const generateOTP = () => {
         if (loginAttempt.otp !== otp) {
             return res.status(401).json({ message: "Invalid OTP" });
         }
-
         if (Date.now() > loginAttempt.otpExpires) {
             return res.status(401).json({ message: "OTP has expired" });
         }
-
         loginAttempt.isLocked = false;
         loginAttempt.attempts = 0;
         loginAttempt.otp = null;
@@ -170,7 +162,6 @@ const generateOTP = () => {
           const { email, password, code } = req.body;
           let loginAttempt = await LoginAttempt.findOne({ email });
           if (loginAttempt && loginAttempt.isLocked) {
-            console.log("locked");
               return res.status(400).json({ message: "Account locked. Please check your email for OTP." });
           }
           const student = await Student.findOne({ email });
@@ -201,11 +192,11 @@ const generateOTP = () => {
               } else {
                   loginAttempt.attempts += 1;
               }
-              console.log("hi",loginAttempt.attempts);
               if (loginAttempt.attempts >= 10) {
                   loginAttempt.isLocked = true;
                   const otp = Math.floor(100000 + Math.random() * 900000).toString();
                   loginAttempt.otp = otp;
+                  loginAttempt.otpExpires = new Date(Date.now() + 5 * 60 * 1000);
                   const transporter = nodemailer.createTransport({
                     service: "gmail",
                     auth: {

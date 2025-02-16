@@ -3,6 +3,7 @@ import Select from "react-select";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaArrowLeft } from "react-icons/fa";
+import {useSelector } from "react-redux";
 import { AlertCircle, GripVertical, X, Edit2 } from "lucide-react";
 import CompanySearchDropdown from "./CompanySearchDropdown";
 
@@ -312,7 +313,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
     active_backlogs: false,
     history_backlogs: false,
   });
-
+ 
+  const { userData } = useSelector((state) => state.auth);
   const [workflowStep, setWorkflowStep] = useState({
     step_type: "",
     details: {},

@@ -13,7 +13,7 @@ router.post("/createjob", createJobProfile);
 router.post("/createjobcopy", createJobProfilecopy);
 router.put("/updatejob/:_id", updateJob);
 router.delete("/deletejob/:_id", deleteJob);
-router.get("/recruiter/getjobs", getJobsByRecruiter);
+router.get("/recruiter/getjobs/:company", getJobsByRecruiter);
 
 
 router.get("/professor/getjobs", getJobProfilesForProfessors);

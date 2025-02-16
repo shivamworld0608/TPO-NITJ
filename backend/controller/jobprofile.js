@@ -231,8 +231,9 @@ export const createJobProfile = async (req, res) => {
 
 export const getJobsByRecruiter = async (req, res) => {
   try {
-    const recruiterId = req.user.userId;
-    const jobs = await JobProfile.find({ recruiter_id: recruiterId }); // Query to find jobs by recruiter
+/*     const recruiterId = req.user.userId; */
+    const company = req.params.company;
+    const jobs = await JobProfile.find({company_name: company });
     res.status(200).json({ success: true, jobs });
   } catch (error) {
     console.error('Error fetching jobs:', error.message);
@@ -242,16 +243,16 @@ export const getJobsByRecruiter = async (req, res) => {
 
 export const toggleEditingAllowed = async (req, res) => {
   try {
-    const {company}=req.body;
-    const recruiter = await Recuiter.findOne({ company });
-    if (!recruiter) {
-      return res.status(404).json({ success: false, message: "Recruiter not found" });
+    const {_id}=req.body;
+    const job = await JobProfile.findById(_id);
+    if (!job) {
+      return res.status(404).json({ success: false, message: "Job Profile not found" });
     }
-    recruiter.editing_allowed = !recruiter.editing_allowed;
-    await recruiter.save();
+    job.recruiter_editing_allowed = !job.recruiter_editing_allowed;
+    await job.save();
     res.status(200).json({ 
       success: true, 
-      editing_allowed: recruiter.editing_allowed 
+      editing_allowed: job.recruiter_editing_allowed
     });
   } catch (error) {
     console.error(error);
@@ -260,9 +261,8 @@ export const toggleEditingAllowed = async (req, res) => {
 };
 
 export const getEditingAllowedStatus = async (req, res) => {
-  console.log("hello");
   try {
-    const {company}=req.params.company;
+    const company=req.params.company;
     const recruiter = await Recuiter.findOne({ company });
     if (!recruiter) {
       return res.status(404).json({ success: false, message: "Recruiter not found" });

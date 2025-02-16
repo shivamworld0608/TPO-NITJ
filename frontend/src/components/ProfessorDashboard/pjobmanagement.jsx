@@ -512,11 +512,13 @@ const JobProfilesonp = () => {
       </div>
     </div>
   );
-
+  const handleediting_allowed = (toggle) => {
+    selectedJob.recruiter_editing_allowed=toggle;
+  };
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl relative">
       {selectedJob ? (
-        <ViewJobDetails onClose={() => setSelectedJob(null)} job={selectedJob} />
+        <ViewJobDetails onClose={() => setSelectedJob(null)} job={selectedJob} oneditingAllowedUpdate={handleediting_allowed} />
       ) : showCreateJob ? (
         <CreateJob onJobCreated={() => setShowCreateJob(false)} onCancel={() => setShowCreateJob(false)} />
       ) :  showJAF ? (
@@ -648,7 +650,6 @@ const JobProfilesonp = () => {
                   placeholder="e.g., 7.5"
                   min="0"
                   max="10"
-                  step="0.1"
                 />
               </div>
             </div>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import Swal from 'sweetalert2';
+import {useSelector } from "react-redux";
 import { 
   Building2, 
   MapPin, 
@@ -26,12 +27,12 @@ const CreatedJobs = () => {
   const [viewingJobDetails, setViewingJobDetails] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
-
+  const { userData } = useSelector((state) => state.auth);
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/recruiter/getjobs`,
+          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/recruiter/getjobs/${userData.company}`,
           { credentials: 'include' }
         );
         const data = await response.json();

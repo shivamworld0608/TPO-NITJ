@@ -28,10 +28,6 @@ const recuiterSchema = new mongoose.Schema({
   otp:{
    type:String
   },
-  editing_allowed:{
-    type:Boolean,
-    default:false
-  }
 }, { timestamps: true });
 
 const Recuiter = mongoose.model('Recuiter', recuiterSchema);

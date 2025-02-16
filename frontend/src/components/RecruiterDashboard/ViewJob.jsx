@@ -38,6 +38,7 @@ const ViewJobDetailsr = ({ job, onClose }) => {
   const [editingSection, setEditingSection] = useState(null);
   const [editedWorkflow, setEditedWorkflow] = useState(job.Hiring_Workflow);
   const [editedJob, setEditedJob] = useState(job);
+  const [editingAllowed, setEditingAllowed] = useState(job.recruiter_editing_allowed || false);
 
   const departmentOptions = [
     { value: 'Computer Science & Engineering', label: 'Computer Science & Engineering' },
@@ -154,17 +155,19 @@ const ViewJobDetailsr = ({ job, onClose }) => {
 
   const renderEditableCard = (title, content, section) => (
     <div className="p-8 bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative mt-8">
-      <button
-        className="absolute top-4 right-4 p-2 text-gray-600 hover:text-custom-blue transition-colors"
-        onClick={() => handleEdit(section)}
-      >
-        <Pencil size={20} />
-      </button>
+      {editingAllowed && (
+        <button
+          className="absolute top-4 right-4 p-2 text-gray-600 hover:text-custom-blue transition-colors"
+          onClick={() => handleEdit(section)}
+        >
+          <Pencil size={20} />
+        </button>
+      )}
 
       <h3 className="text-2xl font-semibold text-custom-blue mb-6">{title}</h3>
       {content}
 
-      {editingSection === section && (
+      {editingSection === section && editingAllowed && (
         <div className="mt-8 flex space-x-4">
           <button
             className="bg-custom-blue  text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300"
@@ -475,13 +478,15 @@ const ViewJobDetailsr = ({ job, onClose }) => {
             key={index}
             className="p-8 bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative"
           >
+            {editingAllowed && (
             <button
               className="absolute top-4 right-4 p-2 text-gray-600 hover:text-blue-600 transition-colors"
               onClick={() => handleEdit('hiring_workflow', index)}
             >
               <Pencil size={20} />
             </button>
-
+             )}
+             
             <h3 className="text-2xl font-semibold text-custom-blue mb-6">
               {step.step_type}
             </h3>
@@ -554,6 +559,7 @@ const ViewJobDetailsr = ({ job, onClose }) => {
         jobId={job._id}
         stepIndex={viewingShortlist.stepIndex}
         onClose={() => setViewingShortlist(null)}
+        editingAllowed
       />
     );
   }
