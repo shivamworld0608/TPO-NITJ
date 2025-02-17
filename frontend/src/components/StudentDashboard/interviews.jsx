@@ -3,6 +3,7 @@ import axios from "axios";
 import InterviewCard from "./InterviewCard";
 import BouncingLoader from "../BouncingLoader";
 import NoDataFound from "../NoData";
+import Notification from "../ProfessorDashboard/Notification";
 
 const InterviewsData = () => {
   const [upcomingInterviews, setUpcomingInterviews] = useState([]);
@@ -125,6 +126,7 @@ const InterviewsData = () => {
 
       {/* Tab Content */}
       <div className="container mx-auto px-4 py-6">{renderTabContent()}</div>
+      <Notification/>
     </>
   );
 };

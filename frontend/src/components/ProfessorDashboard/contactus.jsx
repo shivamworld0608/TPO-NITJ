@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import Notification from "./Notification";
 
 const ContactRequests = () => {
   const [contactForms, setContactForms] = useState({});
@@ -56,6 +57,7 @@ const ContactRequests = () => {
           </div>
         ))}
       </div>
+      <Notification/>
     </section>
   );
 };

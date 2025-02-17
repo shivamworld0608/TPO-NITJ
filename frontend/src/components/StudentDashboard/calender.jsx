@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import axios from "axios";
 import Jobdetail from "./Jobdetail";
+import Notification from "../ProfessorDashboard/Notification";
 
 
 const CalendarComponent = () => {
@@ -207,6 +208,7 @@ const CalendarComponent = () => {
   ];
 
   return (
+    <div>
     <Card className="max-w-6xl mx-auto">
       <CardHeader>
         <div className="flex items-center justify-between mb-4">
@@ -304,8 +306,11 @@ const CalendarComponent = () => {
             </Button>
           </div>
         </div>
+        
       )}
     </Card>
+    <Notification/>
+    </div>
   );
 };
 

@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import BouncingLoader from "../BouncingLoader";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import Notification from "./Notification";
 
 const ProfessorExperienceManagement = () => {
   const [showEditor, setShowEditor] = useState(false);
@@ -308,6 +309,7 @@ const ProfessorExperienceManagement = () => {
        </section>
         )}
       </div>
+      <Notification/>
     </>
   );
 };
