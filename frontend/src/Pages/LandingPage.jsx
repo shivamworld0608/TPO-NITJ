@@ -1,4 +1,4 @@
-import Header from "../components/header";
+// import Header from "../components/header";
 import Footer from "../components/footer";
 import HeroSection from "../components/herosection";
 import TpoMessage from "../components/TpoMessage";
@@ -11,12 +11,13 @@ import FAQ from "../components/faq";
 import AboutUs from "../components/AboutUs";
 import ContactUs from "../components/ContactUs";
 import EventsSection from "../components/EventsSection";
+import Navbar from "../components/Navbar/Navbar";
 
 const Home = () => {
   return (
     <>
-      <Header />
-      <div className="mt-36"><HeroSection /></div>
+      `<Navbar/>`
+      <div className="mt-12"><HeroSection /></div>
       <div className=" max-w-full mx-auto "><AboutUs /></div>
       <div className="max-w-full mx-auto "><TpoMessage /></div>
       <div className="max-w-7xl mx-auto mt-24"><RecruitmentProcess /></div>
