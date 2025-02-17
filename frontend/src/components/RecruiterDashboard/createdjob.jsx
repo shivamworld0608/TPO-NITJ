@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent } from '../ui/card';
-import { Button } from '../ui/button';
-import Swal from 'sweetalert2';
-import {useSelector } from "react-redux";
-import { 
-  Building2, 
-  MapPin, 
-  IndianRupee, 
-  Calendar, 
+import React, { useState, useEffect } from "react";
+import { Card, CardContent } from "../ui/card";
+import { Button } from "../ui/button";
+import Swal from "sweetalert2";
+import { useSelector } from "react-redux";
+import {
+  Building2,
+  MapPin,
+  IndianRupee,
+  Calendar,
   Briefcase,
   Plus,
   Trash2,
   Eye,
-  GraduationCap
-} from 'lucide-react';
-import { Alert, AlertDescription } from '../ui/alert';
-import CreateJob from './createjob';
-import ViewJobDetails from './ViewJob';
-import axios from 'axios';
+  GraduationCap,
+} from "lucide-react";
+import { Alert, AlertDescription } from "../ui/alert";
+import CreateJob from "./createjob";
+import ViewJobDetails from "./ViewJob";
+import axios from "axios";
 
 const CreatedJobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -25,20 +25,22 @@ const CreatedJobs = () => {
   const [error, setError] = useState(null);
   const [isCreatingJob, setIsCreatingJob] = useState(false);
   const [viewingJobDetails, setViewingJobDetails] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('newest');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("newest");
   const { userData } = useSelector((state) => state.auth);
   useEffect(() => {
     const fetchJobs = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/recruiter/getjobs/${userData.company}`,
-          { credentials: 'include' }
+          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/recruiter/getjobs/${
+            userData.company
+          }`,
+          { credentials: "include" }
         );
         const data = await response.json();
         setJobs(data.jobs || []);
       } catch (error) {
-        setError('Failed to fetch jobs. Please try again later.');
+        setError("Failed to fetch jobs. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -52,31 +54,31 @@ const CreatedJobs = () => {
       const response = await fetch(
         `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/deletejob/${jobId}`,
         {
-          method: 'DELETE',
-          credentials: 'include'
+          method: "DELETE",
+          credentials: "include",
         }
       );
-      
+
       if (response.ok) {
         setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
         return true;
       }
       return false;
     } catch (error) {
-      console.error('Error deleting job:', error);
+      console.error("Error deleting job:", error);
       return false;
     }
   };
 
   const handleDeleteJob = async (jobId) => {
     const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'You won’t be able to undo this action!',
-      icon: 'warning',
+      title: "Are you sure?",
+      text: "You won’t be able to undo this action!",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!',
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
     });
 
     if (result.isConfirmed) {
@@ -86,29 +88,34 @@ const CreatedJobs = () => {
           { withCredentials: true }
         );
         setJobs((prevJobs) => prevJobs.filter((job) => job._id !== jobId));
-        Swal.fire('Deleted!', 'The job has been deleted.', 'success');
+        Swal.fire("Deleted!", "The job has been deleted.", "success");
       } catch (error) {
-        console.error('Error deleting job:', error.message);
-        Swal.fire('Failed!', 'Failed to delete the job. Please try again.', 'error');
+        console.error("Error deleting job:", error.message);
+        Swal.fire(
+          "Failed!",
+          "Failed to delete the job. Please try again.",
+          "error"
+        );
       }
     }
   };
 
   const showNotification = (message, type) => {
     return (
-      <Alert variant={type === 'error' ? 'destructive' : 'default'}>
+      <Alert variant={type === "error" ? "destructive" : "default"}>
         <AlertDescription>{message}</AlertDescription>
       </Alert>
     );
   };
 
   const filteredAndSortedJobs = jobs
-    .filter(job => 
-      job.job_role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      job.company_name.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter(
+      (job) =>
+        job.job_role.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        job.company_name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .sort((a, b) => {
-      if (sortBy === 'newest') {
+      if (sortBy === "newest") {
         return new Date(b.createdAt) - new Date(a.createdAt);
       }
       return new Date(a.deadline) - new Date(b.deadline);
@@ -148,7 +155,7 @@ const CreatedJobs = () => {
           onJobCreated={(newJob) => {
             setJobs((prevJobs) => [...prevJobs, newJob]);
             setIsCreatingJob(false);
-            showNotification('Job created successfully', 'success');
+            showNotification("Job created successfully", "success");
           }}
           onCancel={() => setIsCreatingJob(false)}
         />
@@ -162,7 +169,10 @@ const CreatedJobs = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <h1 className="text-3xl font-bold text-gray-900"><span>Job </span><span className='text-custom-blue'>Listings</span></h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              <span>Job </span>
+              <span className="text-custom-blue">Listings</span>
+            </h1>
             <Button
               onClick={() => setIsCreatingJob(true)}
               className="bg-custom-blue hover:bg-blue-700 text-white flex items-center gap-2"
@@ -195,13 +205,20 @@ const CreatedJobs = () => {
         {/* Job Cards */}
         {filteredAndSortedJobs.length === 0 ? (
           <div className="text-center py-12">
-            <h3 className="text-xl font-semibold text-gray-600">No jobs found</h3>
-            <p className="text-gray-500 mt-2">Try adjusting your search or create a new job listing</p>
+            <h3 className="text-xl font-semibold text-gray-600">
+              No jobs found
+            </h3>
+            <p className="text-gray-500 mt-2">
+              Try adjusting your search or create a new job listing
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredAndSortedJobs.map((job) => (
-              <Card key={job._id} className="hover:shadow-lg transition-shadow duration-300">
+              <Card
+                key={job._id}
+                className="hover:shadow-lg transition-shadow duration-300"
+              >
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-4">
@@ -209,7 +226,9 @@ const CreatedJobs = () => {
                         <Building2 className="w-6 h-6 text-custom-blue" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-lg text-gray-900">{job.job_role}</h3>
+                        <h3 className="font-semibold text-lg text-gray-900">
+                          {job.job_role}
+                        </h3>
                         <p className="text-gray-600">{job.company_name}</p>
                       </div>
                     </div>
@@ -218,31 +237,32 @@ const CreatedJobs = () => {
                   <div className="mt-4 space-y-2">
                     <div className="flex items-center gap-2 text-gray-600">
                       <MapPin className="w-4 h-4" />
-                      <span>{job.joblocation || "Remote"}</span>
+                      <span>{job.joblocation || "N/A"}</span>
                     </div>
+
                     <div className="flex items-center gap-2 text-gray-600">
                       <IndianRupee className="w-4 h-4" />
-                      <span>{job.job_salary.ctc || "Competitive"} LPA</span>
+                      <span>{job.job_salary.ctc || "N/A"} LPA</span>
                     </div>
+
                     <div className="flex items-center gap-2 text-gray-600">
                       <GraduationCap className="w-4 h-4" />
-                      <span>{job.job_class}</span>
+                      <span>{job.job_class || "N/A"}</span>
                     </div>
+
                     <div className="flex items-center gap-2 text-gray-600">
                       <Calendar className="w-4 h-4" />
-                      <span>Deadline: {new Date(job.deadline).toLocaleDateString()}</span>
+                      <span>
+                        Deadline:{" "}
+                        {new Date(job.deadline).toLocaleDateString() || "N/A"}
+                      </span>
                     </div>
                   </div>
 
                   <div className="mt-4 flex gap-2 flex-wrap">
                     <span className="px-3 py-1 bg-blue-100 text-custom-blue rounded-full text-sm">
-                      {job.job_type || "Full-time"}
+                      {job.job_type || "N/A"}
                     </span>
-                    {job.isRemote && (
-                      <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-                        Remote
-                      </span>
-                    )}
                   </div>
 
                   <div className="mt-6 flex gap-3">
