@@ -4,6 +4,7 @@ import Professor from "../models/user_model/professor.js";
 import Recuiter from "../models/user_model/recuiter.js";
 import FormSubmission from '../models/FormSubmission.js';
 import Placement from '../models/placement.js';
+import Internship from "../models/internship.js";
 import Notification from "../models/notification.js"; 
 import mongoose from "mongoose";
 import Feedback from "../models/Feedback.js";
@@ -697,7 +698,7 @@ export const addshortlistStudents = async (req, res) => {
           nextStep.eligible_students.push(studentId);
         }
       }
-    } else {
+    } /* else {
       const placementData = [];
       for (const studentId of studentIds) {
         const student = await Student.findById(studentId);
@@ -708,9 +709,10 @@ export const addshortlistStudents = async (req, res) => {
             studentId: studentId,
             name: student.name,
             image: student.image || '',
-            email: student.email,
+            email: student.email || 'N/A',
             gender: student.gender,
             department: student.department,
+            category: student.category || 'N/A',
           });
         } else {
           console.error(`Student not found for ID: ${studentId}`);
@@ -719,16 +721,95 @@ export const addshortlistStudents = async (req, res) => {
 
       const placement = new Placement({
         company_name: job.company_name,
-        company_logo: job.company_logo,
+        company_logo: job.company_logo||'',
         placement_type: job.job_category,
         batch: job.eligibility_criteria?.eligible_batch,
         degree: job.eligibility_criteria?.course_allowed,
         shortlisted_students: placementData,
         ctc: job.job_salary?.ctc || 'N/A',
+        base_salary: job.job_salary?.base_salary || 'N/A',
+        role: job.job_role || '',
+
       });
 
       await placement.save();
-    }
+    } */
+      else {
+        const placementData = [];
+        for (const studentId of studentIds) {
+          const student = await Student.findById(studentId);
+          if (student) {
+            student.placementstatus = job.job_class;
+            await student.save();
+            placementData.push({
+              studentId: studentId,
+              name: student.name,
+              image: student.image || '',
+              email: student.email || 'N/A',
+              gender: student.gender,
+              department: student.department,
+              category: student.category || 'N/A',
+            });
+          } else {
+            console.error(`Student not found for ID: ${studentId}`);
+          }
+        }
+  
+        const jobType = job.job_type;
+        let internshipDuration = null;
+  
+        switch (jobType) {
+          case '2m Intern':
+            internshipDuration = '2m Intern';
+            break;
+          case '6m Intern':
+          case 'Intern+PPO':
+            internshipDuration = '6m Intern';
+            break;
+          case '11m Intern':
+            internshipDuration = '11m Intern';
+            break;
+          case 'Intern+FTE':
+            internshipDuration = '6m Intern';
+            break;
+          default:
+            break;
+        }
+        const createInternship = ['2m Intern', '6m Intern', '11m Intern', 'Intern+PPO', 'Intern+FTE'].includes(jobType);
+        const createPlacement = jobType === 'FTE' || jobType === 'Intern+FTE';
+  
+        if (createInternship) {
+          const internship = new Internship({
+            company_name: job.company_name,
+            company_logo: job.company_logo || '',
+            internship_offer_mode: 'On-Campus',
+            internship_type: job.job_category,
+            internship_duration: internshipDuration,
+            batch: job.eligibility_criteria?.eligible_batch,
+            degree: job.eligibility_criteria?.course_allowed,
+            stipend: job.job_salary?.stipend || 'N/A',
+            role: job.job_role || '',
+            shortlisted_students: placementData,
+          });
+          await internship.save();
+        }
+  
+        if (createPlacement) {
+          const placement = new Placement({
+            company_name: job.company_name,
+            company_logo: job.company_logo || '',
+            placement_type: job.job_category,
+            placement_offer_mode: 'On-Campus',
+            batch: job.eligibility_criteria?.eligible_batch,
+            degree: job.eligibility_criteria?.course_allowed,
+            ctc: job.job_salary?.ctc || 'N/A',
+            base_salary: job.job_salary?.base_salary || 'N/A',
+            role: job.job_role || '',
+            shortlisted_students: placementData,
+          });
+          await placement.save();
+        }
+      }
 
     await job.save();
     

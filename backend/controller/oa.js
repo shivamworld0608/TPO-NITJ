@@ -21,11 +21,11 @@ export const getEligibleUpcomingOAs = async (req, res) => {
           (step) =>
             step.step_type === "OA" &&
             step.eligible_students.some((id) => id.equals(studentObjectId)) &&
-            new Date(step.details.oa_date) > new Date()
+            new Date(step.details?.oa_date) > new Date()
         )
         .map((step) => {
           const oaLinks = Array.isArray(step.details.oa_link)
-            ? step.details.oa_link
+            ? step.details?.oa_link
             : [];
 
           const studentOALink = oaLinks.find((link) => {
@@ -43,12 +43,16 @@ export const getEligibleUpcomingOAs = async (req, res) => {
           return {
             company_name: job.company_name,
             company_logo: job.company_logo,
-            oa_date: step.details.oa_date,
-            oa_login_time: step.details.oa_login_time || step.details.login_time,
-            oa_duration: step.details.oa_duration,
-            oa_info: step.details.oa_info,
+            oa_date: step.details?.oa_date,
+            oa_login_time: step.details?.oa_login_time || step.details?.login_time,
+            oa_duration: step.details?.oa_duration,
+            oa_info: step.details?.oa_info,
             oa_link: isLinkVisible ? studentOALink?.interviewLink || "No link available" : "Link not visible",
             isLinkVisible,
+            was_shortlisted:
+            step.shortlisted_students?.length === 0
+              ? "Result yet to be declared"
+              : step.shortlisted_students.some((id) => id.toString() === studentId) || false,
           };
         });
     });
@@ -79,11 +83,11 @@ export const getEligiblePastOAs = async (req, res) => {
           (step) =>
             step.step_type === "OA" &&
             step.eligible_students.some((id) => id.equals(studentObjectId)) &&
-            new Date(step.details.oa_date) < new Date()
+            new Date(step.details?.oa_date) < new Date()
         )
         .map((step) => {
           const oaLinks = Array.isArray(step.details.oa_link)
-            ? step.details.oa_link
+            ? step.details?.oa_link
             : [];
 
           const studentOALink = oaLinks.find((link) => {
@@ -102,10 +106,10 @@ export const getEligiblePastOAs = async (req, res) => {
           return {
             company_name: job.company_name,
             company_logo: job.company_logo,
-            oa_date: step.details.oa_date,
-            oa_login_time: step.details.oa_login_time || step.details.login_time,
-            oa_duration: step.details.oa_duration,
-            oa_info: step.details.oa_info,
+            oa_date: step.details?.oa_date,
+            oa_login_time: step.details?.oa_login_time || step.details?.login_time,
+            oa_duration: step.details?.oa_duration,
+            oa_info: step.details?.oa_info,
             oa_link: isLinkVisible ? studentOALink?.interviewLink || "No link available" : "Link not visible",
             isLinkVisible,
             was_shortlisted:

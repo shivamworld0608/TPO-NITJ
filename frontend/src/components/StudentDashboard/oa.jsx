@@ -69,6 +69,7 @@ const OnlineAssessment = () => {
               oa_info={oa.oa_info}
               isLinkVisible={oa.isLinkVisible}
               oa_link={oa.oa_link}
+              was_shortlisted={oa.was_shortlisted}
             />
           ))}
         </div>

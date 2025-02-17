@@ -4,9 +4,6 @@ import axios from 'axios';
 
 export const getEligibleUpcomingInterviews = async (req, res) => {
   try {
-    const rollNumbers=['21110019','21102091','21102064','21102067'];
-    const response=await axios.post("https://erp-tpo.vercel.app/api/students/fetch",{rollNumbers});
-    console.log("hello",response.data.data.students);
     const studentId = req.user.userId;
     const studentObjectId = new mongoose.Types.ObjectId(studentId);
 
@@ -23,13 +20,13 @@ export const getEligibleUpcomingInterviews = async (req, res) => {
         .filter((step) => {
           const isInterview = step.step_type === "Interview";
           const isEligible = step.eligible_students.some((id) => id.equals(studentObjectId));
-          const isFutureDate = new Date(step.details.interview_date) > new Date();
+          const isFutureDate = (new Date(step.details?.interview_date) > new Date())|| true;
 
           return isInterview && isEligible && isFutureDate;
         })
         .map((step) => {
           const interviewLinks = Array.isArray(step.details.interview_link)
-            ? step.details.interview_link
+            ? step.details?.interview_link
             : [];
 
           const studentInterviewLink = interviewLinks.find((link) => {
@@ -43,18 +40,21 @@ export const getEligibleUpcomingInterviews = async (req, res) => {
             return linkStudentId.equals(studentObjectId);
           });
 
-          // Check visibility
           const isLinkVisible = studentInterviewLink?.visibility !== false;
 
           return {
             company_name: job.company_name,
             company_logo: job.company_logo,
-            interview_type: step.details.interview_type,
-            interview_date: step.details.interview_date,
-            interview_time: step.details.interview_time,
-            interview_info: step.details.interview_info,
+            interview_type: step.details?.interview_type,
+            interview_date: step.details?.interview_date,
+            interview_time: step.details?.interview_time,
+            interview_info: step.details?.interview_info,
             interview_link: isLinkVisible ? studentInterviewLink?.interviewLink || "No link available" : "Link not visible",
-            isLinkVisible, // Add this field to indicate visibility
+            isLinkVisible,
+            was_shortlisted:
+            step.shortlisted_students?.length === 0
+              ? "Result yet to be declared"
+              : step.shortlisted_students.some((id) => id.equals(studentObjectId)) || false,
           };
         });
     });
@@ -85,11 +85,11 @@ export const getEligiblePastInterviews = async (req, res) => {
           (step) =>
             step.step_type === "Interview" &&
             step.eligible_students.some((id) => id.equals(studentObjectId)) &&
-            new Date(step.details.interview_date) < new Date()
+            new Date(step.details?.interview_date) < new Date()
         )
         .map((step) => {
           const interviewLinks = Array.isArray(step.details.interview_link)
-            ? step.details.interview_link
+            ? step.details?.interview_link
             : [];
 
           const studentInterviewLink = interviewLinks.find((link) => {
@@ -103,18 +103,17 @@ export const getEligiblePastInterviews = async (req, res) => {
             return linkStudentId.equals(studentObjectId);
           });
 
-          // Check visibility
           const isLinkVisible = studentInterviewLink?.visibility !== false;
 
           return {
             company_name: job.company_name,
             company_logo: job.company_logo,
-            interview_type: step.details.interview_type,
-            interview_date: step.details.interview_date,
-            interview_time: step.details.interview_time,
-            interview_info: step.details.interview_info,
+            interview_type: step.details?.interview_type,
+            interview_date: step.details?.interview_date,
+            interview_time: step.details?.interview_time,
+            interview_info: step.details?.interview_info,
             interview_link: isLinkVisible ? studentInterviewLink?.interviewLink || "No link available" : "Link not visible",
-            isLinkVisible, // Add this field to indicate visibility
+            isLinkVisible,
             was_shortlisted:
               step.shortlisted_students?.length === 0
                 ? "Result yet to be declared"
