@@ -4,7 +4,7 @@ import JobCard from "./JobCard";
 import Jobdetail from "./Jobdetail";
 import BouncingLoader from "../BouncingLoader";
 import LowConnectivityWarning from "../LowConnectivityWarning"
-
+import Notification from "../ProfessorDashboard/Notification";
 import NoDataFound from "../NoData";
 
 const JobApplications = () => {
@@ -168,6 +168,7 @@ const JobApplications = () => {
           </button>
         </div>
       </div>
+      <Notification/>
       <div className="container mx-auto px-4 py-6">{renderTabContent()}</div>
     </>
   );

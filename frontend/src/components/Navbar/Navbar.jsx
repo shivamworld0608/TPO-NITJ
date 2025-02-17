@@ -1,108 +1,99 @@
-import React from "react";
-import { Link, NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faYoutube,
-  faInstagram,
-  faTwitter,
-  faLinkedin,
-  faFacebook,
-} from "@fortawesome/free-brands-svg-icons";
+import React from 'react';
+import { 
+  Facebook, 
+  Instagram, 
+  Twitter, 
+  Linkedin, 
+  Youtube,
+  Search,
+  Home
+} from 'lucide-react';
 
-export default function Navbar() {
-  const navLinks = [
-    { name: "Home", link: "/" },
-    { name: "Placements", link: "/placements" },
-    { name: "Internships", link: "/internships" },
-    { name: "Alumni", link: "/alumni" },
-    { name: "People", link: "/team" },
-    { name: "FAQs", link: "/faq" },
-  ];
+const Navbar = () => {
   return (
-    <header className="shadow sticky z-50 top-0 w-full">
-      <nav className="bg-white border-gray-200 w-full h-32">
-        <div className="flex flex-col justify-between items-center mx-auto">
-          <div className="flex mt-2 justify-between w-full pr-10 pl-10">
-            <Link to="http://nitj.ac.in/" className="flex items-center justify-center">
-              <img src="nitj-logo.png" className="mr-3 h-20 w-20" alt="Logo" />
-              <div className="flex flex-col items-center justify-center">
-                <p className="font-semibold text-lg">
-                  DR B R AMBEDKAR NATIONAL INSTITUTE OF TECHNOLOGY
-                </p>
-                <p className="font-semibold text-lg mx-auto">
-                  JALANDHAR, {"(PUNJAB)"}
-                </p>
+    <div className="w-full m-0">
+      {/* Top Bar */}
+      <div className="bg-custom-blue text-white m-0">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center h-10">
+            <div className="flex space-x-4 text-sm">
+              <a href="#" className="hover:text-blue-200">JOBS</a>
+              <a href="#" className="hover:text-blue-200">TENDERS</a>
+              <a href="#" className="hover:text-blue-200">PLACEMENTS</a>
+              <a href="#" className="hover:text-blue-200">RESOURCES</a>
+              <a href="#" className="hover:text-blue-200">LIBRARY</a>
+              <a href="#" className="hover:text-blue-200">PHONEBOOK</a>
+            </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex space-x-2">
+                <Facebook size={16} className="hover:text-blue-200 cursor-pointer" />
+                <Instagram size={16} className="hover:text-blue-200 cursor-pointer" />
+                <Twitter size={16} className="hover:text-blue-200 cursor-pointer" />
+                <Linkedin size={16} className="hover:text-blue-200 cursor-pointer" />
+                <Youtube size={16} className="hover:text-blue-200 cursor-pointer" />
               </div>
-            </Link>
-            <div className="flex items-center lg:order-2">
-              <Link
-                to="/login"
-                className="bg-sky-700 hover:bg-sky-800 text-white font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 "
-              >
-                Log in
-              </Link>
+              <select className="bg-transparent border border-white rounded px-2 py-1 text-sm">
+                <option value="en">Select Language</option>
+                <option value="hi">Hindi</option>
+                <option value="pb">Punjabi</option>
+              </select>
+              <div className="flex space-x-2 text-sm">
+                <a href="#" className="hover:text-blue-200">ERP</a>
+                <a href="#" className="hover:text-blue-200">EOFFICE</a>
+                <a href="#" className="hover:text-blue-200">I-STEM</a>
+              </div>
             </div>
           </div>
-          <div
-            className="justify-between w-full flex bg-sky-700 mt-5 h-full p-5 pr-24 pl-24 pt-0 gap-16"
-            id="mobile-menu-2"
-          >
-            <ul className="flex flex-row gap-5 mt-5">
-              <a href="https://www.youtube.com/c/NITJOfficial" target="_blank">
-                <FontAwesomeIcon
-                  icon={faYoutube}
-                  className="text-white w-7 h-7"
-                />
-              </a>
-              <a href="https://www.instagram.com/nitjofficial/" target="_blank">
-                <FontAwesomeIcon
-                  icon={faInstagram}
-                  className="text-white w-7 h-7"
-                />
-              </a>
-              <a href="https://x.com/NITJofficial" target="_blank">
-                <FontAwesomeIcon
-                  icon={faTwitter}
-                  className="text-white w-7 h-7"
-                />
-              </a>
-              <a href="https://in.linkedin.com/school/dr-b-r-ambedkar-national-institute-of-technology-jalandhar-official/" target="_blank">
-                <FontAwesomeIcon
-                  icon={faLinkedin}
-                  className="text-white w-7 h-7"
-                />
-              </a>
-              <a href="https://www.facebook.com/NITJofficial" target="_blank">
-                <FontAwesomeIcon
-                  icon={faFacebook}
-                  className="text-white w-7 h-7"
-                />
-              </a>
-            </ul>
-            <ul className="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-4 lg:mt-0">
-              {navLinks.map((item) => (
-                <li>
-                  <NavLink
-                    to={item.link}
-                    className={({ isActive }) =>
-                      `${
-                        isActive
-                          ? "bg-white text-sky-700"
-                          : "bg-sky-700 text-white hover:bg-sky-800 hover:text-white"
-                      } block py-2 pr-4 pl-4 duration-200 border-gray-100 rounded-b-2xl `
-                    }
-                    style={{
-                      boxShadow: "inset 0px 0px 10px rgba(0, 0, 0, 0.5)",
-                    }}
-                  >
-                    {item.name}
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
+        </div>
+      </div>
+
+      {/* Institute Name */}
+      <div className="bg-white py-4">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center">
+            <div className="text-center flex-1">
+              <h1 className="text-xl font-bold">डॉ बी आर अम्बेडकर राष्ट्रीय प्रौद्योगिकी संस्थान</h1>
+              <h2 className="text-lg">जालंधर, पंजाब (भारत)</h2>
+            </div>
+            <img 
+              src="nitj-logo.png" 
+              alt="NITJ Logo" 
+              className="h-20 w-25 z-50"
+            />
+            <div className="text-center flex-1">
+              <h1 className="text-xl font-bold">ਡਾ ਬੀ ਆਰ ਅੰਬੇਡਕਰ ਨੈਸ਼ਨਲ ਇੰਸਟੀਚਿਊਟ ਟੈਕਨਾਲੋਜੀ</h1>
+              <h2 className="text-lg">ਜਲੰਧਰ, ਪੰਜਾਬ (ਭਾਰਤ)</h2>
+            </div>
           </div>
         </div>
-      </nav>
-    </header>
+      </div>
+
+      {/* Main Navigation */}
+      <div className="bg-custom-blue text-white">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-evenly items-center h-12">
+            <div className="flex items-center space-x-6">
+              <Home size={20} className="hover:text-blue-200 cursor-pointer" />
+              <a href="#" className="hover:text-blue-200">ADMINISTRATION</a>
+              <a href="#" className="hover:text-blue-200">ACADEMICS</a>
+              <a href="#" className="hover:text-blue-200">ADMISSIONS</a>
+              </div>
+              <img 
+              src="Rectangle.png" 
+              alt="NITJ Logo" 
+              className="h-12 w-100"
+            />
+              <div className='flex items-center space-x-6'>
+              <a href="#" className="hover:text-blue-200">RESEARCH</a>
+              <a href="#" className="hover:text-blue-200">ALUMNI</a>
+              <a href="#" className="hover:text-blue-200">LIFE AT NITJ</a>
+            </div>
+            <Search size={20} className="hover:text-blue-200 cursor-pointer" />
+          </div>
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default Navbar;

@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Graph from "./homeInsightsGraph";
 import RecentPlacements from "./recentplacements";
+import Notification from "../ProfessorDashboard/Notification";
 
 const LoadingSkeleton = () => (
   <div className="h-full w-full animate-pulse space-y-2">
@@ -379,7 +380,7 @@ const StudentDashboard = () => {
             </div>
           </div>
         </div>
-
+        <Notification/>
         <Graph />
       </div>
     </div>

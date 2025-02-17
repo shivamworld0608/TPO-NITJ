@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Notification from "./Notification";
+
 import {
   Table,
   TableBody,
@@ -541,6 +543,7 @@ const ConversationLog = () => {
             </Button>
           </DialogActions>
         </Dialog>
+        <Notification/>
       </div>
     </>
   );

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
+import Notification from "./Notification";
 
 const AddStudentForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -206,6 +207,7 @@ const AddStudentForm = () => {
           </button>
         </div>
       </form>
+      <Notification/>
     </div>
   );
 };

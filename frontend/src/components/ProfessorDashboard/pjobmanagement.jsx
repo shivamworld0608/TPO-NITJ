@@ -7,6 +7,7 @@ import CreateJob from "./createjobprofile";
 import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Building2, MapPin, DollarSign, Calendar, Briefcase, Plus, Search, Check, X, ArrowLeft, Star, MessageCircle, FileText } from "lucide-react";
+import Notification from "./Notification";
 
 const JobProfilesonp = () => {
   const [jobProfiles, setJobProfiles] = useState({ approved: [], notApproved: [], completed: [], feedbackByCompany: {}, jafByCompany: {} });
@@ -253,12 +254,12 @@ const JobProfilesonp = () => {
     <Card className="bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative">
       {job.Approved_Status && !job.completed && (
         <div className="absolute top-2 right-2 text-green-600">
-          <Check className="w-7 h-7 bg-green-100 rounded rounded-3xl p-1" onClick={() => handleComplete(job._id)} />
+          <Check className="w-7 h-7 bg-green-100  rounded-3xl p-1" onClick={() => handleComplete(job._id)} />
         </div>
       )}
       {job.completed && (
         <div className="absolute top-2 right-2 text-red-600">
-          <X className="w-7 h-7 bg-red-100 rounded rounded-3xl p-1" onClick={() => handleInComplete(job._id)} />
+          <X className="w-7 h-7 bg-red-100  rounded-3xl p-1" onClick={() => handleInComplete(job._id)} />
         </div>
       )}
       <CardHeader className="pb-4">
@@ -728,6 +729,7 @@ const JobProfilesonp = () => {
           </Tabs>
         </>
       )}
+      <Notification/>
     </div>
   );
 };

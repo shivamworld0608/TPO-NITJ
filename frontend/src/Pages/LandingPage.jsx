@@ -16,8 +16,8 @@ import Navbar from "../components/Navbar/Navbar";
 const Home = () => {
   return (
     <>
-      `<Navbar/>`
-      <div className="mt-12"><HeroSection /></div>
+      <Navbar/>
+      <div className=""><HeroSection /></div>
       <div className=" max-w-full mx-auto "><AboutUs /></div>
       <div className="max-w-full mx-auto "><TpoMessage /></div>
       <div className="max-w-7xl mx-auto mt-24"><RecruitmentProcess /></div>

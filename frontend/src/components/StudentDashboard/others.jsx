@@ -3,6 +3,7 @@ import axios from "axios";
 import BouncingLoader from "../BouncingLoader";
 import NoDataFound from "../NoData";
 import Otherscard from "./Otherscard";
+import Notification from "../ProfessorDashboard/Notification";
 
 const Others = () => {
   const [upcomingJobs, setUpcomingJobs] = useState([]);
@@ -139,6 +140,7 @@ const Others = () => {
 
       {/* Tab Content */}
       <div className="container mx-auto px-4 py-6">{renderTabContent()}</div>
+      <Notification/>
     </>
   );
 };

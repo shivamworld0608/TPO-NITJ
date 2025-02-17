@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaCheckCircle, FaSpinner, FaExclamationCircle } from "react-icons/fa";
+import Notification from "../ProfessorDashboard/Notification";
 
 const Request = () => {
   const [activeTab, setActiveTab] = useState("request"); // request, resolved, unresolved
@@ -229,6 +230,7 @@ const Request = () => {
           </div>
         )}
       </div>
+      <Notification/>
     </div>
   );
 };
