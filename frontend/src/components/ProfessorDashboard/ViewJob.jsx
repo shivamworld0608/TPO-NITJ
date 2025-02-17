@@ -17,7 +17,12 @@ import GDLinkManager from "./gdlink";
 import OaLinkManager from "./oalink";
 import OthersLinkManager from "./otherslink";
 import AuditLogs from "../AuditLogs";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 const formatDateTime = (dateString) => {
   if (!dateString) return "N/A";
@@ -42,7 +47,7 @@ const formatDate = (dateString) => {
   });
 };
 
-const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
+const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
   const [viewingAppliedStudents, setViewingAppliedStudents] = useState(false);
   const [applicationFormexist, setApplicationFormexist] = useState(null);
   const [selectedJobForForm, setSelectedJobForForm] = useState(null);
@@ -59,29 +64,32 @@ const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
   const [addingInterviewLink, setAddingInterviewLink] = useState(null);
   const [addingGDLink, setAddingGDLink] = useState(null);
   const [addingOALink, setAddingOALink] = useState(null);
-  const [addingOthersLink,setAddingOthersLink]=useState(null);
+  const [addingOthersLink, setAddingOthersLink] = useState(null);
   const [isDeleting, setisDeleting] = useState(false);
-  const [editingAllowed, setEditingAllowed] = useState(editedJob.recruiter_editing_allowed || false);
-   
+  const [editingAllowed, setEditingAllowed] = useState(
+    editedJob.recruiter_editing_allowed || false
+  );
+
   const handleToggleEditing = async () => {
     try {
       console.log(job.recruiter_editing_allowed);
       const response = await axios.put(
         `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/toggle-editing`,
-        {_id:editedJob._id},
+        { _id: editedJob._id },
         { withCredentials: true }
       );
       if (response.data.success) {
         setEditingAllowed(response.data.editing_allowed);
         oneditingAllowedUpdate(response.data.editing_allowed);
-        toast.success(`Editing ${response.data.editing_allowed ? "Enabled" : "Disabled"}`);
+        toast.success(
+          `Editing ${response.data.editing_allowed ? "Enabled" : "Disabled"}`
+        );
       }
     } catch (error) {
       console.error("Error toggling editing:", error);
       toast.error("Failed to toggle editing");
     }
   };
-
 
   const btechdepartmentOptions = [
     {
@@ -413,7 +421,7 @@ const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
   };
 
   const handleDeleteForm = () => {
-    if(isDeleting) return;
+    if (isDeleting) return;
     setisDeleting(true);
     Swal.fire({
       title: "Delete Application Form",
@@ -444,8 +452,7 @@ const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
         } catch (error) {
           console.error("Error deleting application form:", error);
           toast.error("Failed to delete application form");
-        }
-        finally {
+        } finally {
           setisDeleting(false);
         }
       }
@@ -749,11 +756,13 @@ const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
         stepIndex={addingOthersLink.stepIndex}
         onClose={() => setAddingOthersLink(null)}
         othersLinks={
-          job.Hiring_Workflow[addingOthersLink.stepIndex]?.details.others_link || []
+          job.Hiring_Workflow[addingOthersLink.stepIndex]?.details
+            .others_link || []
         }
         onUpdateLinks={(updatedLinks) => {
           const updatedWorkflow = [...job.Hiring_Workflow];
-          updatedWorkflow[addingOthersLink.stepIndex].details.others_link = updatedLinks;
+          updatedWorkflow[addingOthersLink.stepIndex].details.others_link =
+            updatedLinks;
           setEditedWorkflow(updatedWorkflow);
         }}
       />
@@ -771,30 +780,33 @@ const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
         }
         onUpdateLinks={(updatedLinks) => {
           const updatedWorkflow = [...job.Hiring_Workflow];
-          updatedWorkflow[addingOALink.stepIndex].details.oa_link = updatedLinks;
+          updatedWorkflow[addingOALink.stepIndex].details.oa_link =
+            updatedLinks;
           setEditedWorkflow(updatedWorkflow);
         }}
       />
     );
   }
-    if (addingInterviewLink) {
-      return (
-        <InterviewLinkManager
-          jobId={job._id}
-          stepIndex={addingInterviewLink.stepIndex}
-          onClose={() => setAddingInterviewLink(null)}
-          interviewLinks={
-            job.Hiring_Workflow[addingInterviewLink.stepIndex]?.details
-              .interview_link || []
-          }
-          onUpdateLinks={(updatedLinks) => {
-            const updatedWorkflow = [...job.Hiring_Workflow];
-            updatedWorkflow[addingInterviewLink.stepIndex].details.interview_link = updatedLinks;
-            setEditedWorkflow(updatedWorkflow);
-          }}
-        />
-      );
-    }
+  if (addingInterviewLink) {
+    return (
+      <InterviewLinkManager
+        jobId={job._id}
+        stepIndex={addingInterviewLink.stepIndex}
+        onClose={() => setAddingInterviewLink(null)}
+        interviewLinks={
+          job.Hiring_Workflow[addingInterviewLink.stepIndex]?.details
+            .interview_link || []
+        }
+        onUpdateLinks={(updatedLinks) => {
+          const updatedWorkflow = [...job.Hiring_Workflow];
+          updatedWorkflow[
+            addingInterviewLink.stepIndex
+          ].details.interview_link = updatedLinks;
+          setEditedWorkflow(updatedWorkflow);
+        }}
+      />
+    );
+  }
 
   if (addingGDLink) {
     return (
@@ -839,10 +851,10 @@ const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
                     key.toLowerCase().includes("interview_link")) ||
                   (step.step_type === "GD" &&
                     key.toLowerCase().includes("gd_link")) ||
-                    (step.step_type === "OA" &&
-                      key.toLowerCase().includes("oa_link"))||
-                    (step.step_type === "Others" &&
-                      key.toLowerCase().includes("others_link"))
+                  (step.step_type === "OA" &&
+                    key.toLowerCase().includes("oa_link")) ||
+                  (step.step_type === "Others" &&
+                    key.toLowerCase().includes("others_link"))
                 ) {
                   return null;
                 }
@@ -900,26 +912,26 @@ const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
             </ul>
 
             <div className="mt-8 flex space-x-4">
-            {step.step_type === "Others" && (
-  <button
-    className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-    onClick={() =>
-      setAddingOthersLink({ stepIndex: index, type: "Others" })
-    }
-  >
-    Manage Other Assessment Links
-  </button>
-)}
-            {step.step_type === "OA" && (
-  <button
-    className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-    onClick={() =>
-      setAddingOALink({ stepIndex: index, type: "OA" })
-    }
-  >
-    Manage OA Links
-  </button>
-)}
+              {step.step_type === "Others" && (
+                <button
+                  className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                  onClick={() =>
+                    setAddingOthersLink({ stepIndex: index, type: "Others" })
+                  }
+                >
+                  Manage Other Assessment Links
+                </button>
+              )}
+              {step.step_type === "OA" && (
+                <button
+                  className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                  onClick={() =>
+                    setAddingOALink({ stepIndex: index, type: "OA" })
+                  }
+                >
+                  Manage OA Links
+                </button>
+              )}
               {step.step_type === "GD" && (
                 <button
                   className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
@@ -1257,58 +1269,64 @@ const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-4xl font-bold text-custom-blue">Job Details</h2>
         <div className="flex items-center space-x-4">
-    {job.Approved_Status && (
-      <button
-        className="bg-gradient-to-r from-[#0369A0] to-[#024873] text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-        onClick={() => setViewingAppliedStudents(true)}
-      >
-        <Users className="mr-2 h-4 w-4 inline" />
-        View Applied Students
-      </button>
-    )}
+          {job.Approved_Status && (
+            <button
+              className="bg-gradient-to-r from-[#0369A0] to-[#024873] text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+              onClick={() => setViewingAppliedStudents(true)}
+            >
+              <Users className="mr-2 h-4 w-4 inline" />
+              View Applied Students
+            </button>
+          )}
 
-<TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <label className="inline-flex items-center cursor-pointer py-3 relative group">
-              <input
-                type="checkbox"
-                checked={editingAllowed}
-                onChange={handleToggleEditing}
-                className="hidden"
-              />
-              <div className={`
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <label className="inline-flex items-center cursor-pointer py-3 relative group">
+                  <input
+                    type="checkbox"
+                    checked={editingAllowed}
+                    onChange={handleToggleEditing}
+                    className="hidden"
+                  />
+                  <div
+                    className={`
                 w-14 h-8 rounded-full relative transition-colors duration-300
-                ${editingAllowed ? 'bg-green-500' : 'bg-red-500'}
-              `}>
-                <span className={`
+                ${editingAllowed ? "bg-green-500" : "bg-red-500"}
+              `}
+                  >
+                    <span
+                      className={`
                   absolute top-1 left-1 w-6 h-6 bg-white rounded-full 
                   transition-transform duration-300
-                  ${editingAllowed ? 'translate-x-6' : ''}
-                `}></span>
-              </div>
-            </label>
-          </TooltipTrigger>
-          <TooltipContent className="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-xl">
-            <p className="text-sm font-medium">
-              {editingAllowed ? 'Disable Recruiter Editing' : 'Enable Recruiter Editing'}
-            </p>
-            <p className="text-xs text-gray-300 mt-1">
-              {editingAllowed 
-                ? 'Click to prevent recruiter from editing job details' 
-                : 'Click to allow recruiter to edit job details'}
-            </p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+                  ${editingAllowed ? "translate-x-6" : ""}
+                `}
+                    ></span>
+                  </div>
+                </label>
+              </TooltipTrigger>
+              <TooltipContent className="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-xl">
+                <p className="text-sm font-medium">
+                  {editingAllowed
+                    ? "Disable Recruiter Editing"
+                    : "Enable Recruiter Editing"}
+                </p>
+                <p className="text-xs text-gray-300 mt-1">
+                  {editingAllowed
+                    ? "Click to prevent recruiter from editing job details"
+                    : "Click to allow recruiter to edit job details"}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-    <button
-      className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-      onClick={onClose}
-    >
-      Close
-    </button>
-  </div>
+          <button
+            className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
       </div>
 
       {renderEditableCard("Basic Details", renderBasicDetails(), "basic")}
@@ -1348,7 +1366,6 @@ const ViewJobDetails = ({ job, onClose,oneditingAllowedUpdate }) => {
               className="bg-red-500 hover:bg-red-600 text-white"
               onClick={handleDeleteForm}
               disabled={isDeleting}
-
             >
               <Trash2 className="mr-2 h-4 w-4" />
               {isDeleting ? "Deleting..." : "Delete Form"}
