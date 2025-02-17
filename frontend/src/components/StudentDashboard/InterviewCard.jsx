@@ -102,11 +102,18 @@ export default function InterviewCard({
             <span className="font-medium text-gray-800 mr-2">
               Selection Status:
             </span>
-            <span>
-              {was_selected
-                ? "You have been selected!"
-                : "Not selected yet or awaiting results."}
-            </span>
+            <span className={`inline-block px-2 py-1 rounded ${
+  was_selected === true 
+    ? 'text-green-600 bg-green-50'
+    : 'text-gray-600 bg-gray-50'
+}`}>
+  {was_selected === true
+    ? "Shortlisted"
+    : was_selected === false
+      ? "Not selected"
+      : "Result yet to be declared"
+  }
+</span>
           </div>
         </div>
         <button

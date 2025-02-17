@@ -19,6 +19,7 @@ const InterviewsData = () => {
           { withCredentials: true }
         );
         setUpcomingInterviews(upcomingResponse.data.upcomingInterviews || []);
+        console.log("helo",upcomingInterviews);
 
         const pastResponse = await axios.get(
           `${import.meta.env.REACT_APP_BASE_URL}/interview/eligible-past`,
@@ -55,6 +56,7 @@ const InterviewsData = () => {
               interview_info={job.interview_info}
               interview_link={job.interview_link}
               isLinkVisible={job.isLinkVisible}
+              was_selected={job.was_shortlisted}
             />
           ))}
         </div>
@@ -79,7 +81,7 @@ const InterviewsData = () => {
               interview_info={job.interview_info}
               interview_link={job.interview_link}
               isLinkVisible={job.isLinkVisible}
-              was_selected={job.was_selected}
+              was_selected={job.was_shortlisted}
             />
           ))}
         </div>

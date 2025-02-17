@@ -19,13 +19,13 @@ export const getEligibleUpcomingGDs = async (req, res) => {
         .filter((step) => {
           const isGD = step.step_type === "GD";
           const isEligible = step.eligible_students.some((id) => id.equals(studentObjectId));
-          const isFutureDate = new Date(step.details.gd_date) > new Date();
+          const isFutureDate =( new Date(step.details?.gd_date) > new Date()) || true;
 
           return isGD && isEligible && isFutureDate;
         })
         .map((step) => {
           const gdLinks = Array.isArray(step.details.gd_link)
-            ? step.details.gd_link
+            ? step.details?.gd_link
             : [];
 
           const studentGDLink = gdLinks.find((link) => {
@@ -39,18 +39,21 @@ export const getEligibleUpcomingGDs = async (req, res) => {
             return linkStudentId.equals(studentObjectId);
           });
 
-          // Check visibility
           const isLinkVisible = studentGDLink?.visibility !== false;
 
           return {
             company_name: job.company_name,
             company_logo: job.company_logo,
-            gd_type: step.details.gd_type,
-            gd_date: step.details.gd_date,
-            gd_time: step.details.gd_time,
-            gd_info: step.details.gd_info,
+            gd_type: step.details?.gd_type,
+            gd_date: step.details?.gd_date,
+            gd_time: step.details?.gd_time,
+            gd_info: step.details?.gd_info,
             gd_link: isLinkVisible ? studentGDLink?.gdLink || "No link available" : "Link not visible",
-            isLinkVisible, // Add this field to indicate visibility
+            isLinkVisible,
+            was_shortlisted:
+            step.shortlisted_students?.length === 0
+              ? "Result yet to be declared"
+              : step.shortlisted_students.some((id) => id.equals(studentObjectId)) || false,
           };
         });
     });
@@ -81,11 +84,11 @@ export const getEligiblePastGDs = async (req, res) => {
           (step) =>
             step.step_type === "GD" &&
             step.eligible_students.some((id) => id.equals(studentObjectId)) &&
-            new Date(step.details.gd_date) < new Date()
+            new Date(step.details?.gd_date) < new Date()
         )
         .map((step) => {
           const gdLinks = Array.isArray(step.details.gd_link)
-            ? step.details.gd_link
+            ? step.details?.gd_link
             : [];
 
           const studentGDLink = gdLinks.find((link) => {
@@ -105,10 +108,10 @@ export const getEligiblePastGDs = async (req, res) => {
           return {
             company_name: job.company_name,
             company_logo: job.company_logo,
-            gd_type: step.details.gd_type,
-            gd_date: step.details.gd_date,
-            gd_time: step.details.gd_time,
-            gd_info: step.details.gd_info,
+            gd_type: step.details?.gd_type,
+            gd_date: step.details?.gd_date,
+            gd_time: step.details?.gd_time,
+            gd_info: step.details?.gd_info,
             gd_link: isLinkVisible ? studentGDLink?.gdLink || "No link available" : "Link not visible",
             isLinkVisible, // Add this field to indicate visibility
             was_shortlisted:

@@ -70,6 +70,7 @@ const Others = () => {
               others_info={others.others_info}
               others_link={others.others_link}
               isLinkVisible={others.isLinkVisible}
+              was_shortlisted={others.was_shortlisted}
             />
           ))}
         </div>

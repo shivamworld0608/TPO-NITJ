@@ -67,6 +67,7 @@ const GD = () => {
               gd_info={gd.gd_info}
               isLinkVisible={gd.isLinkVisible}
               gd_link={gd.gd_link}
+              was_shortlisted={gd.was_shortlisted}
             />
           ))}
         </div>
