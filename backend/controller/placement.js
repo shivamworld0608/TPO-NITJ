@@ -39,29 +39,45 @@ export const getPlacementInsights = async (req, res) => {
     .sort({ createdAt: -1 });
 
     const uniqueStudents = new Set();
-    let totalCtc = 0;
-    let totalStudents = 0;
-    const companiesVisited = new Set();
-    
-    allPlacements.forEach((placement) => {
-      companiesVisited.add(placement.company_name);
-      totalStudents += placement.shortlisted_students.length;
-      placement.shortlisted_students.forEach((student) => {        
-        uniqueStudents.add(student.email); // Ensure students are counted only once
-        totalCtc += placement.ctc; // Add the CTC to the total sum
-      });
-    });
-    
-    const averagePackage = totalStudents > 0 ? (totalCtc / totalStudents).toFixed(2) : 0;
+let totalCtc = BigInt(0); // Use BigInt for totalCtc
+let totalStudents = 0;
+const companiesVisited = new Set();
 
-    totalStudents = uniqueStudents.size; // Total unique students placed
-    const totalCompanies = companiesVisited.size; // Total unique companies visited
-    
-    res.json({
-      totalStudentsPlaced: totalStudents,
-      companiesVisited: totalCompanies,
-      averagePackage: averagePackage,
-    });
+allPlacements.forEach((placement) => {
+  companiesVisited.add(placement.company_name);
+  totalStudents += placement.shortlisted_students.length;
+  totalCtc += BigInt(Math.round(placement.ctc)); 
+
+  // Track unique students
+  placement.shortlisted_students.forEach((student) => {
+    uniqueStudents.add(student.email);
+  });
+});
+
+// Calculate average package
+let averagePackage = 0;
+if (totalStudents > 0) {
+  // Perform division using BigInt
+  const averagePackageBigInt = totalCtc / BigInt(companiesVisited.size);
+
+  // Convert BigInt back to a regular number
+  averagePackage = Number(averagePackageBigInt);
+
+  // Format to 2 decimal places
+  averagePackage = parseFloat(averagePackage.toFixed(2));
+}
+
+// Update totalStudents to reflect unique students
+totalStudents = uniqueStudents.size;
+
+// Total unique companies visited
+const totalCompanies = companiesVisited.size;
+
+res.json({
+  totalStudentsPlaced: totalStudents,
+  companiesVisited: totalCompanies,
+  averagePackage: averagePackage,
+});
   } catch (error) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -235,77 +251,3 @@ export const getCombinedInsights = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
-// With uniquessness of one student multiple offers counted once
-// export const getCombinedInsights = async (req, res) => {
-//   try {
-//     const batch = req.query.batch || "2022"; // Default to 2022 if no batch is provided
-//     const degree = req.query.degree || "B.Tech"; // Default to B.Tech if no degree is provided
-
-//     const filter = {};
-//     if (batch) filter.batch = batch;
-//     if (degree) filter.degree = degree;
-
-//     // Department-Wise Data
-//     const departmentData = await Placement.aggregate([
-//       { $match: filter },
-//       { $unwind: "$shortlisted_students" },
-//       {
-//         $group: {
-//           _id: {
-//             department: "$shortlisted_students.department",
-//             email: "$shortlisted_students.email", // Group by student email to ensure uniqueness
-//           },
-//         },
-//       },
-//       {
-//         $group: {
-//           _id: "$_id.department",
-//           count: { $sum: 1 }, // Count unique students in each department
-//         },
-//       },
-//       { $sort: { count: -1 } },
-//     ]);
-
-//     // Package-Wise Data
-//     const packageData = await Placement.aggregate([
-//       { $match: filter },
-//       { $unwind: "$shortlisted_students" },
-//       {
-//         $group: {
-//           _id: {
-//             packageRange: {
-//               $cond: [
-//                 { $lt: ["$ctc", 1000000] },
-//                 "<10 LPA",
-//                 {
-//                   $cond: [
-//                     { $and: [{ $gte: ["$ctc", 1000000] }, { $lt: ["$ctc", 2000000] }] },
-//                     "10-20 LPA",
-//                     ">20 LPA",
-//                   ],
-//                 },
-//               ],
-//             },
-//             email: "$shortlisted_students.email", // Group by student email to ensure uniqueness
-//           },
-//         },
-//       },
-//       {
-//         $group: {
-//           _id: "$_id.packageRange",
-//           count: { $sum: 1 }, // Count unique students in each package range
-//         },
-//       },
-//       { $sort: { _id: 1 } },
-//     ]);
-
-//     res.status(200).json({
-//       departmentWise: departmentData,
-//       packageWise: packageData,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching combined insights:", error.message);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// };

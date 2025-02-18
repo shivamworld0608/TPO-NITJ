@@ -3,6 +3,7 @@ import Oacard from "./Oacard";
 import axios from "axios";
 import BouncingLoader from "../BouncingLoader";
 import NoDataFound from "../NoData";
+import Notification from "../ProfessorDashboard/Notification";
 
 const OnlineAssessment = () => {
   const [upcomingJobs, setUpcomingJobs] = useState([]);
@@ -68,6 +69,7 @@ const OnlineAssessment = () => {
               oa_info={oa.oa_info}
               isLinkVisible={oa.isLinkVisible}
               oa_link={oa.oa_link}
+              was_shortlisted={oa.was_shortlisted}
             />
           ))}
         </div>
@@ -137,6 +139,7 @@ const OnlineAssessment = () => {
 
       {/* Tab Content */}
       <div className="container mx-auto px-4 py-6">{renderTabContent()}</div>
+      <Notification/>
     </>
   );
 };

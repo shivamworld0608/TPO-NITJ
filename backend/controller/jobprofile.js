@@ -1,10 +1,15 @@
 import JobProfile from "../models/jobprofile.js";
 import Student from "../models/user_model/student.js";
 import Professor from "../models/user_model/professor.js";
+import Recuiter from "../models/user_model/recuiter.js";
 import FormSubmission from '../models/FormSubmission.js';
 import Placement from '../models/placement.js';
+import Internship from "../models/internship.js";
 import Notification from "../models/notification.js"; 
 import mongoose from "mongoose";
+import Feedback from "../models/Feedback.js";
+import JobAnnouncementForm from "../models/jaf.js";
+import axios from "axios";
 
 export const getAllCompanies = async (req, res) => {
   try {
@@ -227,8 +232,9 @@ export const createJobProfile = async (req, res) => {
 
 export const getJobsByRecruiter = async (req, res) => {
   try {
-    const recruiterId = req.user.userId;
-    const jobs = await JobProfile.find({ recruiter_id: recruiterId }); // Query to find jobs by recruiter
+/*     const recruiterId = req.user.userId; */
+    const company = req.params.company;
+    const jobs = await JobProfile.find({company_name: company });
     res.status(200).json({ success: true, jobs });
   } catch (error) {
     console.error('Error fetching jobs:', error.message);
@@ -236,20 +242,124 @@ export const getJobsByRecruiter = async (req, res) => {
   }
 };
 
+export const toggleEditingAllowed = async (req, res) => {
+  try {
+    const {_id}=req.body;
+    const job = await JobProfile.findById(_id);
+    if (!job) {
+      return res.status(404).json({ success: false, message: "Job Profile not found" });
+    }
+    job.recruiter_editing_allowed = !job.recruiter_editing_allowed;
+    await job.save();
+    res.status(200).json({ 
+      success: true, 
+      editing_allowed: job.recruiter_editing_allowed
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export const getEditingAllowedStatus = async (req, res) => {
+  try {
+    const company=req.params.company;
+    const recruiter = await Recuiter.findOne({ company });
+    if (!recruiter) {
+      return res.status(404).json({ success: false, message: "Recruiter not found" });
+    }
+    res.status(200).json({ success: true, editing_allowed: recruiter.editing_allowed  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
 export const updateJob = async (req, res) => {
   try {
+    const userId = req.user.userId;
     const { _id } = req.params;
+    const recruiter = await Recuiter.findById(userId);
+    const professor = await Professor.findById(userId);
+    const user = recruiter || professor;
     const job = await JobProfile.findById(_id);
+
     if (!job) {
       return res.status(404).json({ success: false, message: 'Job not found' });
     }
-    const updatedJob = await JobProfile.findByIdAndUpdate(_id, req.body, { new: true });
-    res.status(200).json({ success: true, message: 'Job updated successfully', job: updatedJob });
+
+    const oldJob = job.toObject();
+    const updateData = req.body;
+
+    // This function compares only the keys in newObj (updateData).
+    const detectNestedChanges = (oldObj, newObj) => {
+      let diff = {};
+
+      Object.keys(newObj).forEach(key => {
+        const oldValue = oldObj ? oldObj[key] : undefined;
+        const newValue = newObj[key];
+
+        // If both values are arrays, compare added/removed items.
+        if (Array.isArray(newValue) && Array.isArray(oldValue)) {
+          const added = newValue.filter(item => !oldValue.includes(item));
+          const removed = oldValue.filter(item => !newValue.includes(item));
+          if (added.length > 0 || removed.length > 0) {
+            diff[key] = { added, removed };
+          }
+        }
+        // If both values are objects (but not arrays), compare recursively.
+        else if (
+          newValue &&
+          typeof newValue === 'object' &&
+          !Array.isArray(newValue)
+        ) {
+          const nestedDiff = detectNestedChanges(oldValue, newValue);
+          if (Object.keys(nestedDiff).length > 0) {
+            diff[key] = nestedDiff;
+          }
+        }
+        // For all other types, log the change if values differ.
+        else if (oldValue !== newValue) {
+          diff[key] = { oldValue, newValue };
+        }
+      });
+
+      return diff;
+    };
+
+    // Compute differences only for the fields present in updateData.
+    const changes = detectNestedChanges(oldJob, updateData);
+
+    if (Object.keys(changes).length > 0) {
+      // Update the job document.
+      const updatedJob = await JobProfile.findByIdAndUpdate(
+        _id,
+        updateData,
+        { new: true }
+      );
+
+      // Log only the actual changes.
+      updatedJob.auditLogs.push({
+        editedBy: user._id,
+        email: user.email,
+        changes,
+        timestamp: new Date(),
+      });
+
+      await updatedJob.save();
+    }
+
+    res.status(200).json({ 
+      success: true, 
+      message: 'Job updated successfully', 
+      job: await JobProfile.findById(_id) 
+    });
   } catch (error) {
     console.error('Error updating job:', error.message);
     res.status(500).json({ success: false, error: 'Server Error' });
   }
 };
+
 
 export const deleteJob = async (req, res) => {
   try {
@@ -265,10 +375,20 @@ export const deleteJob = async (req, res) => {
 export const getJobProfiletostudent = async (req, res) => {
   try {
     const studentId = req.user.userId;
+    const student = await Student.findById({_id:studentId});
+    const rollNumbers=[student.rollno];
+    const response=await axios.post(`${process.env.ERP_SERVER}`,{rollNumbers});
+    const erpStudents = response.data.data.students;
+    const erpData = erpStudents[0];
     if (!studentId) {
       return res.status(400).json({ message: "User ID is missing in the request." });
     }
-    const JobProfiles = await JobProfile.find({ Approved_Status: true });
+
+    const JobProfiles = await JobProfile.find({
+      Approved_Status: true,
+      'eligibility_criteria.eligible_batch': erpData.batch
+  });
+  
     const applied = [];
     const notApplied = [];
     const liveButNotApplied = [];
@@ -314,10 +434,23 @@ export const getJobProfilesForProfessors = async (req, res) => {
     const approvedJobs = await JobProfile.find({ Approved_Status: true, completed:false });
     const notApprovedJobs = await JobProfile.find({ Approved_Status: false });
     const completed= await JobProfile.find({completed:true});
+    const feedbacks = await Feedback.find({});
+    const feedbackByCompany = feedbacks.reduce((acc, feedback) => {
+      acc[feedback.company] = feedback;
+      return acc;
+    }, {});
+
+   const jafs = await JobAnnouncementForm.find({});
+    const jafByCompany = jafs.reduce((acc, jaf) => {
+      acc[jaf.organizationName] = jaf;
+      return acc;
+    }, {});
     res.status(200).json({
       approved: approvedJobs,
       notApproved: notApprovedJobs,
-      completed:completed
+      completed:completed,
+      feedbackByCompany,
+      jafByCompany
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -400,6 +533,20 @@ export const checkEligibility = async (req, res) => {
     const studentId = req.user.userId;
     const { _id } = req.params;
     const student = await Student.findById({_id:studentId});
+    const rollNumbers=[student.rollno];
+    const response=await axios.post(`${process.env.ERP_SERVER}`,{rollNumbers});
+    const erpStudents = response.data.data.students;
+    if (!erpStudents || !erpStudents.length) {
+      return res.status(404).json({ message: "Updated student details not found in ERP" });
+    }
+    const erpData = erpStudents[0];
+    const updatedStudent = {
+      ...student.toObject(),
+      cgpa: erpData.cgpa,
+      batch: erpData.batch,
+      active_backlogs: erpData.active_backlogs,
+      backlogs_history: erpData.backlogs_history,
+    };
     const job = await JobProfile.findById(_id);
     if (!student || !job) {
       return res.status(404).json({ message: "Student or Job Application not found" });
@@ -414,44 +561,44 @@ export const checkEligibility = async (req, res) => {
       history_backlogs,
     } = job.eligibility_criteria;
 
-    if (!department_allowed.includes(student.department)) {
+    if (!department_allowed.includes(updatedStudent.department)) {
       return res.json({ eligible: false, reason: "Department not eligible" });
     }
 
-    if (gender_allowed !== "Any" && gender_allowed !== student.gender) {
+    if (gender_allowed !== "Any" && gender_allowed !== updatedStudent.gender) {
       return res.json({ eligible: false, reason: "Gender not eligible" });
     }
 
-    if (course_allowed && course_allowed !== student.course) {
+    if (course_allowed && course_allowed !== updatedStudent.course) {
       return res.json({ eligible: false, reason: "Course not eligible" });
     }
-    if (eligible_batch && eligible_batch !== student.batch) {
+    if (eligible_batch && eligible_batch !== updatedStudent.batch) {
       return res.json({ eligible: false, reason: "Batch not eligible" });
     }
 
-    if (minimum_cgpa && student.cgpa < minimum_cgpa) {
+    if (minimum_cgpa && updatedStudent.cgpa < minimum_cgpa) {
       return res.json({ eligible: false, reason: "CGPA below required minimum" });
     }
 
     if (active_backlogs !== undefined) {
-      if (active_backlogs === false && student.active_backlogs !== false) {
+      if (active_backlogs === false && updatedStudent.active_backlogs !== false) {
         return res.json({ eligible: false, reason: "Active backlogs do not meet criteria" });
       }
     }
     
     if (history_backlogs !== undefined) {
-      if (history_backlogs === false && student.backlogs_history !== false) {
+      if (history_backlogs === false && updatedStudent.backlogs_history !== false) {
         return res.json({ eligible: false, reason: "Backlogs History do not meet criteria" });
       }
     }
 
     const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
-    const studentClassIndex = jobClassOrder.indexOf(student.placementstatus);
+    const studentClassIndex = jobClassOrder.indexOf(updatedStudent.placementstatus);
     const jobClassIndex = jobClassOrder.indexOf(job.job_class);
 
     if (
       studentClassIndex !== -1 &&
-      student.placementstatus !== "notplaced" &&
+      updatedStudent.placementstatus !== "notplaced" &&
       jobClassIndex <= studentClassIndex
     ) {
       return res.json({
@@ -561,7 +708,7 @@ export const addshortlistStudents = async (req, res) => {
           nextStep.eligible_students.push(studentId);
         }
       }
-    } else {
+    } /* else {
       const placementData = [];
       for (const studentId of studentIds) {
         const student = await Student.findById(studentId);
@@ -572,9 +719,10 @@ export const addshortlistStudents = async (req, res) => {
             studentId: studentId,
             name: student.name,
             image: student.image || '',
-            email: student.email,
+            email: student.email || 'N/A',
             gender: student.gender,
             department: student.department,
+            category: student.category || 'N/A',
           });
         } else {
           console.error(`Student not found for ID: ${studentId}`);
@@ -583,16 +731,95 @@ export const addshortlistStudents = async (req, res) => {
 
       const placement = new Placement({
         company_name: job.company_name,
-        company_logo: job.company_logo,
+        company_logo: job.company_logo||'',
         placement_type: job.job_category,
         batch: job.eligibility_criteria?.eligible_batch,
         degree: job.eligibility_criteria?.course_allowed,
         shortlisted_students: placementData,
         ctc: job.job_salary?.ctc || 'N/A',
+        base_salary: job.job_salary?.base_salary || 'N/A',
+        role: job.job_role || '',
+
       });
 
       await placement.save();
-    }
+    } */
+      else {
+        const placementData = [];
+        for (const studentId of studentIds) {
+          const student = await Student.findById(studentId);
+          if (student) {
+            student.placementstatus = job.job_class;
+            await student.save();
+            placementData.push({
+              studentId: studentId,
+              name: student.name,
+              image: student.image || '',
+              email: student.email || 'N/A',
+              gender: student.gender,
+              department: student.department,
+              category: student.category || 'N/A',
+            });
+          } else {
+            console.error(`Student not found for ID: ${studentId}`);
+          }
+        }
+  
+        const jobType = job.job_type;
+        let internshipDuration = null;
+  
+        switch (jobType) {
+          case '2m Intern':
+            internshipDuration = '2m Intern';
+            break;
+          case '6m Intern':
+          case 'Intern+PPO':
+            internshipDuration = '6m Intern';
+            break;
+          case '11m Intern':
+            internshipDuration = '11m Intern';
+            break;
+          case 'Intern+FTE':
+            internshipDuration = '6m Intern';
+            break;
+          default:
+            break;
+        }
+        const createInternship = ['2m Intern', '6m Intern', '11m Intern', 'Intern+PPO', 'Intern+FTE'].includes(jobType);
+        const createPlacement = jobType === 'FTE' || jobType === 'Intern+FTE';
+  
+        if (createInternship) {
+          const internship = new Internship({
+            company_name: job.company_name,
+            company_logo: job.company_logo || '',
+            internship_offer_mode: 'On-Campus',
+            internship_type: job.job_category,
+            internship_duration: internshipDuration,
+            batch: job.eligibility_criteria?.eligible_batch,
+            degree: job.eligibility_criteria?.course_allowed,
+            stipend: job.job_salary?.stipend || 'N/A',
+            role: job.job_role || '',
+            shortlisted_students: placementData,
+          });
+          await internship.save();
+        }
+  
+        if (createPlacement) {
+          const placement = new Placement({
+            company_name: job.company_name,
+            company_logo: job.company_logo || '',
+            placement_type: job.job_category,
+            placement_offer_mode: 'On-Campus',
+            batch: job.eligibility_criteria?.eligible_batch,
+            degree: job.eligibility_criteria?.course_allowed,
+            ctc: job.job_salary?.ctc || 'N/A',
+            base_salary: job.job_salary?.base_salary || 'N/A',
+            role: job.job_role || '',
+            shortlisted_students: placementData,
+          });
+          await placement.save();
+        }
+      }
 
     await job.save();
     

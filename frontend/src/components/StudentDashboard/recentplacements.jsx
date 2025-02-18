@@ -260,7 +260,7 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
   if (loading) {
     return (
       <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[400px]">
-        <div className="px-6 py-4 bg-gradient-to-r from-custom-blue to-purple-600 text-white">
+        <div className="px-6 py-4 bg-custom-blue text-white">
           <h2 className="text-xl font-semibold">Recent Placements</h2>
         </div>
         <CardSkeleton />
@@ -272,7 +272,7 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
   if (!Array.isArray(placements)) {
     return (
       <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
-        <div className="px-6 py-4 bg-gradient-to-r from-custom-blue to-purple-600 text-white">
+        <div className="px-6 py-4 bg-custom-blue text-white">
           <h2 className="text-xl font-semibold">Recent Placements</h2>
         </div>
         <div className="p-6 text-center text-gray-600">
@@ -285,7 +285,7 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
       {/* Header */}
-      <div className="px-6 py-4 bg-gradient-to-r from-custom-blue to-purple-600 text-white">
+      <div className="px-6 py-4 bg-custom-blue text-white">
         <h2 className="text-xl font-semibold">Recent Placements</h2>
       </div>
 

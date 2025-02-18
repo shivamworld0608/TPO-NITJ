@@ -3,6 +3,7 @@ import Gdcard from "./Gdcard";
 import axios from "axios";
 import BouncingLoader from "../BouncingLoader";
 import NoDataFound from "../NoData";
+import Notification from "../ProfessorDashboard/Notification";
 
 const GD = () => {
   const [upcomingJobs, setUpcomingJobs] = useState([]);
@@ -67,6 +68,7 @@ const GD = () => {
               gd_info={gd.gd_info}
               isLinkVisible={gd.isLinkVisible}
               gd_link={gd.gd_link}
+              was_shortlisted={gd.was_shortlisted}
             />
           ))}
         </div>
@@ -134,6 +136,7 @@ const GD = () => {
 
       {/* Tab Content */}
       <div className="container mx-auto px-4 py-6">{renderTabContent()}</div>
+      <Notification/>
     </>
   );
 };

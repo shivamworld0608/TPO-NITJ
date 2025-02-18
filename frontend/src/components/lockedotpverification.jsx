@@ -103,7 +103,8 @@ import toast from "react-hot-toast";
         {
           loading: "Verifying OTP...",
           success: "Account Unlocked!",
-          error: "Invalid OTP",
+          error: (err) =>
+          err.response?.data?.message || "Something went wrong",
         }
       );
 

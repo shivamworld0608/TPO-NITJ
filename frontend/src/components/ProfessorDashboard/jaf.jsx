@@ -13,6 +13,7 @@ import {
   ClipboardList,
 } from "lucide-react";
 import ViewJAF from "./viewjaf";
+import Notification from "./Notification";
 
 const JAF = () => {
   const [JAFProfiles, setJAFProfiles] = useState({
@@ -298,6 +299,7 @@ const JAF = () => {
           </Tabs>
         </>
       )}
+      <Notification/>
     </div>
   );
 };

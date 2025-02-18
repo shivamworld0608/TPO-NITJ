@@ -93,11 +93,23 @@ export default function Otherscard(props) {
                 </button>
               </div>
           )}
-          {was_shortlisted && (
-            <div className="text-sm text-gray-500 flex items-center">
-              {was_shortlisted}
-            </div>
-          )}
+          <div className="text-sm text-gray-500 flex items-center">
+            <span className="font-medium text-gray-800 mr-2">
+              Selection Status:
+            </span>
+            <span className={`inline-block px-2 py-1 rounded ${
+  was_shortlisted === true 
+    ? 'text-green-600 bg-green-50'
+    : 'text-gray-600 bg-gray-50'
+}`}>
+  {was_shortlisted === true
+    ? "Shortlisted"
+    : was_shortlisted === false
+      ? "Not selected"
+      : "Result yet to be declared"
+  }
+</span>
+          </div>
         </div>
         <button
           className="mt-6 w-full bg-custom-blue text-white py-2 px-4 rounded-md transition-colors duration-300 hover:bg-blue-600 hover:shadow-lg focus:outline-none"

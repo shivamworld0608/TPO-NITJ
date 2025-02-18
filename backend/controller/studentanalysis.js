@@ -1,12 +1,26 @@
 import Student from '../models/user_model/student.js';
 import JobProfile from '../models/jobprofile.js';
-
+import axios from 'axios';
 export const getStudentAnalytics = async (req, res) => {
     try {
         const students = await Student.find();
         const jobProfiles = await JobProfile.find();
         
+        const rollNumbers = students.map(student => student.rollno);
+        let erpDataMap = new Map();
+        try {
+            const response = await axios.post(`${process.env.ERP_SERVER}`, { rollNumbers });
+            const erpStudents = response.data.data.students;
+            console.log(erpStudents);
+            erpStudents.forEach(erpStudent => {
+                erpDataMap.set(erpStudent.rollno, erpStudent);
+            });
+        } catch (error) {
+            console.error("Error fetching ERP data:", error.message);
+        }
+
         const studentsAnalytics = await Promise.all(students.map(async (student) => {
+            const erpData = erpDataMap.get(student.rollno);
             const studentData = {
                 _id: student._id,
                 name: student.name,
@@ -14,13 +28,13 @@ export const getStudentAnalytics = async (req, res) => {
                 rollno: student.rollno,
                 department: student.department,
                 course: student.course,
-                batch: student.batch,
+                batch: erpData?.batch||student.batch,
                 gender: student.gender,
-                cgpa: student.cgpa,
+                cgpa: erpData?.cgpa || student.cgpa,
                 placementstatus: student.placementstatus,
                 debarred:student.debarred,
-                active_backlogs:student.active_backlogs,
-                backlogs_history:student.backlogs_history,
+                active_backlogs: erpData?.active_backlogs || student.active_backlogs,
+                backlogs_history: erpData?.backlogs_history || student.backlogs_history,
                 applications: {
                     total: 0,
                     jobProfiles: []

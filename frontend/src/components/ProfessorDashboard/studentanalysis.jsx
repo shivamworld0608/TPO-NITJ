@@ -7,6 +7,7 @@ import { Button } from '../ui/button';
 import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import Notification from "./Notification";
 
 const StudentAnalyticsDashboard = () => {
   const [filters, setFilters] = useState({
@@ -956,6 +957,7 @@ const StudentAnalyticsDashboard = () => {
           </Dialog>
         ))}
       </div>
+      <Notification/>
     </div>
   );
 };

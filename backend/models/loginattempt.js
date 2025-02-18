@@ -9,7 +9,7 @@ const loginAttemptSchema = new mongoose.Schema({
     isLocked: { type: Boolean, default: false },
 });
 
-loginAttemptSchema.index({ timestamp: 1 }, { expireAfterSeconds: 18000 });
+loginAttemptSchema.index({ timestamp: 1 }, { expireAfterSeconds: 36000 });
 
 const LoginAttempt = mongoose.model('LoginAttempt', loginAttemptSchema);
 export default LoginAttempt;

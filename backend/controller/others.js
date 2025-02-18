@@ -20,11 +20,11 @@ export const getEligibleUpcomingOthers = async (req, res) => {
           (step) =>
             step.step_type === "Others" &&
             step.eligible_students.some((id) => id.equals(studentObjectId)) &&
-            new Date(step.details.others_date) > new Date()
+            new Date(step.details?.others_date) > new Date()
         )
         .map((step) => {
-          const othersLinks = Array.isArray(step.details.others_link)
-            ? step.details.others_link
+          const othersLinks = Array.isArray(step.details?.others_link)
+            ? step.details?.others_link
             : [];
 
           const studentOthersLink = othersLinks.find((link) => {
@@ -44,12 +44,16 @@ export const getEligibleUpcomingOthers = async (req, res) => {
           return {
             company_name: job.company_name,
             company_logo: job.company_logo,
-            others_date: step.details.others_date,
-            others_round_name: step.details.others_round_name,
-            others_time: step.details.others_time,
-            others_info: step.details.others_info,
+            others_date: step.details?.others_date,
+            others_round_name: step.details?.others_round_name,
+            others_time: step.details?.others_time,
+            others_info: step.details?.others_info,
             others_link: isLinkVisible ? studentOthersLink?.interviewLink || "No link available" : "Link not visible",
-            isLinkVisible, // Add this field to indicate visibility
+            isLinkVisible,
+            was_shortlisted:
+            step.shortlisted_students?.length === 0
+              ? "Result yet to be declared"
+              : step.shortlisted_students.some((id) => id.equals(studentObjectId)) || false,
           };
         });
     });
@@ -80,11 +84,11 @@ export const getEligiblePastOthers = async (req, res) => {
           (step) =>
             step.step_type === "Others" &&
             step.eligible_students.some((id) => id.equals(studentObjectId)) &&
-            new Date(step.details.others_date) < new Date()
+            new Date(step.details?.others_date) < new Date()
         )
         .map((step) => {
-          const othersLinks = Array.isArray(step.details.others_link)
-            ? step.details.others_link
+          const othersLinks = Array.isArray(step.details?.others_link)
+            ? step.details?.others_link
             : [];
 
           const studentOthersLink = othersLinks.find((link) => {
@@ -104,10 +108,10 @@ export const getEligiblePastOthers = async (req, res) => {
           return {
             company_name: job.company_name,
             company_logo: job.company_logo,
-            others_date: step.details.others_date,
-            others_round_name: step.details.others_round_name,
-            others_time: step.details.others_time,
-            others_info: step.details.others_info,
+            others_date: step.details?.others_date,
+            others_round_name: step.details?.others_round_name,
+            others_time: step.details?.others_time,
+            others_info: step.details?.others_info,
             others_link: isLinkVisible ? studentOthersLink?.interviewLink || "No link available" : "Link not visible",
             isLinkVisible, // Add this field to indicate visibility
             was_shortlisted:

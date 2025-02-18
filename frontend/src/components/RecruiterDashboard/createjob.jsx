@@ -3,7 +3,9 @@ import Select from "react-select";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaArrowLeft } from "react-icons/fa";
+import {useSelector } from "react-redux";
 import { AlertCircle, GripVertical, X, Edit2 } from "lucide-react";
+import CompanySearchDropdown from "./CompanySearchDropdown";
 
 const btechdepartmentOptions = [
   {
@@ -311,7 +313,10 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
     active_backlogs: false,
     history_backlogs: false,
   });
-
+ 
+  const { userData } = useSelector((state) => state.auth);
+  formData.company_name = userData.company;
+  
   const [workflowStep, setWorkflowStep] = useState({
     step_type: "",
     details: {},
@@ -320,7 +325,24 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
   const [editingIndex, setEditingIndex] = useState(null);
   const [draggedIndex, setDraggedIndex] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const [companies, setCompanies] = useState([]);
+
+  useEffect(() => {
+    const fetchCompanies = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/`,
+          { withCredentials: true }
+        );
+        setCompanies(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching companies:", error);
+      }
+    };
+
+    fetchCompanies();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -464,6 +486,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
   };
 
   const handleSubmit = async (e) => {
+    console.log(formData);
+    
       if (isSubmitting) return;
       setIsSubmitting(true);
     e.preventDefault();
@@ -481,7 +505,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
       onCancel();
     } catch (error) {
       toast.error("Error creating job application.");
-    }finally {
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -513,7 +537,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>
-            <div>
+            {/* <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Company Name<span className="text-red-500"> *</span>
               </label>
@@ -525,7 +549,20 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 onChange={handleChange}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
-            </div>
+            </div> */}
+
+            {/* <div>
+              <label className="block text-gray-700 font-semibold mb-2">
+                Company Name<span className="text-red-500"> *</span>
+              </label>
+              <CompanySearchDropdown
+                companies={companies}
+                value={formData.company_name}
+                onChange={handleChange}
+              />
+            </div> */}
+            
+
             {/* <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Company Logo (URL)
@@ -579,7 +616,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               <label className="block text-gray-700 font-semibold mb-2">
                 Job Type<span className="text-red-500"> *</span>
               </label>
-              <select
+              <Select
                 required
                 options={jobTypeOptions}
                 onChange={(option) => handleSelectChange("job_type", option)}
@@ -587,8 +624,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   (option) => option.value === formData.job_type
                 )}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-              >
-                <option value="">Select Job Type</option>
+              />
+                {/* <option value="">Select Job Type</option>
                 <option value="2m Intern">2-Month Internship</option>
                 <option value="6m Intern">6-Month Internship</option>
                 <option value="Intern+PPO">
@@ -598,13 +635,13 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   Intern + Full-Time Employment(FTE)
                 </option>
                 <option value="FTE">Full-Time Employment(FTE)</option>
-              </select>
+              </select> */}
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Job Category<span className="text-red-500"> *</span>
               </label>
-              <select
+              <Select
                 required
                 options={jobCategoryOptions}
                 onChange={(option) =>
@@ -614,12 +651,12 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   (option) => option.value === formData.job_category
                 )}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-              >
-                <option value="">Select Job Category</option>
+              />
+                {/* <option value="">Select Job Category</option>
                 <option value="Tech">Tech</option>
                 <option value="Non-Tech">Non-Tech</option>
                 <option value="Tech+Non-Tech">Tech + Non-Tech</option>
-              </select>
+              </select> */}
             </div>
 
             <div>
@@ -778,6 +815,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   onChange={handleChange}
                   min="0"
                   max="10"
+                  step="0.1"
                   className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-custom-blue focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
               </div>

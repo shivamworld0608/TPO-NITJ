@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaCheckCircle, FaSpinner, FaExclamationCircle } from "react-icons/fa";
+import Notification from "../ProfessorDashboard/Notification";
 
 const Request = () => {
   const [activeTab, setActiveTab] = useState("request"); // request, resolved, unresolved
@@ -11,12 +12,12 @@ const Request = () => {
   const [alertMessage, setAlertMessage] = useState("");
 
   const availableIssues = [
-    "Job Profile",
+   /*  "Job Profile", */
     "Eligibility Issue",
     "Application Form Issue",
-    "OA Issue",
+/*     "OA Issue",
     "Interview Issue",
-    "GD Issue",
+    "GD Issue", */
     "Login/Signup Issue",
     "Profile Issue",
     "Other"
@@ -229,6 +230,7 @@ const Request = () => {
           </div>
         )}
       </div>
+      <Notification/>
     </div>
   );
 };

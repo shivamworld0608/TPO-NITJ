@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import BouncingLoader from "../BouncingLoader";
 import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
+import Notification from "../ProfessorDashboard/Notification";
 
 const SharedExperience = () => {
   const [showEditor, setShowEditor] = useState(false);
@@ -191,7 +192,7 @@ const SharedExperience = () => {
               {eligible && (
                 <div
                   onClick={() => setShowEditor(true)}
-                  className="bg-gradient-to-r from-blue-500 to-purple-500 border-dashed border-4 border-gray-300 rounded-xl flex items-center justify-center cursor-pointer shadow-lg hover:shadow-2xl transition-transform hover:scale-105 duration-300 text-white text-6xl p-5 h-auto w-56"
+                  className="bg-custom-blue border-dashed border-4 border-gray-300 rounded-xl flex items-center justify-center cursor-pointer shadow-lg hover:shadow-2xl transition-transform hover:scale-105 duration-300 text-white text-6xl p-5 h-auto w-56"
                 >
                   <FaPlus />
                 </div>
@@ -272,6 +273,7 @@ const SharedExperience = () => {
             </div>
           </section>
         )}
+        <Notification/>
       </div>
     </>
   );

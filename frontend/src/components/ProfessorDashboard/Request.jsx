@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import Notification from "./Notification";
 
 const RequestHelpManager = () => {
   const [issues, setIssues] = useState([]);
@@ -93,6 +94,7 @@ const RequestHelpManager = () => {
           ))}
         </ul>
       )}
+      <Notification/>
     </div>
   );
 };

@@ -11,7 +11,7 @@ const ChangePasswordForm = () => {
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -30,8 +30,12 @@ const ChangePasswordForm = () => {
 
     if (!formData.newPassword) {
       newErrors.newPassword = 'New password is required';
-    } else if (formData.newPassword.length < 8) {
-      newErrors.newPassword = 'Password must be at least 8 characters';
+    } else {
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
+      if (!passwordRegex.test(formData.newPassword)) {
+        newErrors.newPassword =
+          'Password must be at least 12 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special symbol.';
+      }
     }
 
     if (!formData.confirmPassword) {
@@ -46,19 +50,18 @@ const ChangePasswordForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
     setIsSubmitting(true);
     setSubmitStatus(null);
 
     try {
- 
       const response = await axios.post(
         `${import.meta.env.REACT_APP_BASE_URL}/profile/change-pass`,
-         formData,
+        formData,
         { withCredentials: true }
       );
- 
+
       setSubmitStatus('success');
       setFormData({ currentPassword: '', newPassword: '', confirmPassword: '' });
     } catch (error) {
@@ -70,126 +73,139 @@ const ChangePasswordForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: '',
       }));
     }
   };
 
   return (
     <motion.div
-    initial={{ opacity: 0, y: -20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
-    className="flex flex-col items-center"
-  >
-    <h1 className="text-3xl text-center font-bold text-gray-800">
-      Change <span className="text-custom-blue">Password</span>
-    </h1>
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col items-center"
+    >
+      <h1 className="text-3xl text-center font-bold text-gray-800">
+        Change <span className="text-custom-blue">Password</span>
+      </h1>
 
-    <Card className="w-full max-w-md py-8 my-8 mx-auto shadow-lg rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200">
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Current Password */}
-          <div>
-            <label className=" text-sm font-medium mb-1 flex items-center gap-2">
-              <Key className="h-4 w-4 text-gray-600" /> Current Password
-            </label>
-            <div className="relative">
-              <Input
-                type={showCurrentPassword ? 'text' : 'password'}
-                name="currentPassword"
-                value={formData.currentPassword}
-                onChange={handleChange}
-                className={`pr-10 ${errors.currentPassword ? 'border-red-500' : ''}`}
-                placeholder="Enter current password"
-              />
-              <button
-                type="button"
-                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-              >
-                {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+      <Card className="w-full max-w-md py-8 my-8 mx-auto shadow-lg rounded-lg bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200">
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Current Password */}
+            <div>
+              <label className=" text-sm font-medium mb-1 flex items-center gap-2">
+                <Key className="h-4 w-4 text-gray-600" /> Current Password
+              </label>
+              <div className="relative">
+                <Input
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  name="currentPassword"
+                  value={formData.currentPassword}
+                  onChange={handleChange}
+                  className={`pr-10 ${errors.currentPassword ? 'border-red-500' : ''}`}
+                  placeholder="Enter current password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {errors.currentPassword && (
+                <p className="text-red-500 text-sm mt-1">{errors.currentPassword}</p>
+              )}
             </div>
-          </div>
 
-          {/* New Password */}
-          <div>
-            <label className=" text-sm font-medium mb-1 flex items-center gap-2">
-              <Lock className="h-4 w-4 text-gray-600" /> New Password
-            </label>
-            <div className="relative">
-              <Input
-                type={showNewPassword ? 'text' : 'password'}
-                name="newPassword"
-                value={formData.newPassword}
-                onChange={handleChange}
-                className={`pr-10 ${errors.newPassword ? 'border-red-500' : ''}`}
-                placeholder="Enter new password"
-              />
-              <button
-                type="button"
-                onClick={() => setShowNewPassword(!showNewPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-              >
-                {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+            {/* New Password */}
+            <div>
+              <label className=" text-sm font-medium mb-1 flex items-center gap-2">
+                <Lock className="h-4 w-4 text-gray-600" /> New Password
+              </label>
+              <div className="relative">
+                <Input
+                  type={showNewPassword ? 'text' : 'password'}
+                  name="newPassword"
+                  value={formData.newPassword}
+                  onChange={handleChange}
+                  className={`pr-10 ${errors.newPassword ? 'border-red-500' : ''}`}
+                  placeholder="Enter new password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {errors.newPassword && (
+                <p className="text-red-500 text-sm mt-1">{errors.newPassword}</p>
+              )}
             </div>
-          </div>
 
-          {/* Confirm Password */}
-          <div>
-            <label className=" text-sm font-medium mb-1 flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-gray-600" /> Confirm New Password
-            </label>
-            <div className="relative">
-              <Input
-                type={showConfirmPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`pr-10 ${errors.confirmPassword ? 'border-red-500' : ''}`}
-                placeholder="Re-enter new password"
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-              >
-                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+            {/* Confirm Password */}
+            <div>
+              <label className=" text-sm font-medium mb-1 flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-gray-600" /> Confirm New Password
+              </label>
+              <div className="relative">
+                <Input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className={`pr-10 ${errors.confirmPassword ? 'border-red-500' : ''}`}
+                  placeholder="Re-enter new password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
+              )}
             </div>
-          </div>
 
-          {/* Status Messages */}
-          {submitStatus === 'success' && (
-            <Alert className="bg-green-50 border-green-200">
-              <AlertDescription className="text-green-800">Password changed successfully!</AlertDescription>
-            </Alert>
-          )}
-          {submitStatus === 'error' && (
-            <Alert className="bg-red-50 border-red-200">
-              <AlertDescription className="text-red-800">Failed to change password. Please try again.</AlertDescription>
-            </Alert>
-          )}
+            {/* Status Messages */}
+            {submitStatus === 'success' && (
+              <Alert className="bg-green-50 border-green-200">
+                <AlertDescription className="text-green-800">Password changed successfully!</AlertDescription>
+              </Alert>
+            )}
+            {submitStatus === 'error' && (
+              <Alert className="bg-red-50 border-red-200">
+                <AlertDescription className="text-red-800">Failed to change password. Please try again.</AlertDescription>
+              </Alert>
+            )}
 
-          {/* Submit Button */}
-          <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-            <Button type="submit" className="w-full bg-custom-blue text-white hover:bg-blue-600" disabled={isSubmitting}>
-              {isSubmitting ? 'Changing Password...' : 'Change Password'}
-            </Button>
-          </motion.div>
-        </form>
-      </CardContent>
-    </Card>
-  </motion.div>
+            {/* Submit Button */}
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <Button
+                type="submit"
+                className="w-full bg-custom-blue text-white hover:bg-blue-600"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? 'Changing Password...' : 'Change Password'}
+              </Button>
+            </motion.div>
+          </form>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 };
 

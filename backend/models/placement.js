@@ -8,9 +8,14 @@ const PlacementSchema = new mongoose.Schema(
     company_logo: {
       type: String,
     },
+    placement_offer_mode:{
+      type:String,
+      enum:['Off-Campus','On-Campus'],
+      default:'On-Campus',
+    },
     placement_type: {
       type: String,
-      enum: ["Tech", "Non-Tech"],
+      enum: ['Tech', 'Non-Tech','Tech+Non-Tech'],
     },
     batch:{
         type:String,
@@ -18,9 +23,15 @@ const PlacementSchema = new mongoose.Schema(
     },
     degree: {
       type:String,
-      enum:['B.Tech','M.Tech','MBA']
+      enum:["B.Tech","M.Tech","MBA","M.Sc","PHD"]
     },
     ctc:{
+      type:String,
+    },
+    base_salary:{
+      type:String,
+    },
+    role:{
       type:String,
     },
     shortlisted_students: [
@@ -55,6 +66,9 @@ const PlacementSchema = new mongoose.Schema(
             "Artificial Intelligence","Power Systems and Reliability","Finance","Human Resource","Marketing","Chemistry","Mathematics",
             "Physics"],
         },
+        category:{
+          type:String,
+        }
       }
     ]
   },

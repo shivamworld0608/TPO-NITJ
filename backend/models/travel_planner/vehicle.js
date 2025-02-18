@@ -5,6 +5,9 @@ const VehicleRequisitionSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Recruiter',
   },
+  company:{
+    type:String
+  },
   indentor: {
     employeeCode: {
       type: String,

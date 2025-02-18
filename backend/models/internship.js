@@ -8,13 +8,18 @@ const InternshipSchema = new mongoose.Schema(
     company_logo: {
       type: String,
     },
+    internship_offer_mode:{
+      type:String,
+      enum:['Off-Campus','On-Campus'],
+      default:'On-Campus',
+    },
     internship_type: {
       type: String,
-      enum: ["Tech", "Non-Tech"],
+      enum: ['Tech', 'Non-Tech','Tech+Non-Tech'],
     },
     internship_duration: {
        type:String,
-       enum:["2m Intern"]
+       enum:['2m Intern','6m Intern','11m Intern']
     },
     batch:{
         type:String,
@@ -22,9 +27,12 @@ const InternshipSchema = new mongoose.Schema(
     },
     degree: {
       type:String,
-      enum:['B.Tech','M.Tech','MBA']
+      enum:["B.Tech","M.Tech","MBA","M.Sc","PHD"],
     },
     stipend:{
+      type:String,
+    },
+    role:{
       type:String,
     },
     shortlisted_students: [
@@ -58,6 +66,9 @@ const InternshipSchema = new mongoose.Schema(
             "Mathematics and Computing","Design Engineering","Thermal and Energy Engineering","Textile Engineering and Management","Renewable Energy",
             "Artificial Intelligence","Power Systems and Reliability","Finance","Human Resource","Marketing","Chemistry","Mathematics",
             "Physics"],
+        },
+        category:{
+          type:String,
         },
       }
     ]
