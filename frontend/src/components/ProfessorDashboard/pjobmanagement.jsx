@@ -7,6 +7,8 @@ import CreateJob from "./createjobprofile";
 import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Building2, MapPin, DollarSign, Calendar, Briefcase, Plus, Search, Check, X, ArrowLeft, Star, MessageCircle, FileText } from "lucide-react";
+import { FaArrowLeft, FaSpinner, FaFileUpload } from "react-icons/fa";
+
 import Notification from "./Notification";
 
 const JobProfilesonp = () => {
@@ -526,12 +528,20 @@ const JobProfilesonp = () => {
         jobProfiles.jafByCompany[selectedCompany] ? (
           <ViewJAF jaf={jobProfiles.jafByCompany[selectedCompany]} onClose={() => setShowJAF(false)} />
         ) : (
+          <>
+            <div className="mt-2 ml-4">
+                    <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={() => setShowJAF(false)}>
+                      <FaArrowLeft className="mr-2" />
+                    </button>
+                  </div>
           <div className="flex items-center justify-center h-[calc(100vh-200px)]">
   <div className="text-center text-gray-500">
     <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
     <p>JAF not created for this Company</p>
   </div>
 </div>
+</>
+
         )) : selectedCompany ? (
         <>
           <div className="relative mb-10">

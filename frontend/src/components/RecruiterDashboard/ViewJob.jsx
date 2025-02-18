@@ -11,6 +11,7 @@ import GDLinkManager from "../ProfessorDashboard/gdlink";
 import OaLinkManager from "../ProfessorDashboard/oalink";
 import OthersLinkManager from "../ProfessorDashboard/otherslink";
 import AuditLogs from "../AuditLogs";
+import { FaArrowLeft } from "react-icons/fa";
 
 const formatDateTime = (dateString) => {
   if (!dateString) return "N/A";
@@ -1139,6 +1140,12 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
   }
 
   return (
+    <>
+    <div className="mt-2 ml-4">
+        <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={onClose}>
+          <FaArrowLeft className="mr-2" />
+        </button>
+      </div>
     <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <h2 className="text-4xl font-bold text-custom-blue">Job Details</h2>
@@ -1150,12 +1157,12 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
             <Users className="mr-2 h-4 w-4 inline" />
             View Applied Students
           </button>
-          <button
+          {/* <button
             className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             onClick={onClose}
           >
             Close
-          </button>
+          </button> */}
         </div>
       </div>
 
@@ -1173,6 +1180,7 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
       {renderHiringWorkflow()}
       <AuditLogs logs={job.auditLogs || []} />
     </div>
+  </>
   );
 };
 
