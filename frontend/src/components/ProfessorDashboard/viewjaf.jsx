@@ -474,6 +474,14 @@ function ViewJAF({ jaf: initialJAF }) {
 
   return (
     <>
+    <Button
+        type="button"
+        onClick={() => navigate(-1)} // Navigate back to the previous page
+        className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 mb-4"
+      >
+        Back
+      </Button>
+      
       <form
         id="jaf-form"
         onSubmit={(e) => e.preventDefault()}
