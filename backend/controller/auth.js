@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
 import LoginAttempt from "../models/loginattempt.js";
-
+import axios from 'axios';
 
 const generateOTP = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -225,7 +225,6 @@ export const LockedResendOTP = async (req, res) => {
               return res.status(401).json({ message: "Invalid code" });
           }
   
-          // Reset login attempts on successful login
           if (loginAttempt) {
               await LoginAttempt.deleteOne({ email });
           }
@@ -241,14 +240,35 @@ export const LockedResendOTP = async (req, res) => {
           if (!token) {
               return res.status(500).json({ message: "Failed to generate token" });
           }
-  
+   
           res.cookie("token", token, {
               httpOnly: true,
               sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
               secure: process.env.NODE_ENV === "production",
               expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           });
-  
+
+          if (userType === "Student" && student) {
+            try {
+                const rollNumbers = [student.rollno];
+                const response = await axios.post(`${process.env.ERP_SERVER}`, { rollNumbers });
+                const erpStudents = response.data.data.students;
+                const erpData = erpStudents[0];
+
+                const updatedStudent = {
+                    ...student.toObject(),
+                    cgpa: erpData.cgpa,
+                    batch: erpData.batch,
+                    active_backlogs: erpData.active_backlogs,
+                    backlogs_history: erpData.backlogs_history,
+                };
+
+                return res.status(200).json({ message: "Login Successful", user: updatedStudent, userType });
+            } catch (error) {
+                console.error("Error fetching ERP data:", error);
+                return res.status(500).json({ message: "Login Successful, but failed to fetch ERP data", user, userType });
+            }
+        }
           res.status(200).json({ message: "Login Successful", user: user, userType: userType });
       } catch (error) {
           res.status(500).json({ message: "Internal Server Error" });

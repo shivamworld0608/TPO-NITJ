@@ -375,10 +375,20 @@ export const deleteJob = async (req, res) => {
 export const getJobProfiletostudent = async (req, res) => {
   try {
     const studentId = req.user.userId;
+    const student = await Student.findById({_id:studentId});
+    const rollNumbers=[student.rollno];
+    const response=await axios.post(`${process.env.ERP_SERVER}`,{rollNumbers});
+    const erpStudents = response.data.data.students;
+    const erpData = erpStudents[0];
     if (!studentId) {
       return res.status(400).json({ message: "User ID is missing in the request." });
     }
-    const JobProfiles = await JobProfile.find({ Approved_Status: true });
+
+    const JobProfiles = await JobProfile.find({
+      Approved_Status: true,
+      'eligibility_criteria.eligible_batch': erpData.batch
+  });
+  
     const applied = [];
     const notApplied = [];
     const liveButNotApplied = [];
