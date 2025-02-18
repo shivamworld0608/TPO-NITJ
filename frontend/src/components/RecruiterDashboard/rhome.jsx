@@ -269,7 +269,7 @@ const RHome = () => {
   
 
   const handleDownloadPdf1 = () => {
-    const pdfUrl = 'frontend/public/Academic Programs .pdf'; // Path to the first PDF
+    const pdfUrl = 'Academic Programs.pdf'; 
     const link = document.createElement('a');
     link.href = pdfUrl;
     link.download = 'AcademicPrograms.pdf';
@@ -280,7 +280,7 @@ const RHome = () => {
 
   // Function to handle the download of the second PDF
   const handleDownloadPdf2 = () => {
-    const pdfUrl = 'frontend/public/Brochure .pdf'; // Path to the second PDF
+    const pdfUrl = 'Brochure.pdf'; 
     const link = document.createElement('a');
     link.href = pdfUrl;
     link.download = 'PlacementBorchure.pdf';

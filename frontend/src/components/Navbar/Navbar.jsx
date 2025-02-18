@@ -1,15 +1,41 @@
-import React from 'react';
-import { 
-  Facebook, 
-  Instagram, 
-  Twitter, 
-  Linkedin, 
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin,
   Youtube,
   Search,
   Home
 } from 'lucide-react';
 
 const Navbar = () => {
+  const instituteNames = [
+    {
+      title: "Dr B R AMBEDKAR NATIONAL INSTITUTE OF TECHNOLOGY",
+      subtitle: "JALANDHAR, PUNJAB (INDIA)"
+    },
+    {
+      title: "ਡਾ ਬੀ ਆਰ ਅੰਬੇਡਕਰ ਨੈਸ਼ਨਲ ਇੰਸਟੀਚਿਊਟ ਟੈਕਨਾਲੋਜੀ",
+      subtitle: "ਜਲੰਧਰ, ਪੰਜਾਬ (ਭਾਰਤ)"
+    },
+    {
+      title: "डॉ बी आर अम्बेडकर राष्ट्रीय प्रौद्योगिकी संस्थान",
+      subtitle: "जालंधर, पंजाब (भारत)"
+    }
+  ];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prevIndex) => (prevIndex + 1) % instituteNames.length);
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="w-full m-0">
       {/* Top Bar */}
@@ -49,49 +75,56 @@ const Navbar = () => {
 
       {/* Institute Name */}
       <div className="bg-white py-4">
-        <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center">
-            <div className="text-center flex-1">
-              <h1 className="text-xl font-bold">डॉ बी आर अम्बेडकर राष्ट्रीय प्रौद्योगिकी संस्थान</h1>
-              <h2 className="text-lg">जालंधर, पंजाब (भारत)</h2>
-            </div>
-            <img 
-              src="nitj-logo.png" 
-              alt="NITJ Logo" 
-              className="h-20 w-25 z-50"
-            />
-            <div className="text-center flex-1">
-              <h1 className="text-xl font-bold">ਡਾ ਬੀ ਆਰ ਅੰਬੇਡਕਰ ਨੈਸ਼ਨਲ ਇੰਸਟੀਚਿਊਟ ਟੈਕਨਾਲੋਜੀ</h1>
-              <h2 className="text-lg">ਜਲੰਧਰ, ਪੰਜਾਬ (ਭਾਰਤ)</h2>
-            </div>
+        <div className="container mx-auto px-4 flex">
+          <div className="text-center flex-1">
+            <h1 className="text-xl font-bold">{instituteNames[index].title}</h1>
+            <h2 className="text-lg">{instituteNames[index].subtitle}</h2>
           </div>
+
+          <div className="text-center flex-1">
+            <h1 className="text-xl font-bold">{instituteNames[index].title}</h1>
+            <h2 className="text-lg">{instituteNames[index].subtitle}</h2>
+          </div>
+
         </div>
       </div>
 
       {/* Main Navigation */}
       <div className="bg-custom-blue text-white">
         <div className="container mx-auto px-4">
-          <div className="flex justify-evenly items-center h-12">
-            <div className="flex items-center space-x-6">
-              <Home size={20} className="hover:text-blue-200 cursor-pointer" />
-              <a href="#" className="hover:text-blue-200">ADMINISTRATION</a>
-              <a href="#" className="hover:text-blue-200">ACADEMICS</a>
-              <a href="#" className="hover:text-blue-200">ADMISSIONS</a>
-              </div>
-              <img 
-              src="Rectangle.png" 
-              alt="NITJ Logo" 
-              className="h-12 w-100"
-            />
-              <div className='flex items-center space-x-6'>
-              <a href="#" className="hover:text-blue-200">RESEARCH</a>
-              <a href="#" className="hover:text-blue-200">ALUMNI</a>
-              <a href="#" className="hover:text-blue-200">LIFE AT NITJ</a>
+          <div className="flex justify-evenly items-center h-10 relative font-semibold text-lg">
+            <div className="flex items-center space-x-6 gap-5">
+              <Home size={24} className="hover:text-blue-200 cursor-pointer" />
+              <Link to="/" className="hover:text-blue-200 text-xl">Home</Link>
+              <Link to="/placements" className="hover:text-blue-200 text-xl">Placements</Link>
+              <Link to="/internships" className="hover:text-blue-200 text-xl">Internships</Link>
             </div>
-            <Search size={20} className="hover:text-blue-200 cursor-pointer" />
+
+            {/* Image Container */}
+            <div className="relative flex justify-center items-center">
+              <img
+                src="Rectangle.png"
+                alt="Background"
+                className="h-10 w-64"
+              />
+              <img
+                src="nitj-logo.png"
+                alt="NITJ Logo"
+                className="absolute mb-24 h-32 w-auto z-50"
+              />
+            </div>
+
+            <div className="flex items-center space-x-6 gap-5">
+              <Link to="/alumini" className="hover:text-blue-200 text-xl">Alumni</Link>
+              <Link to="/team" className="hover:text-blue-200 text-xl">People</Link>
+              <Link to="/login" className="hover:text-blue-200 text-xl">Login</Link>
+            </div>
+            <Search size={24} className="hover:text-blue-200 cursor-pointer" />
           </div>
         </div>
       </div>
+
+
     </div>
   );
 };

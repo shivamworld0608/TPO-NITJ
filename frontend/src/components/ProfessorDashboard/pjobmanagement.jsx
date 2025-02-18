@@ -260,7 +260,7 @@ const JobProfilesonp = () => {
       {job.completed && (
         <div className="absolute top-2 right-2 text-red-600">
           <X className="w-7 h-7 bg-red-100  rounded-3xl p-1" onClick={() => handleInComplete(job._id)} />
-        </div>
+        </div>            
       )}
       <CardHeader className="pb-4">
         <div className="flex items-center space-x-4">
