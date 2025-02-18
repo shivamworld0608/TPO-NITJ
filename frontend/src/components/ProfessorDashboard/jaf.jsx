@@ -24,6 +24,11 @@ const JAF = () => {
   const [error, setError] = useState("");
   const [selectedJAF, setSelectedJAF] = useState(null);
 
+
+  const handleBack = () => {
+    setSelectedJAF(null); // Reset the selected JAF to go back to the dashboard
+  };
+
   const formatDateTime = (dateString) => {
     const date = new Date(dateString);
     return (
@@ -244,7 +249,7 @@ const JAF = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       {selectedJAF ? (
-        <ViewJAF jaf={selectedJAF} />
+        <ViewJAF jaf={selectedJAF} onClose={handleBack}/>
       ) : (
         <>
           <h1 className="text-4xl font-bold text-center mb-8 text-custom-blue">

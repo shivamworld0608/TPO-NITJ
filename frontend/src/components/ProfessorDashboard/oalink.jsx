@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const OaLinkManager = ({ jobId, stepIndex, onClose, oaLinks, onUpdateLinks }) => {
   const [students, setStudents] = useState([]);
@@ -108,6 +109,12 @@ const OaLinkManager = ({ jobId, stepIndex, onClose, oaLinks, onUpdateLinks }) =>
   };
 
   return (
+    <>
+    <div className="mt-2 ml-4">
+        <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={onClose}>
+          <FaArrowLeft className="mr-2" />
+        </button>
+      </div>
     <div className="max-w-4xl mx-auto bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl">
       <div className="flex justify-between items-center mb-6">
         <div className="flex space-x-4 w-2/3">
@@ -206,6 +213,7 @@ const OaLinkManager = ({ jobId, stepIndex, onClose, oaLinks, onUpdateLinks }) =>
         </button>
       </div>
     </div>
+  </>
   );
 };
 

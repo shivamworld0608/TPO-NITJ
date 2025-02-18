@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+
+import {FaArrowLeft} from 'react-icons/fa';
+
 import * as XLSX from 'xlsx';
 
 const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
@@ -125,6 +128,12 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
   };
 
   return (
+    <>
+    <div className="mt-2 ml-4">
+        <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={onClose}>
+          <FaArrowLeft className="mr-2" />
+        </button>
+      </div>
     <div className="max-w-4xl mx-auto bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl">
       {/* Upload Method Toggle */}
       <div className="mb-6 flex justify-center space-x-4">
@@ -226,6 +235,7 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
         </button>
       </div>
     </div>
+  </>
   );
 };
 

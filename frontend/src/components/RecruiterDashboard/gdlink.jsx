@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+import { FaArrowLeft } from 'react-icons/fa';
 
 const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) => {
   const [students, setStudents] = useState([]);
@@ -102,6 +103,12 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
   };
 
   return (
+    <>
+    <div className="mt-2 ml-4">
+        <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={onClose}>
+          <FaArrowLeft className="mr-2" />
+        </button>
+      </div>
     <div className="max-w-4xl mx-auto bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl">
       <div className="flex justify-between items-center mb-6">
         <div className="flex space-x-4 w-2/3">
@@ -182,7 +189,7 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
                         absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full 
                         transition-transform duration-300
                         ${student.visibility ? 'translate-x-6' : ''}
-                      `}></span>
+                        `}></span>
                     </div>
                   </label>
                 </td>
@@ -196,10 +203,11 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
           {loading ? 'Submitting...' : 'Submit'}
         </button>
         <button className="bg-gray-500 text-white px-4 py-2 rounded-lg" onClick={onClose} disabled={loading}>
-          Cancel
+          {/* Cancel */}
         </button>
       </div>
     </div>
+  </>
   );
 };
 
