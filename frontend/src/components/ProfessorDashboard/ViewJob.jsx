@@ -17,7 +17,7 @@ import GDLinkManager from "./gdlink";
 import OaLinkManager from "./oalink";
 import OthersLinkManager from "./otherslink";
 import AuditLogs from "../AuditLogs";
-import {FaArrowLeft} from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import {
   Tooltip,
   TooltipContent,
@@ -912,7 +912,7 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
               })}
             </ul>
 
-            <div className="mt-8 flex space-x-4">
+            <div className="mt-8 flex sm:flex-row flex-col sm:space-x-4 sm:space-y-0 space-y-4">
               {step.step_type === "Others" && (
                 <button
                   className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
@@ -957,13 +957,13 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
                 </button>
               )}
               <button
-                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl w-full"
                 onClick={() => setAddingShortlist({ stepIndex: index })}
               >
                 Add Shortlisted Students
               </button>
               <button
-                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl w-full"
                 onClick={() => setViewingShortlist({ stepIndex: index })}
               >
                 View Shortlisted Students
@@ -1267,133 +1267,134 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
 
   return (
     <>
-    <div className="mt-2 ml-4">
-        <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={onClose}>
+      <div className="mt-2 ml-4">
+        <button
+          className="flex items-center text-blue-600 hover:text-blue-800"
+          onClick={onClose}
+        >
           <FaArrowLeft className="mr-2" />
         </button>
       </div>
-    <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-4xl font-bold text-custom-blue">Job Details</h2>
-        <div className="flex items-center space-x-4">
-          {job.Approved_Status && (
-            <button
-              className="bg-gradient-to-r from-[#0369A0] to-[#024873] text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-              onClick={() => setViewingAppliedStudents(true)}
-            >
-              <Users className="mr-2 h-4 w-4 inline" />
-              View Applied Students
-            </button>
-          )}
+      <div className="bg-white sm:p-10 p-5 rounded-3xl shadow-2xl max-w-6xl mx-auto">
+        <div className="flex sm:flex-row flex-col justify-between items-center mb-8">
+          <h2 className="text-4xl font-bold text-custom-blue">Job Details</h2>
+          <div className="flex items-center space-x-4 sm:space-y-0 space-y-5">
+            {job.Approved_Status && (
+              <button
+                className="bg-gradient-to-r from-[#0369A0] to-[#024873] text-white p-3 sm:px-8 sm:py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+                onClick={() => setViewingAppliedStudents(true)}
+              >
+                <Users className="mr-2 h-4 w-4 inline" />
+                View Applied Students
+              </button>
+            )}
 
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <label className="inline-flex items-center cursor-pointer py-3 relative group">
-                  <input
-                    type="checkbox"
-                    checked={editingAllowed}
-                    onChange={handleToggleEditing}
-                    className="hidden"
-                  />
-                  <div
-                    className={`
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <label className="inline-flex items-center cursor-pointer py-3 relative group">
+                    <input
+                      type="checkbox"
+                      checked={editingAllowed}
+                      onChange={handleToggleEditing}
+                      className="hidden"
+                    />
+                    <div
+                      className={`
                 w-14 h-8 rounded-full relative transition-colors duration-300
                 ${editingAllowed ? "bg-green-500" : "bg-red-500"}
               `}
-                  >
-                    <span
-                      className={`
+                    >
+                      <span
+                        className={`
                   absolute top-1 left-1 w-6 h-6 bg-white rounded-full 
                   transition-transform duration-300
                   ${editingAllowed ? "translate-x-6" : ""}
                 `}
-                    ></span>
-                  </div>
-                </label>
-              </TooltipTrigger>
-              <TooltipContent className="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-xl">
-                <p className="text-sm font-medium">
-                  {editingAllowed
-                    ? "Disable Recruiter Editing"
-                    : "Enable Recruiter Editing"}
-                </p>
-                <p className="text-xs text-gray-300 mt-1">
-                  {editingAllowed
-                    ? "Click to prevent recruiter from editing job details"
-                    : "Click to allow recruiter to edit job details"}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+                      ></span>
+                    </div>
+                  </label>
+                </TooltipTrigger>
+                <TooltipContent className="bg-gray-800 text-white px-4 py-2 rounded-lg shadow-xl">
+                  <p className="text-sm font-medium">
+                    {editingAllowed
+                      ? "Disable Recruiter Editing"
+                      : "Enable Recruiter Editing"}
+                  </p>
+                  <p className="text-xs text-gray-300 mt-1">
+                    {editingAllowed
+                      ? "Click to prevent recruiter from editing job details"
+                      : "Click to allow recruiter to edit job details"}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
 
-          {/* <button
+            {/* <button
             className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             onClick={onClose}
           >
             Close
           </button> */}
-
-
-        </div>
-      </div>
-
-      {renderEditableCard("Basic Details", renderBasicDetails(), "basic")}
-      {renderEditableCard("Salary Details", renderSalaryDetails(), "salary")}
-      {renderEditableCard(
-        "Eligibility Criteria",
-        renderEligibilityCriteria(),
-        "eligibility"
-      )}
-
-      <h3 className="text-3xl font-bold text-custom-blue mt-10 mb-8">
-        Hiring Workflow
-      </h3>
-      {renderHiringWorkflow()}
-      <div className="p-8 bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative mt-8">
-        {/*       <div className="mt-8 space-y-4"> */}
-        <h3 className="text-2xl font-semibold text-custom-blue mb-6">
-          Application Form
-        </h3>
-        {applicationFormexist ? (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            <Button
-              className="bg-green-500 hover:bg-green-600 text-white"
-              onClick={() => setViewingApplicationForm(true)}
-            >
-              <FileText className="mr-2 h-4 w-4" />
-              View Form
-            </Button>
-            <Button
-              className="bg-amber-500 hover:bg-amber-600 text-white"
-              onClick={() => setEditingApplicationForm(true)}
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Form
-            </Button>
-            <Button
-              className="bg-red-500 hover:bg-red-600 text-white"
-              onClick={handleDeleteForm}
-              disabled={isDeleting}
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
-              {isDeleting ? "Deleting..." : "Delete Form"}
-            </Button>
           </div>
-        ) : (
-          job.Approved_Status && (
-            <Button
-              className="w-full bg-green-500 hover:bg-green-600 text-white"
-              onClick={() => setSelectedJobForForm(job._id)}
-            >
-              <Plus className="mr-2 h-4 w-4 text-white" />
-              Create Application Form
-            </Button>
-          )
+        </div>
+
+        {renderEditableCard("Basic Details", renderBasicDetails(), "basic")}
+        {renderEditableCard("Salary Details", renderSalaryDetails(), "salary")}
+        {renderEditableCard(
+          "Eligibility Criteria",
+          renderEligibilityCriteria(),
+          "eligibility"
         )}
+
+        <h3 className="text-3xl font-bold text-custom-blue mt-10 mb-8">
+          Hiring Workflow
+        </h3>
+        {renderHiringWorkflow()}
+        <div className="p-8 bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative mt-8">
+          {/*       <div className="mt-8 space-y-4"> */}
+          <h3 className="text-2xl font-semibold text-custom-blue mb-6">
+            Application Form
+          </h3>
+          {applicationFormexist ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <Button
+                className="bg-green-500 hover:bg-green-600 text-white"
+                onClick={() => setViewingApplicationForm(true)}
+              >
+                <FileText className="mr-2 h-4 w-4" />
+                View Form
+              </Button>
+              <Button
+                className="bg-amber-500 hover:bg-amber-600 text-white"
+                onClick={() => setEditingApplicationForm(true)}
+              >
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Form
+              </Button>
+              <Button
+                className="bg-red-500 hover:bg-red-600 text-white"
+                onClick={handleDeleteForm}
+                disabled={isDeleting}
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                {isDeleting ? "Deleting..." : "Delete Form"}
+              </Button>
+            </div>
+          ) : (
+            job.Approved_Status && (
+              <Button
+                className="w-full bg-green-500 hover:bg-green-600 text-white"
+                onClick={() => setSelectedJobForForm(job._id)}
+              >
+                <Plus className="mr-2 h-4 w-4 text-white" />
+                Create Application Form
+              </Button>
+            )
+          )}
+        </div>
+        <AuditLogs logs={job.auditLogs || []} />
       </div>
-      <AuditLogs logs={job.auditLogs || []} />
-    </div>
     </>
   );
 };
