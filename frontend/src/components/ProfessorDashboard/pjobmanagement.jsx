@@ -6,13 +6,33 @@ import ViewJAF from "./viewjaf";
 import CreateJob from "./createjobprofile";
 import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Building2, MapPin, DollarSign, Calendar, Briefcase, Plus, Search, Check, X, ArrowLeft, Star, MessageCircle, FileText } from "lucide-react";
+import {
+  Building2,
+  MapPin,
+  DollarSign,
+  Calendar,
+  Briefcase,
+  Plus,
+  Search,
+  Check,
+  X,
+  ArrowLeft,
+  Star,
+  MessageCircle,
+  FileText,
+} from "lucide-react";
 import { FaArrowLeft, FaSpinner, FaFileUpload } from "react-icons/fa";
 
 import Notification from "./Notification";
 
 const JobProfilesonp = () => {
-  const [jobProfiles, setJobProfiles] = useState({ approved: [], notApproved: [], completed: [], feedbackByCompany: {}, jafByCompany: {} });
+  const [jobProfiles, setJobProfiles] = useState({
+    approved: [],
+    notApproved: [],
+    completed: [],
+    feedbackByCompany: {},
+    jafByCompany: {},
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedJob, setSelectedJob] = useState(null);
@@ -150,7 +170,9 @@ const JobProfilesonp = () => {
     if (confirm.isConfirmed) {
       try {
         await axios.put(
-          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/approvejob/${jobId}`,
+          `${
+            import.meta.env.REACT_APP_BASE_URL
+          }/jobprofile/approvejob/${jobId}`,
           {},
           { withCredentials: true }
         );
@@ -158,7 +180,10 @@ const JobProfilesonp = () => {
         setJobProfiles((prev) => ({
           ...prev,
           notApproved: prev.notApproved.filter((job) => job._id !== jobId),
-          approved: [...prev.approved, prev.notApproved.find((job) => job._id === jobId)],
+          approved: [
+            ...prev.approved,
+            prev.notApproved.find((job) => job._id === jobId),
+          ],
         }));
       } catch (err) {
         Swal.fire("Error", "Failed to approve the job.", "error");
@@ -179,7 +204,9 @@ const JobProfilesonp = () => {
     if (confirm.isConfirmed) {
       try {
         await axios.put(
-          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/completejob/${jobId}`,
+          `${
+            import.meta.env.REACT_APP_BASE_URL
+          }/jobprofile/completejob/${jobId}`,
           {},
           { withCredentials: true }
         );
@@ -187,7 +214,10 @@ const JobProfilesonp = () => {
         setJobProfiles((prev) => ({
           ...prev,
           approved: prev.approved.filter((job) => job._id !== jobId),
-          completed: [...prev.completed, prev.approved.find((job) => job._id === jobId)],
+          completed: [
+            ...prev.completed,
+            prev.approved.find((job) => job._id === jobId),
+          ],
         }));
       } catch (err) {
         Swal.fire("Error", "Failed to complete the job.", "error");
@@ -208,7 +238,9 @@ const JobProfilesonp = () => {
     if (confirm.isConfirmed) {
       try {
         await axios.put(
-          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/incompletejob/${jobId}`,
+          `${
+            import.meta.env.REACT_APP_BASE_URL
+          }/jobprofile/incompletejob/${jobId}`,
           {},
           { withCredentials: true }
         );
@@ -216,7 +248,10 @@ const JobProfilesonp = () => {
         setJobProfiles((prev) => ({
           ...prev,
           completed: prev.completed.filter((job) => job._id !== jobId),
-          approved: [...prev.approved, prev.completed.find((job) => job._id === jobId)],
+          approved: [
+            ...prev.approved,
+            prev.completed.find((job) => job._id === jobId),
+          ],
         }));
       } catch (err) {
         Swal.fire("Error", "Failed to mark the job as incomplete.", "error");
@@ -256,19 +291,28 @@ const JobProfilesonp = () => {
     <Card className="bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative">
       {job.Approved_Status && !job.completed && (
         <div className="absolute top-2 right-2 text-green-600">
-          <Check className="w-7 h-7 bg-green-100  rounded-3xl p-1" onClick={() => handleComplete(job._id)} />
+          <Check
+            className="w-7 h-7 bg-green-100  rounded-3xl p-1"
+            onClick={() => handleComplete(job._id)}
+          />
         </div>
       )}
       {job.completed && (
         <div className="absolute top-2 right-2 text-red-600">
-          <X className="w-7 h-7 bg-red-100  rounded-3xl p-1" onClick={() => handleInComplete(job._id)} />
-        </div>            
+          <X
+            className="w-7 h-7 bg-red-100  rounded-3xl p-1"
+            onClick={() => handleInComplete(job._id)}
+          />
+        </div>
       )}
       <CardHeader className="pb-4">
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
             {job.company_logo ? (
-              <img src={job.company_logo} className="w-14 h-14 object-contain" />
+              <img
+                src={job.company_logo}
+                className="w-14 h-14 object-contain"
+              />
             ) : (
               <span className="text-lg font-bold text-custom-blue">
                 {job.company_name?.[0]?.toUpperCase() || "N"}
@@ -276,7 +320,9 @@ const JobProfilesonp = () => {
             )}
           </div>
           <div>
-            <h3 className="text-xl font-semibold text-gray-900">{job.company_name}</h3>
+            <h3 className="text-xl font-semibold text-gray-900">
+              {job.company_name}
+            </h3>
             <p className="text-sm text-gray-500">Job ID: {job.job_id}</p>
           </div>
         </div>
@@ -338,7 +384,10 @@ const JobProfilesonp = () => {
         <div className="flex items-center space-x-4">
           <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
             {jobs[0].company_logo ? (
-              <img src={jobs[0].company_logo} className="w-14 h-14 object-contain" />
+              <img
+                src={jobs[0].company_logo}
+                className="w-14 h-14 object-contain"
+              />
             ) : (
               <span className="text-lg font-bold text-custom-blue">
                 {company[0]?.toUpperCase() || "N"}
@@ -457,8 +506,14 @@ const JobProfilesonp = () => {
 
   const filterJobs = (jobs) => {
     return jobs.filter((job) => {
-      const { batchEligible, courseEligible, branchEligible, minCGPA } = filters;
-      const { eligible_batch, course_allowed, department_allowed, minimum_cgpa } = job.eligibility_criteria;
+      const { batchEligible, courseEligible, branchEligible, minCGPA } =
+        filters;
+      const {
+        eligible_batch,
+        course_allowed,
+        department_allowed,
+        minimum_cgpa,
+      } = job.eligibility_criteria;
 
       return (
         (!batchEligible || eligible_batch === batchEligible) &&
@@ -501,71 +556,87 @@ const JobProfilesonp = () => {
   const groupedNotApprovedJobs = groupJobsByCompany(filteredNotApprovedJobs);
   const groupedCompletedJobs = groupJobsByCompany(filteredCompletedJobs);
 
-  if (loading) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-    </div>
-  );
-
-  if (error) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-red-500 text-center">
-        <h3 className="text-xl font-semibold mb-2">Error</h3>
-        <p>{error}</p>
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
       </div>
-    </div>
-  );
+    );
+
+  if (error)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-red-500 text-center">
+          <h3 className="text-xl font-semibold mb-2">Error</h3>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
   const handleediting_allowed = (toggle) => {
-    selectedJob.recruiter_editing_allowed=toggle;
+    selectedJob.recruiter_editing_allowed = toggle;
   };
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl relative">
       {selectedJob ? (
-        <ViewJobDetails onClose={() => setSelectedJob(null)} job={selectedJob} oneditingAllowedUpdate={handleediting_allowed} />
+        <ViewJobDetails
+          onClose={() => setSelectedJob(null)}
+          job={selectedJob}
+          oneditingAllowedUpdate={handleediting_allowed}
+        />
       ) : showCreateJob ? (
-        <CreateJob onJobCreated={() => setShowCreateJob(false)} onCancel={() => setShowCreateJob(false)} />
-      ) :  showJAF ? (
+        <CreateJob
+          onJobCreated={() => setShowCreateJob(false)}
+          onCancel={() => setShowCreateJob(false)}
+        />
+      ) : showJAF ? (
         jobProfiles.jafByCompany[selectedCompany] ? (
-          <ViewJAF jaf={jobProfiles.jafByCompany[selectedCompany]} onClose={() => setShowJAF(false)} />
+          <ViewJAF
+            jaf={jobProfiles.jafByCompany[selectedCompany]}
+            onClose={() => setShowJAF(false)}
+          />
         ) : (
           <>
             <div className="mt-2 ml-4">
-                    <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={() => setShowJAF(false)}>
-                      <FaArrowLeft className="mr-2" />
-                    </button>
-                  </div>
-          <div className="flex items-center justify-center h-[calc(100vh-200px)]">
-  <div className="text-center text-gray-500">
-    <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
-    <p>JAF not created for this Company</p>
-  </div>
-</div>
-</>
-
-        )) : selectedCompany ? (
+              <button
+                className="flex items-center text-blue-600 hover:text-blue-800"
+                onClick={() => setShowJAF(false)}
+              >
+                <FaArrowLeft className="mr-2" />
+              </button>
+            </div>
+            <div className="flex items-center justify-center h-[calc(100vh-200px)]">
+              <div className="text-center text-gray-500">
+                <Building2 className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <p>JAF not created for this Company</p>
+              </div>
+            </div>
+          </>
+        )
+      ) : selectedCompany ? (
         <>
           <div className="relative mb-10">
-  <button
-    className="absolute top-0 left-4 text-gray-500 m-3 rounded-full"
-    onClick={() => setSelectedCompany(null)}
-  >
-    <ArrowLeft className="w-5 h-5" />
-  </button>
-  
-  <h1 className="text-4xl font-bold text-center">
-    <span className="text-custom-blue">{selectedCompany}</span> Job Profiles
-  </h1>
-  
-  <button
-    onClick={() => setShowJAF(true)}
-    className="absolute top-0 right-4 group inline-flex items-center gap-2 bg-white border-2 border-custom-blue px-4 py-2 rounded-lg 
+            <button
+              className="absolute top-0 left-4 text-gray-500 m-3 rounded-full"
+              onClick={() => setSelectedCompany(null)}
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+
+            <h1 className="text-4xl font-bold text-center">
+              <span className="text-custom-blue">{selectedCompany}</span> Job
+              Profiles
+            </h1>
+
+            <button
+              onClick={() => setShowJAF(true)}
+              className="absolute top-0 right-4 group inline-flex items-center gap-2 bg-white border-2 border-custom-blue px-4 py-2 rounded-lg 
                hover:bg-custom-blue transition-all duration-300 shadow-md
                text-custom-blue hover:text-white font-medium"
-  >
-    <FileText className="w-5 h-5 transition-transform group-hover:scale-110" />
-    <span>View JAF</span>
-  </button>
-</div>
+            >
+              <FileText className="w-5 h-5 transition-transform group-hover:scale-110" />
+              <span>View JAF</span>
+            </button>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {groupedApprovedJobs[selectedCompany]?.map((job) => (
@@ -581,30 +652,38 @@ const JobProfilesonp = () => {
 
           {jobProfiles.feedbackByCompany[selectedCompany] && (
             <div className="mt-8">
-              <h2 className="text-2xl font-bold text-custom-blue mb-4">Company Feedback</h2>
+              <h2 className="text-2xl font-bold text-custom-blue mb-4">
+                Company Feedback
+              </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <FeedbackCard feedback={jobProfiles.feedbackByCompany[selectedCompany]} />
+                <FeedbackCard
+                  feedback={jobProfiles.feedbackByCompany[selectedCompany]}
+                />
               </div>
             </div>
           )}
         </>
       ) : (
         <>
-          <button
-            className="absolute top-8 right-4 bg-custom-blue text-white p-3 rounded-full hover:bg-blue-600 transition-colors"
-            onClick={() => setShowCreateJob(true)}
-          >
-            <span>Create Job Profile</span>
-          </button>
-          <h1 className="text-4xl font-bold text-center mb-8 text-custom-blue">
-            Job Profiles Dashboard
-          </h1>
+          <div className="flex sm:flex-row flex-col sm:space-x-4 items-center justify-center ">
+            <h1 className="text-4xl font-bold text-center mb-8 text-custom-blue">
+              Job Profiles Dashboard
+            </h1>
+            <button
+              className="bg-custom-blue text-white p-3 rounded-full hover:bg-blue-600 transition-colors"
+              onClick={() => setShowCreateJob(true)}
+            >
+              <span>Create Job Profile</span>
+            </button>
+          </div>
 
           <div className="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-semibold mb-4">Filter Jobs</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">Batch Eligible</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Batch Eligible
+                </label>
                 <input
                   type="text"
                   name="batchEligible"
@@ -615,7 +694,9 @@ const JobProfilesonp = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Course Eligible</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Course Eligible
+                </label>
                 <select
                   name="courseEligible"
                   value={filters.courseEligible}
@@ -631,7 +712,9 @@ const JobProfilesonp = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Branch Eligible</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Branch Eligible
+                </label>
                 <select
                   name="branchEligible"
                   value={filters.branchEligible}
@@ -651,7 +734,9 @@ const JobProfilesonp = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Minimum CGPA</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Minimum CGPA
+                </label>
                 <input
                   type="number"
                   name="minCGPA"
@@ -667,14 +752,23 @@ const JobProfilesonp = () => {
           </div>
 
           <Tabs defaultValue="approved" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-8 space-x-4">
-              <TabsTrigger value="approved" className="data-[state=active]:bg-custom-blue data-[state=active]:text-white bg-gray-300 rounded-3xl py-2">
+            <TabsList className="grid w-full sm:grid-cols-3 grid-cols-2 sm:mb-8 mb-16 gap-2">
+              <TabsTrigger
+                value="approved"
+                className="data-[state=active]:bg-custom-blue data-[state=active]:text-white bg-gray-300 rounded-3xl py-2"
+              >
                 Approved Jobs ({filteredApprovedJobs.length})
               </TabsTrigger>
-              <TabsTrigger value="not-approved" className="border data-[state=active]:bg-custom-blue data-[state=active]:text-white bg-gray-300 rounded-3xl py-2">
+              <TabsTrigger
+                value="not-approved"
+                className="border data-[state=active]:bg-custom-blue data-[state=active]:text-white bg-gray-300 rounded-3xl py-2"
+              >
                 Pending Approval ({filteredNotApprovedJobs.length})
               </TabsTrigger>
-              <TabsTrigger value="completed" className="border data-[state=active]:bg-custom-blue data-[state=active]:text-white bg-gray-300 rounded-3xl py-2">
+              <TabsTrigger
+                value="completed"
+                className="border data-[state=active]:bg-custom-blue data-[state=active]:text-white bg-gray-300 rounded-3xl py-2 "
+              >
                 Completed Jobs ({filteredCompletedJobs.length})
               </TabsTrigger>
             </TabsList>
@@ -695,9 +789,16 @@ const JobProfilesonp = () => {
             <TabsContent value="approved">
               {Object.keys(groupedApprovedJobs).length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {Object.entries(groupedApprovedJobs).map(([company, jobs]) => (
-                    <CompanyCard key={company} company={company} jobs={jobs} showActions={false} />
-                  ))}
+                  {Object.entries(groupedApprovedJobs).map(
+                    ([company, jobs]) => (
+                      <CompanyCard
+                        key={company}
+                        company={company}
+                        jobs={jobs}
+                        showActions={false}
+                      />
+                    )
+                  )}
                 </div>
               ) : (
                 <div className="text-center py-12 text-gray-500">
@@ -710,9 +811,16 @@ const JobProfilesonp = () => {
             <TabsContent value="not-approved">
               {Object.keys(groupedNotApprovedJobs).length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {Object.entries(groupedNotApprovedJobs).map(([company, jobs]) => (
-                    <CompanyCard key={company} company={company} jobs={jobs} showActions={true} />
-                  ))}
+                  {Object.entries(groupedNotApprovedJobs).map(
+                    ([company, jobs]) => (
+                      <CompanyCard
+                        key={company}
+                        company={company}
+                        jobs={jobs}
+                        showActions={true}
+                      />
+                    )
+                  )}
                 </div>
               ) : (
                 <div className="text-center py-12 text-gray-500">
@@ -725,9 +833,16 @@ const JobProfilesonp = () => {
             <TabsContent value="completed">
               {Object.keys(groupedCompletedJobs).length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {Object.entries(groupedCompletedJobs).map(([company, jobs]) => (
-                    <CompanyCard key={company} company={company} jobs={jobs} showActions={false} />
-                  ))}
+                  {Object.entries(groupedCompletedJobs).map(
+                    ([company, jobs]) => (
+                      <CompanyCard
+                        key={company}
+                        company={company}
+                        jobs={jobs}
+                        showActions={false}
+                      />
+                    )
+                  )}
                 </div>
               ) : (
                 <div className="text-center py-12 text-gray-500">
@@ -739,7 +854,7 @@ const JobProfilesonp = () => {
           </Tabs>
         </>
       )}
-      <Notification/>
+      <Notification />
     </div>
   );
 };
