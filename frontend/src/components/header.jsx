@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { User } from "lucide-react";
 import { useState } from "react";
+import Navbar from "./Navbar/Navbar";
 
 const Header = () => {
   const { authUser, userData } = useSelector((state) => state.auth);
@@ -659,7 +660,9 @@ const Header = () => {
 //     </div>
 // </div> */}
 //     </>
-<></>
+<>
+<Navbar/> 
+</>
   );
 };
 

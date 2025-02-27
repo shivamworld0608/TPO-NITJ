@@ -269,25 +269,26 @@ const RHome = () => {
   
 
   const handleDownloadPdf1 = () => {
-    const pdfUrl = 'Academic Programs.pdf'; 
+    const pdfUrl = '/Academic_Programs.pdf'; // No spaces in filename
     const link = document.createElement('a');
     link.href = pdfUrl;
-    link.download = 'AcademicPrograms.pdf';
+    link.setAttribute('download', 'AcademicPrograms.pdf');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
-
-  // Function to handle the download of the second PDF
+  
+  
   const handleDownloadPdf2 = () => {
-    const pdfUrl = 'Brochure.pdf'; 
+    const pdfUrl = '/Brochure.pdf'; // Ensure correct path
     const link = document.createElement('a');
     link.href = pdfUrl;
-    link.download = 'PlacementBorchure.pdf';
+    link.setAttribute('download', 'PlacementBrochure.pdf');
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
+  
   const downloadpdf = [
     {
       icon: <FaFileDownload size={24} />,
@@ -306,46 +307,7 @@ const RHome = () => {
   ];
 
   return (
-    <div className="bg-gray-100 p-4 md:p-6 min-h-screen">
-      <p class="text-4xl font-bold text-center text-custom-blue mb-6 p-4">
-        Welcome, XYZ Company ✌️
-      </p>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 h-32">
-        <StatCard
-          value={1000}
-          label="Total Student"
-          bgColor="bg-green-50"
-          borderColor="border-2 border-green-100"
-          textColor="text-green-700"
-          icon={FaUserTie} // Pass the icon
-          isLoading={loading}
-        />
-        <StatCard
-          value={stats.totalStudentsPlaced}
-          label="Total Placements"
-          bgColor="bg-blue-50"
-          borderColor="border-2 border-blue-100"
-          textColor="text-blue-700"
-          icon={FaUserTie} // Pass the icon
-          isLoading={loading}
-        />
-        <StatCard
-          value={
-            stats.averagePackage != 0
-              ? stats.averagePackage >= 10000000
-                ? `${(stats.averagePackage / 10000000).toFixed(2)} Cr`
-                : `${(stats.averagePackage / 100000).toFixed(2)} LPA`
-              : "N/A"
-          }
-          label="Average Package"
-          bgColor="bg-purple-50"
-          borderColor="border-2 border-purple-100"
-          textColor="text-purple-700"
-          icon={FaMoneyBillAlt} // Pass the icon
-          isLoading={loading}
-        />
-      </div>
+    <div className="p-4 md:p-6 min-h-screen">
 
       {/* Grid Container */}
 
@@ -454,7 +416,7 @@ const RHome = () => {
 
       {/* Placement Analytics */}
 
-      <div className="w-full max-w-7xl p-6 bg-gray-50 rounded-xl">
+      {/* <div className="w-full max-w-7xl p-6 bg-gray-50 rounded-xl">
 
         <div className="grid md:grid-cols-2 gap-6">
           {chartConfigs.map((config, index) => (
@@ -532,15 +494,15 @@ const RHome = () => {
             </Card>
           ))}
         </div>
-      </div>
-      <div className="w-full mt-10 py-10 bg-gray-50 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 ">
+      </div> */}
+      {/* <div className="w-full mt-10 py-10 bg-gray-50 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 "> */}
         {/* Heading */}
-        <h2 className="text-center text-4xl font-bold mb-12 text-custom-blue">
+        {/* <h2 className="text-center text-4xl font-bold mb-12 text-custom-blue">
           Companies visited
-        </h2>
+        </h2> */}
 
         {/* Logo Slider Container */}
-        <div className="relative max-w-6xl mx-auto overflow-hidden">
+        {/* <div className="relative max-w-6xl mx-auto overflow-hidden">
           <div
             className="flex transition-transform duration-200 ease-in-out items-center"
             style={{
@@ -565,8 +527,8 @@ const RHome = () => {
             ))}
           </div>
 
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
 
     </div>

@@ -48,7 +48,7 @@ const TeamPage = () => {
     return (
         <div className="min-h-screen bg-white">
             <Header />
-            <div className="container mx-auto mt-32 px-4 py-12 max-w-7xl">
+            <div className="container mx-auto mt px-4 py-12 max-w-7xl">
                 <div className="text-center mb-16">
                     <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
                         Team{" "}
