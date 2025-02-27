@@ -3,209 +3,209 @@ import { Download } from 'lucide-react';
 import { pdf } from '@react-pdf/renderer';
 import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
 
-
 const CardSkeleton = () => (
-    <div className="space-y-3 p-4">
-      {[1, 2, 3].map((i) => (
-        <div key={i} className="animate-pulse space-y-2 p-3">
-          <div className="h-5 bg-gray-200 rounded w-3/4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          <div className="h-3 bg-gray-200 rounded w-1/4"></div>
-        </div>
-      ))}
-    </div>
-  );
+  <div className="space-y-3 p-4">
+    {[1, 2, 3].map((i) => (
+      <div key={i} className="animate-pulse space-y-2 p-3">
+        <div className="h-5 bg-gray-200 rounded w-3/4"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+      </div>
+    ))}
+  </div>
+);
 
-  const styles = StyleSheet.create({
-    page: {
-      padding: 40,
-      backgroundColor: '#ffffff',
-      fontFamily: 'Helvetica',
-    },
-    header: {
-      marginBottom: 30,
-      borderBottom: '2 solid #2563eb',
-      paddingBottom: 15,
-    },
-    title: {
-      fontSize: 28,
-      color: '#1e40af',
-      marginBottom: 12,
-      fontFamily: 'Helvetica-Bold',
-    },
-    subtitle: {
-      fontSize: 12,
-      color: '#6b7280',
-      marginBottom: 8,
-    },
-    section: {
-      marginTop: 25,
-      marginBottom: 15,
-    },
-    sectionTitle: {
-      fontSize: 18,
-      color: '#1e40af',
-      backgroundColor: '#f0f9ff',
-      padding: 10,
-      marginBottom: 15,
-      borderRadius: 4,
-      fontFamily: 'Helvetica-Bold',
-    },
-    companyDetails: {
-      marginLeft: 20,
-      marginBottom: 20,
-      backgroundColor: '#ffffff',
-      padding: 15,
-      borderRadius: 4,
-      border: '1 solid #e5e7eb',
-    },
-    row: {
-      flexDirection: 'row',
-      marginBottom: 8,
-      alignItems: 'center',
-    },
-    label: {
-      width: 130,
-      fontSize: 12,
-      color: '#4b5563',
-      fontFamily: 'Helvetica-Bold',
-    },
-    value: {
-      flex: 1,
-      fontSize: 12,
-      color: '#111827',
-    },
-    studentSection: {
-      marginTop: 10,
-      marginBottom: 15,
-      padding: 15,
-      backgroundColor: '#f8fafc',
-      borderRadius: 4,
-    },
-    studentHeader: {
-      fontSize: 16,
-      color: '#1e40af',
-      marginBottom: 10,
-      fontFamily: 'Helvetica-Bold',
-      borderBottom: '1 solid #e5e7eb',
-      paddingBottom: 5,
-    },
-    studentInfo: {
-      marginLeft: 15,
-      marginTop: 8,
-    },
-    footer: {
-      position: 'absolute',
-      bottom: 30,
-      left: 40,
-      right: 40,
-      textAlign: 'center',
-      color: '#6b7280',
-      fontSize: 10,
-      borderTop: '1 solid #e5e7eb',
-      paddingTop: 15,
-    },
-    watermark: {
-      position: 'absolute',
-      bottom: 60,
-      right: 40,
-      fontSize: 8,
-      color: '#9ca3af',
-      transform: 'rotate(-45deg)',
-    },
-    headerMetadata: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 5,
-      color: '#6b7280',
-      fontSize: 10,
-    },
-  });
-  
-  const PlacementPDF = ({ placement }) => (
-    <Document>
-      <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Placement Details</Text>
-          <View style={styles.headerMetadata}>
-            <Text style={styles.subtitle}>
-              Reference: PL-{placement._id?.slice(-6).toUpperCase() || 'XXXXXX'}
-            </Text>
-            <Text style={styles.subtitle}>
-              Generated on {new Date().toLocaleDateString('en-US', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
+const styles = StyleSheet.create({
+  page: {
+    padding: 40,
+    backgroundColor: '#ffffff',
+    fontFamily: 'Helvetica',
+  },
+  // Rest of the styles remain unchanged
+  header: {
+    marginBottom: 30,
+    borderBottom: '2 solid #2563eb',
+    paddingBottom: 15,
+  },
+  title: {
+    fontSize: 28,
+    color: '#1e40af',
+    marginBottom: 12,
+    fontFamily: 'Helvetica-Bold',
+  },
+  subtitle: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginBottom: 8,
+  },
+  section: {
+    marginTop: 25,
+    marginBottom: 15,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    color: '#1e40af',
+    backgroundColor: '#f0f9ff',
+    padding: 10,
+    marginBottom: 15,
+    borderRadius: 4,
+    fontFamily: 'Helvetica-Bold',
+  },
+  companyDetails: {
+    marginLeft: 20,
+    marginBottom: 20,
+    backgroundColor: '#ffffff',
+    padding: 15,
+    borderRadius: 4,
+    border: '1 solid #e5e7eb',
+  },
+  row: {
+    flexDirection: 'row',
+    marginBottom: 8,
+    alignItems: 'center',
+  },
+  label: {
+    width: 130,
+    fontSize: 12,
+    color: '#4b5563',
+    fontFamily: 'Helvetica-Bold',
+  },
+  value: {
+    flex: 1,
+    fontSize: 12,
+    color: '#111827',
+  },
+  studentSection: {
+    marginTop: 10,
+    marginBottom: 15,
+    padding: 15,
+    backgroundColor: '#f8fafc',
+    borderRadius: 4,
+  },
+  studentHeader: {
+    fontSize: 16,
+    color: '#1e40af',
+    marginBottom: 10,
+    fontFamily: 'Helvetica-Bold',
+    borderBottom: '1 solid #e5e7eb',
+    paddingBottom: 5,
+  },
+  studentInfo: {
+    marginLeft: 15,
+    marginTop: 8,
+  },
+  footer: {
+    position: 'absolute',
+    bottom: 30,
+    left: 40,
+    right: 40,
+    textAlign: 'center',
+    color: '#6b7280',
+    fontSize: 10,
+    borderTop: '1 solid #e5e7eb',
+    paddingTop: 15,
+  },
+  watermark: {
+    position: 'absolute',
+    bottom: 60,
+    right: 40,
+    fontSize: 8,
+    color: '#9ca3af',
+    transform: 'rotate(-45deg)',
+  },
+  headerMetadata: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 5,
+    color: '#6b7280',
+    fontSize: 10,
+  },
+});
+
+const PlacementPDF = ({ placement }) => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Placement Details</Text>
+        <View style={styles.headerMetadata}>
+          <Text style={styles.subtitle}>
+            Reference: PL-{placement._id?.slice(-6).toUpperCase() || 'XXXXXX'}
+          </Text>
+          <Text style={styles.subtitle}>
+            Generated on {new Date().toLocaleDateString('en-US', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Company Information</Text>
+        <View style={styles.companyDetails}>
+          <View style={styles.row}>
+            <Text style={styles.label}>Company Name:</Text>
+            <Text style={styles.value}>{placement.company_name || 'N/A'}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Placement Type:</Text>
+            <Text style={styles.value}>{placement.placement_type || 'N/A'}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Batch:</Text>
+            <Text style={styles.value}>{placement.batch || 'N/A'}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>Degree:</Text>
+            <Text style={styles.value}>{placement.degree || 'N/A'}</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.label}>CTC:</Text>
+            <Text style={styles.value}>
+              {placement.ctc >= 1000000 
+                ? `₹${(placement.ctc / 1000000).toFixed(2)} LPA` 
+                : `₹${(placement.ctc / 100000).toFixed(2)} LPA`}
             </Text>
           </View>
         </View>
-  
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Company Information</Text>
-          <View style={styles.companyDetails}>
-            <View style={styles.row}>
-              <Text style={styles.label}>Company Name:</Text>
-              <Text style={styles.value}>{placement.company_name || 'N/A'}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>Placement Type:</Text>
-              <Text style={styles.value}>{placement.placement_type || 'N/A'}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>Batch:</Text>
-              <Text style={styles.value}>{placement.batch || 'N/A'}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>Degree:</Text>
-              <Text style={styles.value}>{placement.degree || 'N/A'}</Text>
-            </View>
-            <View style={styles.row}>
-              <Text style={styles.label}>CTC:</Text>
-              <Text style={styles.value}>
-                {placement.ctc >= 1000000 
-                  ? `₹${(placement.ctc / 1000000).toFixed(2)} LPA` 
-                  : `₹${(placement.ctc / 100000).toFixed(2)} LPA`}
-              </Text>
-            </View>
-          </View>
-        </View>
-  
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Selected Students</Text>
-          {placement?.shortlisted_students?.map((student, index) => (
-            <View key={index} style={styles.studentSection}>
-              <Text style={styles.studentHeader}>Student {index + 1}</Text>
-              <View style={styles.studentInfo}>
-                <View style={styles.row}>
-                  <Text style={styles.label}>Name:</Text>
-                  <Text style={styles.value}>{student.name || 'N/A'}</Text>
-                </View>
-                <View style={styles.row}>
-                  <Text style={styles.label}>Department:</Text>
-                  <Text style={styles.value}>{student.department || 'N/A'}</Text>
-                </View>
-                <View style={styles.row}>
-                  <Text style={styles.label}>Email:</Text>
-                  <Text style={styles.value}>{student.email || 'N/A'}</Text>
-                </View>
-                <View style={styles.row}>
-                  <Text style={styles.label}>Gender:</Text>
-                  <Text style={styles.value}>{student.gender || 'N/A'}</Text>
-                </View>
+      </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Selected Students</Text>
+        {placement?.shortlisted_students?.map((student, index) => (
+          <View key={index} style={styles.studentSection}>
+            <Text style={styles.studentHeader}>Student {index + 1}</Text>
+            <View style={styles.studentInfo}>
+              <View style={styles.row}>
+                <Text style={styles.label}>Name:</Text>
+                <Text style={styles.value}>{student.name || 'N/A'}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Department:</Text>
+                <Text style={styles.value}>{student.department || 'N/A'}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Email:</Text>
+                <Text style={styles.value}>{student.email || 'N/A'}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.label}>Gender:</Text>
+                <Text style={styles.value}>{student.gender || 'N/A'}</Text>
               </View>
             </View>
-          ))}
-        </View>
-  
-        <Text style={styles.footer}>
-          This document is automatically generated and confidential. Any unauthorized distribution is strictly prohibited.
-        </Text>
-      </Page>
-    </Document>
-  );
+          </View>
+        ))}
+      </View>
+
+      <Text style={styles.footer}>
+        This document is automatically generated and confidential. Any unauthorized distribution is strictly prohibited.
+      </Text>
+    </Page>
+  </Document>
+);
 
 const PlacementDetailsDownload = ({ placement }) => {
   if (!placement) return null;
@@ -284,23 +284,15 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
-      {/* Header */}
-      <div className="px-6 py-4 bg-custom-blue text-white">
-        <h2 className="text-xl font-semibold">Recent Placements</h2>
+      <div className="px-4 py-3 bg-custom-blue text-white">
+        <h2 className="text-lg font-medium">Recent Placements</h2>
       </div>
-
-      {/* Timeline Content */}
-      <div
-        className={`p-6 h-[calc(100%-72px)] ${
-          placements.length > 2
-            ? "overflow-y-auto scrollbar-thin scrollbar-thumb-[#3b82f6] scrollbar-track-gray-200"
-            : "overflow-y-hidden"
-        }`}
-      >
-        {placements.length === 0 ? (
-          <div className="min-h-[300px] flex items-center justify-center">
-            <div className="p-6 bg-white rounded-lg text-center w-full max-w-md mx-auto shadow-sm">
-              {/* Icon */}
+      <div className={`h-[calc(100%-48px)]`}>
+        {loading ? (
+          <CardSkeleton />
+        ) : !Array.isArray(placements) || placements.length === 0 ? (
+          <div className="h-full flex items-center justify-center p-4">
+            <div className="p-6 bg-white rounded-lg text-center w-full max-w-md mx-auto">
               <div className="flex justify-center mb-3">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -317,7 +309,6 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
                   />
                 </svg>
               </div>
-              {/* Message */}
               <p className="text-sm text-gray-800 font-medium">
                 No Recent Placements
               </p>

@@ -392,8 +392,8 @@ const PlacementInsights = () => {
         <select
           value={selectedCourse}
           onChange={(e) => setSelectedCourse(e.target.value)}
-          className="w-36 px-3 py-2 rounded-lg bg-custom-blue text-white font-medium shadow-md outline-none 
-             hover:bg-blue-600 hover:shadow-lg transition-all duration-300 
+          className="w-36 px-3 py-2 rounded-lg border-2  border-custom-blue text-custom-blue font-medium shadow-md outline-none 
+              hover:shadow-lg transition-all duration-300 
               focus:ring-offset-2 cursor-pointer"
         >
           <option value="BTech" className="text-gray-800 bg-white">Btech</option>
