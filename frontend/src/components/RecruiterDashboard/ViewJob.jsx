@@ -10,7 +10,7 @@ import InterviewLinkManager from "../ProfessorDashboard/interviewlink";
 import GDLinkManager from "../ProfessorDashboard/gdlink";
 import OaLinkManager from "../ProfessorDashboard/oalink";
 import OthersLinkManager from "../ProfessorDashboard/otherslink";
-import AuditLogs from "../AuditLogs";
+// import AuditLogs from "../AuditLogs";
 import { FaArrowLeft } from "react-icons/fa";
 
 const formatDateTime = (dateString) => {
@@ -862,14 +862,14 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
                   Manage Interview Links
                 </button>
               )}
-              {/* {editingAllowed && ( */}
+              {editingAllowed && (
                 <button
                   className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
                   onClick={() => setAddingShortlist({ stepIndex: index })}
                 >
                   Add Shortlisted Students
                 </button>
-              {/* )} */}
+              )}
               <button
                 className="bg-gradient-to-r from-green-500 to-green-600 text-white px-8 py-3 rounded-2xl hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
                 onClick={() => setViewingShortlist({ stepIndex: index })}
@@ -1141,46 +1141,49 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
 
   return (
     <>
-    <div className="mt-2 ml-4">
-        <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={onClose}>
+      <div className="mt-2 ml-4">
+        <button
+          className="flex items-center text-blue-600 hover:text-blue-800"
+          onClick={onClose}
+        >
           <FaArrowLeft className="mr-2" />
         </button>
       </div>
-    <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-6xl mx-auto">
-      <div className="flex justify-between items-center mb-8">
-        <h2 className="text-4xl font-bold text-custom-blue">Job Details</h2>
-        <div className="flex items-center space-x-4">
-          <button
-            className="bg-gradient-to-r from-[#0369A0] to-[#024873] text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
-            onClick={() => setViewingAppliedStudents(true)}
-          >
-            <Users className="mr-2 h-4 w-4 inline" />
-            View Applied Students
-          </button>
-          {/* <button
+      <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-4xl font-bold text-custom-blue">Job Details</h2>
+          <div className="flex items-center space-x-4">
+            <button
+              className="bg-gradient-to-r from-[#0369A0] to-[#024873] text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+              onClick={() => setViewingAppliedStudents(true)}
+            >
+              <Users className="mr-2 h-4 w-4 inline" />
+              View Applied Students
+            </button>
+            {/* <button
             className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-3 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
             onClick={onClose}
           >
             Close
           </button> */}
+          </div>
         </div>
+
+        {renderEditableCard("Basic Details", renderBasicDetails(), "basic")}
+        {renderEditableCard("Salary Details", renderSalaryDetails(), "salary")}
+        {renderEditableCard(
+          "Eligibility Criteria",
+          renderEligibilityCriteria(),
+          "eligibility"
+        )}
+
+        <h3 className="text-3xl font-bold text-custom-blue mt-10 mb-8">
+          Hiring Workflow
+        </h3>
+        {renderHiringWorkflow()}
+        {/* <AuditLogs logs={job.auditLogs || []} /> */}
       </div>
-
-      {renderEditableCard("Basic Details", renderBasicDetails(), "basic")}
-      {renderEditableCard("Salary Details", renderSalaryDetails(), "salary")}
-      {renderEditableCard(
-        "Eligibility Criteria",
-        renderEligibilityCriteria(),
-        "eligibility"
-      )}
-
-      <h3 className="text-3xl font-bold text-custom-blue mt-10 mb-8">
-        Hiring Workflow
-      </h3>
-      {renderHiringWorkflow()}
-      <AuditLogs logs={job.auditLogs || []} />
-    </div>
-  </>
+    </>
   );
 };
 
