@@ -259,7 +259,7 @@ const PlacementDetailsDownload = ({ placement }) => {
 const RecentPlacements = ({ placements = [], loading = false }) => {
   if (loading) {
     return (
-      <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[400px]">
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
         <div className="px-6 py-4 bg-custom-blue text-white">
           <h2 className="text-xl font-semibold">Recent Placements</h2>
         </div>
@@ -339,7 +339,7 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
                 <div className="absolute left-0 top-1 h-3 w-3 bg-custom-blue rounded-full border-2 border-white transform -translate-x-1/2"></div>
 
                 {/* Placement Details */}
-                <div className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border-l-4 border-custom-blue hover:border-purple-600">
+                <div className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border-l-4 border-custom-blue hover:border-blue-600">
                   <PlacementDetailsDownload placement={placement} />
                 </div>
               </div>
