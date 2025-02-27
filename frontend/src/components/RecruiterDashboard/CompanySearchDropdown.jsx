@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Search } from 'lucide-react';
+import React, { useState, useEffect, useRef } from "react";
+import { Search } from "lucide-react";
 
 const CompanySearchDropdown = ({ companies, value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState(value);
   const dropdownRef = useRef(null);
+  console.log("company", companies);
 
-  // Filter companies based on search term
-  const filteredCompanies = companies
-    .map(company => company.company_name)
+  const filteredCompanies = (companies || []) // Ensure it's always an array
+    .filter((company) => typeof company === "string") // Ensure it's a string
     .filter((company, index, self) => self.indexOf(company) === index) // Remove duplicates
-    .filter(company => 
+    .filter((company) =>
       company.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
@@ -22,8 +22,8 @@ const CompanySearchDropdown = ({ companies, value, onChange }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const handleInputChange = (e) => {
@@ -35,7 +35,7 @@ const CompanySearchDropdown = ({ companies, value, onChange }) => {
   const handleCompanySelect = (company) => {
     setSearchTerm(company);
     setIsOpen(false);
-    onChange({ target: { name: 'company_name', value: company } });
+    onChange({ target: { name: "company_name", value: company } });
   };
 
   return (
@@ -53,7 +53,7 @@ const CompanySearchDropdown = ({ companies, value, onChange }) => {
         />
         <Search className="absolute left-3 top-3.5 text-gray-400" size={20} />
       </div>
-      
+
       {isOpen && filteredCompanies.length > 0 && (
         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
           {filteredCompanies.map((company, index) => (

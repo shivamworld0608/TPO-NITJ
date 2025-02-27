@@ -330,15 +330,22 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
           `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/`,
           { withCredentials: true }
         );
-        setCompanies(response.data);
-        console.log(response.data);
+  
+        if (Array.isArray(response.data)) {
+          setCompanies(response.data);
+        } else {
+          console.error("Unexpected response format:", response.data);
+          setCompanies([]); // Fallback to empty array
+        }
       } catch (error) {
         console.error("Error fetching companies:", error);
+        setCompanies([]); // Handle API failure
       }
     };
-
+  
     fetchCompanies();
   }, []);
+  
 
 
   const handleChange = (e) => {
