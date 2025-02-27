@@ -94,7 +94,9 @@ const Navbar = () => {
         <div className="container mx-auto px-4">
           <div className="flex justify-evenly items-center h-10 relative font-semibold text-lg">
             <div className="flex items-center space-x-6 gap-5">
-              <Home size={24} className="hover:text-blue-200 cursor-pointer" />
+            <Link to="/">
+                <Home size={24} className="hover:text-blue-200 cursor-pointer" />
+              </Link>
               <Link to="/" className="hover:text-blue-200 text-xl">Home</Link>
               <Link to="/placements" className="hover:text-blue-200 text-xl">Placements</Link>
               <Link to="/internships" className="hover:text-blue-200 text-xl">Internships</Link>
@@ -115,7 +117,7 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-6 gap-5">
-              <Link to="/alumini" className="hover:text-blue-200 text-xl">Alumni</Link>
+              <Link to="/#" className="hover:text-blue-200 text-xl">Alumni</Link>
               <Link to="/team" className="hover:text-blue-200 text-xl">People</Link>
               <Link to="/login" className="hover:text-blue-200 text-xl">Login</Link>
             </div>

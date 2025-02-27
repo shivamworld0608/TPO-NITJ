@@ -1,4 +1,4 @@
-import Header from "../components/header";
+import Header from "../components/Navbar/Navbar";
 import Footer from "../components/footer";
 import TopRecruiters from "../components/toprecruiter";
 
