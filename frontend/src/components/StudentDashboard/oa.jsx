@@ -26,6 +26,8 @@ const OnlineAssessment = () => {
                     { withCredentials: true }
                 );
                 setPreviousJobs(pastResponse.data.pastOAs || []);
+                console.log(pastResponse.data.pastOAs);
+                
             } catch (error) {
                 console.error("Error fetching assessments:", error);
             } finally {
