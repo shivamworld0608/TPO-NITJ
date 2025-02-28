@@ -625,7 +625,6 @@ const StudentAnalyticsDashboard = () => {
         </div>
         <div className="flex items-center gap-4">
           <div className="bg-white rounded-lg p-3 shadow-sm">
-<<<<<<< HEAD
           {loading ? (
               <div className="flex items-center gap-2">
                 <Loader2 className="h-6 w-6 animate-spin text-custom-blue" />
@@ -637,12 +636,6 @@ const StudentAnalyticsDashboard = () => {
                 <div className="text-sm text-gray-600">Total Students</div>
               </>
             )}
-=======
-            <div className="text-2xl font-bold text-blue-600">
-              {filteredStudents.length}
-            </div>
-            <div className="text-sm text-gray-600">Total Students</div>
->>>>>>> a404c789cb676979fec00afd393f67c4825c1e65
           </div>
         </div>
       </div>
