@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
@@ -8,40 +7,7 @@ import { Button } from '../ui/button';
 import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User,Loader2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-=======
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Input } from "../ui/input";
-import { Select } from "../ui/select";
-import { Button } from "../ui/button";
-import {
-  X,
-  Pencil,
-  Save,
-  Search,
-  Filter,
-  UserCog,
-  GraduationCap,
-  User,
-} from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
->>>>>>> a404c789cb676979fec00afd393f67c4825c1e65
+
 import Notification from "./Notification";
 
 const StudentAnalyticsDashboard = () => {
