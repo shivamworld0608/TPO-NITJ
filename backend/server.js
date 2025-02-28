@@ -36,6 +36,7 @@ import studentsRoutes from "./routes/addstudents.js";
 import nodemailerRoutes from "./routes/nodemailer.js";
 import adminRoutes from "./routes/admin.js";
 import captchaRoutes from "./routes/captcha.js";
+import addRecruiterRoutes from "./routes/addrecruiter.js";
 
 import { mkdir } from 'fs/promises';
 try {
@@ -96,6 +97,8 @@ app.get('/check-auth', authenticate, (req, res) => {
   res.status(200).json({ message: 'Authenticated', user: req.user, userType:req.user.userType });
 });
 
+app.use('/uploads', express.static('uploads'));
+
 app.use('/auth', authroutes);
 app.use('/interview',authenticate, interviewroutes);
 app.use('/oa',authenticate,oaroutes);
@@ -124,6 +127,7 @@ app.use('/add-student',authenticate,studentsRoutes);
 app.use('/nodemailer',authenticate,nodemailerRoutes);
 app.use('/admin',authenticate,adminRoutes);
 app.use('/captcha',captchaRoutes);
+app.use('/add-recruiter', authenticate, addRecruiterRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

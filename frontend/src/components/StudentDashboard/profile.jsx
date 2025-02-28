@@ -14,6 +14,12 @@ function Profile() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const [isUpdatingPic, setIsUpdatingPic] = useState(false);
+  const getImageUrl = () => {
+    if (!user?.image) {
+      return "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80";
+    }
+    return `${import.meta.env.REACT_APP_BASE_URL}${user.image}`;
+  };
 
   const [formData, setFormData] = useState({
     name: "",
@@ -29,6 +35,8 @@ function Profile() {
     course: "",
     active_backlogs: "",
     backlogs_history: "",
+    placementstatus:"",
+    internshipstatus:"",
     debarred: "",
     image: "",
   });
@@ -53,6 +61,8 @@ function Profile() {
         gender: userData.gender,
         course: userData.course,
         debarred: userData.debarred,
+        placementstatus:userData.placementstatus,
+        internshipstatus:userData.internshipstatus,
         active_backlogs: userData.active_backlogs,
         backlogs_history: userData.backlogs_history,
         image: userData.image,
@@ -196,16 +206,16 @@ function Profile() {
         </div>
 
         {/* Profile Section */}
-        <div className="relative -mt-12 text-center">
+        <div className="relative -mt-24 text-center">
           <button onClick={triggerFileInput}>
-            <img
-              src={
-                user.image ||
-                "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80"
-              }
-              alt="Profile"
-              className="w-40 h-40 rounded-full mx-auto border-4 border-custom-blue"
-            />
+          <img
+  src={getImageUrl()}
+  alt="Profile"
+  className="w-40 h-40 rounded-full mx-auto border-4 border-custom-blue"
+  onError={(e) => {
+    e.target.src = "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=80";
+  }}
+/>
           </button>
           <input
             ref={fileInputRef}
@@ -325,16 +335,6 @@ function Profile() {
                     Course: {formData.course}
                   </p>
                 </div>
-              </div>
-
-              {/* Right Column */}
-              <div className="w-full md:w-1/2 space-y-6">
-                <div className="flex items-center">
-                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-                    <CheckCircle2 />
-                  </div>
-                  <p className="font-italic tracking-tight">CGPA: {formData.cgpa}</p>
-                </div>
                 <div className="flex items-center">
                   <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
                     <CheckCircle2 />
@@ -342,6 +342,16 @@ function Profile() {
                   <p className="font-italic tracking-tight">
                     Branch: {formData.department}
                   </p>
+                </div>
+              </div>
+
+              {/* Right Column */}
+              <div className="w-full md:w-1/2 space-y-6">
+              <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">CGPA: {formData.cgpa}</p>
                 </div>
                 <div className="flex items-center">
                   <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
@@ -360,6 +370,20 @@ function Profile() {
                     <CheckCircle2 />
                   </div>
                   <p className="font-italic tracking-tight">Debarred: {formData.debarred ? "Yes" : "No"}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">Placement Status: {formData.placementstatus}</p>
+                </div>
+                <div className="flex items-center">
+                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
+                    <CheckCircle2 />
+                  </div>
+                  <p className="font-italic tracking-tight">
+                    Internship Status: {formData.internshipstatus}
+                  </p>
                 </div>
                 <div className="flex items-center">
                   <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">

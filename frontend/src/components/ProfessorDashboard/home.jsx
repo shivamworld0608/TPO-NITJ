@@ -161,22 +161,22 @@ const Home = () => {
     <div className="min-h-screen p-8 bg-gray-50">
       <div className="max-w-7xl mx-auto font-sans">
         {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 h-32">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 ">
   <StatCard
     value={stats.totalStudentsPlaced}
     label="Total Placements"
-    bgColor="bg-blue-50"
-    borderColor="border-2 border-blue-100"
-    textColor="text-blue-700"
+    bgColor="bg-[#ffead6]"
+    borderColor="border-2 border-[#e4bca0]"
+            textColor="text-[#b87748]"
     icon={FaUserTie} // Pass the icon
     isLoading={loading}
   />
   <StatCard
     value={stats.companiesVisited}
     label="Companies Visited"
-    bgColor="bg-purple-50"
-    borderColor="border-2 border-purple-100"
-    textColor="text-purple-700"
+    bgColor="bg-[#f3e5fa]"
+    borderColor="border-2 border-[#d3b8e3]"
+    textColor="text-[#a578c0]"
     icon={FaBuilding} // Pass the icon
     isLoading={loading}
   />
@@ -189,9 +189,9 @@ const Home = () => {
         : "N/A"
     }
     label="Average Package"
-    bgColor="bg-green-50"
-    borderColor="border-2 border-green-100"
-    textColor="text-green-700"
+    bgColor="bg-[#d7f7e5]"
+    borderColor="border-2 border-[#b3d4c2]"
+    textColor="text-[#6a987b]"
     icon={FaMoneyBillAlt} // Pass the icon
     isLoading={loading}
   />

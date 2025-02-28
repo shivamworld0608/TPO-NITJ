@@ -184,7 +184,7 @@ const RecruiterDashboards = () => {
             </button>
           ) : (
             <div className="flex items-center gap-4">
-              <span className="text-gray-600">👋 Hi, {userData.name}</span>
+                <span className="text-gray-600 font-bold tracking-wide">👋 Hi, <span className="text-custom-blue">{userData.name}</span> </span>
               <img
                 onClick={() => navigate("/rdashboard/rprofile")}
                 src={userData?.image || ProfileImage}
