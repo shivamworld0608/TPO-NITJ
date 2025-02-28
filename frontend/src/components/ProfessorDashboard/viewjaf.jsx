@@ -5,6 +5,8 @@ import { Input } from "../ui/input";
 import { Checkbox } from "../ui/checkbox";
 import { Textarea } from "../ui/textarea";
 import Swal from "sweetalert2";
+import { FaArrowLeft, FaSpinner, FaFileUpload } from "react-icons/fa";
+
 import {
   Building2,
   GraduationCap,
@@ -19,7 +21,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import html2pdf from 'html2pdf.js';
 
-function ViewJAF({ jaf: initialJAF }) {
+function ViewJAF({ jaf: initialJAF, onClose }) {
   const bTechPrograms = [
     { name: "Computer Science & Engineering", type: "Circuital" },
     { name: "Electronics & Communication Engineering", type: "Circuital" },
@@ -474,6 +476,13 @@ function ViewJAF({ jaf: initialJAF }) {
 
   return (
     <>
+
+      <div className="mt-2 ml-4">
+        <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={onClose}>
+          <FaArrowLeft className="mr-2" />
+        </button>
+      </div>
+      
       <form
         id="jaf-form"
         onSubmit={(e) => e.preventDefault()}

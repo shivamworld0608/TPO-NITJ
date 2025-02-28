@@ -7,6 +7,7 @@ import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { ArrowLeft, Plus, Save } from 'lucide-react';
 import { Alert, AlertDescription } from "../ui/alert";
+import { FaArrowLeft } from 'react-icons/fa';
 import axios from 'axios';
 
 const EditApplicationForm = ({ jobId, onClose }) => {
@@ -112,14 +113,19 @@ const EditApplicationForm = ({ jobId, onClose }) => {
   return (
     <Card className="max-w-4xl mx-auto bg-white shadow-xl">
       <CardHeader>
-        <Button 
+        {/* <Button 
           variant="ghost" 
           className="mb-4" 
           onClick={onClose}
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back
-        </Button>
+        </Button> */}
+        <div className="mt-0 ml-1">
+        <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={onClose}>
+          <FaArrowLeft className="mr-2" />
+        </button>
+      </div>
         <CardTitle className="text-2xl font-bold text-center">
           Edit Application Form Template
         </CardTitle>

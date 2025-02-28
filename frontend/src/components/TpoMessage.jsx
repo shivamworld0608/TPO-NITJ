@@ -5,7 +5,6 @@ import { FaQuoteLeft } from "react-icons/fa";
 const TpoMessage = () => {
   return (
     <>
-      <Header />
       <div className="mt-24 px-4">
         <div className="max-w-6xl mx-auto bg-white rounded-lg overflow-hidden shadow-2xl mt-20 mb-40">
           <div className="flex flex-col md:flex-row">
