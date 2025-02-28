@@ -243,11 +243,11 @@ const LoginSignup = ({ Login }) => {
               <p className="text-red-500 text-xs">{passwordError}</p>
             )}
 
-            <Altcha
+            {/* <Altcha
               ref={altchaRef}
               challengeurl={`${import.meta.env.REACT_APP_BASE_URL}/captcha/challenge`}
               verifyurl={`${import.meta.env.REACT_APP_BASE_URL}/captcha/verify`}
-            />
+            /> */}
 
             <button
               type="submit"
