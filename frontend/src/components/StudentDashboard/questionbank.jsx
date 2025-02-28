@@ -413,7 +413,7 @@ const QuestionBank = () => {
                       {q.answer.length > 200 && (
                         <button
                           onClick={() => toggleAnswer(index)}
-                          className="mt-2 text-custom-blue hover:text-indigo-700 font-medium transition-colors duration-200 flex items-center space-x-1"
+                          className="mt-2 text-custom-blue font-medium  flex items-center space-x-1"
                         >
                           <span>{isExpanded ? 'Show Less' : 'Read More'}</span>
                           <svg
