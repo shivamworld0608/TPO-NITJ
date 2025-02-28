@@ -126,9 +126,7 @@ const ContactUs = () => {
                 required
               >
                 <option value="">Select your designation</option>
-                <option value="Student">Student</option>
                 <option value="Recruiter">Recruiter</option>
-                <option value="Professor">Professor</option>
                 <option value="Others">Others</option>
               </select>
             </div>

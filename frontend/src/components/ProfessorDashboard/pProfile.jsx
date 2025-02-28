@@ -17,16 +17,7 @@ function Profile() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
-    employeeId: "",
     department: "",
-    designation: "",
-    specialization: "",
-    qualifications: "",
-    researchInterests: "",
-    officeAddress: "",
-    officeHours: "",
-    publications: "",
     image: "",
   });
 
@@ -34,22 +25,17 @@ function Profile() {
   const { userData } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+  // const { name, email, phone,rollno,department,year,batch,address,cgpa,gender } = req.body;
+
+
   useEffect(() => {
     if (userData) {
       setUser(userData);
       setFormData({
         name: userData.name,
         email: userData.email,
-        phone: userData.phone,
-        employeeId: userData.employeeId,
+        phone: userData.facultyId,
         department: userData.department,
-        designation: userData.designation,
-        specialization: userData.specialization,
-        qualifications: userData.qualifications,
-        researchInterests: userData.researchInterests,
-        officeAddress: userData.officeAddress,
-        officeHours: userData.officeHours,
-        publications: userData.publications,
         image: userData.image,
       });
     }
@@ -210,74 +196,6 @@ function Profile() {
             </div>
           )}
 
-          {isEditing ? (
-            <div>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                placeholder="Phone"
-                className="mt-2 mx-2 p-2 border border-custom-blue rounded"
-              />
-              <input
-                type="text"
-                name="officeHours"
-                value={formData.officeHours}
-                onChange={handleChange}
-                placeholder="Office Hours"
-                className="mt-2 p-2 mx-2 border border-custom-blue rounded"
-              />
-              <input
-                type="text"
-                name="officeAddress"
-                value={formData.officeAddress}
-                onChange={handleChange}
-                placeholder="Office Address"
-                className="mt-2 p-2 mx-2 border border-custom-blue rounded"
-              />
-              <textarea
-                name="researchInterests"
-                value={formData.researchInterests}
-                onChange={handleChange}
-                placeholder="Research Interests"
-                className="mt-2 p-2 mx-2 border border-custom-blue rounded w-64 h-24"
-              />
-              <textarea
-                name="publications"
-                value={formData.publications}
-                onChange={handleChange}
-                placeholder="Recent Publications"
-                className="mt-2 p-2 mx-2 border border-custom-blue rounded w-64 h-24"
-              />
-              <button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className="mt-4 mx-2 bg-custom-blue text-white px-4 py-1 border border-custom-blue-400 rounded"
-              >
-                {isSubmitting ? "Saving..." : "Save"}
-              </button>
-              <button
-                onClick={handleEditToggle}
-                className="mt-4 ml-2 bg-red-500 text-white px-4 py-1 border border-red-400 rounded"
-              >
-                Cancel
-              </button>
-            </div>
-          ) : (
-            <div>
-              <h4 className="mt-4 text-3xl font-semibold text-custom-blue">
-                {user.name}
-              </h4>
-              <p className="text-lg text-gray-600">{formData.designation}</p>
-              <button
-                onClick={handleEditToggle}
-                className="bg-custom-blue text-white mt-5 px-4 py-1 border rounded"
-              >
-                Edit Profile
-              </button>
-            </div>
-          )}
         </div>
 
         {/* About Section */}
@@ -299,18 +217,6 @@ function Profile() {
                   </div>
                   <p className="font-italic tracking-tight">Email: {formData.email}</p>
                 </div>
-                <div className="flex items-center">
-                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-                    <CheckCircle2 />
-                  </div>
-                  <p className="font-italic tracking-tight">Phone: {formData.phone}</p>
-                </div>
-                <div className="flex items-center">
-                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-                    <CheckCircle2 />
-                  </div>
-                  <p className="font-italic tracking-tight">Employee ID: {formData.employeeId}</p>
-                </div>
               </div>
               
               {/* Right Column */}
@@ -325,19 +231,7 @@ function Profile() {
                   <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
                     <CheckCircle2 />
                   </div>
-                  <p className="font-italic tracking-tight">Designation: {formData.designation}</p>
-                </div>
-                <div className="flex items-center">
-                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-                    <CheckCircle2 />
-                  </div>
-                  <p className="font-italic tracking-tight">Specialization: {formData.specialization}</p>
-                </div>
-                <div className="flex items-center">
-                  <div className="text-white mx-4 bg-custom-blue h-10 w-10 p-2 justify-center items-center rounded-full">
-                    <CheckCircle2 />
-                  </div>
-                  <p className="font-italic tracking-tight">Office Hours: {formData.officeHours}</p>
+                  <p className="font-italic tracking-tight">FacultyID: {formData.facultyId}</p>
                 </div>
               </div>
             </div>
@@ -345,7 +239,7 @@ function Profile() {
         </div>
 
         {/* Research and Publications Section */}
-        <div className="mt-6 px-6 py-4">
+        {/* <div className="mt-6 px-6 py-4">
           <h5 className="mb-3 ml-4 font-bold text-custom-blue">Research & Publications</h5>
           <div className="p-4 bg-white border border-neutral-400 rounded-3xl">
             <div className="space-y-6">
@@ -363,7 +257,7 @@ function Profile() {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
 
       </div>
     </div>

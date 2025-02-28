@@ -18,10 +18,11 @@ import {
   faUpload,
   faContactCard,
   faComment,
-  
+  faUserPlus,
+  faUserCheck
 } from "@fortawesome/free-solid-svg-icons";
 
-import { Menu, X, LogOut } from "lucide-react";
+import { Menu, X, LogOut} from "lucide-react";
 
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 
@@ -47,6 +48,7 @@ import StudentAnalyticsDashboard from "./studentanalysis.jsx";
 import ContactRequests from "./contactus.jsx";
 import ConversationLog from "./conversation.jsx";
 import AddStudentForm from "./addstudents.jsx";
+import RecruiterForm from "./addrecruiter.jsx";
 import { FaRegComment } from "react-icons/fa";
 
 
@@ -100,12 +102,13 @@ const Pdashboard = () => {
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
     {label:"Student",icon:faUser, path:"/pdashboard/student-analysis"},
+    { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
     // {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
     // { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
  /*    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" }, */
     { label: "User Requests", icon: faContactCard, path: "/pdashboard/contact-request" },
-    { label: "Add students", icon: faContactCard, path: "/pdashboard/add-students" },
-    { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
+    { label: "Add students", icon: faUserPlus, path: "/pdashboard/add-students" },
+    { label: "Add Recruiter", icon: faUserCheck, path: "/pdashboard/add-recruiter" },
     
   ];
 
@@ -177,7 +180,7 @@ const Pdashboard = () => {
             </button>
           ) : (
             <div className="flex items-center gap-4">
-              <span className="text-gray-600">👋 Hi, {userData.name}</span>
+                <span className="text-gray-600 font-bold tracking-wide">👋 Hi, <span className="text-custom-blue">{userData.name}</span> </span>
               <img
                 onClick={() => navigate("/pdashboard/profile")}
                 src={userData?.image || ProfileImage}
@@ -278,7 +281,7 @@ const Pdashboard = () => {
 
       {/* Main Content */}
       <main
-        className={`flex-1 mt-10 transition-all duration-300 ${
+        className={`flex-1 mt-16 transition-all duration-300 ${
           !isMobile ? (isSidebarExpanded ? "ml-64" : "ml-16") : ""
         }`}
       >
@@ -301,6 +304,7 @@ const Pdashboard = () => {
             <Route path="conversation" element={<ConversationLog />} />
             <Route path="placement-insights" element={<PlacementInsights />} />
             <Route path="add-students" element={<AddStudentForm/>} />
+            <Route path="add-recruiter" element={<RecruiterForm/>} />
             <Route path="placement-policy" element={<PlacementPolicy />} />
             <Route path="profile" element={<Profile />} />
             <Route path="team" element={<TeamSection />} />

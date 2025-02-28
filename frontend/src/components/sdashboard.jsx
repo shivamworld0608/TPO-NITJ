@@ -180,7 +180,7 @@ const StudentDashboard = () => {
               <span className="text-gray-600 font-bold tracking-wide">👋 Hi, <span className="text-custom-blue">{userData.name}</span> </span>
               <img
                 onClick={() => navigate("/sdashboard/profile")}
-                src={userData?.image || ProfileImage}
+                src={`${import.meta.env.REACT_APP_BASE_URL}${userData?.image}`|| ProfileImage}
                 alt="Profile"
                 className="w-8 h-8 rounded-full object-cover cursor-pointer"
               />
@@ -316,8 +316,8 @@ const StudentDashboard = () => {
                   navigate("/team")
                   onClick?.();
                 }}
-                className="text-yellow-300 hover:text-yellow-400 cursor-pointer">
-                Developed by Placement Portal Dev Team
+                className="cursor-pointer">
+                Developed by <span className="text-yellow-300 hover:text-yellow-400">Placement Portal Dev Team</span>
               </span>
             </div>
           </div>

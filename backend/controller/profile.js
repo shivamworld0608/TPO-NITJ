@@ -61,12 +61,12 @@ export const updatesProfile = async (req, res) => {
         }
         student.name = name;
         student.email = email;
-        if(phone!="") student.phone = phone;
+        student.phone = phone;
+        student.address = address;
         if(rollno!="") student.rollno = rollno;
         if(department!="") student.department = department;
         if(year!="") student.year = year;
         if(batch!="") student.batch = batch;
-        if(address!="") student.address = address;
         if(cgpa!="") student.cgpa = cgpa;
         if(gender!="") student.gender = gender;
 
@@ -80,7 +80,7 @@ export const updatesProfile = async (req, res) => {
 
 
 //handle student profile photo
-export const handlesProfilePhoto = async (req, res) => {
+/* export const handlesProfilePhoto = async (req, res) => {
     const image = req.file.path;
     try{
       const x = await cloudinary.uploader.upload(image);
@@ -96,7 +96,28 @@ export const handlesProfilePhoto = async (req, res) => {
       console.error("Error updating profile photo:", error);
       res.status(500).json({ success: false, error: "Profile Updation failed" });
     }
-  };
+  }; */
+
+
+  export const handlesProfilePhoto = async (req, res) => {
+    try {
+        const student = await Student.findOne({ _id: req.user.userId });
+        const imagePath = `/uploads/${req.file.filename}`;
+        student.image = imagePath;
+        await student.save();
+        res.json({ 
+            success: true, 
+            image: imagePath,
+            student
+        });
+    } catch (error) {
+        console.error("Error updating profile photo:", error);
+        res.status(500).json({ 
+            success: false, 
+            error: "Profile update failed" 
+        });
+    }
+};
 
 
   export const changepass=async(req,res)=>{
