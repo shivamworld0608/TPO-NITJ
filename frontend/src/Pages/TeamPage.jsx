@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TeamSection from '../components/Developers/TeamSection.jsx';
-import Header from '../components/header';
+import Header from "../components/Navbar/Navbar";
 import Footer from '../components/footer';
 import BouncingLoader from '../components/BouncingLoader';
 
@@ -48,7 +48,11 @@ const TeamPage = () => {
     return (
         <div className="min-h-screen bg-white">
             <Header />
+<<<<<<< HEAD
+            <div className="container mx-auto mt-3 px-4 py-12 max-w-7xl">
+=======
             <div className="container mx-auto mt px-4 py-12 max-w-7xl">
+>>>>>>> c39377ad0832ac0396f11c04fb33404f1c469ce4
                 <div className="text-center mb-16">
                     <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-center tracking-wide">
                         Team{" "}
