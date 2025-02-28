@@ -10,16 +10,23 @@ import mongoose from "mongoose";
 import Feedback from "../models/Feedback.js";
 import JobAnnouncementForm from "../models/jaf.js";
 import axios from "axios";
+import Recruiter from "../models/user_model/recuiter.js";
 
 export const getAllCompanies = async (req, res) => {
   try {
-    const companies = await JobProfile.find().select('company_name -_id'); // Fetch only company_name, exclude _id
-    res.status(200).json(companies);
+    const companiesFromJobProfiles = await JobProfile.find().select('company_name -_id'); // Fetch only company_name, exclude _id
+    const companiesFromRecruiters = await Recuiter.find().distinct('company'); // Fetch unique company names from Recuiter model
+
+    // Combine and send unique company names
+    const allCompanies = [...new Set([...companiesFromJobProfiles.map(company => company.company_name), ...companiesFromRecruiters])];
+
+    res.status(200).json(allCompanies);
   } catch (error) {
     console.error('Error fetching companies:', error);
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 export const createJobProfilecopy = async (req, res) => {

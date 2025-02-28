@@ -53,8 +53,8 @@ const ConversationLog = () => {
   });
   const [loading, setLoading] = useState(false);
 
-  // Fixed colors for the color picker
-  const colors = ['#ffffff', '#ffcccc', '#ccffcc', '#ccccff'];
+  // Fixed colors for the color picker (matching your image: white, pink, green, blue)
+  const colors = ['#ffffff', '#ffcccc', '#ccffcc', '#cce5ff'];
 
   useEffect(() => {
     fetchConversations();
@@ -107,7 +107,6 @@ const ConversationLog = () => {
       });
       setOpenAddDialog(false);
     } catch (error) {
-
       console.error('Error adding conversation:', error);
     }
   };
@@ -238,18 +237,17 @@ const ConversationLog = () => {
         ) : (
           <TableContainer component={Paper}>
             <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Company Name</TableCell>
-                  <TableCell>Contact No.</TableCell>
-                  <TableCell>Email</TableCell>
-                  <TableCell>Contacted</TableCell>
-                  <TableCell>Notes</TableCell>
-                  <TableCell>Color</TableCell>
-                  <TableCell>Pinned</TableCell>
-                  <TableCell>Actions</TableCell>
-                </TableRow>
-              </TableHead>
+            <TableHead style={{ backgroundColor: '#0369A0' }}>
+      <TableRow>
+        <TableCell style={{ color: 'white' }}>Company Name</TableCell>
+        <TableCell style={{ color: 'white' }}>Contact No.</TableCell>
+        <TableCell style={{ color: 'white' }}>Email</TableCell>
+        <TableCell style={{ color: 'white' }}>Contacted</TableCell>
+        <TableCell style={{ color: 'white' }}>Notes</TableCell>
+        <TableCell style={{ color: 'white' }}>Color</TableCell>
+        <TableCell style={{ color: 'white' }}>Actions</TableCell>
+      </TableRow>
+    </TableHead>
               <TableBody>
                 {filteredConversations.map((conversation) => (
                   <TableRow key={conversation._id} style={{ backgroundColor: conversation.color }}>
@@ -271,13 +269,14 @@ const ConversationLog = () => {
                       </IconButton>
                     </TableCell>
                     <TableCell>
-                      <div style={{ display: 'flex', gap: '5px' }}>
+                      <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
                         {colors.map((color) => (
                           <div
                             key={color}
                             style={{
                               width: '20px',
                               height: '20px',
+                              borderRadius: '50%',
                               backgroundColor: color,
                               border: conversation.color === color ? '2px solid black' : '1px solid #ccc',
                               cursor: 'pointer',
@@ -287,12 +286,10 @@ const ConversationLog = () => {
                         ))}
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                       <IconButton onClick={() => handlePinConversation(conversation._id)}>
                         {conversation.pinned ? <PushPin /> : <PushPinOutlined />}
                       </IconButton>
-                    </TableCell>
-                    <TableCell style={{ display: 'flex', gap: '10px' }}>
                       <IconButton onClick={() => handleOpenEditDialog(conversation)}>
                         <EditIcon />
                       </IconButton>
@@ -370,13 +367,14 @@ const ConversationLog = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <div style={{ display: 'flex', gap: '5px' }}>
+                <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
                   {colors.map((color) => (
                     <div
                       key={color}
                       style={{
                         width: '20px',
                         height: '20px',
+                        borderRadius: '50%',
                         backgroundColor: color,
                         border: newConversation.color === color ? '2px solid black' : '1px solid #ccc',
                         cursor: 'pointer',
@@ -503,13 +501,14 @@ const ConversationLog = () => {
                 />
               </Grid>
               <Grid item xs={12}>
-                <div style={{ display: 'flex', gap: '5px' }}>
+                <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
                   {colors.map((color) => (
                     <div
                       key={color}
                       style={{
                         width: '20px',
                         height: '20px',
+                        borderRadius: '50%',
                         backgroundColor: color,
                         border: editingConversation.color === color ? '2px solid black' : '1px solid #ccc',
                         cursor: 'pointer',
@@ -543,9 +542,10 @@ const ConversationLog = () => {
             </Button>
           </DialogActions>
         </Dialog>
-        <Notification/>
+        <Notification />
       </div>
     </>
   );
 };
+
 export default ConversationLog;

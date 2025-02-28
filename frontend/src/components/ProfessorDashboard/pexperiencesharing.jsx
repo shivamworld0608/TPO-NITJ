@@ -1,24 +1,54 @@
 import React, { useState, useEffect } from "react";
-import { FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft, FaStar, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import axios from "axios";
 import Editor from "../StudentDashboard/ckeditor";
 import parse from "html-react-parser";
 import Swal from "sweetalert2";
 import toast from "react-hot-toast";
 import BouncingLoader from "../BouncingLoader";
-import { FaEdit, FaTrash, FaPlus } from "react-icons/fa";
 import Notification from "./Notification";
+
+// Star Rating Component
+const StarRating = ({ rating }) => {
+  const stars = Array.from({ length: 5 }, (_, index) => (
+    <FaStar
+      key={index}
+      className={index < rating ? "text-yellow-400" : "text-gray-300"}
+    />
+  ));
+  return <div className="flex space-x-1">{stars}</div>;
+};
+
+// Truncate Text Component
+const TruncatedText = ({ text, maxLength }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  if (text.length <= maxLength || isExpanded) {
+    return <p>{text}</p>;
+  }
+
+  return (
+    <p>
+      {text.slice(0, maxLength)}...
+      <button
+        onClick={() => setIsExpanded(true)}
+        className="text-blue-500 hover:underline ml-1"
+      >
+        Read More
+      </button>
+    </p>
+  );
+};
 
 const ProfessorExperienceManagement = () => {
   const [showEditor, setShowEditor] = useState(false);
-  const [recruiterFeedback, setrecruiterFeedback] = useState([]);
+  const [recruiterFeedback, setRecruiterFeedback] = useState([]);
   const [otherExperiences, setOtherExperiences] = useState([]);
   const [selectedExperience, setSelectedExperience] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("myExperiences");
-  
 
   useEffect(() => {
     const fetchExperiences = async () => {
@@ -42,13 +72,12 @@ const ProfessorExperienceManagement = () => {
     const fetchFeedback = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.REACT_APP_BASE_URL}/feedback`, { withCredentials: true }
+          `${import.meta.env.REACT_APP_BASE_URL}/feedback`,
+          { withCredentials: true }
         );
-        setrecruiterFeedback(response.data.data || []);
- 
-    
+        setRecruiterFeedback(response.data.data || []);
       } catch (err) {
-        setError(err.message || "Failed to load experiences.");
+        setError(err.message || "Failed to load feedback.");
       } finally {
         setLoading(false);
       }
@@ -75,7 +104,7 @@ const ProfessorExperienceManagement = () => {
             }`,
             { withCredentials: true }
           );
-          setrecruiterFeedback((prev) =>
+          setRecruiterFeedback((prev) =>
             prev.filter((exp) => exp._id !== experience._id)
           );
           toast.success("Experience deleted successfully!");
@@ -104,12 +133,12 @@ const ProfessorExperienceManagement = () => {
             }`,
             { withCredentials: true }
           );
-          setrecruiterFeedback((prev) =>
+          setRecruiterFeedback((prev) =>
             prev.filter((exp) => exp._id !== experience._id)
           );
-          toast.success("Experience deleted successfully!");
+          toast.success("Feedback deleted successfully!");
         } catch (err) {
-          toast.error(err.message || "Failed to delete experience.");
+          toast.error(err.message || "Failed to delete feedback.");
         }
       }
     });
@@ -123,11 +152,13 @@ const ProfessorExperienceManagement = () => {
     setSelectedExperience(null);
   };
 
-  if (loading) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
-    </div>
-  );
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+      </div>
+    );
+  }
 
   if (error) {
     return (
@@ -206,7 +237,6 @@ const ProfessorExperienceManagement = () => {
         </h2>
 
         <div className="flex border border-gray-300 rounded-3xl lg:mt-0 bg-white mt-10">
-          {/* Active Tab Heading */}
           <button
             className={`px-4 py-2 rounded-3xl ${
               activeTab === "myExperiences"
@@ -234,82 +264,106 @@ const ProfessorExperienceManagement = () => {
       <div className="container mx-auto px-4 py-6">
       {activeTab === "myExperiences" && (
   <section>
-    <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {recruiterFeedback.map((experience) => (
+    <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      {recruiterFeedback.map((feedback) => (
         <div
-          key={experience._id}
-          className="border border-gray-200 rounded-xl shadow-md hover:shadow-2xl transition-transform hover:scale-105 hover:border-blue-500 duration-300 cursor-pointer overflow-hidden p-4 flex flex-col items-start justify-between text-center h-auto w-auto"
+          key={feedback._id}
+          className="border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transform transition-all duration-300 hover:scale-105 bg-gradient-to-br from-white to-gray-50 p-6 flex flex-col items-start justify-between text-left h-auto w-auto"
         >
-          <p><strong>Technical Skill:</strong> {experience.technicalSkill}/5</p>
-          <p><strong>Communication Skill:</strong> {experience.communicationSkill}/5</p>
-          <p><strong>Overall Experience:</strong> {experience.overallExperience}/5</p>
-          <p><strong>Comments:</strong> {experience.comment}</p>
-          <button
-            className="bg-red-600 text-white mt-4 px-5 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition duration-300 shadow-md w-24 flex items-center justify-center space-x-2"
-            onClick={(e) => {
-              e.stopPropagation(); 
-              handleFeedbackDelete(experience);
-            }}
-          >
-            <FaTrash /> <span>Delete</span>
-          </button>
+          <div className="w-full">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">{feedback.company}</h3>
+            <div className="space-y-4">
+              {/* Technical Skill */}
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-600">Technical Skill</p>
+                <StarRating rating={feedback.technicalSkill} />
+              </div>
+
+              {/* Communication Skill */}
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-600">Communication Skill</p>
+                <StarRating rating={feedback.communicationSkill} />
+              </div>
+
+              {/* Overall Experience */}
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-medium text-gray-600">Overall Experience</p>
+                <StarRating rating={feedback.overallExperience} />
+              </div>
+
+              {/* Comments */}
+              <div className="mt-4">
+                <p className="text-sm font-medium text-gray-600 mb-2">Comments</p>
+                <TruncatedText text={feedback.comment} maxLength={100} className="text-gray-800" />
+              </div>
+            </div>
+
+            {/* Delete Button */}
+            <button
+              className="mt-6 bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition duration-300 shadow-md w-full flex items-center justify-center space-x-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleFeedbackDelete(feedback);
+              }}
+            >
+              <FaTrash /> <span>Delete</span>
+            </button>
+          </div>
         </div>
       ))}
     </div>
   </section>
 )}
-
         {activeTab === "otherExperiences" && (
-         <section>
-         <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-           
-           {otherExperiences.map((experience) => (
-             <div
-               key={experience._id}
-               className=" border border-gray-200 rounded-xl shadow-md hover:shadow-2xl transition-transform hover:scale-105 hover:border-blue-500 duration-300 cursor-pointer overflow-hidden p-4 flex flex-col  items-center justify-between text-center h-auto w-auto"
-               onClick={() => handleViewDetails(experience)}
-             >
-               <h4 className="text-lg font-semibold text-gray-800 break-words w-full px-2">
-                 {experience.title || "Untitled Experience"}
-               </h4>
-               <p className="text-sm text-gray-600 break-words px-2">
-                 {new Date(experience.createdAt).toLocaleDateString(
-                   undefined,
-                   {
-                     year: "numeric",
-                     month: "short",
-                     day: "numeric",
-                   }
-                 )}
-               </p>
-               <div className="flex justify-center space-x-3 mt-2 w-full">
-                 <button
-                   className="bg-custom-blue text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition duration-300 shadow-md w-24 flex items-center justify-center space-x-2"
-                   onClick={(e) => {
-                     e.stopPropagation();
-                     setSelectedExperience(experience);
-                     setIsEditing(true);
-                   }}
-                 >
-                   <FaEdit /> <span>Edit</span>
-                 </button>
-                 <button
-                   className="bg-red-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition duration-300 shadow-md w-24 flex items-center justify-center space-x-2"
-                   onClick={(e) => {
-                     e.stopPropagation();
-                     handleDelete(experience);
-                   }}
-                 >
-                   <FaTrash /> <span>Delete</span>
-                 </button>
-               </div>
-             </div>
-           ))}
-         </div>
-       </section>
+          <section>
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {otherExperiences.map((experience) => (
+                <div
+                  key={experience._id}
+                  className="border border-gray-200 rounded-xl shadow-md hover:shadow-2xl transition-transform hover:scale-105 hover:border-blue-500 duration-300 cursor-pointer overflow-hidden p-4 flex flex-col items-center justify-between text-center h-auto w-auto"
+                  onClick={() => handleViewDetails(experience)}
+                >
+                  <h4 className="text-lg font-semibold text-gray-800 break-words w-full px-2">
+                    {experience.title || "Untitled Experience"}
+                  </h4>
+                  <p className="text-sm text-gray-600 break-words px-2">
+                    {new Date(experience.createdAt).toLocaleDateString(
+                      undefined,
+                      {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )}
+                  </p>
+                  <div className="flex justify-center space-x-3 mt-2 w-full">
+                    <button
+                      className="bg-custom-blue text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition duration-300 shadow-md w-24 flex items-center justify-center space-x-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedExperience(experience);
+                        setIsEditing(true);
+                      }}
+                    >
+                      <FaEdit /> <span>Edit</span>
+                    </button>
+                    <button
+                      className="bg-red-600 text-white px-5 py-2 rounded-lg text-sm font-medium hover:bg-red-700 transition duration-300 shadow-md w-24 flex items-center justify-center space-x-2"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(experience);
+                      }}
+                    >
+                      <FaTrash /> <span>Delete</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
         )}
       </div>
-      <Notification/>
+      <Notification />
     </>
   );
 };

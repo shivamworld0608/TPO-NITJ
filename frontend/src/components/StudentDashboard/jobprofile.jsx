@@ -68,7 +68,7 @@ const JobApplications = () => {
               <JobCard
                 key={job.job_id}
                 job_id={job.job_id}
-                jobtype={job.jobtype}
+                jobtype={job.job_type}
                 company={job.company_name}
                 jobtitle={job.job_role}
                 deadline={job.deadline}
@@ -89,7 +89,7 @@ const JobApplications = () => {
               <JobCard
                 key={job.job_id}
                 job_id={job.job_id}
-                jobtype={job.jobtype}
+                jobtype={job.job_type}
                 company={job.company_name}
                 jobtitle={job.job_role}
                 deadline={job.deadline}
@@ -110,7 +110,7 @@ const JobApplications = () => {
               <JobCard
                 key={job.job_id}
                 job_id={job.job_id}
-                jobtype={job.jobtype}
+                jobtype={job.job_type}
                 company={job.company_name}
                 jobtitle={job.job_role}
                 deadline={job.deadline}
