@@ -257,6 +257,31 @@ const PlacementDetailsDownload = ({ placement }) => {
 };
 
 const RecentPlacements = ({ placements = [], loading = false }) => {
+  if (loading) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
+        <div className="px-6 py-4 bg-custom-blue text-white">
+          <h2 className="text-xl font-semibold">Recent Placements</h2>
+        </div>
+        <CardSkeleton />
+      </div>
+    );
+  }
+
+  // Handle the case when placements is undefined or null
+  if (!Array.isArray(placements)) {
+    return (
+      <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
+        <div className="px-6 py-4 bg-custom-blue text-white">
+          <h2 className="text-xl font-semibold">Recent Placements</h2>
+        </div>
+        <div className="p-6 text-center text-gray-600">
+          No placement data available
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
       <div className="px-4 py-3 bg-custom-blue text-white">
@@ -291,12 +316,25 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
             </div>
           </div>
         ) : (
-          <div className={`p-4 h-full overflow-y-auto scrollbar-thin scrollbar-thumb-custom-blue scrollbar-track-gray-200`}>
-            <div className="space-y-4">
-              {placements.map((placement, index) => (
-                <PlacementDetailsDownload key={placement._id || index} placement={placement} />
-              ))}
-            </div>
+          <div className="relative">
+            {/* Timeline Line */}
+            <div className="absolute left-4 top-0 h-full w-0.5 bg-gray-200"></div>
+
+            {/* Placements as Timeline Items */}
+            {placements.map((placement, index) => (
+              <div
+                key={placement._id || index}
+                className="group relative pl-8 pb-6"
+              >
+                {/* Timeline Dot */}
+                <div className="absolute left-0 top-1 h-3 w-3 bg-custom-blue rounded-full border-2 border-white transform -translate-x-1/2"></div>
+
+                {/* Placement Details */}
+                <div className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border-l-4 border-custom-blue hover:border-blue-600">
+                  <PlacementDetailsDownload placement={placement} />
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
