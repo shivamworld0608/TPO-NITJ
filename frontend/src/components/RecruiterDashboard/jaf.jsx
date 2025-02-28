@@ -329,7 +329,7 @@ const JobAnnouncementForm = () => {
               <h3 className="text-custom-blue">Recruiter Details</h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <label className="block text-sm font-medium">
                   Organization Name*
