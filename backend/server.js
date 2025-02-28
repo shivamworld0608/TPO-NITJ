@@ -37,6 +37,7 @@ import nodemailerRoutes from "./routes/nodemailer.js";
 import adminRoutes from "./routes/admin.js";
 import captchaRoutes from "./routes/captcha.js";
 import addRecruiterRoutes from "./routes/addrecruiter.js";
+import questionbankRoutes from "./routes/questionbank.js";
 
 import { mkdir } from 'fs/promises';
 try {
@@ -128,6 +129,7 @@ app.use('/nodemailer',authenticate,nodemailerRoutes);
 app.use('/admin',authenticate,adminRoutes);
 app.use('/captcha',captchaRoutes);
 app.use('/add-recruiter', authenticate, addRecruiterRoutes);
+app.use('/question-bank', authenticate, questionbankRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
