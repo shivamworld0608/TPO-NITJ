@@ -110,7 +110,7 @@ const OaLinkManager = ({ jobId, stepIndex, onClose, oaLinks, onUpdateLinks }) =>
         </button>
       </div>
     <div className="max-w-4xl mx-auto bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex sm:flex-row flex-col justify-between items-center mb-6">
         <div className="flex space-x-4 w-2/3">
           <input
             type="text"

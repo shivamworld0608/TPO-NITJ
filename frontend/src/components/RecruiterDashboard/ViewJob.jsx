@@ -818,7 +818,7 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
               })}
             </ul>
 
-            <div className="mt-8 flex space-x-4">
+            <div className="mt-8 flex sm:flex-row flex-col sm:space-x-4 sm:space-y-0 space-y-4">
               {step.step_type === "Others" && (
                 <button
                   className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3 rounded-2xl hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-purple-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
@@ -1149,12 +1149,12 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
           <FaArrowLeft className="mr-2" />
         </button>
       </div>
-      <div className="bg-white p-10 rounded-3xl shadow-2xl max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+      <div className="bg-white sm:p-10 p-4 rounded-3xl shadow-2xl max-w-6xl mx-auto">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 justify-between items-center mb-8">
           <h2 className="text-4xl font-bold text-custom-blue">Job Details</h2>
           <div className="flex items-center space-x-4">
             <button
-              className="bg-gradient-to-r from-[#0369A0] to-[#024873] text-white px-8 py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+              className="bg-gradient-to-r from-[#0369A0] to-[#024873] text-white p-3 sm:px-8 sm:py-3 rounded-2xl hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
               onClick={() => setViewingAppliedStudents(true)}
             >
               <Users className="mr-2 h-4 w-4 inline" />

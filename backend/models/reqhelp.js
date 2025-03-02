@@ -26,6 +26,9 @@ const IssueSchema = new mongoose.Schema(
           enum: ['Pending', 'Resolved'],
           default: 'Pending',
         },
+        comment:{
+          type:String
+        },
         raisedAt: {
           type: Date,
           default: Date.now,

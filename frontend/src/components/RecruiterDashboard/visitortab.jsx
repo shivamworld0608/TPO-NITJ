@@ -50,12 +50,12 @@ const VisitorTab = ({ visitorDetails, setVisitorDetails, onNext }) => {
 
   return (
     <div className="space-y-6">
-      <div className="text-center mb-8">
+      <div className="text-center mb-8 sm:p-0 p-5">
         <h2 className="text-3xl font-bold text-custom-blue mb-2">Visitor Information</h2>
         <p className="text-custom-blue">Please provide your details</p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-100 sm:p-8 p-3">
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-custom-blue">Personal Details</h3>
           <p className="text-custom-blue mt-2">Fill in the information below</p>

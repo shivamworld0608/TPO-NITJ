@@ -43,27 +43,6 @@ export const getUserIssues = async (req, res) => {
         "details.status": "Resolved",
       });
   
-/*       const populateDetails = async (issues) => {
-        return Promise.all(
-          issues.map(async (issue) => {
-            const populatedDetails = await Promise.all(
-              issue.details.map(async (detail) => {
-                if (detail.userId && detail.onModel) {
-                  const model = mongoose.model(detail.onModel);
-                  const populatedUser = await model.findById(detail.userId, "name email");
-                  return { ...detail.toObject(), userId: populatedUser };
-                }
-                return detail;
-              })
-            );
-            return { ...issue.toObject(), details: populatedDetails };
-          })
-        );
-      };
-  
-      const populatedUnresolvedIssues = await populateDetails(unresolvedIssues);
-      const populatedResolvedIssues = await populateDetails(resolvedIssues); */
-  
       res.status(200).json({
         success: true,
         unresolved: unresolvedIssues,
@@ -79,6 +58,7 @@ export const getUserIssues = async (req, res) => {
 export const resolveIssue = async (req, res) => {
   try {
     const { issueId, detailId } = req.params;
+    const { comment } = req.body;
     const professorId = req.user.userId;
 
     const issue = await Issue.findOneAndUpdate(
@@ -88,10 +68,12 @@ export const resolveIssue = async (req, res) => {
           "details.$.status": "Resolved",
           "details.$.resolvedBy": professorId,
           "details.$.resolvedAt": new Date(),
+          "details.$.comment": comment,
         },
       },
       { new: true }
-    )
+    );
+
     if (!issue) {
       return res.status(404).json({ success: false, message: "Issue or Detail not found" });
     }

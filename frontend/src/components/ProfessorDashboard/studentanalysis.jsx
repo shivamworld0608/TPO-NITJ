@@ -1,35 +1,13 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Input } from "../ui/input";
-import { Select } from "../ui/select";
-import { Button } from "../ui/button";
-import {
-  X,
-  Pencil,
-  Save,
-  Search,
-  Filter,
-  UserCog,
-  GraduationCap,
-  User,
-} from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Input } from '../ui/input';
+import { Select } from '../ui/select';
+import { Button } from '../ui/button';
+import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User,Loader2 } from 'lucide-react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+
 import Notification from "./Notification";
 
 const StudentAnalyticsDashboard = () => {
@@ -59,10 +37,12 @@ const StudentAnalyticsDashboard = () => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStudents = async () => {
       try {
+        setLoading(true);
         const response = await axios.get(
           `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/get`,
           { withCredentials: true }
@@ -71,6 +51,8 @@ const StudentAnalyticsDashboard = () => {
         setData(response.data.data || []);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to fetch students.");
+      }finally {
+        setLoading(false);
       }
     };
 
@@ -609,10 +591,17 @@ const StudentAnalyticsDashboard = () => {
         </div>
         <div className="flex items-center gap-4">
           <div className="bg-white rounded-lg p-3 shadow-sm">
-            <div className="text-2xl font-bold text-blue-600">
-              {filteredStudents.length}
-            </div>
-            <div className="text-sm text-gray-600">Total Students</div>
+          {loading ? (
+              <div className="flex items-center gap-2">
+                <Loader2 className="h-6 w-6 animate-spin text-custom-blue" />
+                <span className="text-sm text-gray-600">Loading...</span>
+              </div>
+            ) : (
+              <>
+                <div className="text-2xl font-bold text-custom-blue">{filteredStudents.length}</div>
+                <div className="text-sm text-gray-600">Total Students</div>
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -48,7 +48,7 @@ function FoodArrangementTab({
 
   const renderFoodForm = () => (
     <div className="mt-8">
-      <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+      <div className="bg-white rounded-xl shadow-lg border border-gray-100 sm:p-8 p-2">
         <div className="mb-8">
           <h3 className="text-2xl font-semibold text-gray-800">
             Meal Details
@@ -60,7 +60,7 @@ function FoodArrangementTab({
 
         <div className="grid gap-8">
           {foodDetails.tableRows.map((row, index) => (
-            <div key={index} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div key={index} className="bg-gray-50 rounded-lg sm:p-6 p-2 border border-gray-200">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex-1 mr-4">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -84,7 +84,7 @@ function FoodArrangementTab({
                 </button>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 {["breakfast", "lunch", "dinner", "snacks"].map((meal) => (
                   <div key={meal} className="space-y-1">
                     <label className="block text-sm font-medium text-gray-700 capitalize">

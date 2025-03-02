@@ -15,7 +15,8 @@ import {
   faShareSquare,
   faCalendar,
   faNoteSticky,
-  faHammer
+  faHammer,
+  faBook
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -38,6 +39,7 @@ import TeamSection from "./Developers/TeamSection.jsx";
 import ResumeBuilder from "./StudentDashboard/resume.jsx";
 import ChangePasswordForm from "./changepass.jsx";
 import Others from "./StudentDashboard/others.jsx";
+import QuestionBank from "./StudentDashboard/questionbank.jsx";
 
 
 const StudentDashboard = () => {
@@ -105,7 +107,12 @@ const StudentDashboard = () => {
       label: "Shared Experience",
       icon: faShareSquare,
     },
-/*     { path: "/sdashboard/policy-guidlines", label: "Policy & Guidlines", icon: faNoteSticky }, */
+    {
+      path: "/sdashboard/question-bank",
+      label: "Question Bank",
+      icon: faBook,
+    },
+/*     { path: "/sdashboard/policy-guidlines", label: "Policy & Guidlines", icon: faNoteSticky },
 /*     { path: "/sdashboard/resume", label: "Resume", icon: faNoteSticky }, */
     { path: "/sdashboard/change-pass", label: "Change Password", icon: faHammer },
   ];
@@ -180,7 +187,7 @@ const StudentDashboard = () => {
               <span className="text-gray-600 font-bold tracking-wide">👋 Hi, <span className="text-custom-blue">{userData.name}</span> </span>
               <img
                 onClick={() => navigate("/sdashboard/profile")}
-                src={userData?.image || ProfileImage}
+                src={`${import.meta.env.REACT_APP_BASE_URL}${userData?.image}`|| ProfileImage}
                 alt="Profile"
                 className="w-8 h-8 rounded-full object-cover cursor-pointer"
               />
@@ -295,6 +302,7 @@ const StudentDashboard = () => {
             <Route path="calendar" element={<CalendarComponent />} />
             {/* <Route path="mailbox" element={<MailboxComponent />} /> */}
             <Route path="shared-experience" element={<SharedExperience />} />
+            <Route path="question-bank" element={<QuestionBank />} />
             <Route path="profile" element={<Profile />} />
             <Route path="request-help" element={<Request />} />
             <Route path="policy-guidlines" element={<PDFDownloadCards />} />
@@ -316,8 +324,8 @@ const StudentDashboard = () => {
                   navigate("/team")
                   onClick?.();
                 }}
-                className="text-yellow-300 hover:text-yellow-400 cursor-pointer">
-                Developed by Placement Portal Dev Team
+                className="cursor-pointer">
+                Developed by <span className="text-yellow-300 hover:text-yellow-400">Placement Portal Dev Team</span>
               </span>
             </div>
           </div>
