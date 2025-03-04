@@ -845,7 +845,7 @@ export const addshortlistStudents = async (req, res) => {
   }
 };
 
-export const eligibleinthis = async (req, res) => {
+/* export const eligibleinthis = async (req, res) => {
   try {
     const { jobId, stepIndex } = req.body;
     const jobProfile = await JobProfile.findById(jobId);
@@ -874,6 +874,7 @@ export const eligibleinthis = async (req, res) => {
       const studentId = submission.studentId;
       const isShortlisted = shortlisted_studentsid.includes(studentId);
       const isAbsent = absent_studentsid.includes(studentId);
+      console.log(submission.studentId.name);
 
       return {
         studentId,
@@ -889,7 +890,51 @@ export const eligibleinthis = async (req, res) => {
     console.error('Error in eligibleinthis:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
+}; */
+
+
+export const eligibleinthis = async (req, res) => {
+  try {
+    const { jobId, stepIndex } = req.body;
+    const jobProfile = await JobProfile.findById(jobId);
+    if (!jobProfile) {
+      return res.status(404).json({ error: 'Job profile not found' });
+    }
+
+    const step = jobProfile.Hiring_Workflow[stepIndex];
+    if (!step) {
+      return res.status(404).json({ error: 'Step not found' });
+    }
+
+    const eligible_studentsid = step.eligible_students;
+    const shortlisted_studentsid = step.shortlisted_students || [];
+    const absent_studentsid = step.absent_students || [];
+    const students = await Student.find({ _id: { $in: eligible_studentsid } }, 'name');
+    const submissions = await FormSubmission.find(
+      { studentId: { $in: eligible_studentsid }, jobId },
+      'studentId fields'
+    );
+    const emailMap = {};
+    submissions.forEach(submission => {
+      const emailField = submission.fields.find(field => field.fieldName === 'Email');
+      if (emailField) {
+        emailMap[submission.studentId.toString()] = emailField.value;
+      }
+    });
+    const eligibleStudents = students.map(student => ({
+      studentId: student._id,
+      name: student.name,
+      email: emailMap[student._id.toString()] || '', // Email from FormSubmission or empty string
+      shortlisted: shortlisted_studentsid.includes(student._id.toString()),
+      absent: absent_studentsid.includes(student._id.toString()),
+    }));
+    res.status(200).json({ eligibleStudents });
+  } catch (error) {
+    console.error('Error in eligibleinthis:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
+
 
 export const viewshortlisting=async(req,res)=>{
   try {

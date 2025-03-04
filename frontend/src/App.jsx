@@ -17,6 +17,7 @@ import FAQ from "./Pages/Faqs";
 import ErrorPage from "./Pages/ErrorPage";
 /* import Signup from "./Pages/Signup"; */
 import AlumniLogin from "./Pages/ALogin";
+import AssessmentAttemptPage from "./Pages/Mock-test";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -69,6 +70,11 @@ const App = () => {
         <Route path="/recruiter" element={<Recruiter />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/team" element={<TeamPage />} />
+
+        <Route
+          path= "/sdashboard/assessment-attempt/:attemptId"
+          element={authUser && userType === "Student" ? < AssessmentAttemptPage/> : <Navigate to={getDashboardPath()} />}
+        />
         <Route
           path="/sdashboard/*"
           element={authUser && userType === "Student" ? <Sdashboard /> : <Navigate to={getDashboardPath()} />}

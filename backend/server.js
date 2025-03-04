@@ -18,6 +18,7 @@ import jobprofileroutes from "./routes/jobprofile.js";
 import formTemplateroutes from "./routes/formTemplate.js";
 import sharedexperienceroutes from "./routes/sharedexperience.js";
 import placementroutes from "./routes/placement.js";
+import internshiptroutes from "./routes/internship.js";
 import reqhelproutes from "./routes/reqhelp.js";
 import jobEventroutes from "./routes/jobEvents.js"
 import pdfroutes from "./routes/pdf.js";
@@ -38,6 +39,7 @@ import adminRoutes from "./routes/admin.js";
 import captchaRoutes from "./routes/captcha.js";
 import addRecruiterRoutes from "./routes/addrecruiter.js";
 import questionbankRoutes from "./routes/questionbank.js";
+import mockassessmentRoutes from "./routes/mock-assessement.js"
 
 import { mkdir } from 'fs/promises';
 try {
@@ -109,6 +111,7 @@ app.use('/devteam',devteamroutes);
 app.use('/jobprofile',authenticate,jobprofileroutes);
 app.use('/sharedexperience',authenticate,sharedexperienceroutes);
 app.use("/placements",placementroutes);
+app.use("/internships",internshiptroutes);
 app.use("/reqhelp",authenticate,reqhelproutes);
 app.use("/job-events",jobEventroutes);
 app.use("/feedback",authenticate,feedbackRoutes);
@@ -130,6 +133,8 @@ app.use('/admin',authenticate,adminRoutes);
 app.use('/captcha',captchaRoutes);
 app.use('/add-recruiter', authenticate, addRecruiterRoutes);
 app.use('/question-bank', authenticate, questionbankRoutes);
+app.use('/mock-assessment',authenticate,mockassessmentRoutes);
+app.use('/attempt/:assessment',authenticate,mockassessmentRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {

@@ -8,4 +8,8 @@ export default defineConfig({
 
   envCompatible(),
   ],
+ /*  server: {
+    port: 4000, // Set your custom port here
+    strictPort: true, // Optional: Prevents Vite from auto-switching ports if 4000 is in use
+  }, */
 })
