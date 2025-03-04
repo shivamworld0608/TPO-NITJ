@@ -1,64 +1,73 @@
 import React from 'react';
+import { Clock, Briefcase, Tag } from 'lucide-react';
 
-const JobCard = ({ job_id, jobtype, jobtitle, company, deadline, onShowDetails }) => (
-  <div className="w-full max-w-lg mx-auto border border-custom-blue bg-white rounded-lg shadow-lg p-6 transition-all transform duration-300 hover:shadow-2xl hover:scale-105">
-      <h2 className="text-2xl font-semibold text-gray-800">{company}</h2>
-      <p className="text-lg text-gray-600 mt-2">{jobtitle}</p>
-      <div className="mt-4 space-y-2 text-sm">
-      <p className="flex items-center text-[#0F6BA8]">
-               <span className="mr-2 text-[#0369A0]">
-             <svg
-               className="w-4 h-4"
-               fill="currentColor"
-               viewBox="0 0 24 24"
-            >
-               <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-               <path d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z" />
-             </svg>
-           </span>
-           <strong>Job Type:</strong>  {jobtype}
-          </p>
-          <p className="flex items-center text-[#0F6BA8]">
-          <span className="mr-2 text-[#0369A0]">
-            <svg
-              className="w-4 h-4"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12z" />
-            </svg>
-          </span>
-          <strong>Job ID:</strong>  {job_id}
-        </p>
-          <p className="flex items-center text-[#0F6BA8]">
-          <span className="mr-2 text-[#0369A0]">
-            <svg
-              className="w-4 h-4"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V9h14v10z" />
-            </svg>
-          </span>
-          <strong>Deadline:</strong> 
-          <span className="ml-1 text-[#0369A0] font-medium">
-            {deadline
-              ? new Date(deadline).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })
-              : "Not Provided"}
-          </span>
-        </p>
-      </div>
-      <button
-          className="mt-4 w-full bg-custom-blue text-white py-2 px-4 rounded-md hover:bg-blue-600"
+const JobCard = ({ 
+  job_id, 
+  jobtype, 
+  jobtitle, 
+  company, 
+  deadline, 
+  onShowDetails 
+}) => {
+  // Format deadline with more robust date handling
+  const formatDeadline = (deadlineDate) => {
+    if (!deadlineDate) return 'Not Specified';
+    
+    try {
+      const date = new Date(deadlineDate);
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        timeZone: 'UTC'
+      });
+    } catch (error) {
+      return 'Invalid Date';
+    }
+  };
+
+  return (
+    <div className="w-full max-w-xs mx-auto bg-white shadow-md rounded-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-lg">
+      <div className="p-4">
+        {/* Company and Job Title */}
+        <div className="mb-3">
+          <h2 className="text-xl font-bold text-gray-900 truncate">{company}</h2>
+          <h3 className="text-lg text-gray-600 mt-1 truncate font-semibold">{jobtitle}</h3>
+        </div>
+
+        {/* Job Details */}
+        <div className="space-y-2 mb-4">
+          <div className="flex items-center text-gray-700 text-sm">
+            <Briefcase className="mr-2 text-custom-blue" size={16} />
+            <span className="font-medium mr-1">Type:</span>
+            <span className="text-gray-600">{jobtype}</span>
+          </div>
+
+          <div className="flex items-center text-gray-700 text-sm">
+            <Tag className="mr-2 text-custom-blue" size={16} />
+            <span className="font-medium mr-1">ID:</span>
+            <span className="text-gray-600">{job_id}</span>
+          </div>
+
+          <div className="flex items-center text-gray-700 text-sm">
+            <Clock className="mr-2 text-custom-blue" size={16} />
+            <span className="font-medium mr-1">Deadline:</span>
+            <span className="text-gray-600">
+              {formatDeadline(deadline)}
+            </span>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <button 
           onClick={onShowDetails}
-      >
-          Show Details
-      </button>
-  </div>
-);
+          className="w-full bg-custom-blue text-white py-2 rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        >
+          View Details
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default JobCard;

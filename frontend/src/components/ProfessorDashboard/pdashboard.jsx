@@ -299,7 +299,7 @@ const Pdashboard = () => {
             <Route path="notifications" element={<PNotifications />} />
             {/* <Route path="pmailbox" element={<Mailbox />} /> */}
             <Route path="help-requests" element={<RequestHelpManager />} />
-            <Route path="company-analysis" element={<StudentAnalyticsDashboard />} />
+            <Route path="student-analysis" element={<StudentAnalyticsDashboard />} />
             <Route path="mock-assessment" element={<MockAssessmentProfessorDashboard/>} />
             <Route path="experience-sharing" element={<ExperienceSharing />} />
             <Route path="contact-request" element={<ContactRequests />} />

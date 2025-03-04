@@ -46,7 +46,7 @@ const InterviewsData = () => {
   const renderTabContent = () => {
     if (activeTab === "upcoming") {
       return upcomingInterviews.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {upcomingInterviews.map((job) => (
             <InterviewCard
               key={job.job_id}
@@ -71,7 +71,7 @@ const InterviewsData = () => {
 
     if (activeTab === "past") {
       return previousInterviews.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {previousInterviews.map((job) => (
             <InterviewCard
               key={job.job_id}
