@@ -70,12 +70,12 @@ const LoginSignup = ({ Login }) => {
     }
   
     try {
-      const captchaValue = altchaRef.current?.value;
+      /* const captchaValue = altchaRef.current?.value; */
   
       const response = await toast.promise(
         axios.post(
           `${import.meta.env.REACT_APP_BASE_URL}/auth/login`,
-          { email, password, code, captcha: captchaValue },
+          { email, password /* code *//* , captcha: captchaValue */ },
           { withCredentials: true }
         ),
         {
@@ -209,7 +209,7 @@ const LoginSignup = ({ Login }) => {
             />
             {emailError && <p className="text-red-500 text-xs">{emailError}</p>}
 
-            <input
+           {/*  <input
               className="w-full px-4 py-3 rounded-md font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-custom-blue"
               type="text"
               placeholder="Enter your code"
@@ -217,7 +217,7 @@ const LoginSignup = ({ Login }) => {
               onChange={(e) => setCode(e.target.value)}
               required
             />
-            {codeError && <p className="text-red-500 text-xs">{codeError}</p>}
+            {codeError && <p className="text-red-500 text-xs">{codeError}</p>} */}
 
             <div className="relative w-full">
               <input
