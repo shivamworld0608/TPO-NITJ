@@ -250,7 +250,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
               </span>
             ) : (
               <button
-                className="text-white p-1 bg-custom-blue rounded-lg text-sm"
+                className="text-custom-blue p-1 border border-custom-blue rounded-lg text-sm font-semibold"
                 onClick={() => setDescription(true)} // ✅ Corrected function
               >
                 Click Here
