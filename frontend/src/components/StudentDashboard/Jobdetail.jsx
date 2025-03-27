@@ -21,6 +21,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
   const [application, setApplication] = useState(false);
   const [isdeadlineOver, setIsdeadlineOver] = useState(false);
   const [timeLeft, setTimeLeft] = useState("");
+  const [description, setDescription] = useState(false);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -176,7 +177,8 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
   const isInternship = ["Intern", "Intern+PPO", "Intern+FTE"].includes(
     jobDetails.job_type
   );
-
+  
+ 
   const details = [
     {
       icon: faClipboardList,
@@ -226,6 +228,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
 
   const info = {
     jobDescription: (
+      <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-2 sm:p-4">
         {details.map((detail, index) => (
           <div
@@ -241,12 +244,41 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
               {detail.label}
             </span>
             <hr className="w-full sm:w-10 border-gray-300 my-1 sm:my-2" />
-            <span className="text-black font-medium text-xs sm:text-sm text-center">
-              {detail.value}
-            </span>
+            {detail.label !== "DESCRIPTION" ? (
+              <span className="text-black font-medium text-xs sm:text-sm text-center">
+                {detail.value}
+              </span>
+            ) : (
+              <button
+                className="text-white p-1 bg-custom-blue rounded-lg text-sm"
+                onClick={() => setDescription(true)} // ✅ Corrected function
+              >
+                Click Here
+              </button>
+            )}
           </div>
         ))}
       </div>
+
+      {/* Popup Modal */}
+      {description && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="relative p-6 bg-white rounded-lg shadow-lg w-80">
+            {/* Close Button */}
+            <button
+              onClick={() => setDescription(false)} // ✅ Fixed setter function
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-xl"
+            >
+              &times;
+            </button>
+
+            {/* Popup Content */}
+            <h2 className="text-lg text-custom-blue text-center font-semibold">Description</h2>
+            <p className="mt-2 text-gray-800">{jobDetails.jobdescription || "No description available"}</p>
+          </div>
+        </div>
+      )}
+    </div>
     ),
 
     hiringFlow: (
