@@ -3,6 +3,12 @@ import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import ApplicationForm from "./applicationform";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { 
+  Clock, 
+  MapPin, 
+  CheckCircle, 
+  Info 
+} from 'lucide-react';
 import Swal from "sweetalert2";
 import {
   faMapMarkerAlt,
@@ -11,6 +17,7 @@ import {
   faBriefcase,
   faIndianRupeeSign,
 } from "@fortawesome/free-solid-svg-icons";
+
 
 const Jobdetail = ({ job_id, onBack, onShow }) => {
   const [activeInfo, setActiveInfo] = useState("jobDescription");
@@ -22,6 +29,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
   const [isdeadlineOver, setIsdeadlineOver] = useState(false);
   const [timeLeft, setTimeLeft] = useState("");
   const [description, setDescription] = useState(false);
+  const [selectedStep, setSelectedStep] = useState(null);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -226,6 +234,17 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
     },
   ];
 
+  const getStepIcon = (stepType) => {
+    const iconClasses = "w-6 h-6";
+    const iconMap = {
+      'OA': <Clock className={`${iconClasses} text-blue-600`} />,
+      'Interview': <MapPin className={`${iconClasses} text-green-600`} />,
+      'Others': <CheckCircle className={`${iconClasses} text-purple-600`} />,
+      'default': <Info className={`${iconClasses} text-gray-600`} />
+    };
+    return iconMap[stepType] || iconMap['default'];
+  };
+
   const info = {
     jobDescription: (
       <div>
@@ -282,84 +301,111 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
     ),
 
     hiringFlow: (
-      <div className="font-sans p-2 sm:p-6">
-        <div className="relative max-w-2xl mx-auto">
-          <div className="flex flex-col space-y-6 sm:space-y-8">
-            {jobDetails?.Hiring_Workflow?.map((step, index) => (
-              <div
-                key={index}
-                className="relative flex items-start space-x-3 sm:space-x-6 group"
+      <div className=" py-16 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto">
+
+        <div className="relative border-l-4 border-custom-blue">
+          {jobDetails?.Hiring_Workflow?.map((step, index) => (
+            <div 
+              key={index} 
+              className="mb-10 ml-10 pl-6 pb-6 border-b border-gray-200 last:border-b-0"
+            >
+              {/* Timeline Dot */}
+              <div 
+                className="absolute -left-[26px] w-12 h-12 bg-white border-4 border-custom-blue 
+                rounded-full flex items-center justify-center"
               >
-                <div className="relative flex flex-col items-center">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 bg-custom-blue rounded-full flex items-center justify-center text-white shadow-lg group-hover:bg-blue-500 transition-colors">
-                    <span className="text-xs sm:text-sm">{index + 1}</span>
-                  </div>
-                  {index !== jobDetails.Hiring_Workflow.length - 1 && (
-                    <div
-                      className="absolute top-6 sm:top-7 left-1/2 transform -translate-x-1/2 w-0.5 sm:w-1 bg-custom-blue group-hover:bg-blue-500 transition-all"
-                      style={{ height: "170px" }}
-                    ></div>
-                  )}
+                {getStepIcon(step.step_type)}
+              </div>
+
+              {/* Step Card */}
+              <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-custom-blue hover:border-blue-500 hover:shadow-2xl">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-xl font-semibold text-gray-800">
+                    {step.step_type || "Upcoming Stage"}
+                  </h3>
+                  <span className="text-sm text-custom-blue">
+                    Stage {index + 1}
+                  </span>
                 </div>
 
-                <div className="ml-4 sm:ml-10 p-3 sm:p-4 w-full sm:w-2/3 border border-blue-500 rounded-lg bg-white shadow-md group-hover:shadow-lg transition-shadow">
-                  <h3 className="text-base sm:text-xl font-semibold text-gray-800 group-hover:text-blue-500 transition-colors">
-                    {step.step_type || "To be announced"}
-                  </h3>
-                  <p className="text-sm sm:text-base text-gray-600 mt-2 group-hover:text-blue-500 transition-colors">
-                    {step.step_type === "OA" ? (
-                      <>
+                {/* Step Details */}
+                <div className="space-y-2">
+                  {step.step_type === "OA" && (
+                    <>
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="mr-2 w-5 h-5 text-blue-500" />
                         <span>
                           Date: {step.details.oa_date || "To be announced"}
                         </span>
-                        <br />
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="mr-2 w-5 h-5 text-green-500" />
                         <span>
                           Login Time: {step.details.oa_login_time || "N/A"}
                         </span>
-                        <br />
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <CheckCircle className="mr-2 w-5 h-5 text-purple-500" />
                         <span>
                           Duration: {step.details.oa_duration || "N/A"}
                         </span>
-                      </>
-                    ) : step.step_type === "Interview" ? (
-                      <>
+                      </div>
+                    </>
+                  )}
+
+                  {step.step_type === "Interview" && (
+                    <>
+                      <div className="flex items-center text-gray-600">
+                        <MapPin className="mr-2 w-5 h-5 text-red-500" />
                         <span>
                           Type: {step.details.interview_type || "N/A"}
                         </span>
-                        <br />
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="mr-2 w-5 h-5 text-blue-500" />
                         <span>
-                          Date:{" "}
-                          {step.details.interview_date || "To be announced"}
+                          Date: {step.details.interview_date || "To be announced"}
                         </span>
-                        <br />
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="mr-2 w-5 h-5 text-green-500" />
                         <span>
                           Time: {step.details.interview_time || "N/A"}
                         </span>
-                      </>
-                    ) : step.step_type === "Others" ? (
-                      <>
+                      </div>
+                    </>
+                  )}
+
+                  {step.step_type === "Others" && (
+                    <>
+                      <div className="flex items-center text-gray-600">
+                        <CheckCircle className="mr-2 w-5 h-5 text-purple-500" />
                         <span>
-                          Round Name: {step.details.others_round_name || "N/A"}
+                          Round: {step.details.others_round_name || "N/A"}
                         </span>
-                        <br />
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="mr-2 w-5 h-5 text-blue-500" />
                         <span>
                           Date: {step.details.others_date || "To be announced"}
                         </span>
-                        <br />
+                      </div>
+                      <div className="flex items-center text-gray-600">
+                        <Clock className="mr-2 w-5 h-5 text-green-500" />
                         <span>
-                          Time: {step.details.others_duration || "N/A"}
+                          Duration: {step.details.others_duration || "N/A"}
                         </span>
-                      </>
-                    ) : (
-                      "To be announced"
-                    )}
-                  </p>
+                      </div>
+                    </>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
+    </div>
     ),
 
     eligibilityCriteria: (
