@@ -122,11 +122,11 @@ export const createJobProfilecopy = async (req, res) => {
     });
 
     let job_class;
-    if (ctc < 10) {
+    if (ctc < 5) {
       job_class = "Below Dream";
-    } else if (ctc >= 10 && ctc < 20) {
+    } else if (ctc >= 5 && ctc < 12) {
       job_class = "Dream";
-    } else if (ctc >= 20) {
+    } else if (ctc >= 12) {
       job_class = "Super Dream";
     } else {
       throw new Error("Invalid CTC value");
@@ -384,9 +384,11 @@ export const getJobProfiletostudent = async (req, res) => {
     const studentId = req.user.userId;
     const student = await Student.findById({_id:studentId});
     const rollNumbers=[student.rollno];
+    console.log(rollNumbers);
     const response=await axios.post(`${process.env.ERP_SERVER}`,{rollNumbers});
-    const erpStudents = response.data.data.students;
+    const erpStudents = response.data.data;
     const erpData = erpStudents[0];
+    console.log(erpData);
     if (!studentId) {
       return res.status(400).json({ message: "User ID is missing in the request." });
     }
@@ -542,7 +544,7 @@ export const checkEligibility = async (req, res) => {
     const student = await Student.findById({_id:studentId});
     const rollNumbers=[student.rollno];
     const response=await axios.post(`${process.env.ERP_SERVER}`,{rollNumbers});
-    const erpStudents = response.data.data.students;
+    const erpStudents = response.data.data;
     if (!erpStudents || !erpStudents.length) {
       return res.status(404).json({ message: "Updated student details not found in ERP" });
     }
@@ -601,8 +603,54 @@ export const checkEligibility = async (req, res) => {
 
     const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
     const studentClassIndex = jobClassOrder.indexOf(updatedStudent.placementstatus);
-    const jobClassIndex = jobClassOrder.indexOf(job.job_class);
-
+  /*   const jobClassIndex = jobClassOrder.indexOf(job.job_class); */
+     if(job.ctc>=20){
+       jobClassIndex = 3;
+     }
+     else if(job.ctc<4.5){
+       jobClassIndex = 0;
+     }
+     else if((student.course=="B.Tech"|| student.course=="M.Tech") && (student.department=="Computer Science & Engineering"||student.department=="Information Technology")){
+       if(job.ctc>=10 && job.ctc<20){
+         jobClassIndex = 2;
+       }
+       else{
+         jobClassIndex = 1;
+       }
+     }
+     else if((student.course=="B.Tech"|| student.course=="M.Tech") && (student.department=="Electronics & Communication Engineering"|| student.department=="Instrumentation and Control Engineering"||student.department=="Electronics and VLSI Engineering"||student.department=="Electrical Engineering")){
+      if(job.ctc>=8 && job.ctc<20){
+        jobClassIndex = 2;
+      }
+      else{
+        jobClassIndex = 1;
+      }
+     }
+     else if(student.course=="B.Tech"|| student.course=="M.Tech"){
+      if(job.ctc>=6 && job.ctc<20){
+        jobClassIndex = 2;
+      }
+      else{
+        jobClassIndex = 1;
+      }
+     }
+     else if(student.course=="MBA"){
+      if(job.ctc>=5 && job.ctc<20){
+        jobClassIndex = 2;
+      }
+      else{
+        jobClassIndex = 1;
+      }
+     }
+     else if(student.course=="M.Sc"){
+      if(job.ctc>=6 && job.ctc<20){
+        jobClassIndex = 2;
+      }
+      else{
+        jobClassIndex = 1;
+      }
+     }
+     
     if (
       studentClassIndex !== -1 &&
       updatedStudent.placementstatus !== "notplaced" &&

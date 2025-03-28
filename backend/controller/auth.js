@@ -252,7 +252,7 @@ export const LockedResendOTP = async (req, res) => {
             try {
                 const rollNumbers = [student.rollno];
                 const response = await axios.post(`${process.env.ERP_SERVER}`, { rollNumbers });
-                const erpStudents = response.data.data.students;
+                const erpStudents = response.data.data;
                 const erpData = erpStudents[0];
 
                 const updatedStudent = {

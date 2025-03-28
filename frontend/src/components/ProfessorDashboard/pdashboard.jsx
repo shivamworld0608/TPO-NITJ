@@ -106,7 +106,7 @@ const Pdashboard = () => {
     {label:"Mock Assessment",icon:faUser, path:"/pdashboard/mock-assessment"},
     { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
     // {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
-    // { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
+    { label: "Placement Reports", icon: faChartBar, path: "/pdashboard/placement-insights" },
  /*    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" }, */
     { label: "User Requests", icon: faContactCard, path: "/pdashboard/contact-request" },
     { label: "Add students", icon: faUserPlus, path: "/pdashboard/add-students" },

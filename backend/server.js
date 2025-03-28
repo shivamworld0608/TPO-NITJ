@@ -136,7 +136,7 @@ app.use('/question-bank', authenticate, questionbankRoutes);
 app.use('/mock-assessment',authenticate,mockassessmentRoutes);
 app.use('/attempt/:assessment',authenticate,mockassessmentRoutes);
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 7000;
 app.listen(port, () => {
  
 }); 
