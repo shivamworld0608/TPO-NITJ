@@ -17,7 +17,8 @@ import ProfileImage from "../../assets/chillguy.png";
 import NITJlogo from "../../assets/nitj-logo.png";
 
 import AdminJobProfileManager from "./jobprofiles";
-
+import StudentManager from "./students";
+import RecruiterManager from "./recruiter";
 
 const Admindashboard = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -63,6 +64,8 @@ const Admindashboard = () => {
 
   const menuItems = [
     { label: "Job Profiles Management", icon: faHome, path: "/admindashboard/home" },
+    { label: "Recruiter Management", icon: faHome, path: "/admindashboard/recruiters" },
+    { label: "Student Management", icon: faHome, path: "/admindashboard/students" },
   ];
 
 
@@ -242,6 +245,8 @@ const Admindashboard = () => {
           {/* Placeholder for route content */}
           <Routes>
             <Route path="/home" element={<AdminJobProfileManager />} />
+            <Route path="/students" element={<StudentManager />} />
+            <Route path="/recruiters" element={<RecruiterManager />} />
             </Routes>
         </div>
 
