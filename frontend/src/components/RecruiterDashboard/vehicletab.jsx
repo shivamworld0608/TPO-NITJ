@@ -110,7 +110,7 @@ function VehicleTab({ wantVehicle, setWantVehicle, vehicleDetails, setVehicleDet
             <h4 className="text-lg font-semibold text-gray-800 mb-4">Basic Details</h4>
             <InputField
               label="Number of Visitors"
-              type="number"
+              type="text"
               value={vehicleDetails.passengers}
               onChange={(e) =>
                 setVehicleDetails({ ...vehicleDetails, passengers: e.target.value })

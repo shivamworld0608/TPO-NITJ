@@ -163,7 +163,7 @@ const VisitorTab = ({ visitorDetails, setVisitorDetails, onNext }) => {
                   Expected Number of Visitors <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   value={visitorDetails.expectedVisitors}
                   onChange={(e) => setVisitorDetails({ ...visitorDetails, expectedVisitors: e.target.value })}
                   className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-custom-blue focus:border-transparent bg-white"
