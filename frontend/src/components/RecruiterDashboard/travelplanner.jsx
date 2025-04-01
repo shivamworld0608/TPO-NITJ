@@ -526,7 +526,7 @@ function TravelPlanner() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b">
-      <div className="max-w-3xl mx-auto px-6 py-10">
+      <div className="max-w-3xl mx-auto sm:px-6 sm:py-10">
         {/* Header Section */}
         <div className="flex items-center justify-between mb-12">
           <h1 className="text-4xl font-extrabold text-custom-blue tracking-tight ">
@@ -551,7 +551,7 @@ function TravelPlanner() {
         <div className="mb-10">{renderProgressBar()}</div>
 
         {/* Content Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-10 border border-custom-blue">
+        <div className="bg-white rounded-2xl shadow-lg sm:p-10 p-2 border border-custom-blue">
           {renderContent()}
         </div>
       </div>

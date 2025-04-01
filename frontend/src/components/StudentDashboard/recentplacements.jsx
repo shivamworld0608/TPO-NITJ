@@ -1,7 +1,15 @@
 import React from 'react';
 import { Download } from 'lucide-react';
-import { pdf } from '@react-pdf/renderer';
-import { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
+
+// Assuming you have a way to load the NIT Jalandhar logo (replace with actual path or base64)
+import NITJlogo from "../../assets/nitj-logo.png"; // Replace with actual logo path or base64
+import NotoSansDevanagari from '../../assets/fonts/NotoSansDevanagari-Regular.ttf';
+
+Font.register({
+  family: 'NotoSansDevanagari',
+  src: NotoSansDevanagari,
+});
 
 const CardSkeleton = () => (
   <div className="space-y-3 p-4">
@@ -15,154 +23,125 @@ const CardSkeleton = () => (
   </div>
 );
 
+// Styles aligned with InternshipPDF
 const styles = StyleSheet.create({
-  page: {
-    padding: 40,
-    backgroundColor: '#ffffff',
-    fontFamily: 'Helvetica',
+  page: { padding: 30, fontFamily: 'Helvetica', backgroundColor: '#f9fafb' },
+  header: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    marginBottom: 20, 
   },
-  // Rest of the styles remain unchanged
-  header: {
-    marginBottom: 30,
-    borderBottom: '2 solid #2563eb',
-    paddingBottom: 15,
-  },
-  title: {
-    fontSize: 28,
-    color: '#1e40af',
-    marginBottom: 12,
-    fontFamily: 'Helvetica-Bold',
-  },
-  subtitle: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginBottom: 8,
-  },
-  section: {
-    marginTop: 25,
-    marginBottom: 15,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    color: '#1e40af',
-    backgroundColor: '#f0f9ff',
-    padding: 10,
-    marginBottom: 15,
-    borderRadius: 4,
-    fontFamily: 'Helvetica-Bold',
-  },
-  companyDetails: {
-    marginLeft: 20,
-    marginBottom: 20,
-    backgroundColor: '#ffffff',
-    padding: 15,
-    borderRadius: 4,
-    border: '1 solid #e5e7eb',
-  },
-  row: {
-    flexDirection: 'row',
-    marginBottom: 8,
-    alignItems: 'center',
-  },
-  label: {
-    width: 130,
-    fontSize: 12,
-    color: '#4b5563',
-    fontFamily: 'Helvetica-Bold',
-  },
-  value: {
-    flex: 1,
-    fontSize: 12,
-    color: '#111827',
-  },
-  studentSection: {
-    marginTop: 10,
-    marginBottom: 15,
-    padding: 15,
-    backgroundColor: '#f8fafc',
-    borderRadius: 4,
-  },
-  studentHeader: {
-    fontSize: 16,
-    color: '#1e40af',
-    marginBottom: 10,
-    fontFamily: 'Helvetica-Bold',
-    borderBottom: '1 solid #e5e7eb',
-    paddingBottom: 5,
-  },
-  studentInfo: {
-    marginLeft: 15,
-    marginTop: 8,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 40,
-    right: 40,
+  logo: { width: 60, height: 65, marginRight: 15 },
+  headerText: { flex: 1 },
+  collegeNameHindi: {
     textAlign: 'center',
-    color: '#6b7280',
-    fontSize: 10,
-    borderTop: '1 solid #e5e7eb',
-    paddingTop: 15,
+    marginBottom: 5,
+    fontSize: 15, 
+    fontWeight: 'bold', 
+    color: '#1f2937', 
+    fontFamily: 'NotoSansDevanagari' // Use Devanagari font for Hindi text
   },
-  watermark: {
-    position: 'absolute',
-    bottom: 60,
-    right: 40,
-    fontSize: 8,
-    color: '#9ca3af',
-    transform: 'rotate(-45deg)',
+  collegeNameEnglish: {
+    textAlign: 'center', 
+    fontSize: 13, 
+    fontWeight: 'bold', 
+    color: '#1f2937', 
+    fontFamily: 'Helvetica' // Use Helvetica for English text
   },
-  headerMetadata: {
+  headerMetadata: { 
+    fontSize: 8, 
+    color: '#9ca3af', 
+    textAlign: 'right', 
+    marginTop: 5 
+  },
+  section: { marginBottom: 20 },
+  sectionTitle: { 
+    fontSize: 12, 
+    fontWeight: 'bold', 
+    color: '#1f2937',  
+    marginBottom: 10, 
+    borderBottom: '1px solid #d1d5db' 
+  },
+  gridRow: { 
+    flexDirection: 'row', 
+    flexWrap: 'wrap', 
+    gap: 10 
+  },
+  gridItem: { 
+    width: '33.33%', // 3 columns
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 5,
-    color: '#6b7280',
-    fontSize: 10,
+    marginBottom: 2
   },
+  label: { width: 100, fontSize: 10, color: '#1f2937', fontWeight: 'semibold', fontFamily: 'Helvetica' },
+  value: { fontSize: 10, color: '#1f2937', flex: 1, fontFamily: 'Helvetica' },
+  table: { 
+    border: '1px solid #e5e7eb', 
+    borderRadius: 4, 
+    overflow: 'hidden' 
+  },
+  tableHeader: { 
+    flexDirection: 'row', 
+    backgroundColor: '#e5e7eb', 
+    padding: 8 
+  },
+  tableRow: { 
+    flexDirection: 'row', 
+    padding: 8, 
+    borderTop: '1px solid #e5e7eb' 
+  },
+  tableCell: { 
+    fontSize: 9, 
+    color: '#1f2937',
+    textAlign: 'left', 
+    fontFamily: 'Helvetica' 
+  },
+  footer: { 
+    fontSize: 8, 
+    color: '#9ca3af', 
+    textAlign: 'center', 
+    position: 'absolute', 
+    bottom: 20, 
+    left: 0, 
+    right: 0, 
+    fontFamily: 'Helvetica' 
+  }
 });
 
 const PlacementPDF = ({ placement }) => (
   <Document>
     <Page size="A4" style={styles.page}>
       <View style={styles.header}>
-        <Text style={styles.title}>Placement Details</Text>
-        <View style={styles.headerMetadata}>
-          <Text style={styles.subtitle}>
-            Reference: PL-{placement._id?.slice(-6).toUpperCase() || 'XXXXXX'}
+        <Image src={NITJlogo} style={styles.logo} />
+        <View style={styles.headerText}>
+          <Text style={styles.collegeNameHindi}>
+            डॉ बी आर अंबेडकर राष्ट्रीय प्रौद्योगिकी संस्थान जालंधर
           </Text>
-          <Text style={styles.subtitle}>
-            Generated on {new Date().toLocaleDateString('en-US', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-              hour: '2-digit',
-              minute: '2-digit'
-            })}
+          <Text style={styles.collegeNameEnglish}>
+            Dr B R Ambedkar National Institute of Technology, Jalandhar - 144008
           </Text>
         </View>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Company Information</Text>
-        <View style={styles.companyDetails}>
-          <View style={styles.row}>
+        <Text style={styles.sectionTitle}>Placement Information</Text>
+        <View style={styles.gridRow}>
+          <View style={styles.gridItem}>
             <Text style={styles.label}>Company Name:</Text>
             <Text style={styles.value}>{placement.company_name || 'N/A'}</Text>
           </View>
-          <View style={styles.row}>
+          <View style={styles.gridItem}>
             <Text style={styles.label}>Placement Type:</Text>
             <Text style={styles.value}>{placement.placement_type || 'N/A'}</Text>
           </View>
-          <View style={styles.row}>
+          <View style={styles.gridItem}>
             <Text style={styles.label}>Batch:</Text>
             <Text style={styles.value}>{placement.batch || 'N/A'}</Text>
           </View>
-          <View style={styles.row}>
+          <View style={styles.gridItem}>
             <Text style={styles.label}>Degree:</Text>
             <Text style={styles.value}>{placement.degree || 'N/A'}</Text>
           </View>
-          <View style={styles.row}>
+          <View style={styles.gridItem}>
             <Text style={styles.label}>CTC:</Text>
             <Text style={styles.value}>
               {placement.ctc >= 1000000 
@@ -175,33 +154,45 @@ const PlacementPDF = ({ placement }) => (
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Selected Students</Text>
-        {placement?.shortlisted_students?.map((student, index) => (
-          <View key={index} style={styles.studentSection}>
-            <Text style={styles.studentHeader}>Student {index + 1}</Text>
-            <View style={styles.studentInfo}>
-              <View style={styles.row}>
-                <Text style={styles.label}>Name:</Text>
-                <Text style={styles.value}>{student.name || 'N/A'}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.label}>Department:</Text>
-                <Text style={styles.value}>{student.department || 'N/A'}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.label}>Email:</Text>
-                <Text style={styles.value}>{student.email || 'N/A'}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text style={styles.label}>Gender:</Text>
-                <Text style={styles.value}>{student.gender || 'N/A'}</Text>
-              </View>
-            </View>
+        <View style={styles.table}>
+          <View style={styles.tableHeader}>
+            <Text style={[styles.tableCell, { fontWeight: 'semibold', flex: 1 }]}>Student Name</Text>
+            <Text style={[styles.tableCell, { fontWeight: 'semibold', flex: 1 }]}>Email Address</Text>
           </View>
-        ))}
+          {placement?.shortlisted_students?.length > 0 ? (
+            placement.shortlisted_students.map((student, index) => (
+              <View key={index} style={styles.tableRow}>
+                <Text style={[styles.tableCell, { flex: 1 }]}>
+                  {student.name || 'N/A'}
+                </Text>
+                <Text style={[styles.tableCell, { flex: 1 }]}>
+                  {student.email || 'N/A'}
+                </Text>
+              </View>
+            ))
+          ) : (
+            <View style={styles.tableRow}>
+              <Text style={[styles.tableCell, { flex: 2 }]}>
+                No students shortlisted yet.
+              </Text>
+            </View>
+          )}
+        </View>
       </View>
 
       <Text style={styles.footer}>
-        This document is automatically generated and confidential. Any unauthorized distribution is strictly prohibited.
+        Shortlisting generated from NITJ Placement Portal
+        <View style={styles.headerMetadata}>
+          <Text>
+            Generated on {new Date().toLocaleDateString('en-US', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </Text>
+        </View>
       </Text>
     </Page>
   </Document>
@@ -215,7 +206,7 @@ const PlacementDetailsDownload = ({ placement }) => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${placement.company_name || 'placement'}-details.pdf`;
+    link.download = `${placement.company_name || 'placement'}-details-${Date.now()}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -224,56 +215,50 @@ const PlacementDetailsDownload = ({ placement }) => {
 
   return (
     <div
-      className="p-3 hover:bg-gray-100 rounded transition-all duration-200 hover:scale-[1.02] cursor-pointer group"
+      className="px-4 py-3 bg-white rounded-lg hover:bg-blue-50 transition-colors duration-200 border-l-3 border hover:border-custom-blue relative cursor-pointer"
       onClick={downloadPDF}
     >
       <div className="flex justify-between items-start">
         <div>
-          <div className="text-gray-800 font-medium mb-1">
+          <div className="text-md font-semibold text-gray-800 mb-1">
             {placement.company_name || 'Company Name Not Available'}
           </div>
-          <div className="text-sm text-gray-600">
+          <div className="text-xs text-gray-600">
             {`${placement.placement_type || 'N/A'} - ${placement.degree || 'N/A'}`}
           </div>
-          <div className="text-sm text-gray-600">
-            {placement.ctc >= 1000000 
-              ? `${(placement.ctc / 1000000).toFixed(2)} LPA` 
-              : `${(placement.ctc / 100000).toFixed(2)} LPA`}
-          </div>
-          <div className="text-xs text-gray-500 mt-1">
+          <div className="text-xs text-gray-400 mt-2">
             {new Date(placement.createdAt).toLocaleDateString('en-US', {
               day: 'numeric',
               month: 'long',
-              year: 'numeric'
+              year: 'numeric',
             })}
           </div>
         </div>
-        <Download 
-          className="w-5 h-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200" 
+        <Download
+          className="w-5 h-5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
         />
       </div>
     </div>
   );
 };
 
-const RecentPlacements = ({ placements = [], loading = false }) => {
+const RecentPlacement = ({ placements = [], loading = false }) => {
   if (loading) {
     return (
       <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
-        <div className="px-6 py-4 bg-custom-blue text-white">
-          <h2 className="text-xl font-semibold">Recent Placements</h2>
+        <div className="px-4 py-3 bg-custom-blue text-white">
+          <h2 className="text-lg font-medium">Recent Placements</h2>
         </div>
         <CardSkeleton />
       </div>
     );
   }
 
-  // Handle the case when placements is undefined or null
   if (!Array.isArray(placements)) {
     return (
       <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
-        <div className="px-6 py-4 bg-custom-blue text-white">
-          <h2 className="text-xl font-semibold">Recent Placements</h2>
+        <div className="px-4 py-3 bg-custom-blue text-white">
+          <h2 className="text-lg font-medium">Recent Placements</h2>
         </div>
         <div className="p-6 text-center text-gray-600">
           No placement data available
@@ -287,10 +272,10 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
       <div className="px-4 py-3 bg-custom-blue text-white">
         <h2 className="text-lg font-medium">Recent Placements</h2>
       </div>
-      <div className={`h-[calc(100%-48px)]`}>
+      <div className="h-[calc(100%-48px)]">
         {loading ? (
           <CardSkeleton />
-        ) : !Array.isArray(placements) || placements.length === 0 ? (
+        ) : placements.length === 0 ? (
           <div className="h-full flex items-center justify-center p-4">
             <div className="p-6 bg-white rounded-lg text-center w-full max-w-md mx-auto">
               <div className="flex justify-center mb-3">
@@ -317,22 +302,12 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
           </div>
         ) : (
           <div className="relative">
-            {/* Timeline Line */}
-            <div className="absolute left-4 top-0 h-full w-0.5 bg-gray-200"></div>
-
-            {/* Placements as Timeline Items */}
             {placements.map((placement, index) => (
               <div
                 key={placement._id || index}
-                className="group relative pl-8 pb-6"
+                className="group relative px-4 py-3"
               >
-                {/* Timeline Dot */}
-                <div className="absolute left-0 top-1 h-3 w-3 bg-custom-blue rounded-full border-2 border-white transform -translate-x-1/2"></div>
-
-                {/* Placement Details */}
-                <div className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border-l-4 border-custom-blue hover:border-blue-600">
-                  <PlacementDetailsDownload placement={placement} />
-                </div>
+                <PlacementDetailsDownload placement={placement} />
               </div>
             ))}
           </div>
@@ -342,4 +317,4 @@ const RecentPlacements = ({ placements = [], loading = false }) => {
   );
 };
 
-export default RecentPlacements;
+export default RecentPlacement;

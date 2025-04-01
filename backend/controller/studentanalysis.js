@@ -5,13 +5,51 @@ export const getStudentAnalytics = async (req, res) => {
     try {
         const students = await Student.find();
         const jobProfiles = await JobProfile.find();
-        
+        console.log("from database",students[0].rollno);
         const rollNumbers = students.map(student => student.rollno);
+        console.log(rollNumbers);
         let erpDataMap = new Map();
+        const axiosInstance = axios.create({
+            transformResponse: [
+                ...axios.defaults.transformResponse,
+                (data) => {
+                    if (data && data.data) {
+                        data.data = data.data.map(student => {
+                            let cleanedRollno = student.rollno;
+                            if (typeof cleanedRollno === 'string') {
+                                // Case 1: Handle malformed stringified object (e.g., '{"rollNumbers":"21110054"')
+                                if (cleanedRollno.startsWith('{"rollNumbers":"')) {
+                                    // Match the roll number between the second pair of quotes
+                                    const match = cleanedRollno.match(/:?"([^"]+)"$/); // Captures "21110054"
+                                    if (match && match[1]) {
+                                        cleanedRollno = match[1]; // e.g., "21110054"
+                                    }
+                                }
+                                // Case 2: Handle valid stringified object (e.g., '{"rollNumbers":"21110054"}')
+                                else if (cleanedRollno.startsWith('{"rollNumbers":') && cleanedRollno.endsWith('}')) {
+                                    try {
+                                        const parsed = JSON.parse(cleanedRollno);
+                                        cleanedRollno = parsed.rollNumbers;
+                                    } catch (e) {
+                                        console.error("Failed to parse rollno:", cleanedRollno);
+                                    }
+                                }
+                                // Case 3: Handle stringified string (e.g., '"21110018"')
+                                else if (cleanedRollno.startsWith('"') && cleanedRollno.endsWith('"')) {
+                                    cleanedRollno = cleanedRollno.replace(/^"|"$/g, '');
+                                }
+                            }
+                            return { ...student, rollno: cleanedRollno };
+                        });
+                    }
+                    return data;
+                }
+            ]
+        });
         try {
-            const response = await axios.post(`${process.env.ERP_SERVER}`, { rollNumbers });
-            const erpStudents = response.data.data.students;
-            console.log(erpStudents);
+            const response = await axiosInstance.post(`${process.env.ERP_SERVER}`, { rollNumbers });
+            const erpStudents = response.data.data;
+            console.log("erpStudents",erpStudents);
             erpStudents.forEach(erpStudent => {
                 erpDataMap.set(erpStudent.rollno, erpStudent);
             });

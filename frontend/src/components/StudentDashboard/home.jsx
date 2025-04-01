@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Graph from "./homeInsightsGraph";
 import RecentPlacements from "./recentplacements";
+import RecentInternship from "./recentinternship";
 import Notification from "../ProfessorDashboard/Notification";
 
 const LoadingSkeleton = () => (
@@ -114,20 +115,7 @@ const StudentDashboard = () => {
 
   const [placements,setPlacements]=useState([]);
 
-  const internships = [
-    { company: "Expedia", role: "Software Engineer", date: "January 13, 2024" },
-    {
-      company: "Accenture",
-      role: "Software Engineer",
-      date: "January 12, 2024",
-    },
-    { company: "Company A", role: "Data Analyst", date: "January 10, 2024" },
-    {
-      company: "Company B",
-      role: "Backend Developer",
-      date: "January 9, 2024",
-    },
-  ];
+  const [internships,setInternships]=useState([]);
 
   const fetchPlacements = async () => {
     setLoading(true);
@@ -155,6 +143,18 @@ const StudentDashboard = () => {
  
   }
 }
+  const recentinternship=async()=>{
+    setLoading(true);
+    try {
+      const response=await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/internships/last-seven-days`,{withCredentials:true});
+      console.log(response.data);
+      setInternships(response.data);
+ 
+  }
+  catch(error){
+ 
+  }
+}
 
   useEffect(() => {
     fetchPlacements();
@@ -162,6 +162,9 @@ const StudentDashboard = () => {
 
   useEffect(() => {
     recentplacements();
+  }, []);
+  useEffect(() => {
+    recentinternship();
   }, []);
 
   const NotificationCard = ({ isLoading }) => {
@@ -344,41 +347,7 @@ const StudentDashboard = () => {
 
          
           {/* Recent Internships Card */}
-          <div className="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 transition-all duration-300 hover:shadow-xl h-[320px]">
-            <div className="px-4 py-3 bg-custom-blue text-white">
-              <h2 className="text-lg font-medium">Recent Internships</h2>
-            </div>
-            <div
-              className={`p-4 h-[calc(100%-48px)] ${
-                internships.length > 2
-                  ? "overflow-y-auto scrollbar-thin scrollbar-thumb-custom-blue scrollbar-track-gray-200"
-                  : "overflow-y-hidden"
-              }`}
-            >
-              {loading ? (
-                <CardSkeleton />
-              ) : (
-                <div className="space-y-4">
-                  {internships.map((internship, index) => (
-                    <div
-                      key={index}
-                      className="p-3 hover:bg-gray-100 rounded transition-all duration-200 hover:scale-[1.02]"
-                    >
-                      <div className="text-gray-800 font-medium mb-1">
-                        {internship.company}
-                      </div>
-                      <div className="text-sm text-gray-600">
-                        {internship.role}
-                      </div>
-                      <div className="text-xs text-gray-500 mt-1">
-                        {internship.date}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+         <RecentInternship internships={internships} loading={loading}/>
         </div>
         <Notification/>
         <Graph />

@@ -63,7 +63,7 @@ const JobApplications = () => {
     switch (activeTab) {
       case "upcoming":
         return liveNotAppliedJobs.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {liveNotAppliedJobs.map((job) => (
               <JobCard
                 key={job.job_id}
@@ -84,7 +84,7 @@ const JobApplications = () => {
 
       case "applied":
         return appliedJobs.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {appliedJobs.map((job) => (
               <JobCard
                 key={job.job_id}
@@ -105,7 +105,7 @@ const JobApplications = () => {
 
       case "notApplied":
         return notAppliedJobs.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             {notAppliedJobs.map((job) => (
               <JobCard
                 key={job.job_id}

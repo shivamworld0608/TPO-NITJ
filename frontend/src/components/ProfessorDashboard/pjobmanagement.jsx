@@ -784,17 +784,20 @@ const JobProfilesonp = () => {
         </>
       ) : (
         <>
-          <div className="flex sm:flex-row flex-col sm:space-x-4 items-center justify-center ">
-            <h1 className="text-4xl font-bold text-center mb-8 text-custom-blue">
-              Job Profiles Dashboard
-            </h1>
-            <button
-              className="bg-custom-blue text-white p-3 rounded-full hover:bg-blue-600 transition-colors"
-              onClick={() => setShowCreateJob(true)}
-            >
-              <span>Create Job Profile</span>
-            </button>
-          </div>
+          <div className="flex sm:flex-row flex-col items-center justify-between px-4">
+  <div className="flex-1"></div> {/* Empty div to balance the layout */}
+  <h1 className="text-4xl font-bold text-center mb-8 sm:mb-0 text-custom-blue">
+    Job Profiles Dashboard
+  </h1>
+  <div className="flex-1 flex justify-end">
+    <button
+      className="bg-custom-blue text-white p-3 rounded-full hover:bg-blue-600 transition-colors"
+      onClick={() => setShowCreateJob(true)}
+    >
+      <span>Create Job Profile</span>
+    </button>
+  </div>
+</div>
 
           <div className="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
             <h3 className="text-lg font-semibold mb-4">Filter Jobs</h3>

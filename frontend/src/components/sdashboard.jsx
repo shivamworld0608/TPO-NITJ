@@ -16,7 +16,8 @@ import {
   faCalendar,
   faNoteSticky,
   faHammer,
-  faBook
+  faBook,
+  faCheckSquare
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -40,6 +41,8 @@ import ResumeBuilder from "./StudentDashboard/resume.jsx";
 import ChangePasswordForm from "./changepass.jsx";
 import Others from "./StudentDashboard/others.jsx";
 import QuestionBank from "./StudentDashboard/questionbank.jsx";
+import MockAssessmentStudentDashboard from "./StudentDashboard/mockassessment.jsx";
+import AssessmentAttempt from "./StudentDashboard/assessmentattempt.jsx";
 
 
 const StudentDashboard = () => {
@@ -111,6 +114,11 @@ const StudentDashboard = () => {
       path: "/sdashboard/question-bank",
       label: "Question Bank",
       icon: faBook,
+    },
+    {
+      path: "/sdashboard/mock-assessment",
+      label: "Mock Assessment",
+      icon: faCheckSquare,
     },
 /*     { path: "/sdashboard/policy-guidlines", label: "Policy & Guidlines", icon: faNoteSticky },
 /*     { path: "/sdashboard/resume", label: "Resume", icon: faNoteSticky }, */
@@ -303,6 +311,8 @@ const StudentDashboard = () => {
             {/* <Route path="mailbox" element={<MailboxComponent />} /> */}
             <Route path="shared-experience" element={<SharedExperience />} />
             <Route path="question-bank" element={<QuestionBank />} />
+            <Route path="mock-assessment" element={<MockAssessmentStudentDashboard/>} />
+     {/*        <Route path="assessment-attempt/:attemptId" element={<AssessmentAttempt/>} /> */}
             <Route path="profile" element={<Profile />} />
             <Route path="request-help" element={<Request />} />
             <Route path="policy-guidlines" element={<PDFDownloadCards />} />

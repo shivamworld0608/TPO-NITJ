@@ -57,7 +57,7 @@ const GD = () => {
   const renderTabContent = () => {
     if (activeTab === "upcoming") {
       return upcomingJobs.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {upcomingJobs.map((gd, index) => (
             <Gdcard
               key={index}
@@ -79,7 +79,7 @@ const GD = () => {
 
     if (activeTab === "past") {
       return previousJobs.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {previousJobs.map((gd, index) => (
             <Gdcard
               key={index}

@@ -18,6 +18,8 @@ import OaLinkManager from "./oalink";
 import OthersLinkManager from "./otherslink";
 import AuditLogs from "../AuditLogs";
 import { FaArrowLeft } from "react-icons/fa";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import {
   Tooltip,
   TooltipContent,
@@ -637,21 +639,35 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
           )}
         </div>
 
-        <div className="flex items-center">
-          <strong className="w-1/3 text-gray-800">Description:</strong>
-          {editingSection === "basic" ? (
-            <textarea
+        <div className="flex items-start">
+        <strong className="w-1/3 text-gray-800">Description:</strong>
+        {editingSection === "basic" ? (
+          <div className="flex-1">
+            <ReactQuill
               value={editedJob.jobdescription || ""}
-              onChange={(e) =>
-                handleInputChange("basic", "jobdescription", e.target.value)
+              onChange={(value) =>
+                handleInputChange("basic", "jobdescription", value)
               }
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              rows={4}
+              className="border border-gray-300 rounded-lg"
+              theme="snow"
+              modules={{
+                toolbar: [
+                  [{ header: [1, 2, false] }],
+                  ["bold", "italic", "underline", "strike"],
+                  [{ list: "ordered" }, { list: "bullet" }],
+                  ["link"],
+                  ["clean"],
+                ],
+              }}
             />
-          ) : (
-            <span className="flex-1">{editedJob.jobdescription}</span>
-          )}
-        </div>
+          </div>
+        ) : (
+          <div
+            className="flex-1"
+            dangerouslySetInnerHTML={{ __html: editedJob.jobdescription || "" }}
+          />
+        )}
+      </div>
 
         <div className="flex items-center">
           <strong className="w-1/3 text-gray-800">Deadline:</strong>

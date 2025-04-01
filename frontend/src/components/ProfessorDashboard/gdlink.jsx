@@ -118,7 +118,7 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
       </div>
     <div className="max-w-4xl mx-auto bg-white p-4 sm:p-6 md:p-8 rounded-2xl shadow-2xl">
       <div className="flex justify-between items-center mb-6">
-        <div className="flex space-x-4 w-2/3">
+        <div className="flex sm:flex-row flex-col space-y-4 sm:space-y-0 sm:space-x-4 w-2/3">
           <input
             type="text"
             value={commonLink}
@@ -134,7 +134,7 @@ const GDLinkManager = ({ jobId, stepIndex, onClose, gdLinks, onUpdateLinks }) =>
           </button>
         </div>
         <div className="flex items-center space-x-4">
-          <label className="inline-flex items-center cursor-pointer">
+          <label className="inline-flex sm:flex-row flex-col items-center cursor-pointer">
             <input
               type="checkbox"
               checked={allLinksVisible}

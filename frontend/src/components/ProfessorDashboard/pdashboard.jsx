@@ -49,6 +49,7 @@ import ContactRequests from "./contactus.jsx";
 import ConversationLog from "./conversation.jsx";
 import AddStudentForm from "./addstudents.jsx";
 import RecruiterForm from "./addrecruiter.jsx";
+import MockAssessmentProfessorDashboard from "./mockassessment.jsx"
 import { FaRegComment } from "react-icons/fa";
 
 
@@ -102,9 +103,10 @@ const Pdashboard = () => {
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
     {label:"Student",icon:faUser, path:"/pdashboard/student-analysis"},
+    {label:"Mock Assessment",icon:faUser, path:"/pdashboard/mock-assessment"},
     { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
     // {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
-    // { label: "Placement Insights", icon: faChartBar, path: "/pdashboard/placement-insights" },
+    { label: "Placement Reports", icon: faChartBar, path: "/pdashboard/placement-insights" },
  /*    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" }, */
     { label: "User Requests", icon: faContactCard, path: "/pdashboard/contact-request" },
     { label: "Add students", icon: faUserPlus, path: "/pdashboard/add-students" },
@@ -297,8 +299,8 @@ const Pdashboard = () => {
             <Route path="notifications" element={<PNotifications />} />
             {/* <Route path="pmailbox" element={<Mailbox />} /> */}
             <Route path="help-requests" element={<RequestHelpManager />} />
-            <Route path="company-analysis" element={<StudentAnalyticsDashboard />} />
             <Route path="student-analysis" element={<StudentAnalyticsDashboard />} />
+            <Route path="mock-assessment" element={<MockAssessmentProfessorDashboard/>} />
             <Route path="experience-sharing" element={<ExperienceSharing />} />
             <Route path="contact-request" element={<ContactRequests />} />
             <Route path="conversation" element={<ConversationLog />} />

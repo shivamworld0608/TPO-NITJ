@@ -159,7 +159,7 @@ export const LockedResendOTP = async (req, res) => {
   
   export const login = async (req, res) => {
       try {
-          const { email, password, code } = req.body;
+          const { email, password/* code */ } = req.body;
           let loginAttempt = await LoginAttempt.findOne({ email });
           if (loginAttempt && loginAttempt.isLocked) {
               return res.status(400).json({ message: "Account locked. Please check your email for OTP." });
@@ -221,9 +221,9 @@ export const LockedResendOTP = async (req, res) => {
               return res.status(401).json({ message: "Invalid password" });
           }
   
-          if (code && code !== '21cm') {
+/*           if (code && code !== '21cm') {
               return res.status(401).json({ message: "Invalid code" });
-          }
+          } */
   
           if (loginAttempt) {
               await LoginAttempt.deleteOne({ email });
@@ -252,7 +252,7 @@ export const LockedResendOTP = async (req, res) => {
             try {
                 const rollNumbers = [student.rollno];
                 const response = await axios.post(`${process.env.ERP_SERVER}`, { rollNumbers });
-                const erpStudents = response.data.data.students;
+                const erpStudents = response.data.data;
                 const erpData = erpStudents[0];
 
                 const updatedStudent = {

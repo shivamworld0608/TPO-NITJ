@@ -126,12 +126,12 @@ const Request = () => {
 
   return (
     <div className="p-6 min-h-screen">
-      <div className="flex ">
+      <div className="flex justify-center items-center">
         <div className="w-9/12">
 
         </div>
 
-        <div className=" border border-gray-300 rounded-3xl bg-gray-50">
+        <div className="flex sm:flex-col flex-row border border-gray-300 rounded-3xl bg-gray-50 mb-5">
 
           <button
             className={`px-4 py-2 rounded-3xl ${activeTab === "request"
