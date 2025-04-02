@@ -38,10 +38,6 @@ const VehicleRequisitionSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  purposeType: {
-    type: String,
-    enum: ['Non-Official', 'Official'],
-  },
   supportingDocument: {
     type: String,
     trim: true

@@ -7,17 +7,18 @@ import VisitorTab from "./visitortab";
 import VehicleTab from "./vehicletab";
 import RoomTab from "./roomtab";
 import FoodTab from "./foodtab";
+import { useSelector } from "react-redux";
 
 function TravelPlanner() {
   const [step, setStep] = useState(0);
-
+  const {userData} = useSelector((state) => state.auth);
   const [visitorDetails, setVisitorDetails] = useState({
     purpose: "",
-    visitorName: "",
-    designation: "",
-    organization: "",
+    visitorName: userData.name || "",
+    designation: userData.designation || "",
+    organization: userData.company || "",
     contact: "",
-    email: "",
+    email: userData.email || "",
     expectedVisitors: "",
     companions: [""],
   });
