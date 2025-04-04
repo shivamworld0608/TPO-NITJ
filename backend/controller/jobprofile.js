@@ -386,7 +386,7 @@ export const getJobProfiletostudent = async (req, res) => {
     const rollNumbers=[student.rollno];
     console.log(rollNumbers);
     const response=await axios.post(`${process.env.ERP_SERVER}`,{rollNumbers});
-    const erpStudents = response.data.data;
+    const erpStudents = response.data.data.students;
     const erpData = erpStudents[0];
     console.log(erpData);
     if (!studentId) {
@@ -544,7 +544,7 @@ export const checkEligibility = async (req, res) => {
     const student = await Student.findById({_id:studentId});
     const rollNumbers=[student.rollno];
     const response=await axios.post(`${process.env.ERP_SERVER}`,{rollNumbers});
-    const erpStudents = response.data.data;
+    const erpStudents = response.data.data.students;
     if (!erpStudents || !erpStudents.length) {
       return res.status(404).json({ message: "Updated student details not found in ERP" });
     }
@@ -604,6 +604,7 @@ export const checkEligibility = async (req, res) => {
     const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
     const studentClassIndex = jobClassOrder.indexOf(updatedStudent.placementstatus);
   /*   const jobClassIndex = jobClassOrder.indexOf(job.job_class); */
+  let jobClassIndex;
      if(job.ctc>=20){
        jobClassIndex = 3;
      }
