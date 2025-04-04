@@ -19,9 +19,9 @@ const Home = () => {
       <Navbar/>
       <div className=""><HeroSection /></div>
       <div className=" max-w-full mx-auto "><AboutUs /></div>
-      <div className="max-w-full mx-auto "><TpoMessage /></div>
+      <div className="max-w-full mx-auto bg-gray-50 py-10"><TpoMessage /></div>
       <div className="max-w-7xl mx-auto mt-24"><RecruitmentProcess /></div>
-      <div className="max-w-full mx-auto  mt-24"><WhyRecruit /></div>
+      <div className="max-w-full mx-auto bg-gray-50 mt-12 pt-12"><WhyRecruit /></div>
       <div className="max-w-7xl mx-auto "><PlacementHighlights /></div> 
       <div className="max-w-7xl mx-auto"><EventsSection/></div>
       <div className="max-w-7xl mx-auto mt-24 mb-16 pt-15 px-6"><ImageSlider/></div>   

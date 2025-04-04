@@ -61,7 +61,7 @@ const WhyRecruit = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-blue-300 to-white">
+    <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         {/* Header Section */}
         <motion.div
@@ -109,10 +109,11 @@ const WhyRecruit = () => {
         key={index}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        transition={{ type: "spring", stiffness: 300 }}
-        className="overflow-hidden transition-all duration-300 hover:shadow-lg bg-white rounded-lg"
+        transition={{easings:"easeOut", stiffness: 600,damping:100 }}
+        className="overflow-hidden transition-all duration-300 bg-white rounded-lg"
       >
         <Card>
+          <div className="hover:shadow-lg">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-2xl font-bold">{stat.title}</CardTitle>
             {stat.icon}
@@ -144,6 +145,7 @@ const WhyRecruit = () => {
               )}
             </Button>
           </CardContent>
+          </div>
         </Card>
       </motion.div>
     ))}
