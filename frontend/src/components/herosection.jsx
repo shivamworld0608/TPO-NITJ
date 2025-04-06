@@ -36,10 +36,10 @@ function HeroSection() {
 
   return (
     <>
-      <div className="relative overflow-hidden flex flex-col items-center justify-center lg:mt-0 -mt-10">
+      <div className="relative overflow-hidden flex flex-col items-center justify-center h-[100vh]">
         <div className="absolute grid grid-cols-2 top-0 left-0 right-0 bottom-0">
           <div
-            className={`relative gate1 w-full sm:h-[100vh] h-[100vh] bg-white z-[1000] transition-all duration-[1s] ${
+            className={`relative gate1 w-full h-full bg-white z-[1000] transition-all duration-[1s] ${
               slideIn
                 ? "opacity-0 -translate-x-full"
                 : "translate-x-0"
@@ -54,7 +54,7 @@ function HeroSection() {
             </p>
           </div>
           <div
-            className={`relative gate2sm:h-[100vh] h-[100vh] bg-white z-[1000] transition-all duration-[1s]  ${
+            className={`relative gate2 h-full bg-white z-[1000] transition-all duration-[1s]  ${
               slideIn
                 ? "opacity-0 translate-x-full"
                 : "translate-x-0"

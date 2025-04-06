@@ -7,18 +7,12 @@ const TpoMessage = () => {
       <div className="flex flex-col justify-center align-center p-4">
           <div className="max-w-7xl w-full mx-auto">
             <div className="flex flex-col md:flex-row">
-              <div className="md:w-1/3 h-full relative group overflow-hidden">
+              <div className="md:w-1/3 h-full relative group overflow-hidden rounded-full">
                 <img
                   src="/headPhoto2.png"
                   alt="Director portrait"
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-in-out"
                 />
-                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-gray-800 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                  <h2 className="text-3xl font-semibold text-white mb-2 transform group-hover:translate-x-2 transition-transform duration-300">
-                    Dr. Ajay Gupta
-                  </h2>
-                  <p className="text-lg text-gray-200">CTP Head, NIT Jalandhar</p>
-                </div>
               </div>
               <div className="md:w-2/3 p-8 flex flex-col justify-between">
                 <div className="text-gray-500 text-6xl mb-6 transform animate__animated animate__fadeIn animate__delay-1s">
@@ -86,18 +80,12 @@ const TpoMessage = () => {
                   </div>
                 </div>
               </div>
-              <div className="md:w-1/3 h-full relative group overflow-hidden">
+              <div className="md:w-1/3 h-full relative group overflow-hidden rounded-full">
                 <img
                   src="/headPhoto2.png"
                   alt="Director portrait"
                   className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500 ease-in-out"
                 />
-                <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-gray-800 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                  <h2 className="text-3xl font-semibold text-white mb-2 transform group-hover:translate-x-2 transition-transform duration-300">
-                    Dr. Ajay Gupta
-                  </h2>
-                  <p className="text-lg text-gray-200">CTP Head, NIT Jalandhar</p>
-                </div>
               </div>
             </div>
           </div>
