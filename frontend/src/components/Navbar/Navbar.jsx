@@ -40,9 +40,9 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className="w-full m-0 absolute top-0 left-0 z-40">
+    <div className="w-full m-0">
       {/* Top Bar */}
-      <div className="bg-custom-ck text-white m-0">
+      <div className="bg-custom-blue text-white m-0">
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-8">
             {/* Add social icons or other content here if needed */}
@@ -105,7 +105,7 @@ const Navbar = () => {
 
 
       {/* Main Navigation */}
-      <div className="bg-custom-ck text-white sticky top-0 z-50">
+      <div className="bg-custom-blue text-white sticky top-0 z-50">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-10 md:h-10 relative">
             {/* Mobile Menu Button */}
@@ -120,11 +120,11 @@ const Navbar = () => {
             <div className="hidden md:flex items-center space-x-6 flex-1 justify-evenly font-semibold">
 
               <Link to="/">
-                <Home size={20} className="ck-hover-text cursor-pointer" />
+              <Home size={20} className="hover:text-blue-200 cursor-pointer" />
               </Link>
-              <Link to="/placements" className="ck-hover-text text-base lg:text-lg">PLACEMENTS</Link>
-              <Link to="/internships" className="ck-hover-text text-base lg:text-lg">INTERNSHIPS</Link>
-              <Link to="/alumini" className="ck-hover-text text-base lg:text-lg">ALUMINI</Link>
+              <Link to="/placements" className="hover:text-blue-200 text-base lg:text-lg">PLACEMENTS</Link>
+               <Link to="/internships" className="hover:text-blue-200 text-base lg:text-lg">INTERNSHIPS</Link>
+               <Link to="/alumini" className="hover:text-blue-200 text-base lg:text-lg">ALUMINI</Link>
             </div>
 
             {/* Logo */}
@@ -145,24 +145,24 @@ const Navbar = () => {
 
             {/* Desktop Navigation - Right Side */}
             <div className="hidden md:flex items-center space-x-6 flex-1 justify-evenly font-semibold">
-              <Link to="/faq" className="ck-hover-text text-base lg:text-lg">FAQ's</Link>
-              <Link to="/team" className="ck-hover-text text-base lg:text-lg">PEOPLE</Link>
-              <Link to="/login" className="ck-hover-text text-base lg:text-lg">LOGIN</Link>
+            <Link to="/faq" className="hover:text-blue-200 text-base lg:text-lg">FAQ's</Link>
+               <Link to="/team" className="hover:text-blue-200 text-base lg:text-lg">PEOPLE</Link>
+               <Link to="/login" className="hover:text-blue-200 text-base lg:text-lg">LOGIN</Link>
             </div>
 
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
-              <div className="absolute top-10  w-full bg-custom-ck md:hidden shadow-lg z-40">
+              <div className="absolute top-10  w-full bg-custom-blue md:hidden shadow-lg z-40">
                 <div className="flex flex-col items-center py-4 space-y-4">
                   <Link to="/">
-                    <Home size={20} className="ck-hover-text cursor-pointer" />
+                  <Home size={20} className="hover:text-blue-200 cursor-pointer" />
                   </Link>
-                  <Link to="/placements" className="ck-hover-text text-base lg:text-lg">PLACEMENTS</Link>
-                  <Link to="/internships" className="ck-hover-text text-base lg:text-lg">INTERNSHIPS</Link>
-                  <Link to="/alumini" className="ck-hover-text text-base lg:text-lg">ALUMINI</Link>
-                  <Link to="/faq" className="ck-hover-text text-base lg:text-lg">FAQ's</Link>
-                  <Link to="/team" className="ck-hover-text text-base lg:text-lg">PEOPLE</Link>
-                  <Link to="/login" className="ck-hover-text text-base lg:text-lg">LOGIN</Link>
+                  <Link to="/placements" className="hover:text-blue-200 text-base lg:text-lg">PLACEMENTS</Link>
+                   <Link to="/internships" className="hover:text-blue-200 text-base lg:text-lg">INTERNSHIPS</Link>
+                   <Link to="/alumini" className="hover:text-blue-200 text-base lg:text-lg">ALUMINI</Link>
+                   <Link to="/faq" className="hover:text-blue-200 text-base lg:text-lg">FAQ's</Link>
+                   <Link to="/team" className="hover:text-blue-200 text-base lg:text-lg">PEOPLE</Link>
+                   <Link to="/login" className="hover:text-blue-200 text-base lg:text-lg">LOGIN</Link>
                 </div>
               </div>
             )}

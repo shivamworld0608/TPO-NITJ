@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 @media print {
@@ -9,7 +11,7 @@ body{
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
-	font-family: 'Jost',sans-serif;
+	/* font-family: 'Jost',sans-serif; */
 }
 #root
 {
@@ -25,14 +27,14 @@ body{
 	color: #205781;
 }
 .main-container {
-	font-family: 'Jost';
+	font-family: 'Lato';
 	width: fit-content;
 	margin-left: auto;
 	margin-right: auto;
 }
 
 .ck-content {
-	font-family: 'Jost';
+	font-family: 'Lato';
 	line-height: 1.6;
 	word-break: break-word;
 }
@@ -43,7 +45,7 @@ body{
 }
 
 .ck-content h3.category {
-	font-family: 'Jost';
+	font-family: 'Lato';
 	font-size: 20px;
 	font-weight: bold;
 	color: #555;
@@ -53,7 +55,7 @@ body{
 }
 
 .ck-content h2.document-title {
-	font-family: 'Jost';
+	font-family: 'Lato';
 	font-size: 50px;
 	font-weight: bold;
 	margin: 0;
@@ -62,7 +64,7 @@ body{
 }
 
 .ck-content h3.document-subtitle {
-	font-family: 'Jost';
+	font-family: 'Lato';
 	font-size: 20px;
 	color: #555;
 	margin: 0 0 1em;
@@ -93,7 +95,7 @@ body{
 }
 
 .ck-content blockquote.side-quote {
-	font-family: 'Jost';
+	font-family: 'Lato';
 	font-style: normal;
 	float: right;
 	width: 35%;

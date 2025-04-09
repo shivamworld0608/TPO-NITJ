@@ -257,10 +257,10 @@ export const LockedResendOTP = async (req, res) => {
                 console.log(erpData)
                 const updatedStudent = {
                     ...student.toObject(),
-                    cgpa: erpData.cgpa,
-                    batch: erpData.batch,
-                    active_backlogs: erpData.active_backlogs,
-                    backlogs_history: erpData.backlogs_history,
+                    cgpa: erpStudents.cgpa,
+                    batch: erpStudents.batch,
+                    active_backlogs: erpStudents.active_backlogs,
+                    backlogs_history: erpStudents.backlogs_history,
                 };
 
                 return res.status(200).json({ message: "Login Successful", user: updatedStudent, userType });

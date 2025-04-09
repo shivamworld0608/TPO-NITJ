@@ -24,28 +24,28 @@ const WhyRecruit = () => {
   const stats = [
     {
       title: "Alumni Network",
-      icon: <Share2 className="w-8 h-8 text-custom-ck" />,
+      icon: <Share2 className="w-8 h-8 text-custom-blue" />,
       description: "Our alumni hold senior positions globally, showcasing our education quality.",
       expanded:
         "Spanning Fortune 500 companies, research institutions, and startups, our alumni have leadership roles, groundbreaking research, and entrepreneurial success stories.",
     },
     {
       title: "National Ranking",
-      icon: <BarChart2 className="w-8 h-8 text-custom-ck" />,
+      icon: <BarChart2 className="w-8 h-8 text-custom-blue" />,
       description: "Ranked 52nd in Engineering, NIRF 2022; 2nd in Punjab among Govt. Engineering Institutes.",
       expanded:
         "Our consistent rankings improvement highlights academic excellence, research output, and industry collaboration, earning multiple awards for innovation.",
     },
     {
       title: "Rigorous Selection",
-      icon: <Users className="w-8 h-8 text-custom-ck" />,
+      icon: <Users className="w-8 h-8 text-custom-blue" />,
       description: "Admissions through JEE MAINS, GATE, ensuring top-tier talent for recruiters.",
       expanded:
         "High cutoff ranks ensure a competitive peer group. Special provisions for international students promote campus diversity.",
     },
     {
       title: "Holistic Development",
-      icon: <Grid className="w-8 h-8 text-custom-ck" />,
+      icon: <Grid className="w-8 h-8 text-custom-blue" />,
       description: "15 departments and 10 student clubs for technical and soft skills development.",
       expanded:
         "Workshops, leadership programs, and competitions develop skills. State-of-the-art labs foster hands-on learning.",
@@ -71,7 +71,7 @@ const WhyRecruit = () => {
           className="text-center mb-16"
         >
           <h1 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
-            Why Recruit From <span className="text-custom-ck">NIT Jalandhar?</span>
+            Why Recruit From <span className="text-custom-blue">NIT Jalandhar?</span>
           </h1>
           <p className="text-md mt-8 font-normal text-gray-600 mx-auto leading-relaxed text-base sm:text-sm lg:text-lg">
             Since 1987, NIT Jalandhar has been shaping the future of technology and innovation.
@@ -161,7 +161,7 @@ const WhyRecruit = () => {
               transition={{ duration: 0.8 }}
               className="mt-8 bg-white p-8 shadow-lg"
             >
-              <h2 className="text-3xl font-bold mb-6 text-custom-ck">Our Excellence</h2>
+              <h2 className="text-3xl font-bold mb-6 text-custom-blue">Our Excellence</h2>
               <p className="text-gray-600 text-lg mb-8 leading-relaxed">
                 Distinguished faculty, substantial government funding, and top-tier research.
               </p>
@@ -195,7 +195,7 @@ const WhyRecruit = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mb-16 text-center bg-white p-8 shadow-xl"
         >
-          <h2 className="text-4xl font-bold text-custom-ck mb-6">Ready to Recruit Top Talent?</h2>
+          <h2 className="text-4xl font-bold text-custom-blue mb-6">Ready to Recruit Top Talent?</h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
             Join leading companies who have found their star performers at NIT Jalandhar.
           </p>

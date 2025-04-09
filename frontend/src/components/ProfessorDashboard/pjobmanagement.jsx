@@ -31,7 +31,7 @@ import {
 import { FaArrowLeft, FaSpinner, FaFileUpload } from "react-icons/fa";
 
 import Notification from "./Notification";
-import MealArrangementForm from "./mealarrangmentform";
+// import MealArrangementForm from "./mealarrangmentform";
 import GuestHouseBookingForm from "./roomarrangement";
 import VehicleRequisitionForm from "./vehiclerequisitionform";
 
@@ -42,7 +42,7 @@ const JobProfilesonp = () => {
     completed: [],
     feedbackByCompany: {},
     jafByCompany: {},
-    mealArrangements: [],
+    // mealArrangements: [],
     guestHouseBookings: [],
     vehicleRequisitions: [],
   });
@@ -307,15 +307,15 @@ const JobProfilesonp = () => {
     setActiveComponent(componentName);
   };
 
-  const hasMealArrangement = jobProfiles.mealArrangements.find(
-    (meal) => meal.visitingOrganization === selectedCompany
-  );
+  // const hasMealArrangement = jobProfiles?.mealArrangements?.find(
+  //   (meal) => meal.visitingOrganization === selectedCompany
+  // );
 
-  const hasVehicleArrangement = jobProfiles.vehicleRequisitions.find(
+  const hasVehicleArrangement = jobProfiles?.vehicleRequisitions?.find(
     (vehicle) => vehicle.company === selectedCompany
   );
 
-  const hasRoomArrangement = jobProfiles.guestHouseBookings.find(
+  const hasRoomArrangement = jobProfiles?.guestHouseBookings?.find(
     (room) => room.organization === selectedCompany
   );
 
@@ -698,7 +698,7 @@ const JobProfilesonp = () => {
           <div className="mt-8">
             {/* Cards in a single row */}
             <div className="flex flex-wrap gap-4 mb-6">
-              {hasMealArrangement && (
+              {/* {hasMealArrangement && (
                 <Card
                   className="flex-1 min-w-64 cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() => handleCardClick("meal")}
@@ -709,7 +709,7 @@ const JobProfilesonp = () => {
                     </CardTitle>
                   </CardHeader>
                 </Card>
-              )}
+              )} */}
 
               {hasVehicleArrangement && (
                 <Card
@@ -739,7 +739,7 @@ const JobProfilesonp = () => {
             </div>
 
             {/* Display the selected component */}
-            {activeComponent === "meal" && hasMealArrangement && (
+            {/* {activeComponent === "meal" && hasMealArrangement && (
               <div className="w-full flex justify-center mt-6">
                 <div className="max-w-5xl w-full">
                   <h2 className="text-2xl font-bold text-custom-blue mb-4 text-center">
@@ -751,7 +751,7 @@ const JobProfilesonp = () => {
                   />
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Vehicle Arrangement */}
             {activeComponent === "vehicle" && hasVehicleArrangement && (
