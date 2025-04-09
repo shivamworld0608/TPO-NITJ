@@ -244,7 +244,6 @@ const StatCard = ({
   );
 };
 
-// Filter component
 const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
@@ -261,7 +260,7 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
       >
         <div className="flex items-center space-x-2 text-gray-700">
           <Icon type="filter" />
-          <h2 className="text-lg font-medium">Filter Placements</h2>
+          <h2 className="text-lg font-medium">Filter Internships</h2>
         </div>
         <div className={`transition-transform duration-300 ${isFilterOpen ? 'rotate-180' : ''}`}>
           <Icon type="chevron" />
@@ -271,6 +270,7 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
       {isFilterOpen && (
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Company Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <div className="flex items-center gap-2">
@@ -288,6 +288,7 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
               />
             </div>
 
+            {/* Student Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <div className="flex items-center gap-2">
@@ -305,6 +306,7 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
               />
             </div>
 
+            {/* Batch */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <div className="flex items-center gap-2">
@@ -327,6 +329,7 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
               </select>
             </div>
 
+            {/* Department */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <div className="flex items-center gap-2">
@@ -342,21 +345,17 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
               >
                 <option value="">All</option>
                 {[
-                  "CSE",
-                  "ECE",
-                  "EE",
-                  "ME",
-                  "CE",
-                  "IT",
-                  "CH",
-                  "ICE",
-                  "BT",
-                  "TT",
-                  "IPE",
-                  "DS",
-                  "VLSI",
-                  "AI",
-                  "HM",
+                  "Biotechnology", "Chemical Engineering", "Civil Engineering", "Computer Science & Engineering",
+                  "Data Science and Engineering", "Electrical Engineering", "Electronics & Communication Engineering",
+                  "Electronics and VLSI Engineering", "Industrial and Production Engineering", "Information Technology",
+                  "Instrumentation and Control Engineering", "Mathematics and Computing", "Mechanical Engineering",
+                  "Textile Technology", "Structural and Construction Engineering", "Geotechnical and Geo-Environmental Engineering",
+                  "Information Security", "Electric Vehicle Design", "Signal Processing and Machine Learning", "VLSI Design",
+                  "Industrial Engineering and Data Analytics", "Manufacturing Technology With Machine Learning", "Data Analytics",
+                  "Control and Instrumentation", "Machine Intelligence and Automation", "Design Engineering",
+                  "Thermal and Energy Engineering", "Textile Engineering and Management", "Renewable Energy",
+                  "Artificial Intelligence", "Power Systems and Reliability", "Finance", "Human Resource", "Marketing",
+                  "Chemistry", "Mathematics", "Physics"
                 ].map((dept) => (
                   <option key={dept} value={dept}>
                     {dept}
@@ -365,16 +364,17 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
               </select>
             </div>
 
+            {/* Internship Type */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <div className="flex items-center gap-2">
                   <Icon type="type" />
-                  Placement Type
+                  Internship Type
                 </div>
               </label>
               <select
-                name="placement_type"
-                value={filters.placement_type}
+                name="internship_type"
+                value={filters.internship_type}
                 onChange={handleFilterChange}
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
               >
@@ -385,6 +385,48 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
               </select>
             </div>
 
+            {/* Internship Duration */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="flex items-center gap-2">
+                  <Icon type="clock" />
+                  Internship Duration
+                </div>
+              </label>
+              <select
+                name="internship_duration"
+                value={filters.internship_duration}
+                onChange={handleFilterChange}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+              >
+                <option value="">All</option>
+                <option value="2m Intern">2 months</option>
+                <option value="6m Intern">6 months</option>
+                <option value="11m Intern">11 months</option>
+              </select>
+            </div>
+
+            {/* Internship Offer Mode */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="flex items-center gap-2">
+                  <Icon type="mode" />
+                  Internship Offer Mode
+                </div>
+              </label>
+              <select
+                name="internship_offer_mode"
+                value={filters.internship_offer_mode}
+                onChange={handleFilterChange}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+              >
+                <option value="">All</option>
+                <option value="On-Campus">On-Campus</option>
+                <option value="Off-Campus">Off-Campus</option>
+              </select>
+            </div>
+
+            {/* Degree */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <div className="flex items-center gap-2">
@@ -407,6 +449,7 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
               </select>
             </div>
 
+            {/* Gender */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <div className="flex items-center gap-2">
@@ -427,23 +470,24 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
               </select>
             </div>
 
+            {/* Stipend */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <div className="flex items-center gap-2">
                   <Icon type="money" />
-                  CTC
+                  Stipend
                 </div>
               </label>
               <select
-                name="ctc"
-                value={filters.ctc}
+                name="stipend"
+                value={filters.stipend}
                 onChange={handleFilterChange}
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
               >
                 <option value="">All</option>
-                <option value="one">Less than 10 LPA</option>
-                <option value="two">10-20 LPA</option>
-                <option value="three">Greater than 20 LPA</option>
+                <option value="one">Less than 10k</option>
+                <option value="two">10k - 20k</option>
+                <option value="three">Greater than 20k</option>
               </select>
             </div>
           </div>
@@ -468,23 +512,24 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
   );
 };
 
-// Placement Card Component
-const PlacementCard = ({ placement }) => {
+
+const InternshipCard = ({ internship }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showAllStudents, setShowAllStudents] = useState(false);
   const {
     company_name = "",
     company_logo = "",
-    placement_type = "",
-    placement_offer_mode = "On-Campus",
+    internship_type = "",
+    internship_offer_mode = "On-Campus",
     batch = "",
     degree = "",
-    ctc = "0",
+    stipend = "0",
     role = "",
+    internship_duration = "",
     shortlisted_students = [],
-  } = placement;
+  } = internship;
 
-  if (!placement || Object.keys(placement).length === 0) {
+  if (!internship || Object.keys(internship).length === 0) {
     return null;
   }
 
@@ -492,10 +537,10 @@ const PlacementCard = ({ placement }) => {
     ? shortlisted_students
     : shortlisted_students.slice(0, 4);
 
-  const formattedCTC = ctc
-    ? parseInt(ctc) >= 10000000
-      ? `₹ ${(parseInt(ctc) / 10000000).toFixed(2)} Cr`
-      : `₹ ${(parseInt(ctc) / 100000).toFixed(2)} LPA`
+  const formattedStipend = stipend
+    ? parseInt(stipend) >= 100000
+      ? `₹ ${(parseInt(stipend) / 1000).toFixed(0)}K`
+      : `₹ ${stipend}`
     : "N/A";
 
   return (
@@ -513,10 +558,13 @@ const PlacementCard = ({ placement }) => {
               </h3>
               <div className="flex flex-wrap items-center mt-1 gap-2 text-gray-600 text-sm">
                 <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs">
-                  {placement_type}
+                  {internship_type}
                 </span>
                 <span className="bg-purple-50 text-purple-700 px-2 py-1 rounded-md text-xs">
-                  {placement_offer_mode}
+                  {internship_offer_mode}
+                </span>
+                <span className="bg-indigo-50 text-indigo-700 px-2 py-1 rounded-md text-xs">
+                  {(internship_duration).slice(0, 1) + " Months"}
                 </span>
                 <span className="bg-green-50 text-green-700 px-2 py-1 rounded-md text-xs">
                   {batch}
@@ -533,7 +581,7 @@ const PlacementCard = ({ placement }) => {
             </div>
           </div>
           <div className="bg-custom-blue text-white text-sm font-medium px-3 py-1.5 rounded-full shadow-sm whitespace-nowrap">
-            {formattedCTC}
+            {formattedStipend}
           </div>
         </div>
       </div>
@@ -606,42 +654,47 @@ const PlacementCard = ({ placement }) => {
   );
 };
 
-// Main Component
-const PlacementInsights = () => {
+const InternshipInsights = () => {
   const [filters, setFilters] = useState({
     company_name: "",
     student_name: "",
-    placement_type: "",
+    internship_type: "",
     batch: "",
     degree: "",
     gender: "",
     department: "",
-    ctc: "",
+    stipend: "",
+    internship_duration: "",
+    internship_offer_mode: "",
   });
 
-  const [placements, setPlacements] = useState([]);
+  const [internships, setInternships] = useState([]);
   const [insights, setInsights] = useState({
-    totalStudentsPlaced: 0,
+    totalStudentsSelected: 0,
     companiesVisited: 0,
-    averagePackage: 0,
+    averageStipend: 0,
   });
   const [expandedRow, setExpandedRow] = useState(null);
+
   const [loading, setLoading] = useState(false);
-  const [view, setView] = useState("card");
+  const [view, setView] = useState("card"); 
   const [sortBy, setSortBy] = useState("newest");
   const [page, setPage] = useState(1);
   const itemsPerPage = 9;
 
-  const fetchPlacements = async (updatedFilters = filters) => {
+  const fetchInternships = async (updatedFilters = filters) => {
     setLoading(true);
     try {
       const queryParams = new URLSearchParams(
         Object.entries(updatedFilters).filter(([_, value]) => value !== "")
       ).toString();
-      const apiUrl = `${import.meta.env.REACT_APP_BASE_URL}/placements/filter?${queryParams}`;
+
+      const apiUrl = `${import.meta.env.REACT_APP_BASE_URL}/internships/filter?${queryParams}`;
       const response = await axios.get(apiUrl);
-      setPlacements(response.data);
-      const insightsUrl = `${import.meta.env.REACT_APP_BASE_URL}/placements/insights?${queryParams}`;
+      setInternships(response.data);
+
+      const insightsUrl = `${import.meta.env.REACT_APP_BASE_URL}/internships/insights?${queryParams}`;
+
       const insightsResponse = await axios.get(insightsUrl);
       setInsights(insightsResponse.data);
     } catch (error) {
@@ -652,77 +705,84 @@ const PlacementInsights = () => {
   };
 
   useEffect(() => {
-    fetchPlacements();
+    fetchInternships();
   }, []);
 
   const handleClearFilters = () => {
     setFilters({
       company_name: "",
       student_name: "",
-      placement_type: "",
+      internship_type: "",
       batch: "",
       degree: "",
       gender: "",
       department: "",
-      ctc: "",
+      stipend: "",
+      internship_duration: "",
+      internship_offer_mode: "",
     });
-    fetchPlacements({});
+    fetchInternships({});
   };
 
   const applyFilters = () => {
-    fetchPlacements(filters);
+    fetchInternships(filters);
     setPage(1);
   };
 
-  const sortedPlacements = React.useMemo(() => {
-    if (!placements.length) return [];
+  const sortedInternships = React.useMemo(() => {
+    if (!internships.length) return [];
 
-    return [...placements].sort((a, b) => {
+    return [...internships].sort((a, b) => {
       if (sortBy === "newest") {
         return new Date(b.createdAt) - new Date(a.createdAt);
       } else if (sortBy === "oldest") {
         return new Date(a.createdAt) - new Date(b.createdAt);
-      } else if (sortBy === "ctc_high") {
-        return parseInt(b.ctc) - parseInt(a.ctc);
-      } else if (sortBy === "ctc_low") {
-        return parseInt(a.ctc) - parseInt(b.ctc);
+      } else if (sortBy === "stipend_high") {
+        return parseInt(b.stipend || 0) - parseInt(a.stipend || 0);
+      } else if (sortBy === "stipend_low") {
+        return parseInt(a.stipend || 0) - parseInt(b.stipend || 0);
+      } else if (sortBy === "duration_high") {
+        return parseInt(b.internship_duration || 0) - parseInt(a.internship_duration || 0);
+      } else if (sortBy === "duration_low") {
+        return parseInt(a.internship_duration || 0) - parseInt(b.internship_duration || 0);
       }
       return 0;
     });
-  }, [placements, sortBy]);
+  }, [internships, sortBy]);
 
-  const paginatedPlacements = React.useMemo(() => {
+  const paginatedInternships = React.useMemo(() => {
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return sortedPlacements.slice(startIndex, endIndex);
-  }, [sortedPlacements, page]);
+    return sortedInternships.slice(startIndex, endIndex);
+  }, [sortedInternships, page]);
 
-  const totalPages = Math.ceil(sortedPlacements.length / itemsPerPage);
+  const totalPages = Math.ceil(sortedInternships.length / itemsPerPage);
 
   const prepareExportData = () => {
-    return sortedPlacements.map(placement => ({
-      'Company Name': placement.company_name,
-      'Role': placement.role || 'N/A',
-      'Placement Type': placement.placement_type,
-      'Batch': placement.batch,
-      'Degree': placement.degree,
-      'CTC (₹)': parseInt(placement.ctc) >= 10000000
-        ? `${(parseInt(placement.ctc) / 10000000).toFixed(2)} Cr`
-        : `${(parseInt(placement.ctc) / 100000).toFixed(2)} LPA`,
-      'Students Count': placement.shortlisted_students.length,
-      'Date': placement.createdAt
-        ? new Date(placement.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' })
-        : ''
+    return sortedInternships.map(internship => ({
+      'Company Name': internship.company_name,
+      'Role': internship.role || 'N/A',
+      'Internship Type': internship.internship_type || 'N/A',
+      'Offer Mode': internship.internship_offer_mode || 'N/A',
+      'Batch': internship.batch || 'N/A',
+      'Degree': internship.degree || 'N/A',
+      'Stipend (₹)': internship.stipend
+        ? parseInt(internship.stipend) >= 1000
+          ? `${(parseInt(internship.stipend) / 1000).toFixed(1)}K`
+          : internship.stipend
+        : "N/A",
+      'Internship Duration': internship.internship_duration || 'N/A',
+      'Students Count': internship.shortlisted_students?.length || 0,
+      'Date': new Date(internship.createdAt).toLocaleDateString(),
     }));
   };
-
 
   return (
     <div className="bg-gray-50 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-10">
           <h1 className="font-bold text-2xl sm:text-3xl lg:text-4xl text-gray-900 tracking-tight mb-2">
-            Placement{" "}
+            Internship{" "}
             <span className="bg-custom-blue text-transparent bg-clip-text">
               Insights
             </span>
@@ -732,8 +792,8 @@ const PlacementInsights = () => {
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
           <StatCard
-            value={insights.totalStudentsPlaced}
-            label="Students Placed"
+            value={insights.totalStudentsSelected}
+            label="Students Selected"
             bgColor="bg-[#ffead6]"
             borderColor="border-2 border-[#e4bca0]"
             textColor="text-[#b87748]"
@@ -751,11 +811,11 @@ const PlacementInsights = () => {
           />
           <StatCard
             value={
-              insights.average_ctc && insights.average_ctc !== "N/A"
-                ? `₹${insights.average_ctc} LPA`
+              insights.averageStipend && insights.averageStipend !== "N/A"
+                ? `₹${insights.averageStipend} / month`
                 : "N/A"
             }
-            label="Average Package"
+            label="Average Stipend"
             bgColor="bg-[#d7f7e5]"
             borderColor="border-2 border-[#b3d4c2]"
             textColor="text-[#6a987b]"
@@ -808,14 +868,16 @@ const PlacementInsights = () => {
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
-              <option value="ctc_high">Highest CTC</option>
-              <option value="ctc_low">Lowest CTC</option>
+              <option value="stipend_high">Highest Stipend</option>
+              <option value="stipend_low">Lowest Stipend</option>
+              <option value="duration_high">Highest Duration</option>
+              <option value="duration_low">Shortest Duration</option>
             </select>
 
             {/* Export Button */}
             <CSVLink
               data={prepareExportData()}
-              filename={`placements-${new Date().toLocaleDateString()}.csv`}
+              filename={`internships-${new Date().toLocaleDateString()}.csv`}
               className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md shadow-sm text-sm font-medium flex items-center ml-2"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
@@ -826,20 +888,20 @@ const PlacementInsights = () => {
           </div>
         </div>
 
-        {/* Placements List */}
+        {/* Internships List */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         ) : view === "card" ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {paginatedPlacements.length > 0 ? (
-              paginatedPlacements.map((placement, index) => (
-                <PlacementCard key={index} placement={placement} />
+            {paginatedInternships.length > 0 ? (
+              paginatedInternships.map((internship, index) => (
+                <InternshipCard key={index} internship={internship} />
               ))
             ) : (
               <div className="col-span-full flex flex-col items-center justify-center py-12 px-4 text-center">
-                <h3 className="mt-4 text-lg font-medium text-gray-900">No placements found</h3>
+                <h3 className="mt-4 text-lg font-medium text-gray-900">No internships found</h3>
                 <p className="mt-1 text-sm text-gray-500">
                   Try adjusting your filters or search criteria
                 </p>
@@ -865,7 +927,7 @@ const PlacementInsights = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Role
                     </th>
-                    <th className="px-10 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-7 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Type
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -874,8 +936,11 @@ const PlacementInsights = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Degree
                     </th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      Stipend
+                    </th>
                     <th className="px-11 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      CTC
+                      Duration
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Students
@@ -883,50 +948,51 @@ const PlacementInsights = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {paginatedPlacements.length > 0 ? (
-                    paginatedPlacements.map((placement, index) => (
-                      <React.Fragment key={placement._id || index}>
+                  {paginatedInternships.length > 0 ? (
+                    paginatedInternships.map((internship, index) => (
+                      <React.Fragment key={internship._id || index}>
                         <tr className="hover:bg-gray-50">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="w-8 h-8 bg-blue-50 rounded-md flex items-center justify-center text-blue-600 font-semibold">
-                                {placement.company_name.charAt(0)}
+                                {internship.company_name.charAt(0)}
                               </div>
                               <div className="ml-3">
                                 <p className="text-sm font-medium text-gray-800">
-                                  {placement.company_name}
+                                  {internship.company_name}
                                 </p>
                               </div>
                             </div>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                            {placement.role || "N/A"}
+                            {internship.role || "N/A"}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs">
-                              {placement.placement_type}
+                              {internship.internship_type}
                             </span>
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                            {placement.batch}
+                            {internship.batch}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                            {placement.degree}
+                            {internship.degree}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className="bg-custom-blue text-white text-xs font-medium px-2.5 py-1 rounded-full">
-                              {parseInt(placement.ctc) >= 10000000
-                                ? `${(parseInt(placement.ctc) / 10000000).toFixed(2)} Cr`
-                                : `${(parseInt(placement.ctc) / 100000).toFixed(2)} LPA`}
+                              ₹{internship.stipend?.toLocaleString() || "0"}
                             </span>
+                          </td>
+                          <td className="px-12 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {(internship.internship_duration).slice(0, 1)} Months
                           </td>
                           <td className="px-9 py-4 whitespace-nowrap text-sm text-gray-600">
                             <div className="flex items-center space-x-2">
-                              <span>{placement.shortlisted_students.length}</span>
-                              {placement.shortlisted_students.length > 0 && (
+                              <span>{internship.shortlisted_students.length}</span>
+                              {internship.shortlisted_students.length > 0 && (
                                 <button
                                   onClick={() =>
-                                    setExpandedRow(expandedRow === placement._id ? null : placement._id)
+                                    setExpandedRow(expandedRow === internship._id ? null : internship._id)
                                   }
                                   className="text-blue-600 hover:text-blue-800"
                                   title="View Students"
@@ -938,7 +1004,7 @@ const PlacementInsights = () => {
                             </div>
                           </td>
                         </tr>
-                        {expandedRow === placement._id && (
+                        {expandedRow === internship._id && (
                           <tr>
                             <td colSpan="8" className="px-0 py-0">
                               <div className="m-2 rounded-lg bg-gray-50 border border-gray-200 overflow-hidden shadow-sm">
@@ -952,9 +1018,9 @@ const PlacementInsights = () => {
                                   </button>
                                 </div>
                                 <div className="p-4">
-                                  {placement.shortlisted_students.length > 0 ? (
+                                  {internship.shortlisted_students.length > 0 ? (
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                                      {placement.shortlisted_students.map((student, i) => (
+                                      {internship.shortlisted_students.map((student, i) => (
                                         <div
                                           key={i}
                                           className="flex items-center bg-white p-3 rounded-md border border-gray-200 shadow-sm hover:shadow-md hover:bg-blue-50 transition duration-200 ease-in-out"
@@ -982,9 +1048,9 @@ const PlacementInsights = () => {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="7" className="px-6 py-12 text-center">
+                      <td colSpan="8" className="px-6 py-12 text-center">
                         <div className="flex flex-col items-center justify-center">
-                          <h3 className="mt-4 text-lg font-medium text-gray-900">No placements found</h3>
+                          <h3 className="mt-4 text-lg font-medium text-gray-900">No internships found</h3>
                           <p className="mt-1 text-sm text-gray-500">
                             Try adjusting your filters or search criteria
                           </p>
@@ -1005,7 +1071,7 @@ const PlacementInsights = () => {
         )}
 
         {/* Pages */}
-        {sortedPlacements.length > itemsPerPage && (
+        {sortedInternships.length > itemsPerPage && (
           <div className="flex items-center justify-between bg-white px-4 py-3 mt-6 rounded-lg shadow-sm">
             <div className="flex-1 flex justify-between sm:hidden">
               <button
@@ -1034,9 +1100,9 @@ const PlacementInsights = () => {
                 <p className="text-sm text-gray-700">
                   Showing <span className="font-medium">{(page - 1) * itemsPerPage + 1}</span> to{" "}
                   <span className="font-medium">
-                    {Math.min(page * itemsPerPage, sortedPlacements.length)}
+                    {Math.min(page * itemsPerPage, sortedInternships.length)}
                   </span>{" "}
-                  of <span className="font-medium">{sortedPlacements.length}</span> results
+                  of <span className="font-medium">{sortedInternships.length}</span> results
                 </p>
               </div>
               <div>
@@ -1143,4 +1209,4 @@ const PlacementInsights = () => {
     </div>
   );
 };
-export default PlacementInsights;
+export default InternshipInsights;

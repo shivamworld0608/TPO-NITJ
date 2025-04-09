@@ -1,5 +1,5 @@
-import Placement from '../models/placement.js'; // Adjust the path as needed
-import moment from 'moment'; // For date handling
+import Placement from '../models/placement.js'; 
+import moment from 'moment';
 
 export const getTodayPlacements = async (req, res) => {
   try {
@@ -16,7 +16,6 @@ export const getTodayPlacements = async (req, res) => {
   }
 };
 
-// Get all placements
 export const getAllPlacements = async (req, res) => {
   try {
     const allPlacements = await Placement.find().sort({ createdAt: -1 });
@@ -26,60 +25,84 @@ export const getAllPlacements = async (req, res) => {
   }
 };
 
+
 export const getPlacementInsights = async (req, res) => {
   try {
-    const batchToFilter = req.query.batch || "2022"; // Default to 2022 if no batch is provided
-    const degreeToFilter = req.query.degree || "B.Tech"; // Default to B.Tech if no degree is provided
+    const {
+      company_name,
+      student_name,
+      placement_type,
+      batch,
+      degree,
+      gender,
+      department,
+      ctc,
+    } = req.query;
+    const filters = {};
+    if (company_name) filters.company_name = { $regex: company_name, $options: "i" };
+    if (placement_type) filters.placement_type = placement_type;
+    if (batch) filters.batch = batch;
+    if (degree) filters.degree = degree;
 
-    // Fetch placements with both batch and degree filtering
-    const allPlacements = await Placement.find({
-      batch: batchToFilter,
-      degree: degreeToFilter,
-    })
-    .sort({ createdAt: -1 });
+    let placements = await Placement.find(filters);
 
-    const uniqueStudents = new Set();
-let totalCtc = BigInt(0); // Use BigInt for totalCtc
-let totalStudents = 0;
-const companiesVisited = new Set();
+    if (ctc) {
+      placements = placements.filter((placement) => {
+        const numericCtc = parseFloat(placement.ctc);
+        if (isNaN(numericCtc)) return false;
+        if (ctc === "one") return numericCtc < 1000000;
+        if (ctc === "two") return numericCtc >= 1000000 && numericCtc < 2000000;
+        if (ctc === "three") return numericCtc >= 2000000;
+        return true;
+      });
+    }
 
-allPlacements.forEach((placement) => {
-  companiesVisited.add(placement.company_name);
-  totalStudents += placement.shortlisted_students.length;
-  totalCtc += BigInt(Math.round(placement.ctc)); 
+    let totalOffers = 0;
+    let totalCTC = 0;
+    let countCTC = 0;
+    const companiesVisited = new Set();
+    const uniqueStudentKeys = new Set();
 
-  // Track unique students
-  placement.shortlisted_students.forEach((student) => {
-    uniqueStudents.add(student.email);
-  });
-});
+    for (const placement of placements) {
+      const matchingStudents = placement.shortlisted_students.filter((student) => {
+        const matchesGender =
+          !gender || student.gender?.toLowerCase() === gender.toLowerCase();
+        const matchesDepartment =
+          !department || student.department?.toLowerCase() === department.toLowerCase();
+        const matchesStudentName =
+          !student_name || student.name?.toLowerCase().includes(student_name.toLowerCase());
 
-// Calculate average package
-let averagePackage = 0;
-if (totalStudents > 0) {
-  // Perform division using BigInt
-  const averagePackageBigInt = totalCtc / BigInt(companiesVisited.size);
+        return matchesGender && matchesDepartment && matchesStudentName;
+      });
 
-  // Convert BigInt back to a regular number
-  averagePackage = Number(averagePackageBigInt);
+      if (matchingStudents.length === 0) continue;
 
-  // Format to 2 decimal places
-  averagePackage = parseFloat(averagePackage.toFixed(2));
-}
+      totalOffers += matchingStudents.length;
+      companiesVisited.add(placement.company_name);
 
-// Update totalStudents to reflect unique students
-totalStudents = uniqueStudents.size;
+      for (const student of matchingStudents) {
+        const key = student.studentId?.toString() || `${student.name?.toLowerCase()}|${student.email?.toLowerCase()}`;
+        uniqueStudentKeys.add(key);
+      }
 
-// Total unique companies visited
-const totalCompanies = companiesVisited.size;
+      const numericCtc = parseFloat(placement.ctc);
+      if (!isNaN(numericCtc)) {
+        totalCTC += numericCtc * matchingStudents.length;
+        countCTC += matchingStudents.length;
+      }
+    }
 
-res.json({
-  totalStudentsPlaced: totalStudents,
-  companiesVisited: totalCompanies,
-  averagePackage: averagePackage,
-});
+    const averageCtcLPA =
+      countCTC > 0 ? `${(totalCTC / countCTC / 100000).toFixed(2)}` : "N/A";
+
+    res.status(200).json({
+      totalStudentsPlaced: uniqueStudentKeys.size,
+      companiesVisited: companiesVisited.size,
+      average_ctc: averageCtcLPA,
+    });
   } catch (error) {
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error in getPlacementInsights:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -95,28 +118,30 @@ export const getFilteredPlacements = async (req, res) => {
       department,
       ctc,
     } = req.query;
-
-    // Build dynamic filters for placements
+   
     const filters = {};
     if (company_name) filters.company_name = { $regex: company_name, $options: "i" };
     if (placement_type) filters.placement_type = placement_type;
     if (batch) filters.batch = batch;
     if (degree) filters.degree = degree;
-
-    // Handling CTC filtering based on ranges
-    if (ctc) {
-      if (ctc === "one") {
-        filters.ctc = { $lt: "1000000" }; // Less than 10 LPA
-      } else if (ctc === "two") {
-        filters.ctc = { $gte: "1000000", $lt: "2000000" }; // Between 10 and 20 LPA
-      } else if (ctc === "three") {
-        filters.ctc = { $gte: "2000000" }; // Greater than 20 LPA
-      }
-    }
-
  
-
-    const placements = await Placement.find(filters);
+    const allPlacements = await Placement.find(filters);
+    let placements;
+    
+    if(ctc){
+      const filteredByCtc = allPlacements.filter((placement) => {
+        const numericCtc = parseInt(placement.ctc);
+        if (isNaN(numericCtc)) return false;
+        if (ctc === "one") return numericCtc < 1000000;
+        if (ctc === "two") return numericCtc >= 1000000 && numericCtc < 2000000;
+        if (ctc === "three") return numericCtc >= 2000000;
+        return true;
+      });
+      placements = filteredByCtc;
+    }
+    else{
+      placements = allPlacements;
+    }
 
     const filteredPlacements = placements.map((placement) => {
       const filteredStudents = placement.shortlisted_students.filter((student) => {
@@ -131,12 +156,10 @@ export const getFilteredPlacements = async (req, res) => {
       return { ...placement.toObject(), shortlisted_students: filteredStudents };
     });
 
-    // Remove placements without any shortlisted students after filtering
     const finalPlacements = filteredPlacements.filter(
       (placement) => placement.shortlisted_students.length > 0
     );
 
-    // Return the filtered placements
     res.status(200).json(finalPlacements);
   } catch (error) {
     console.error("Error fetching placements:", error.message);
