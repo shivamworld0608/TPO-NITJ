@@ -7,6 +7,7 @@ import Home from "./Pages/LandingPage";
 import Login from "./Pages/Login"; 
 import Forgotpassword from "./Pages/ForgotPassword"; 
 import Placement from "./Pages/Placement";
+import Internship from "./Pages/Internship";
 import Recruiter from "./Pages/Recruiter";
 import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
@@ -67,6 +68,7 @@ const App = () => {
         />
         {/* <Route path="/signup" element={<Signup />} /> */}
         <Route path="/placements" element={<Placement />} />
+        <Route path="/internships" element={<Internship />} />
         <Route path="/recruiter" element={<Recruiter />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/team" element={<TeamPage />} />

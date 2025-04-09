@@ -55,6 +55,7 @@
     "react-calendar": "^5.1.0",
     "react-chartjs-2": "^5.3.0",
     "react-color": "^2.19.3",
+    "react-csv": "^2.2.2",
     "react-dom": "^18.3.1",
     "react-google-recaptcha": "^3.1.0",
     "react-hot-toast": "^2.5.1",
