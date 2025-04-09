@@ -7,12 +7,14 @@ const Card = ({ title, content, index }) => {
   const isContentLong = content.length > contentThreshold;
 
   return (
-    <div className="group rounded-xl overflow-hidden bg-white shadow-lg hover:shadow-2xl hover:scale-[1.05] hover:rotate-1 transition-all duration-300 border border-gray-200 hover:border-custom-blue cursor-pointer">
-      <div className="bg-gradient-to-r from-custom-blue to-blue-500 p-8 flex flex-col items-center text-center gap-4">
-        <div className="flex-shrink-0 flex items-center justify-center bg-white text-custom-blue rounded-full w-14 h-14 shadow-lg font-bold text-2xl">
+    <div className="group overflow-hidden bg-white shadow-lg hover:shadow-2xl hover:scale-[1.05] hover:rotate-1 transition-all duration-300 border border-gray-200 hover:border-custom-blue cursor-pointer flex flex-col">
+      <div className="relative overflow-hidden p-8 flex flex-col items-center text-center gap-4 flex-[1]">
+        <img className="absolute top-0 left-0 w-full h-full object-cover" src={`./step${index}.jpeg`} />
+        <div className="z-[100] absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
+        <div className="z-[100] flex-shrink-0 flex items-center justify-center bg-white text-custom-blue rounded-full w-14 h-14 shadow-lg font-bold text-2xl">
           {String(index).padStart(2, "0")}
         </div>
-        <h3 className="text-2xl font-bold text-white leading-tight group-hover:text-white transition-all duration-300">
+        <h3 className="z-[100] text-2xl font-bold text-white leading-tight group-hover:text-white transition-all duration-300">
           {title}
         </h3>
       </div>
@@ -93,11 +95,11 @@ const RecruitmentProcess = () => {
   const visibleSteps = showMore ? steps : steps.slice(0, 4);
 
   return (
-    <div className="rounded-2xl bg-white-100  min-h-screen">
+    <div className="rounded-2xl bg-white-100">
       <div className="max-w-8xl mx-auto px-6 space-y-16">
         <div className="space-y-6 max-w-4xl mx-auto text-center">
           <h1 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
-            Recruitment <span className="text-custom-blue">Process</span>
+            Recruitment <span className="text-custom-ck">Process</span>
           </h1>
           <p className="text-md text-gray-600 leading-relaxed text-base sm:text-sm lg:text-lg">
             Follow our structured and transparent recruitment process designed
@@ -118,14 +120,26 @@ const RecruitmentProcess = () => {
 
         {/* Toggle Button for More Steps / Less Steps */}
         <div className="text-center mt-8">
-        <button
-  onClick={() => setShowMore(!showMore)}
-  className="px-6 py-3 z-10 text-white bg-gradient-to-r from-custom-blue to-blue-500 hover:from-blue-400 hover:to-blue-800 rounded-lg font-semibold transition-all duration-300"
->
-  {showMore ? "Less Steps" : "More Steps"}
-</button>
-
+          <button
+            className="button dark text-white font-medium p-3 rounded-md z-0 border-[1.5px] border-[#205781]"
+            onClick={() => setShowMore(!showMore)}
+          >
+            {showMore ? "Less Steps" : "More Steps"}
+          </button>
         </div>
+        <style jsx>
+        {`
+          .button.dark {
+            color:#205781;
+          }
+
+          .button.dark:hover {
+            color: #fff;
+            background:#205781;
+            box-shadow: 0 0 0 .2rem #205781;
+          }
+        `}
+      </style>
       </div>
     </div>
   );

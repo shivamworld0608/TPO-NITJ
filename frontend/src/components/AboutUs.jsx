@@ -3,7 +3,7 @@ import { FaRocket, FaEye, FaHandshake, FaChalkboardTeacher, FaUsers } from "reac
 
 const AboutUs = () => {
   return (
-    <section className="bg-gradient-to-t from-white via-blue-200 to-white py-16 px-4">
+    <section className="py-16 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">
@@ -20,7 +20,7 @@ const AboutUs = () => {
         {/* Content Section */}
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-3">
           {/* Mission */}
-          <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-lg hover:scale-105 transform hover:shadow-gray-500/50 hover:ring-4 hover:ring-gray-300 transition-all duration-300">
+          <div className="bg-white border shadow-md p-8 hover:shadow-lg hover:scale-105 transform hover:shadow-gray-500/50 hover:ring-4 hover:ring-gray-300 transition-all duration-300">
             <div className="flex items-center justify-center mb-6 text-gray-600">
               <FaRocket className="text-5xl sm:text-6xl hover:text-gray-500 transition-all duration-300" />
             </div>
@@ -35,7 +35,7 @@ const AboutUs = () => {
           </div>
 
           {/* Vision */}
-          <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-lg hover:scale-105 transform hover:shadow-green-500/50 hover:ring-4 hover:ring-green-300 transition-all duration-300">
+          <div className="bg-white border shadow-md p-8 hover:shadow-lg hover:scale-105 transform hover:shadow-green-500/50 hover:ring-4 hover:ring-green-300 transition-all duration-300">
             <div className="flex items-center justify-center mb-6 text-green-600">
               <FaEye className="text-5xl sm:text-6xl hover:text-green-400 transition-all duration-300" />
             </div>
@@ -49,7 +49,7 @@ const AboutUs = () => {
           </div>
 
           {/* Values */}
-          <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-lg hover:scale-105 transform hover:shadow-amber-400/50 hover:ring-4 hover:ring-amber-300 transition-all duration-300">
+          <div className="bg-white border shadow-md p-8 hover:shadow-lg hover:scale-105 transform hover:shadow-amber-400/50 hover:ring-4 hover:ring-amber-300 transition-all duration-300">
             <div className="flex items-center justify-center mb-6 text-amber-600">
               <FaHandshake className="text-5xl sm:text-6xl hover:text-amber-400 transition-all duration-300" />
             </div>
@@ -67,7 +67,7 @@ const AboutUs = () => {
         {/* Additional Sections */}
         <div className="mt-12 grid gap-12 sm:grid-cols-2 lg:grid-cols-2">
           {/* Guidance */}
-          <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-lg hover:scale-105 transform hover:shadow-blue-500/50 hover:ring-4 hover:ring-blue-300 transition-all duration-300">
+          <div className="bg-white border shadow-md p-8 hover:shadow-lg hover:scale-105 transform hover:shadow-blue-500/50 hover:ring-4 hover:ring-blue-300 transition-all duration-300">
             <div className="flex items-center justify-center mb-6 text-blue-600">
               <FaChalkboardTeacher className="text-5xl sm:text-6xl hover:text-blue-400 transition-all duration-300" />
             </div>
@@ -82,7 +82,7 @@ const AboutUs = () => {
           </div>
 
           {/* Collaboration */}
-          <div className="bg-white rounded-lg shadow-md p-8 hover:shadow-lg hover:scale-105 transform hover:shadow-teal-500/50 hover:ring-4 hover:ring-teal-300 transition-all duration-300">
+          <div className="bg-white border shadow-md p-8 hover:shadow-lg hover:scale-105 transform hover:shadow-teal-500/50 hover:ring-4 hover:ring-teal-300 transition-all duration-300">
             <div className="flex items-center justify-center mb-6 text-teal-600">
               <FaUsers className="text-5xl sm:text-6xl hover:text-teal-400 transition-all duration-300" />
             </div>
