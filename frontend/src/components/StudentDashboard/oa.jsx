@@ -76,7 +76,7 @@ const OnlineAssessment = () => {
           ))}
         </div>
       ) : (
-        <NoDataFound mg="OA" smg="till you will be eligible for any OA 🤗" />
+        <NoDataFound mg="OA" smg="till you will be eligible for any Online Assessment 🤗" />
       );
     }
 
@@ -99,7 +99,7 @@ const OnlineAssessment = () => {
           ))}
         </div>
       ) : (
-        <NoDataFound mg="OA" smg="you have not any Past OA 😌" />
+        <NoDataFound mg="OA" smg="you have not any Past Online Assessment 😌" />
       );
     }
 
@@ -114,7 +114,7 @@ const OnlineAssessment = () => {
           <span className="text-black">
             {activeTab === "upcoming" ? "Upcoming" : "Past"}
           </span>{" "}
-          OA's
+          Online Assessment's
         </h2>
 
         <div className="flex border border-gray-300 rounded-3xl bg-white sm:mt-0 mt-10">

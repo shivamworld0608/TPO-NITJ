@@ -15,8 +15,8 @@ import {
 const Navbar = () => {
   const instituteNames = [
     {
-      title: "Dr BR AMBEDKAR NATIONAL INSTITUTE OF TECHNOLOGY",
-      subtitle: "JALANDHAR, PUNJAB (INDIA)"
+      title: "Dr BR AMBEDKAR NATIONAL INSTITUTE OF",
+      subtitle: "TECHNOLOGY JALANDHAR, PUNJAB (INDIA)"
     },
     {
       title: "ਡਾ ਬੀ ਆਰ ਅੰਬੇਡਕਰ ਨੈਸ਼ਨਲ ਇੰਸਟੀਚਿਊਟ ਟੈਕਨਾਲੋਜੀ",

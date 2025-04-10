@@ -95,9 +95,9 @@ const StudentDashboard = () => {
       label: "Job Application",
       icon: faBriefcase,
     },
-    { path: "/sdashboard/oa", label: "OA", icon: faClipboard },
+    { path: "/sdashboard/oa", label: "Online Assessment", icon: faClipboard },
     { path: "/sdashboard/interviews", label: "Interview", icon: faComments },
-    { path: "/sdashboard/gd", label: "GD", icon: faComments },
+    { path: "/sdashboard/gd", label: "Group Discussion", icon: faComments },
     { path: "/sdashboard/others", label: "Others", icon: faClipboard },
     { path: "/sdashboard/calendar", label: "Calendar", icon: faCalendar },
    /* { path: "/sdashboard/mailbox", label: "Mailbox", icon: faEnvelope }, */
