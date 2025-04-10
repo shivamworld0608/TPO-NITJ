@@ -85,7 +85,7 @@ function HeroSection() {
             ))}
         </div>
         <div className={`absolute inset-0 bg-black backdrop-blur-lg ${fadeIn ? "opacity-50" : "opacity-0"}`}></div>
-        <div className="absolute text flex flex-col gap-8 items-center justify-center p-10 text-white">
+        <div className="absolute -mt-24 text flex flex-col gap-8 items-center justify-center p-10 text-white">
           <motion.div key={1001} initial={{opacity:0,translateY: "100%"}} animate={{opacity:1,translateY: 0}}  transition={{ duration: 0.5, ease: "easeOut",delay:1 }} className="flex sm:flex-row flex-col items-center sm:text-5xl text-4xl gap-1">
             <span className="font-extrabold ">Welcome to </span>
             <div className="flex">
@@ -115,7 +115,7 @@ function HeroSection() {
             </div>
           </div>
             </motion.div>
-          <motion.div key={1003} initial={{opacity:0,translateY: "100%"}} animate={{opacity:1,translateY: 0}}  transition={{ duration: 0.5, ease: "easeOut",delay:1.5 }} className="buttons flex gap-5">
+        {/*   <motion.div key={1003} initial={{opacity:0,translateY: "100%"}} animate={{opacity:1,translateY: 0}}  transition={{ duration: 0.5, ease: "easeOut",delay:1.5 }} className="buttons flex gap-5">
             <button
               className="button text-white font-medium p-3 rounded-md z-0 border-[1.5px] border-white"
               onClick={() => {
@@ -124,7 +124,7 @@ function HeroSection() {
             >
               Register Now
             </button>
-          </motion.div>
+          </motion.div> */}
         </div>
       </div>
       <style jsx>
