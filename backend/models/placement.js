@@ -34,6 +34,9 @@ const PlacementSchema = new mongoose.Schema(
     role:{
       type:String,
     },
+    result_date: {
+      type: Date,
+    },
     shortlisted_students: [
       {
         studentId:{
@@ -70,7 +73,11 @@ const PlacementSchema = new mongoose.Schema(
           type:String,
         }
       }
-    ]
+    ],
+    visibility: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );

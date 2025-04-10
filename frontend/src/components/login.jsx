@@ -60,6 +60,7 @@ const LoginSignup = ({ Login }) => {
 
   // Handle login form submission
   const handleLogin = async (e) => {
+    console.log("hello");
     e.preventDefault();
     setIsSubmitting(true);
   

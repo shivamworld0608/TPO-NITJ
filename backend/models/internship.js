@@ -35,6 +35,9 @@ const InternshipSchema = new mongoose.Schema(
     role:{
       type:String,
     },
+    result_date: {
+      type: Date,
+    },
     shortlisted_students: [
       {
         studentId:{
@@ -71,7 +74,11 @@ const InternshipSchema = new mongoose.Schema(
           type:String,
         },
       }
-    ]
+    ],
+    visibility: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
