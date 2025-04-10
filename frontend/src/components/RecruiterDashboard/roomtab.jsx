@@ -52,7 +52,7 @@ function RoomTab({
                   Number of Rooms <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="number"
+                  type="text"
                   value={roomDetails.numberOfRooms || ""}
                   onChange={(e) =>
                     setRoomDetails({

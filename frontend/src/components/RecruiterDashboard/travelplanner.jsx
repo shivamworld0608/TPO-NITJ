@@ -6,18 +6,23 @@ import { CheckCircle2, Circle, ArrowLeft } from "lucide-react";
 import VisitorTab from "./visitortab";
 import VehicleTab from "./vehicletab";
 import RoomTab from "./roomtab";
-import FoodTab from "./foodtab";
+// import FoodTab from "./foodtab";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function TravelPlanner() {
   const [step, setStep] = useState(0);
-
+  const navigate = useNavigate();
+  
+  const { userData } = useSelector((state) => state.auth);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [visitorDetails, setVisitorDetails] = useState({
     purpose: "",
-    visitorName: "",
-    designation: "",
-    organization: "",
+    visitorName: userData.name || "",
+    designation: userData.designation || "",
+    organization: userData.company || "",
     contact: "",
-    email: "",
+    email: userData.email || "",
     expectedVisitors: "",
     companions: [""],
   });
@@ -46,13 +51,11 @@ function TravelPlanner() {
     notes: "",
   });
 
-  const [wantFood, setWantFood] = useState(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const [foodDetails, setFoodDetails] = useState({
-    tableRows: [{ date: "", breakfast: "", lunch: "", dinner: "", snacks: "" }],
-    notes: "",
-  });
+  // const [wantFood, setWantFood] = useState(null);
+  // const [foodDetails, setFoodDetails] = useState({
+  //   tableRows: [{ date: "", breakfast: "", lunch: "", dinner: "", snacks: "" }],
+  //   notes: "",
+  // });
 
   const handleSubmit = async () => {
     if (isSubmitting) return;
@@ -64,9 +67,10 @@ function TravelPlanner() {
       vehicleDetails,
       wantRoom,
       roomDetails,
-      wantFood,
-      foodDetails,
+      // wantFood,
+      // foodDetails,
     };
+    
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to edit this in Future!",
@@ -76,6 +80,7 @@ function TravelPlanner() {
       cancelButtonColor: "#EF4444",
       confirmButtonText: "Yes, submit it!",
     });
+    
     if (result.isConfirmed) {
       try {
         const response = await axios.post(
@@ -84,25 +89,27 @@ function TravelPlanner() {
           { withCredentials: true }
         );
         toast.success("Booking form submitted successfully 😊");
+        // navigate to /
+        // Add your navigation logic here, e.g., using react-router-dom
+        // For example:
+        navigate("/");
       } catch (error) {
         toast.error("Some error in submitting");
+      } finally {
         setIsSubmitting(false);
       }
-      finally {
-        setIsSubmitting(false);
-      }
-
+    } else {
+      setIsSubmitting(false);
     }
   };
 
-  const steps = ["Visitor", "Vehicle", "Room", "Food", "Summary"];
+  const steps = ["Visitor", "Vehicle", "Room", "Summary"];
 
   const canNavigateToStep = (targetStep) => {
     if (targetStep === 0) return true;
     if (targetStep === 1 && visitorDetails.visitorName) return true;
     if (targetStep === 2 && wantVehicle !== null) return true;
     if (targetStep === 3 && wantRoom !== null) return true;
-    if (targetStep === 4 && wantFood !== null) return true;
     return false;
   };
 
@@ -186,17 +193,7 @@ function TravelPlanner() {
             onNext={() => setStep(3)}
           />
         );
-      case 3:
-        return (
-          <FoodTab
-            wantFood={wantFood}
-            setWantFood={setWantFood}
-            foodDetails={foodDetails}
-            setFoodDetails={setFoodDetails}
-            onNext={() => setStep(4)}
-          />
-        );
-      case 4:
+      case 3: // Summary (not 4 since we start at 0)
         return (
           <div className="space-y-8">
             <div className="text-center mb-8">
@@ -309,7 +306,7 @@ function TravelPlanner() {
                           Pickup Time
                         </p>
                         <p className="text-gray-800">
-                        {new Date(
+                          {vehicleDetails.pickupDateTime ? new Date(
                             vehicleDetails.pickupDateTime
                           ).toLocaleString("en-US", {
                             day: "2-digit",
@@ -318,7 +315,7 @@ function TravelPlanner() {
                             hour: "2-digit",
                             minute: "2-digit",
                             hour12: true,
-                          })}
+                          }) : ""}
                         </p>
                       </div>
                       <div>
@@ -342,7 +339,7 @@ function TravelPlanner() {
                           Return Pickup Time
                         </p>
                         <p className="text-gray-800">
-                          {new Date(
+                          {vehicleDetails.returnDateTime ? new Date(
                             vehicleDetails.returnDateTime
                           ).toLocaleString("en-US", {
                             day: "2-digit",
@@ -351,7 +348,7 @@ function TravelPlanner() {
                             hour: "2-digit",
                             minute: "2-digit",
                             hour12: true,
-                          })}
+                          }) : ""}
                         </p>
                       </div>
                     </div>
@@ -389,31 +386,33 @@ function TravelPlanner() {
                           Stay Duration
                         </p>
                         <p className="text-gray-800">
-                          {new Date(
-                            roomDetails.arrivalDate +
-                              " " +
-                              roomDetails.arrivalTime
-                          ).toLocaleString("en-US", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                            hour: "numeric",
-                            minute: "2-digit",
-                            hour12: true,
-                          })}
-                          {" to "}
-                          {new Date(
-                            roomDetails.departureDate +
-                              " " +
-                              roomDetails.departureTime
-                          ).toLocaleString("en-US", {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                            hour: "numeric",
-                            minute: "2-digit",
-                            hour12: true,
-                          })}
+                          {roomDetails.arrivalDate && roomDetails.arrivalTime ? 
+                            new Date(
+                              roomDetails.arrivalDate +
+                                " " +
+                                roomDetails.arrivalTime
+                            ).toLocaleString("en-US", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit",
+                              hour12: true,
+                            }) : ""}
+                          {roomDetails.departureDate && roomDetails.departureTime ? 
+                            (" to " + 
+                            new Date(
+                              roomDetails.departureDate +
+                                " " +
+                                roomDetails.departureTime
+                            ).toLocaleString("en-US", {
+                              day: "2-digit",
+                              month: "short",
+                              year: "numeric",
+                              hour: "numeric",
+                              minute: "2-digit",
+                              hour12: true,
+                            })) : ""}
                         </p>
                       </div>
                     </div>
@@ -428,83 +427,6 @@ function TravelPlanner() {
                   </div>
                 ) : (
                   <p className="text-gray-500">No room booking needed</p>
-                )}
-              </div>
-
-              <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
-                <h3 className="text-2xl font-semibold text-gray-800 mb-4">
-                  Food Selection
-                </h3>
-                {wantFood ? (
-                  <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 space-y-4">
-                    <p className="text-sm font-medium text-gray-500 mb-4">
-                      Meal Schedule
-                    </p>
-                    <div className="overflow-x-auto">
-                      <table className="min-w-full">
-                        <thead>
-                          <tr className="bg-gray-100">
-                            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
-                              Date
-                            </th>
-                            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
-                              Breakfast
-                            </th>
-                            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
-                              Lunch
-                            </th>
-                            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
-                              Dinner
-                            </th>
-                            <th className="px-4 py-2 text-left text-sm font-medium text-gray-600">
-                              Snacks
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {foodDetails.tableRows.map((row, index) => (
-                            <tr
-                              key={index}
-                              className="border-t border-gray-200"
-                            >
-                              <td className="px-4 py-2 text-gray-800">
-                                {new Date(row.date).toLocaleDateString(
-                                  "en-US",
-                                  {
-                                    day: "2-digit",
-                                    month: "short",
-                                    year: "numeric",
-                                  }
-                                )}
-                              </td>
-                              <td className="px-4 py-2 text-gray-800">
-                                {row.breakfast || 0}
-                              </td>
-                              <td className="px-4 py-2 text-gray-800">
-                                {row.lunch || 0}
-                              </td>
-                              <td className="px-4 py-2 text-gray-800">
-                                {row.dinner || 0}
-                              </td>
-                              <td className="px-4 py-2 text-gray-800">
-                                {row.snacks || 0}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                    {foodDetails.notes && (
-                      <div>
-                        <p className="text-sm font-medium text-gray-500">
-                          Additional Notes
-                        </p>
-                        <p className="text-gray-800">{foodDetails.notes}</p>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-gray-500">No food selection needed</p>
                 )}
               </div>
             </div>
@@ -533,16 +455,15 @@ function TravelPlanner() {
           </h1>
           {step > 0 && (
             <button
-            onClick={() => setStep(step - 1)}
-            className="flex items-center gap-2 text-white bg-custom-blue hover:bg-custom-blue
+              onClick={() => setStep(step - 1)}
+              className="flex items-center gap-2 text-white bg-custom-blue hover:bg-custom-blue
               px-6 py-3 rounded-full shadow-lg transition-all duration-200 transform hover:scale-105
               focus:outline-none focus:ring-2 focus:ring-custom-blue focus:ring-opacity-50 active:scale-95"
-            aria-label="Go Back"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span className="font-medium text-sm">Back</span>
-          </button>
-          
+              aria-label="Go Back"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              <span className="font-medium text-sm">Back</span>
+            </button>
           )}
         </div>
 

@@ -7,7 +7,6 @@ import jwt from "jsonwebtoken";
 /* import configureWebSocket from "./utils/websocket.js"; */
 import http from "http";
 
-
 import authroutes from "./routes/auth.js";
 import interviewroutes from "./routes/interview.js";
 import oaroutes from "./routes/oa.js";
@@ -138,5 +137,5 @@ app.use('/attempt/:assessment',authenticate,mockassessmentRoutes);
 
 const port = process.env.PORT || 7000;
 app.listen(port, () => {
- 
-}); 
+  console.log("App running on port: ", port);
+});

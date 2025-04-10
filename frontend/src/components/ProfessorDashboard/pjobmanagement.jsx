@@ -4,7 +4,13 @@ import Swal from "sweetalert2";
 import ViewJobDetails from "./ViewJob";
 import ViewJAF from "./viewjaf";
 import CreateJob from "./createjobprofile";
-import { Card, CardHeader, CardContent, CardFooter } from "../ui/card";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  CardFooter,
+  CardTitle,
+} from "../ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import {
   Building2,
@@ -20,10 +26,14 @@ import {
   Star,
   MessageCircle,
   FileText,
+  Map,
 } from "lucide-react";
 import { FaArrowLeft, FaSpinner, FaFileUpload } from "react-icons/fa";
 
 import Notification from "./Notification";
+// import MealArrangementForm from "./mealarrangmentform";
+import GuestHouseBookingForm from "./roomarrangement";
+import VehicleRequisitionForm from "./vehiclerequisitionform";
 
 const JobProfilesonp = () => {
   const [jobProfiles, setJobProfiles] = useState({
@@ -32,6 +42,9 @@ const JobProfilesonp = () => {
     completed: [],
     feedbackByCompany: {},
     jafByCompany: {},
+    // mealArrangements: [],
+    guestHouseBookings: [],
+    vehicleRequisitions: [],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -39,6 +52,8 @@ const JobProfilesonp = () => {
   const [showCreateJob, setShowCreateJob] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [showJAF, setShowJAF] = useState(false);
+  const [activeComponent, setActiveComponent] = useState(null);
+
   const [filters, setFilters] = useState({
     batchEligible: "",
     courseEligible: "",
@@ -147,6 +162,7 @@ const JobProfilesonp = () => {
           { withCredentials: true }
         );
         setJobProfiles(response.data);
+        console.log(response.data);
       } catch (err) {
         setError(err.response?.data?.error || "Failed to fetch job profiles.");
       } finally {
@@ -286,6 +302,22 @@ const JobProfilesonp = () => {
       }
     }
   };
+
+  const handleCardClick = (componentName) => {
+    setActiveComponent(componentName);
+  };
+
+  // const hasMealArrangement = jobProfiles?.mealArrangements?.find(
+  //   (meal) => meal.visitingOrganization === selectedCompany
+  // );
+
+  const hasVehicleArrangement = jobProfiles?.vehicleRequisitions?.find(
+    (vehicle) => vehicle.company === selectedCompany
+  );
+
+  const hasRoomArrangement = jobProfiles?.guestHouseBookings?.find(
+    (room) => room.organization === selectedCompany
+  );
 
   const JobCard = ({ job, showActions }) => (
     <Card className="bg-white border border-gray-200 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 relative">
@@ -662,6 +694,93 @@ const JobProfilesonp = () => {
               </div>
             </div>
           )}
+
+          <div className="mt-8">
+            {/* Cards in a single row */}
+            <div className="flex flex-wrap gap-4 mb-6">
+              {/* {hasMealArrangement && (
+                <Card
+                  className="flex-1 min-w-64 cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => handleCardClick("meal")}
+                >
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-xl font-bold text-custom-blue">
+                      Meal Arrangement
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              )} */}
+
+              {hasVehicleArrangement && (
+                <Card
+                  className="flex-1 min-w-64 cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => handleCardClick("vehicle")}
+                >
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-xl font-bold text-custom-blue">
+                      Vehicle Arrangement
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              )}
+
+              {hasRoomArrangement && (
+                <Card
+                  className="flex-1 min-w-64 cursor-pointer hover:shadow-lg transition-shadow"
+                  onClick={() => handleCardClick("room")}
+                >
+                  <CardHeader className="text-center">
+                    <CardTitle className="text-xl font-bold text-custom-blue">
+                      Room Arrangement
+                    </CardTitle>
+                  </CardHeader>
+                </Card>
+              )}
+            </div>
+
+            {/* Display the selected component */}
+            {/* {activeComponent === "meal" && hasMealArrangement && (
+              <div className="w-full flex justify-center mt-6">
+                <div className="max-w-5xl w-full">
+                  <h2 className="text-2xl font-bold text-custom-blue mb-4 text-center">
+                    Meal Arrangement
+                  </h2>
+                  <MealArrangementForm
+                    existingData={hasMealArrangement}
+                    isEditing={true}
+                  />
+                </div>
+              </div>
+            )} */}
+
+            {/* Vehicle Arrangement */}
+            {activeComponent === "vehicle" && hasVehicleArrangement && (
+              <div className="w-full flex justify-center mt-6">
+                <div className="max-w-5xl w-full">
+                  <h2 className="text-2xl font-bold text-custom-blue mb-4 text-center">
+                    Vehicle Arrangement
+                  </h2>
+                  <div className="w-full">
+                    <VehicleRequisitionForm existingData={hasVehicleArrangement} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Room Arrangement */}
+            {activeComponent === "room" && hasRoomArrangement && (
+              <div className="w-full flex justify-center mt-6">
+                <div className="max-w-5xl w-full">
+                  <h2 className="text-2xl font-bold text-custom-blue mb-4 text-center">
+                    Room Arrangement
+                  </h2>
+                  <div className="w-full">
+                    <GuestHouseBookingForm existingData={hasRoomArrangement} />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </>
       ) : (
         <>

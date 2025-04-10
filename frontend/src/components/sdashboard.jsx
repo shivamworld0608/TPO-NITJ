@@ -25,8 +25,8 @@ import { Menu, X, LogOut } from "lucide-react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import Home from "./StudentDashboard/home";
 import JobApplications from "./StudentDashboard/jobprofile";
-import Interviews from "./StudentDashboard/interviews";
-import GD from "./StudentDashboard/gd";
+import Interviews from "./StudentDashboard/interviews"; 
+import GD from "./StudentDashboard/gd";    
 // import MailboxComponent from "./StudentDashboard/mailbox";
 import OnlineAssessment from "./StudentDashboard/oa";
 import PDFDownloadCards from "./StudentDashboard/policy";
@@ -43,6 +43,7 @@ import Others from "./StudentDashboard/others.jsx";
 import QuestionBank from "./StudentDashboard/questionbank.jsx";
 import MockAssessmentStudentDashboard from "./StudentDashboard/mockassessment.jsx";
 import AssessmentAttempt from "./StudentDashboard/assessmentattempt.jsx";
+import JobdetailFromCalender from "./StudentDashboard/JobDetailsFromCalender.jsx";
 
 
 const StudentDashboard = () => {
@@ -94,9 +95,9 @@ const StudentDashboard = () => {
       label: "Job Application",
       icon: faBriefcase,
     },
-    { path: "/sdashboard/oa", label: "OA", icon: faClipboard },
+    { path: "/sdashboard/oa", label: "Online Assessment", icon: faClipboard },
     { path: "/sdashboard/interviews", label: "Interview", icon: faComments },
-    { path: "/sdashboard/gd", label: "GD", icon: faComments },
+    { path: "/sdashboard/gd", label: "Group Discussion", icon: faComments },
     { path: "/sdashboard/others", label: "Others", icon: faClipboard },
     { path: "/sdashboard/calendar", label: "Calendar", icon: faCalendar },
    /* { path: "/sdashboard/mailbox", label: "Mailbox", icon: faEnvelope }, */
@@ -300,6 +301,7 @@ const StudentDashboard = () => {
         <div className="container mx-auto p-4 min-h-[calc(100vh-theme(spacing.16)-theme(spacing.16))]">
           {/* Placeholder for route content */}
           <Routes>
+
             <Route path="/" element={<Home />} />
             <Route path="home" element={<Home />} />
             <Route path="job-application" element={<JobApplications />} />
@@ -314,6 +316,7 @@ const StudentDashboard = () => {
             <Route path="mock-assessment" element={<MockAssessmentStudentDashboard/>} />
      {/*        <Route path="assessment-attempt/:attemptId" element={<AssessmentAttempt/>} /> */}
             <Route path="profile" element={<Profile />} />
+            <Route path="jobs/:job_id" element={<JobdetailFromCalender />} />
             <Route path="request-help" element={<Request />} />
             <Route path="policy-guidlines" element={<PDFDownloadCards />} />
             <Route path="team" element={<TeamSection />} />
