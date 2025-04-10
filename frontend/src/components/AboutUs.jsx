@@ -3,7 +3,7 @@ import { FaRocket, FaEye, FaHandshake, FaChalkboardTeacher, FaUsers } from "reac
 
 const AboutUs = () => {
   return (
-    <section className="py-16 px-4">
+    <section className="bg-gradient-to-t from-white via-blue-200 to-white py-16 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
         <div className="text-center mb-12">

@@ -11,6 +11,9 @@ import Feedback from "../models/Feedback.js";
 import JobAnnouncementForm from "../models/jaf.js";
 import axios from "axios";
 import Recruiter from "../models/user_model/recuiter.js";
+import MealArrangement from "../models/travel_planner/food.js";
+ import GuestHouseBooking from "../models/travel_planner/room.js";
+ import VehicleRequisition from "../models/travel_planner/vehicle.js";
 
 export const getAllCompanies = async (req, res) => {
   try {
@@ -449,6 +452,11 @@ export const getJobProfilesForProfessors = async (req, res) => {
       return acc;
     }, {});
 
+    // Fetch travel-related data
+    const mealArrangements = await MealArrangement.find({}).sort({ updatedAt: -1 })
+    const guestHouseBookings = await GuestHouseBooking.find({}).sort({ updatedAt: -1 });
+    const vehicleRequisitions = await VehicleRequisition.find({}).sort({ updatedAt: -1 });
+
    const jafs = await JobAnnouncementForm.find({});
     const jafByCompany = jafs.reduce((acc, jaf) => {
       acc[jaf.organizationName] = jaf;
@@ -459,7 +467,10 @@ export const getJobProfilesForProfessors = async (req, res) => {
       notApproved: notApprovedJobs,
       completed:completed,
       feedbackByCompany,
-      jafByCompany
+      jafByCompany,
+      mealArrangements,
+      guestHouseBookings,
+      vehicleRequisitions,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
