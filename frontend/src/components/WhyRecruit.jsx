@@ -61,7 +61,7 @@ const WhyRecruit = () => {
   ];
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-gradient-to-b from-white via-blue-300 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ">
         {/* Header Section */}
         <motion.div
@@ -73,7 +73,7 @@ const WhyRecruit = () => {
           <h1 className="text-3xl font-bold sm:text-4xl lg:text-5xl">
             Why Recruit From <span className="text-custom-blue">NIT Jalandhar?</span>
           </h1>
-          <p className="text-md mt-8 font-normal text-gray-600 mx-auto leading-relaxed text-base sm:text-sm lg:text-lg">
+          <p className="text-md mt-8 font-semibold text-gray-600 mx-auto leading-relaxed text-base sm:text-sm lg:text-lg">
             Since 1987, NIT Jalandhar has been shaping the future of technology and innovation.
             Our alumni are driving advancements globally.
           </p>
@@ -81,16 +81,16 @@ const WhyRecruit = () => {
 
         {/* Tabs Section */}
         <Tabs defaultValue="stats" className="mb-16 ">
-          <TabsList className="w-full bg-transparent">
+          <TabsList className="grid w-full grid-cols-2 ">
             <TabsTrigger
               value="stats"
-              className="z-10 ring-transparent ring-offset-transparent hover:text-black	lg:text-2xl text-xl text-gray-500 data-[state=active]:text-black transition data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:underline"
+              className="z-10 data-[state=active]:bg-custom-blue lg:text-lg text-md data-[state=active]:text-white transition rounded-lg border-b-custom-blue border-b-4"
             >
               Key Statistics
             </TabsTrigger>
             <TabsTrigger
               value="achievements"
-              className="z-10 ring-transparent ring-offset-transparent hover:text-black	lg:text-2xl text-xl  text-gray-500 data-[state=active]:text-black outline-none transition data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:underline"
+              className="z-10 data-[state=active]:bg-custom-blue lg:text-lg text-md data-[state=active]:text-white transition rounded-lg border-b-custom-blue border-b-4"
             >
               Our Achievements
             </TabsTrigger>
@@ -102,18 +102,17 @@ const WhyRecruit = () => {
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.8 }}
-    className="grid md:grid-cols-2 gap-8 mt-8 bg-white p-12 shadow-md"
+    className="grid md:grid-cols-2 gap-8 mt-8 bg-white p-12 rounded-lg shadow-md"
   >
     {stats.map((stat, index) => (
       <motion.div
         key={index}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        transition={{easings:"easeOut", stiffness: 600,damping:100 }}
-        className="overflow-hidden transition-all duration-300 bg-white rounded-lg"
+        transition={{ type: "spring", stiffness: 300 }}
+        className="overflow-hidden transition-all duration-300 hover:shadow-lg bg-white rounded-lg"
       >
         <Card>
-          <div className="hover:shadow-lg">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-2xl font-bold">{stat.title}</CardTitle>
             {stat.icon}
@@ -145,7 +144,6 @@ const WhyRecruit = () => {
               )}
             </Button>
           </CardContent>
-          </div>
         </Card>
       </motion.div>
     ))}
@@ -159,7 +157,7 @@ const WhyRecruit = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="mt-8 bg-white p-8 shadow-lg"
+              className="mt-8 bg-white rounded-lg p-8 shadow-lg"
             >
               <h2 className="text-3xl font-bold mb-6 text-custom-blue">Our Excellence</h2>
               <p className="text-gray-600 text-lg mb-8 leading-relaxed">
@@ -169,8 +167,8 @@ const WhyRecruit = () => {
                 {achievements.map((achievement, index) => (
                   <motion.div
                     key={index}
-                    whileHover={{ scale: 1.01 }}
-                    transition={{ type: "spring", stiffness: 600,damping:20 }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 300 }}
                     className="bg-gradient-to-r from-custom-blue to-blue-800 p-6 rounded-lg shadow-md"
                   >
                     <div className="flex items-center mb-4">
@@ -193,19 +191,18 @@ const WhyRecruit = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="mb-16 text-center bg-white p-8 shadow-xl"
+          className="mt-16 text-center bg-white p-8 rounded-lg shadow-xl"
         >
           <h2 className="text-4xl font-bold text-custom-blue mb-6">Ready to Recruit Top Talent?</h2>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
             Join leading companies who have found their star performers at NIT Jalandhar.
           </p>
-          <div className="w-full flex justify-center items-center">
-            <button
-              className="flex justify-center items-center button dark text-white font-medium p-3 rounded-md z-0 border-[1.5px] border-[#205781]"
-            >
-              Get in Touch <ArrowRight className="ml-2 w-6 h-6" />
-            </button>
-            </div>
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-custom-blue to-blue-600 hover:from-blue-600 hover:to-custom-blue text-white px-8 py-4 rounded-lg z-10"
+          >
+            Get in Touch <ArrowRight className="ml-2 w-6 h-6" />
+          </Button>
         </motion.div>
       </div>
     </div>

@@ -72,7 +72,7 @@ export default function OACard({
 
     return (
       <button
-        onClick={() => alert("OA link will be available soon")}
+        onClick={() => alert("Online Assessment link will be available soon")}
         className="rounded-lg px-1 text-sm text-custom-blue hover:bg-custom-blue hover:text-white transition-colors"
       >
         Soon
@@ -139,7 +139,7 @@ export default function OACard({
           onClick={toggleModal}
           className="w-full bg-custom-blue text-white py-2 rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
-          View OA Info
+          View Online Assessment Info
         </button>
       </div>
 
@@ -158,7 +158,7 @@ export default function OACard({
               <Info size={24} />
             </button>
             <h3 className="text-lg font-bold text-gray-900 mb-4">
-              OA Guidelines & Info
+              Online Assessment Guidelines & Info
             </h3>
             <p className="text-gray-600">
               {oa_info || "No additional information provided."}
