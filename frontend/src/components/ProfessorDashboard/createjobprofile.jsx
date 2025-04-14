@@ -731,7 +731,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   <option value="B.Tech">B.Tech</option>
                   <option value="M.Tech">M.Tech</option>
                   <option value="MBA">MBA</option>
-                  <option value="M.Sc">M.Sc</option>
+                  <option value="M.Sc.">M.Sc.</option>
                   <option value="PHD">PHD</option>
                 </select>
               </div>
@@ -748,7 +748,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                       ? mtechdepartmentOptions
                       : formData.course_allowed === "MBA"
                       ? mbadepartmentOptions
-                      : formData.course_allowed === "M.Sc"
+                      : formData.course_allowed === "M.Sc."
                       ? mscdepartmentOptions
                       : formData.course_allowed === "PHD"
                       ? phddepartmentOptions
