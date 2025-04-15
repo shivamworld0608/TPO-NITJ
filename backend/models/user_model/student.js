@@ -55,7 +55,7 @@ const studentSchema = new mongoose.Schema({
   },
   category:{
     type:String,
-    enum: ['General','General-EWS', 'SC', 'ST', 'OBC'],
+    enum: ['General','GEN-EWS', 'SC', 'ST', 'OBC-NCL'],
   },
   active_backlogs: {
     type: Boolean,

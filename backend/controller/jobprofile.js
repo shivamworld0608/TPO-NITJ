@@ -614,6 +614,16 @@ export const checkEligibility = async (req, res) => {
       }
     }
 
+    const isInternship = ['2m Intern', '6m Intern', '11m Intern', 'Intern+PPO', 'Intern+FTE'].includes(jobType);
+    const isPlacement = jobType === 'FTE' || jobType === 'Intern+FTE';
+
+    if(isInternship){
+      if(student.internshipstatus!=="No Intern"){
+        return res.json({ eligible: false, reason: "Already You have Internship" });
+      }
+    }
+
+   if(isPlacement){
     const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
     const studentClassIndex = jobClassOrder.indexOf(updatedStudent.placementstatus);
   /*   const jobClassIndex = jobClassOrder.indexOf(job.job_class); */
@@ -675,6 +685,7 @@ export const checkEligibility = async (req, res) => {
         reason: "Student can only apply for higher job categories than their current placement status",
       });
     }
+   }
     const currentDate = new Date();
     const isDeadlineOver = job.deadline && currentDate > job.deadline;
     const hasApplied = job.Applied_Students.includes(studentId);
@@ -777,75 +788,40 @@ export const addshortlistStudents = async (req, res) => {
           nextStep.eligible_students.push(studentId);
         }
       }
-    } /* else {
-      const placementData = [];
-      for (const studentId of studentIds) {
-        const student = await Student.findById(studentId);
-        if (student) {
-          student.placementstatus = job.job_class;
-          await student.save();
-          placementData.push({
-            studentId: studentId,
-            name: student.name,
-            image: student.image || '',
-            email: student.email || 'N/A',
-            gender: student.gender,
-            department: student.department,
-            category: student.category || 'N/A',
-          });
-        } else {
-          console.error(`Student not found for ID: ${studentId}`);
-        }
-      }
-
-      const placement = new Placement({
-        company_name: job.company_name,
-        company_logo: job.company_logo||'',
-        placement_type: job.job_category,
-        batch: job.eligibility_criteria?.eligible_batch,
-        degree: job.eligibility_criteria?.course_allowed,
-        shortlisted_students: placementData,
-        ctc: job.job_salary?.ctc || 'N/A',
-        base_salary: job.job_salary?.base_salary || 'N/A',
-        role: job.job_role || '',
-
-      });
-
-      await placement.save();
-    } */
+    } 
       else {
         const placementData = [];
         const createInternship = ['2m Intern', '6m Intern', '11m Intern', 'Intern+PPO', 'Intern+FTE'].includes(jobType);
         const createPlacement = jobType === 'FTE' || jobType === 'Intern+FTE';
         const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
+        let internshipDuration = null;
+        if(createInternship){
+          switch (jobType) {
+            case '2m Intern':
+              internshipDuration = '2m Intern';
+              break;
+            case '6m Intern':
+              internshipDuration = '6m Intern';
+              break;
+            case '11m Intern':
+              internshipDuration = '11m Intern';
+              break;
+            case 'Intern+PPO':
+              internshipDuration = '6m Intern';
+              break;
+            case 'Intern+FTE':
+              internshipDuration = '6m Intern';
+              break;
+            default:
+              break;
+          }}
+
 
         for (const studentId of studentIds) {
           const student = await Student.findById(studentId);
           if (student) {
 
             if(createInternship){
-              let internshipDuration = null;
-  
-              switch (jobType) {
-                case '2m Intern':
-                  internshipDuration = '2m Intern';
-                  break;
-                case '6m Intern':
-                  internshipDuration = '6m Intern';
-                  break;
-                case '11m Intern':
-                  internshipDuration = '11m Intern';
-                  break;
-                case 'Intern+PPO':
-                  internshipDuration = '6m Intern';
-                  break;
-                case 'Intern+FTE':
-                  internshipDuration = '6m Intern';
-                  break;
-                default:
-                  break;
-              }
-
               student.internshipstatus=internshipDuration;
             }
 
@@ -916,27 +892,6 @@ export const addshortlistStudents = async (req, res) => {
         }
   
         const jobType = job.job_type;
-        let internshipDuration = null;
-  
-        switch (jobType) {
-          case '2m Intern':
-            internshipDuration = '2m Intern';
-            break;
-          case '6m Intern':
-            internshipDuration = '6m Intern';
-            break;
-          case '11m Intern':
-            internshipDuration = '11m Intern';
-            break;
-          case 'Intern+PPO':
-            internshipDuration = '6m Intern';
-            break;
-          case 'Intern+FTE':
-            internshipDuration = '6m Intern';
-            break;
-          default:
-            break;
-        }
   
         if (createInternship) {
           const internship = new Internship({

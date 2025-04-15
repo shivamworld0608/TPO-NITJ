@@ -139,9 +139,9 @@ const JobProfileSchema = new mongoose.Schema(
       type:Boolean,
       default:false
     },
-    show:{
-      type:Boolean,
-      default:false
+    visibility: {
+      type: Boolean,
+      default: true,
     },
     recruiter_editing_allowed:{
       type:Boolean,
