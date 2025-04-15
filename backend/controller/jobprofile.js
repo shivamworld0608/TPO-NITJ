@@ -389,11 +389,20 @@ export const getJobProfiletostudent = async (req, res) => {
     let batch;
     try {
       const rollNumbers = [student.rollno];
+      const course = student.course;
       const response = await axios.post(`${process.env.ERP_SERVER}`, rollNumbers);
       const erpStudents = response.data.data;
       const erpData = erpStudents[0];
       const erpBatch = erpData.batch;
-      const adjustedBatch = String(Number(erpBatch) + 4);
+      const courseDurations = {
+        "B.Tech": 4,
+        "M.Tech": 2,
+        "B.Sc.-B.Ed.": 4,
+        "MBA": 2,
+        "M.Sc.": 2
+        };
+       const adjustment = courseDurations[course] || 0; // Default to 0 if course not found
+       const adjustedBatch = String(Number(erpBatch) + adjustment);
       batch = adjustedBatch;
     } catch (erpError) {
       console.error("ERP server error, falling back to database batch:", erpError);
@@ -556,11 +565,20 @@ export const checkEligibility = async (req, res) => {
     let updatedStudent;
     try {
       const rollNumbers = [student.rollno];
+      const course = student.course;
       const response = await axios.post(`${process.env.ERP_SERVER}`, rollNumbers);
       const erpStudents = response.data.data;
       const erpData = erpStudents[0];
       const erpBatch = erpData.batch;
-      const adjustedBatch = String(Number(erpBatch) + 4);
+      const courseDurations = {
+        "B.Tech": 4,
+        "M.Tech": 2,
+        "B.Sc.-B.Ed.": 4,
+        "MBA": 2,
+        "M.Sc.": 2
+        };
+       const adjustment = courseDurations[course] || 0; // Default to 0 if course not found
+       const adjustedBatch = String(Number(erpBatch) + adjustment);
       updatedStudent = {
         ...student.toObject(),
         cgpa: erpData.cgpa,

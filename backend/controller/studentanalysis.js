@@ -12,10 +12,10 @@ export const getStudentAnalytics = async (req, res) => {
             const erpStudents = response.data.data;
             console.log("erpStudents",erpStudents);
             erpStudents.forEach(erpStudent => {
-                const adjustedBatch = String(Number(erpStudent.batch) + 4);
+                /* const adjustedBatch = String(Number(erpStudent.batch) + 4); */
                 erpDataMap.set(erpStudent.rollno, {
                     ...erpStudent,
-                    batch: adjustedBatch,
+                    batch: erpStudent.batch,
                     active_backlogs: erpStudent.active_backlogs === 'true',
                     backlogs_history: erpStudent.backlogs_history === 'true'
                 });
@@ -26,6 +26,16 @@ export const getStudentAnalytics = async (req, res) => {
 
         const studentsAnalytics = await Promise.all(students.map(async (student) => {
             const erpData = erpDataMap.get(student.rollno);
+            const course = student.course;
+            const courseDurations = {
+                "B.Tech": 4,
+                "M.Tech": 2,
+                "B.Sc.-B.Ed.": 4,
+                "MBA": 2,
+                "M.Sc.": 2
+                };
+               const adjustment = courseDurations[course] || 0; // Default to 0 if course not found
+               const adjustedBatch = String(Number(erpData.batch) + adjustment);
             const studentData = {
                 _id: student._id,
                 name: student.name,
@@ -33,7 +43,7 @@ export const getStudentAnalytics = async (req, res) => {
                 rollno: student.rollno,
                 department: student.department,
                 course: student.course,
-                batch: erpData?.batch||student.batch,
+                batch: adjustedBatch ||student.batch,
                 gender: student.gender,
                 cgpa: erpData?.cgpa || student.cgpa,
                 placementstatus: student.placementstatus,

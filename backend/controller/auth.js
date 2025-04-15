@@ -252,12 +252,21 @@ export const LockedResendOTP = async (req, res) => {
           if (userType === "Student" && student) {
             try {
                 const rollNumbers = [student.rollno];
-                    const response = await axios.post(`${process.env.ERP_SERVER}`, rollNumbers, {
+                const course = student.course;
+                const response = await axios.post(`${process.env.ERP_SERVER}`, rollNumbers, {
                     });
                 const erpStudents = response.data.data;
                 const erpData = erpStudents[0];
                 const erpBatch = erpData.batch;
-                const adjustedBatch = String(Number(erpBatch) + 4);
+                const courseDurations = {
+                "B.Tech": 4,
+                "M.Tech": 2,
+                "B.Sc.-B.Ed.": 4,
+                "MBA": 2,
+                "M.Sc.": 2
+                };
+               const adjustment = courseDurations[course] || 0; // Default to 0 if course not found
+               const adjustedBatch = String(Number(erpBatch) + adjustment);
                 const updatedStudent = await Student.findByIdAndUpdate(
                     student._id,
                     {
