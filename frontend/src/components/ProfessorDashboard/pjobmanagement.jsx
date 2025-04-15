@@ -829,7 +829,7 @@ const JobProfilesonp = () => {
                   <option value="B.Tech">B.Tech</option>
                   <option value="M.Tech">M.Tech</option>
                   <option value="MBA">MBA</option>
-                  <option value="M.Sc">M.Sc</option>
+                  <option value="M.Sc.">M.Sc.</option>
                   <option value="PHD">PHD</option>
                 </select>
               </div>
