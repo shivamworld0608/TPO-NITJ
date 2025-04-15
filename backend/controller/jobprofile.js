@@ -666,7 +666,7 @@ export const checkEligibility = async (req, res) => {
         jobClassIndex = 1;
       }
      }
-     else if(student.course=="M.Sc"){
+     else if(student.course=="M.Sc."){
       if(job.ctc>=6 && job.ctc<20){
         jobClassIndex = 2;
       }
@@ -865,7 +865,7 @@ export const addshortlistStudents = async (req, res) => {
                  jobClassIndex = 1;
                }
               }
-              else if(student.course=="M.Sc"){
+              else if(student.course=="M.Sc."){
                if(job.ctc>=6 && job.ctc<20){
                  jobClassIndex = 2;
                }

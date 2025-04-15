@@ -19,7 +19,7 @@ const Home = () => {
       <Navbar/>
       <div className=""><HeroSection /></div>
       <div className=" max-w-full mx-auto "><AboutUs /></div>
-      <div className="max-w-full mx-auto py-10"><TpoMessage /></div>
+      <div className="max-w-7xl mx-auto py-10"><TpoMessage /></div>
       <div className="max-w-7xl mx-auto mt-24"><RecruitmentProcess /></div>
       <div id="why-recruit" className="max-w-full mx-auto  mt-12 pt-12 pb-6"><WhyRecruit /></div>
       <div className="max-w-7xl mx-auto "><PlacementHighlights /></div> 

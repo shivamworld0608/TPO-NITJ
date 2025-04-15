@@ -153,7 +153,7 @@ const StudentAnalyticsDashboard = () => {
     { value: "B.Tech", label: "B.Tech" },
     { value: "M.Tech", label: "M.Tech" },
     { value: "MBA", label: "MBA" },
-    { value: "M.Sc", label: "M.Sc" },
+    { value: "M.Sc.", label: "M.Sc." },
     { value: "PHD", label: "PHD" },
   ];
 
@@ -463,7 +463,7 @@ const StudentAnalyticsDashboard = () => {
       case "MBA":
         setDepartmentOptions(mbadepartmentOptions);
         break;
-      case "M.Sc":
+      case "M.Sc.":
         setDepartmentOptions(mscdepartmentOptions);
         break;
       case "PHD":

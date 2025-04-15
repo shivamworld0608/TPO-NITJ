@@ -119,7 +119,7 @@ const JobProfileSchema = new mongoose.Schema(
         },
         course_allowed: {
           type: String,
-          enum: ["B.Tech", "M.Tech", "MBA" , "M.Sc" , "PHD"],
+          enum: ["B.Tech", "M.Tech", "MBA" , "M.Sc." , "PHD","B.Sc.-B.Ed."],
         },
       },
     },
