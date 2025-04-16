@@ -248,7 +248,7 @@ export const LockedResendOTP = async (req, res) => {
               secure: process.env.NODE_ENV === "production",
               expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           });
-
+        console.log("hello");
           if (userType === "Student" && student) {
             try {
                 const rollNumbers = [student.rollno];
