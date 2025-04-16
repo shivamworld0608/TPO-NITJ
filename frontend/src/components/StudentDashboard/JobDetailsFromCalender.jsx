@@ -18,170 +18,167 @@ const JobdetailFromCalender = () => {
   const { job_id } = useParams();
   const navigate = useNavigate();
 
- const [activeInfo, setActiveInfo] = useState("jobDescription");
-   const [jobDetails, setJobDetails] = useState({});
-   const [loading, setLoading] = useState(true);
-   const [error, setError] = useState(null);
-   const [status, setStatus] = useState("");
-   const [application, setApplication] = useState(false);
-   const [isdeadlineOver, setIsdeadlineOver] = useState(false);
-   const [timeLeft, setTimeLeft] = useState("");
-   const [description, setDescription] = useState(false);
+  const [activeInfo, setActiveInfo] = useState("jobDescription");
+  const [jobDetails, setJobDetails] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [status, setStatus] = useState("");
+  const [application, setApplication] = useState(false);
+  const [isdeadlineOver, setIsdeadlineOver] = useState(false);
+  const [timeLeft, setTimeLeft] = useState("");
+  const [description, setDescription] = useState(false);
 
   useEffect(() => {
-      const fetchDetails = async () => {
-        try {
-            console.log("what is the job id" , job_id);
-          setLoading(true);
-          const response = await axios.get(
-            `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/${job_id}`,
-            { withCredentials: true }
-          );
-          setJobDetails(response.data.job || {});
-          console.log(response.data.job);
-        } catch (error) {
-          setError("Failed to fetch job details. Please try again.");
-        } finally {
-          setLoading(false);
-        }
-      };
-  
-      fetchDetails();
-    }, [job_id]);
-  
-    useEffect(() => {
-      const fetchEligibility = async () => {
-        try {
-          const response = await axios.get(
-            `${
-              import.meta.env.REACT_APP_BASE_URL
-            }/jobprofile/eligibility/${job_id}`,
-            { withCredentials: true }
-          );
-          setStatus(response.data || "");
-          setIsdeadlineOver(response.data.isDeadlineOver);
-        } catch (error) {
-          setError("Failed to fetch eligibility status. Please try again.");
-        }
-      };
-  
-      fetchEligibility();
-    }, [job_id]);
-  
-    useEffect(() => {
-      if (jobDetails.deadline) {
-        const deadlineDate = new Date(jobDetails.deadline).getTime();
-  
-        const updateCountdown = () => {
-          const now = new Date().getTime();
-          const timeDifference = deadlineDate - now;
-  
-          if (timeDifference > 0) {
-            const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-            const hours = Math.floor(
-              (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-            );
-            const minutes = Math.floor(
-              (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
-            );
-            const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-  
-            setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
-          } else {
-            setTimeLeft("Deadline Passed");
-            setIsdeadlineOver(true);
-            clearInterval(interval);
-          }
-        };
-  
-        // Update the countdown every second
-        const interval = setInterval(updateCountdown, 1000);
-  
-        // Clear the interval when the component unmounts
-        return () => clearInterval(interval);
-      }
-    }, [jobDetails.deadline]);
-  
-    const withdrawApplication = async () => {
+    const fetchDetails = async () => {
       try {
-        const result = await Swal.fire({
-          title: "Are you sure?",
-          text: "You are about to withdraw your application. This action cannot be undone.",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, withdraw it!",
-        });
-  
-        if (result.isConfirmed) {
-          const response = await axios.post(
-            `${import.meta.env.REACT_APP_BASE_URL}/api/withdraw`,
-            { jobId: job_id },
-            { withCredentials: true }
-          );
-  
-          if (response.status === 200) {
-            setStatus((prevStatus) => ({
-              ...prevStatus,
-              applied: false,
-            }));
-            Swal.fire({
-              title: "Withdrawn!",
-              text: "Your application has been withdrawn successfully.",
-              icon: "success",
-              confirmButtonColor: "#3085d6",
-            });
-          }
-        }
+        console.log("what is the job id", job_id);
+        setLoading(true);
+        const response = await axios.get(
+          `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/${job_id}`,
+          { withCredentials: true }
+        );
+        setJobDetails(response.data.job || {});
+        console.log(response.data.job);
       } catch (error) {
-        console.error("Failed to withdraw application:", error);
-        Swal.fire({
-          title: "Error!",
-          text: "Failed to withdraw application. Please try again.",
-          icon: "error",
-          confirmButtonColor: "#3085d6",
-        });
+        setError("Failed to fetch job details. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
-  
-    if (loading)
-      return (
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
-        </div>
-      );
-  
-    if (error) {
-      return (
-        <div className="min-h-screen flex items-center justify-center text-red-600">
-          {error}
-        </div>
-      );
-    }
-  
-    const handleApplicationSuccess = () => {
-      setStatus((prevStatus) => ({
-        ...prevStatus,
-        applied: true,
-      }));
-    };
-  
-    if (application) {
-      return (
-        <div className="container mx-auto px-4 py-6">
-          <ApplicationForm
-            onHide={() => setApplication(false)}
-            jobId={job_id}
-            onApplicationSuccess={handleApplicationSuccess}
-          />
-        </div>
-      );
-    }
 
-  // First, determine if we're dealing with an internship type
+    fetchDetails();
+  }, [job_id]);
+
+  useEffect(() => {
+    const fetchEligibility = async () => {
+      try {
+        const response = await axios.get(
+          `${
+            import.meta.env.REACT_APP_BASE_URL
+          }/jobprofile/eligibility/${job_id}`,
+          { withCredentials: true }
+        );
+        setStatus(response.data || "");
+        setIsdeadlineOver(response.data.isDeadlineOver);
+      } catch (error) {
+        setError("Failed to fetch eligibility status. Please try again.");
+      }
+    };
+
+    fetchEligibility();
+  }, [job_id]);
+
+  useEffect(() => {
+    if (jobDetails.deadline) {
+      const deadlineDate = new Date(jobDetails.deadline).getTime();
+
+      const updateCountdown = () => {
+        const now = new Date().getTime();
+        const timeDifference = deadlineDate - now;
+
+        if (timeDifference > 0) {
+          const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+          const hours = Math.floor(
+            (timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+          );
+          const minutes = Math.floor(
+            (timeDifference % (1000 * 60 * 60)) / (1000 * 60)
+          );
+          const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+          setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
+        } else {
+          setTimeLeft("Deadline Passed");
+          setIsdeadlineOver(true);
+          clearInterval(interval);
+        }
+      };
+
+      const interval = setInterval(updateCountdown, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [jobDetails.deadline]);
+
+  const withdrawApplication = async () => {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You are about to withdraw your application. This action cannot be undone.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, withdraw it!",
+      });
+
+      if (result.isConfirmed) {
+        const response = await axios.post(
+          `${import.meta.env.REACT_APP_BASE_URL}/api/withdraw`,
+          { jobId: job_id },
+          { withCredentials: true }
+        );
+
+        if (response.status === 200) {
+          setStatus((prevStatus) => ({
+            ...prevStatus,
+            applied: false,
+          }));
+          Swal.fire({
+            title: "Withdrawn!",
+            text: "Your application has been withdrawn successfully.",
+            icon: "success",
+            confirmButtonColor: "#3085d6",
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to withdraw application:", error);
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to withdraw application. Please try again.",
+        icon: "error",
+        confirmButtonColor: "#3085d6",
+      });
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+      </div>
+    );
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-600">
+        {error}
+      </div>
+    );
+  }
+
+  const handleApplicationSuccess = () => {
+    setStatus((prevStatus) => ({
+      ...prevStatus,
+      applied: true,
+    }));
+  };
+
+  if (application) {
+    return (
+      <div className="container mx-auto px-4 py-6">
+        <ApplicationForm
+          onHide={() => setApplication(false)}
+          jobId={job_id}
+          onApplicationSuccess={handleApplicationSuccess}
+        />
+      </div>
+    );
+  }
+
   const isInternship = ["Intern", "Intern+PPO", "Intern+FTE"].includes(
-    jobDetails.job_type,
+    jobDetails.job_type
   );
 
   const handleBack = () => {
@@ -209,7 +206,6 @@ const JobdetailFromCalender = () => {
       label: "JOB ROLE",
       value: jobDetails.job_role || "N/A",
     },
-    // CTC box
     {
       icon: faIndianRupeeSign,
       label: isInternship ? "CTC(BASE)" : "CTC",
@@ -217,7 +213,6 @@ const JobdetailFromCalender = () => {
         ? `${jobDetails.job_salary?.ctc}(${jobDetails.job_salary?.base_salary})`
         : jobDetails.job_salary?.ctc || "N/A",
     },
-    // Base salary or stipend box
     {
       icon: faIndianRupeeSign,
       label: isInternship ? "STIPEND" : "BASE SALARY",
@@ -282,25 +277,24 @@ const JobdetailFromCalender = () => {
           ))}
         </div>
 
-        {/* Popup Modal */}
         {description && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
-            <div className="relative p-6 bg-white rounded-lg shadow-lg w-80">
-              {/* Close Button */}
+            <div className="relative p-6 bg-white rounded-lg shadow-lg w-80 sm:w-96 max-h-[80vh] overflow-y-auto">
               <button
                 onClick={() => setDescription(false)}
                 className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-xl"
               >
-                &times;
+                ×
               </button>
-
-              {/* Popup Content */}
-              <h2 className="text-lg text-custom-blue text-center font-semibold">
+              <h2 className="text-lg text-custom-blue text-center font-semibold mb-4">
                 Description
               </h2>
-              <p className="mt-2 text-gray-800">
-                {jobDetails.jobdescription || "No description available"}
-              </p>
+              <div
+                className="text-gray-800 prose prose-sm sm:prose-base max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html: jobDetails.jobdescription || "<p>No description available</p>",
+                }}
+              />
             </div>
           </div>
         )}
@@ -316,15 +310,11 @@ const JobdetailFromCalender = () => {
                 key={index}
                 className="mb-10 ml-10 pl-6 pb-6 border-b border-gray-200 last:border-b-0"
               >
-                {/* Timeline Dot */}
                 <div
-                  className="absolute -left-[26px] w-12 h-12 bg-white border-4 border-custom-blue 
-                  rounded-full flex items-center justify-center"
+                  className="absolute -left-[26px] w-12 h-12 bg-white border-4 border-custom-blue rounded-full flex items-center justify-center"
                 >
                   {getStepIcon(step.step_type)}
                 </div>
-
-                {/* Step Card */}
                 <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-custom-blue hover:border-blue-500 hover:shadow-2xl">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="text-xl font-semibold text-gray-800">
@@ -334,8 +324,6 @@ const JobdetailFromCalender = () => {
                       Stage {index + 1}
                     </span>
                   </div>
-
-                  {/* Step Details */}
                   <div className="space-y-2">
                     {step.step_type === "OA" && (
                       <>
@@ -359,7 +347,6 @@ const JobdetailFromCalender = () => {
                         </div>
                       </>
                     )}
-
                     {step.step_type === "Interview" && (
                       <>
                         <div className="flex items-center text-gray-600">
@@ -371,8 +358,7 @@ const JobdetailFromCalender = () => {
                         <div className="flex items-center text-gray-600">
                           <Clock className="mr-2 w-5 h-5 text-blue-500" />
                           <span>
-                            Date:{" "}
-                            {step.details.interview_date || "To be announced"}
+                            Date: {step.details.interview_date || "To be announced"}
                           </span>
                         </div>
                         <div className="flex items-center text-gray-600">
@@ -383,7 +369,6 @@ const JobdetailFromCalender = () => {
                         </div>
                       </>
                     )}
-
                     {step.step_type === "Others" && (
                       <>
                         <div className="flex items-center text-gray-600">
@@ -395,8 +380,7 @@ const JobdetailFromCalender = () => {
                         <div className="flex items-center text-gray-600">
                           <Clock className="mr-2 w-5 h-5 text-blue-500" />
                           <span>
-                            Date:{" "}
-                            {step.details.others_date || "To be announced"}
+                            Date: {step.details.others_date || "To be announced"}
                           </span>
                         </div>
                         <div className="flex items-center text-gray-600">
@@ -556,7 +540,7 @@ const JobdetailFromCalender = () => {
                   day: "numeric",
                   hour: "2-digit",
                   minute: "2-digit",
-                  hour12: true, // Use 12-hour format (AM/PM)
+                  hour12: true,
                 })
               : "Not Provided"}
           </strong>

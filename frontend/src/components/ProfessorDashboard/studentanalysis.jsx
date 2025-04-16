@@ -173,11 +173,11 @@ const StudentAnalyticsDashboard = () => {
       options: [{ value: "Civil Engineering", label: "Civil Engineering" }],
     },
     {
-      label: "Computer Science & Engineering",
+      label: "COMPUTER SCIENCE AND ENGINEERING",
       options: [
         {
-          value: "Computer Science & Engineering",
-          label: "Computer Science & Engineering",
+          value: "COMPUTER SCIENCE AND ENGINEERING",
+          label: "COMPUTER SCIENCE AND ENGINEERING",
         },
         {
           value: "Data Science and Engineering",
@@ -186,9 +186,9 @@ const StudentAnalyticsDashboard = () => {
       ],
     },
     {
-      label: "Electrical Engineering",
+      label: "ELECTRICAL ENGINEERING",
       options: [
-        { value: "Electrical Engineering", label: "Electrical Engineering" },
+        { value: "ELECTRICAL ENGINEERING", label: "ELECTRICAL ENGINEERING" },
       ],
     },
     {
@@ -220,11 +220,11 @@ const StudentAnalyticsDashboard = () => {
       ],
     },
     {
-      label: "Instrumentation and Control Engineering",
+      label: "INSTRUMENTATION AND CONTROL ENGINEERING",
       options: [
         {
-          value: "Instrumentation and Control Engineering",
-          label: "Instrumentation and Control Engineering",
+          value: "INSTRUMENTATION AND CONTROL ENGINEERING",
+          label: "INSTRUMENTATION AND CONTROL ENGINEERING",
         },
       ],
     },
@@ -1000,132 +1000,7 @@ const StudentAnalyticsDashboard = () => {
                           </div>
                         </CardContent>
                       </Card>
-                      <Card className="border-0 shadow-sm">
-                        <CardHeader>
-                          <CardTitle className="text-lg">
-                            Academic Details
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              Department
-                            </label>
-                            {editMode ? (
-                              <Select
-                                options={departmentOptions}
-                                value={editedStudent.department}
-                                onValueChange={(value) =>
-                                  handleChange("department", value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.department}
-                              </p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              Course
-                            </label>
-                            {editMode ? (
-                              <Select
-                                options={courseOptions}
-                                value={editedStudent.course}
-                                onValueChange={(value) =>
-                                  handleChange("course", value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.course}
-                              </p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              CGPA
-                            </label>
-                            {editMode ? (
-                              <Input
-                                type="number"
-                                min="0"
-                                max="10"
-                                value={editedStudent.cgpa}
-                                onChange={(e) =>
-                                  handleChange("cgpa", e.target.value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.cgpa}
-                              </p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              Batch
-                            </label>
-                            {editMode ? (
-                              <Select
-                                options={batchOptions}
-                                value={editedStudent.batch}
-                                onValueChange={(value) =>
-                                  handleChange("batch", value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.batch}
-                              </p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              Active Backlog
-                            </label>
-                            {editMode ? (
-                              <Select
-                                options={backlogOptions}
-                                value={editedStudent.active_backlogs}
-                                onValueChange={(value) =>
-                                  handleChange("active_backlogs", value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.active_backlogs ? "Yes" : "No"}
-                              </p>
-                            )}
-                          </div>
-
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              Backlogs History
-                            </label>
-                            {editMode ? (
-                              <Select
-                                options={backlogOptions}
-                                value={editedStudent.backlogs_history}
-                                onValueChange={(value) =>
-                                  handleChange("backlogs_history", value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.backlogs_history ? "Yes" : "No"}
-                              </p>
-                            )}
-                          </div>
-                        </CardContent>
-                      </Card>
+                 
                     </div>
 
                     {/* Right Column */}

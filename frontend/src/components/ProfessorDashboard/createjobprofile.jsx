@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import { FaArrowLeft } from "react-icons/fa";
 import { AlertCircle, GripVertical, X, Edit2 } from "lucide-react";
 import CompanySearchDropdown from "../RecruiterDashboard/CompanySearchDropdown.jsx";
+import ReactQuill from "react-quill"; // Import React Quill
+import "react-quill/dist/quill.snow.css"; // Import Quill styles
 
 const btechdepartmentOptions = [
   {
@@ -290,6 +292,28 @@ const workflowStepOptions = [
   { value: "Others", label: "Others" },
 ];
 
+// Configure React Quill toolbar
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link"],
+    ["clean"],
+  ],
+};
+
+const quillFormats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "list",
+  "bullet",
+  "link",
+];
+
 const CreateJob = ({ onJobCreated, onCancel }) => {
   const [formData, setFormData] = useState({
     job_id: "",
@@ -330,30 +354,36 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
           `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/`,
           { withCredentials: true }
         );
-  
+
         if (Array.isArray(response.data)) {
           setCompanies(response.data);
         } else {
           console.error("Unexpected response format:", response.data);
-          setCompanies([]); // Fallback to empty array
+          setCompanies([]);
         }
       } catch (error) {
         console.error("Error fetching companies:", error);
-        setCompanies([]); // Handle API failure
+        setCompanies([]);
       }
     };
-  
+
     fetchCompanies();
   }, []);
-  
-
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
-      ...(name === "course_allowed" && {}), // Clear departments when course changes
+      ...(name === "course_allowed" && {}),
+    });
+  };
+
+  // Handle React Quill changes for job description
+  const handleQuillChange = (value) => {
+    setFormData({
+      ...formData,
+      jobdescription: value,
     });
   };
 
@@ -506,16 +536,15 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
       onCancel();
     } catch (error) {
       toast.error("Error creating job application.");
-    }
-    finally {
-      isSubmitting(false);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <>
       <button
-        className=" text-gray-500 mx-4 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+        className="text-gray-500 mx-4 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
         onClick={onCancel}
       >
         <FaArrowLeft />
@@ -549,31 +578,6 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 onChange={handleChange}
               />
             </div>
-            {/* <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Company Name<span className="text-red-500"> *</span>
-              </label>
-              <input
-                required
-                type="text"
-                name="company_name"
-                value={formData.company_name}
-                onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-              />
-            </div> */}
-            {/* <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Company Logo (URL)
-              </label>
-              <input
-                type="text"
-                name="company_logo"
-                value={formData.company_logo}
-                onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-              />
-            </div> */}
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Job Role<span className="text-red-500"> *</span>
@@ -591,12 +595,13 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               <label className="block text-gray-700 font-semibold mb-2">
                 Job Description
               </label>
-              <textarea
-                name="jobdescription"
+              <ReactQuill
                 value={formData.jobdescription}
-                onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-                rows={4}
+                onChange={handleQuillChange}
+                modules={quillModules}
+                formats={quillFormats}
+                className="border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                theme="snow"
               />
             </div>
             <div>
@@ -624,17 +629,6 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 )}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
-                {/* <option value="">Select Job Type</option>
-                <option value="2m Intern">2-Month Internship</option>
-                <option value="6m Intern">6-Month Internship</option>
-                <option value="Intern+PPO">
-                  Intern + Pre Placement Offer(PPO)
-                </option>
-                <option value="Intern+FTE">
-                  Intern + Full-Time Employment(FTE)
-                </option>
-                <option value="FTE">Full-Time Employment(FTE)</option>
-              </select> */}
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -643,21 +637,13 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               <Select
                 required
                 options={jobCategoryOptions}
-                onChange={(option) =>
-                  handleSelectChange("job_category", option)
-                }
+                onChange={(option) => handleSelectChange("job_category", option)}
                 defaultValue={jobCategoryOptions.find(
                   (option) => option.value === formData.job_category
                 )}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
-                {/* <option value="">Select Job Category</option>
-                <option value="Tech">Tech</option>
-                <option value="Non-Tech">Non-Tech</option>
-                <option value="Tech+Non-Tech">Tech + Non-Tech</option>
-              </select> */}
             </div>
-
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 CTC
@@ -677,7 +663,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               <input
                 type="number"
                 name="stipend"
-                value={formData.stipend} //baceknd me ctc ko stipend me change krna h
+                value={formData.stipend}
                 onChange={handleChange}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
@@ -753,13 +739,13 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                       : formData.course_allowed === "PHD"
                       ? phddepartmentOptions
                       : []
-                  } // Show departmentOptions if course is selected, otherwise an empty array
+                  }
                   isMulti
                   onChange={handleDepartmentChange}
                   isDisabled={!formData.course_allowed}
-                  className="w-full border-2 p-1.5 border-gray-200 rounded-xl  focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300 "
+                  className="w-full border-2 p-1.5 border-gray-200 rounded-xl focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
-                {!formData.course_allowed && ( // Check if no course is selected
+                {!formData.course_allowed && (
                   <p className="text-red-500 text-sm mt-2">
                     Please choose a course first.
                   </p>
@@ -1096,10 +1082,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
             type="submit"
             className="mt-10 w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold text-lg rounded-2xl hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
             disabled={isSubmitting}
-            isSubmitting={isSubmitting}
           >
             {isSubmitting ? "Creating Job..." : "Create Job"}
-            
           </button>
         </form>
       </div>

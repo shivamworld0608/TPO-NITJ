@@ -4,15 +4,14 @@ import toast from 'react-hot-toast';
 import { FaArrowLeft } from "react-icons/fa";
 import { Button } from "../ui/button";
 import { ArrowLeft, Plus, Save } from 'lucide-react';
-
+import Swal from 'sweetalert2';
 
 const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
   const [fields, setFields] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-
-  const studentProperties = ['gender', 'department', 'cgpa','name','email'];
+  const studentProperties = ['gender', 'department', 'cgpa', 'name', 'email', 'course', 'batch', 'active_backlogs', 'backlogs_history'];
 
   const addField = () => {
     setFields([...fields, { 
@@ -24,7 +23,6 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
       options: [] 
     }]);
   };
-
 
   const removeField = (index) => {
     setFields(fields.filter((_, i) => i !== index));
@@ -59,8 +57,42 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
     setFields(updatedFields);
   };
 
+  const validateForm = () => {
+    // Check if any autofill field doesn't have student property selected
+    const hasInvalidAutofill = fields.some(
+      field => field.isAutoFill && !field.studentPropertyPath
+    );
+
+    if (hasInvalidAutofill) {
+      toast.error('Please select a student property for all auto-fill fields');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async () => {
     if (isSubmitting) return;
+    
+    // First validate the form
+    if (!validateForm()) {
+      return;
+    }
+
+    // Show confirmation dialog
+    const result = await Swal.fire({
+      title: 'Confirm Submission',
+      text: 'Please make sure that Email field has type "email" and neccessary field has been marked autofill?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, create it!',
+      cancelButtonText: 'No, cancel'
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       await axios.post(
@@ -76,8 +108,7 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
     } catch (err) {
       console.error(err);
       toast.error('Failed to create form template');
-    }
-    finally {
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -104,25 +135,24 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
           placeholder="Enter form title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          required
         />
       </div>
-
-
 
       <div className="space-y-6">
         {fields.map((field, index) => (
           <div key={index} className="p-4 border border-gray-200 rounded-lg shadow-sm">
-               <div className="flex justify-between items-center">
-                          <h3 className="font-medium">Field {index + 1}</h3>
-                          <Button
-                            variant="destructive"
-                            className='text-red-500'
-                            size="sm"
-                            onClick={() => removeField(index)}
-                          >
-                            Remove
-                          </Button>
-                        </div>
+            <div className="flex justify-between items-center">
+              <h3 className="font-medium">Field {index + 1}</h3>
+              <Button
+                variant="destructive"
+                className='text-red-500'
+                size="sm"
+                onClick={() => removeField(index)}
+              >
+                Remove
+              </Button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <input
                 type="text"
@@ -130,6 +160,7 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
                 placeholder="Field Name"
                 value={field.fieldName}
                 onChange={(e) => handleFieldChange(index, 'fieldName', e.target.value)}
+                required
               />
               <select
                 className="border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -196,6 +227,7 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
                   className="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   value={field.studentPropertyPath || ''}
                   onChange={(e) => handleFieldChange(index, 'studentPropertyPath', e.target.value)}
+                  required={field.isAutoFill}
                 >
                   <option value="" disabled>
                     Select Student Property
@@ -212,29 +244,26 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
         ))}
       </div>
 
-
       <div className="flex flex-col space-y-4 mt-3">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={addField}
-            className="w-full bg-custom-blue text-white"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add New Field
-          </Button>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={addField}
+          className="w-full bg-custom-blue text-white"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Add New Field
+        </Button>
 
-          <Button
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className="w-full bg-green-500 text-white"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            {isSubmitting ? 'Creating Form Template...' : 'Create Form Template'}
-          </Button>
-        </div>
-
-
+        <Button
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="w-full bg-green-500 text-white"
+        >
+          <Save className="w-4 h-4 mr-2" />
+          {isSubmitting ? 'Creating Form Template...' : 'Create Form Template'}
+        </Button>
+      </div>
     </div>
   );
 };

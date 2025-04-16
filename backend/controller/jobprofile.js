@@ -631,7 +631,7 @@ export const checkEligibility = async (req, res) => {
         return res.json({ eligible: false, reason: "Backlogs History do not meet criteria" });
       }
     }
-
+   const jobType = job.job_type;
     const isInternship = ['2m Intern', '6m Intern', '11m Intern', 'Intern+PPO', 'Intern+FTE'].includes(jobType);
     const isPlacement = jobType === 'FTE' || jobType === 'Intern+FTE';
 
@@ -652,7 +652,7 @@ export const checkEligibility = async (req, res) => {
      else if(job.ctc<4.5){
        jobClassIndex = 0;
      }
-     else if((student.course=="B.Tech"|| student.course=="M.Tech") && (student.department=="Computer Science & Engineering"||student.department=="Information Technology")){
+     else if((student.course=="B.Tech"|| student.course=="M.Tech") && (student.department=="COMPUTER SCIENCE AND ENGINEERING"||student.department=="INFORMATION TECHNOLOGY")){
        if(job.ctc>=10 && job.ctc<20){
          jobClassIndex = 2;
        }
@@ -660,7 +660,7 @@ export const checkEligibility = async (req, res) => {
          jobClassIndex = 1;
        }
      }
-     else if((student.course=="B.Tech"|| student.course=="M.Tech") && (student.department=="Electronics & Communication Engineering"|| student.department=="Instrumentation and Control Engineering"||student.department=="Electronics and VLSI Engineering"||student.department=="Electrical Engineering")){
+     else if((student.course=="B.Tech"|| student.course=="M.Tech") && (student.department=="ELECTRONICS AND COMMUNICATION ENGINEERING"|| student.department=="INSTRUMENTATION AND CONTROL ENGINEERING"||student.department=="ELECTRONICS AND VLSI ENGINEERING"||student.department=="ELECTRICAL ENGINEERING")){
       if(job.ctc>=8 && job.ctc<20){
         jobClassIndex = 2;
       }
@@ -809,6 +809,7 @@ export const addshortlistStudents = async (req, res) => {
     } 
       else {
         const placementData = [];
+        const jobType = job.job_type;
         const createInternship = ['2m Intern', '6m Intern', '11m Intern', 'Intern+PPO', 'Intern+FTE'].includes(jobType);
         const createPlacement = jobType === 'FTE' || jobType === 'Intern+FTE';
         const jobClassOrder = ["notplaced", "Below Dream", "Dream", "Super Dream"];
@@ -851,7 +852,7 @@ export const addshortlistStudents = async (req, res) => {
               else if(job.ctc<4.5){
                 jobClassIndex = 0;
               }
-              else if((student.course=="B.Tech"|| student.course=="M.Tech") && (student.department=="Computer Science & Engineering"||student.department=="Information Technology")){
+              else if((student.course=="B.Tech"|| student.course=="M.Tech") && (student.department=="COMPUTER SCIENCE AND ENGINEERING"||student.department=="INFORMATION TECHNOLOGY")){
                 if(job.ctc>=10 && job.ctc<20){
                   jobClassIndex = 2;
                 }
@@ -859,7 +860,7 @@ export const addshortlistStudents = async (req, res) => {
                   jobClassIndex = 1;
                 }
               }
-              else if((student.course=="B.Tech"|| student.course=="M.Tech") && (student.department=="Electronics & Communication Engineering"|| student.department=="Instrumentation and Control Engineering"||student.department=="Electronics and VLSI Engineering"||student.department=="Electrical Engineering")){
+              else if((student.course=="B.Tech"|| student.course=="M.Tech") && (student.department=="ELECTRONICS AND COMMUNICATION ENGINEERING"|| student.department=="INSTRUMENTATION AND CONTROL ENGINEERING"||student.department=="ELECTRONICS AND VLSI ENGINEERING"||student.department=="ELECTRICAL ENGINEERING")){
                if(job.ctc>=8 && job.ctc<20){
                  jobClassIndex = 2;
                }
@@ -908,8 +909,6 @@ export const addshortlistStudents = async (req, res) => {
             console.error(`Student not found for ID: ${studentId}`);
           }
         }
-  
-        const jobType = job.job_type;
   
         if (createInternship) {
           const internship = new Internship({
@@ -1034,7 +1033,7 @@ export const eligibleinthis = async (req, res) => {
     );
     const emailMap = {};
     submissions.forEach(submission => {
-      const emailField = submission.fields.find(field => field.fieldName === 'Email');
+      const emailField = submission.fields.find(field => field.fieldType === 'email');
       if (emailField) {
         emailMap[submission.studentId.toString()] = emailField.value;
       }
@@ -1068,7 +1067,7 @@ export const viewshortlisting=async(req,res)=>{
     });
     const shortlistedStudents = submissions.map(submission => {
       const nameField = submission.fields.find(field => field.fieldName === 'Name');
-      const emailField = submission.fields.find(field => field.fieldName === 'Email');
+      const emailField = submission.fields.find(field => field.fieldType === 'Email');
 
       return {
         name: nameField ? nameField.value : submission.studentId.name,

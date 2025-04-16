@@ -43,9 +43,6 @@ const studentSchema = new mongoose.Schema({
               // "Physics",
           ]
   },
-  year: {
-    type: String,
-  },
   batch: {
     type: String,
   },

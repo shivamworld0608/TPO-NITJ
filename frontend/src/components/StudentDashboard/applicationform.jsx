@@ -175,8 +175,9 @@ const [noFormAvailable, setNoFormAvailable] = useState(false);
       const submissionData = {
         jobId,
         fields: [
-          ...fields.map(({ fieldName, value, isLocked, studentPropertyPath }) => ({
+          ...fields.map(({ fieldName, fieldType, value, isLocked, studentPropertyPath }) => ({
             fieldName,
+            fieldType,
             value,
             isAutoFilled: isLocked,
             studentPropertyPath,
