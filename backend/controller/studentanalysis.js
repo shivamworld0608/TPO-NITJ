@@ -1,18 +1,85 @@
 import Student from '../models/user_model/student.js';
 import JobProfile from '../models/jobprofile.js';
 import axios from 'axios';
+
 export const getStudentAnalytics = async (req, res) => {
     try {
-        const students = await Student.find();
+        // Extract filter query parameters
+        const {
+            department,
+            course,
+            batch,
+            cgpa,
+            gender,
+            rollno,
+            debarred,
+            active_backlogs,
+            backlogs_history,
+            name,
+            placementstatus,
+            category,
+            internshipstatus
+        } = req.query;
+
+        console.log('Query parameters:', req.query);
+
+        // Build the filter object for MongoDB query
+        const filter = {};
+
+        if (department && department !== 'All') {
+            filter.department = department;
+        }
+        if (course && course !== 'All') {
+            filter.course = course;
+        }
+        if (batch && batch !== 'All') {
+            filter.batch = batch;
+        }
+        if (cgpa && cgpa !== 'All') {
+            filter.cgpa = { $gt: parseFloat(cgpa.replace('> ', '')) };
+        }
+        if (gender && gender !== 'All') {
+            filter.gender = gender;
+        }
+        if (rollno) {
+            filter.rollno = { $regex: rollno, $options: 'i' }; // Case-insensitive partial match
+        }
+        if (debarred && debarred !== 'All') {
+            filter.debarred = debarred === 'true';
+        }
+        if (active_backlogs && active_backlogs !== 'All') {
+            filter.active_backlogs = active_backlogs === 'true';
+        }
+        if (backlogs_history && backlogs_history !== 'All') {
+            filter.backlogs_history = backlogs_history === 'true';
+        }
+        if (name) {
+            filter.name = { $regex: name, $options: 'i' }; // Case-insensitive partial match
+        }
+        if (placementstatus && placementstatus !== 'All') {
+            filter.placementstatus = placementstatus;
+        }
+        if (category && category !== 'All') {
+            filter.category = category;
+        }
+        if (internshipstatus && internshipstatus !== 'All') {
+            filter.internshipstatus = internshipstatus;
+        }
+
+        // Fetch students with applied filters
+        const students = await Student.find(filter);
+
         const jobProfiles = await JobProfile.find();
+
         const rollNumbers = students.map(student => student.rollno);
         let erpDataMap = new Map();
+
+        // Attempt to fetch ERP data, but continue even if it fails
         try {
             const response = await axios.post(`${process.env.ERP_SERVER}`, rollNumbers);
-            const erpStudents = response.data.data;
-            console.log("erpStudents",erpStudents);
+            const erpStudents = response.data.data || [];
+            console.log("erpStudents:", erpStudents);
             erpStudents.forEach(erpStudent => {
-                /* const adjustedBatch = String(Number(erpStudent.batch) + 4); */
                 erpDataMap.set(erpStudent.rollno, {
                     ...erpStudent,
                     batch: erpStudent.batch,
@@ -22,106 +89,130 @@ export const getStudentAnalytics = async (req, res) => {
             });
         } catch (error) {
             console.error("Error fetching ERP data:", error.message);
+            // Continue without ERP data, relying on database
         }
 
-        const studentsAnalytics = await Promise.all(students.map(async (student) => {
-            const erpData = erpDataMap.get(student.rollno);
-            const course = student.course;
-            const courseDurations = {
-                "B.Tech": 4,
-                "M.Tech": 2,
-                "B.Sc.-B.Ed.": 4,
-                "MBA": 2,
-                "M.Sc.": 2
-                };
-               const adjustment = courseDurations[course] || 0; // Default to 0 if course not found
-               const adjustedBatch = String(Number(erpData.batch) + adjustment);
-            const studentData = {
-                _id: student._id,
-                name: student.name,
-                email: student.email,
-                rollno: student.rollno,
-                department: student.department,
-                course: student.course,
-                batch: adjustedBatch ||student.batch,
-                gender: student.gender,
-                cgpa: erpData?.cgpa || student.cgpa,
-                placementstatus: student.placementstatus,
-                debarred:student.debarred,
-                active_backlogs: erpData?.active_backlogs || student.active_backlogs,
-                backlogs_history: erpData?.backlogs_history || student.backlogs_history,
-                applications: {
-                    total: 0,
-                    jobProfiles: []
-                },
-                assessments: {
-                    resumeshortlisting: {
-                        total: 0,
-                        shortlisted: 0,
-                        rejected: 0
-                    },
-                    oa: {
-                        total: 0,
-                        shortlisted: 0,
-                        rejected: 0,
-                        absent: 0
-                    },
-                    interview: {
-                        total: 0,
-                        shortlisted: 0,
-                        rejected: 0,
-                        absent: 0
-                    },
-                    gd: {
-                        total: 0,
-                        shortlisted: 0,
-                        rejected: 0,
-                        absent: 0
-                    },
-                    others: {
-                        total: 0,
-                        shortlisted: 0,
-                        rejected: 0,
-                        absent: 0
+        const studentsAnalytics = await Promise.all(
+            students.map(async (student) => {
+                try {
+                    const erpData = erpDataMap.get(student.rollno);
+                    const course = student.course;
+                    const courseDurations = {
+                        "B.Tech": 4,
+                        "M.Tech": 2,
+                        "B.Sc.-B.Ed.": 4,
+                        "MBA": 2,
+                        "M.Sc.": 2
+                    };
+                    const adjustment = courseDurations[course] || 0;
+                    let adjustedBatch = student.batch;
+                    if (erpData && erpData.batch && !isNaN(Number(erpData.batch))) {
+                        adjustedBatch = String(Number(erpData.batch) + adjustment);
                     }
-                }
-            };
 
-            for (const job of jobProfiles) {
-                const hasApplied = job.Applied_Students.includes(student._id);
-                if (hasApplied) {
-                    studentData.applications.total++;
-                    studentData.applications.jobProfiles.push({
-                        job_id: job.job_id,
-                        company_name: job.company_name,
-                        job_role: job.job_role,
-                        job_type: job.job_type,
-                        job_class: job.job_class
-                    });
-                }
-                job.Hiring_Workflow.forEach(step => {
-                    const assessmentType = step.step_type.toLowerCase().replace(/\s+/g, '');
-                    if (step.eligible_students.includes(student._id)) {
-                        studentData.assessments[assessmentType].total++;
-                        if (step.shortlisted_students.includes(student._id)) {
-                            studentData.assessments[assessmentType].shortlisted++;
-                        } else if (step.absent_students.includes(student._id)) {
-                            studentData.assessments[assessmentType].absent++;
-                        } else {
-                            studentData.assessments[assessmentType].rejected++;
+                    const studentData = {
+                        _id: student._id,
+                        name: student.name || '',
+                        email: student.email || '',
+                        phone: student.phone || '',
+                        rollno: student.rollno || '',
+                        department: student.department || '',
+                        course: student.course || '',
+                        batch: adjustedBatch,
+                        gender: student.gender || '',
+                        category: student.category || '',
+                        cgpa: erpData?.cgpa ?? student.cgpa ?? 0,
+                        placementstatus: student.placementstatus || 'Not Placed',
+                        internshipstatus: student.internshipstatus || 'No Intern',
+                        debarred: student.debarred ?? false,
+                        active_backlogs: erpData?.active_backlogs ?? student.active_backlogs ?? false,
+                        backlogs_history: erpData?.backlogs_history ?? student.backlogs_history ?? false,
+                        applications: {
+                            total: 0,
+                            jobProfiles: []
+                        },
+                        assessments: {
+                            resumeshortlisting: {
+                                total: 0,
+                                shortlisted: 0,
+                                rejected: 0
+                            },
+                            oa: {
+                                total: 0,
+                                shortlisted: 0,
+                                rejected: 0,
+                                absent: 0
+                            },
+                            interview: {
+                                total: 0,
+                                shortlisted: 0,
+                                rejected: 0,
+                                absent: 0
+                            },
+                            gd: {
+                                total: 0,
+                                shortlisted: 0,
+                                rejected: 0,
+                                absent: 0
+                            },
+                            others: {
+                                total: 0,
+                                shortlisted: 0,
+                                rejected: 0,
+                                absent: 0
+                            }
                         }
-                    }
-                });
-            }
-            Object.keys(studentData.assessments).forEach(assessmentType => {
-                const assessment = studentData.assessments[assessmentType];
-                if (assessment.total > 0) {
-                    assessment.successRate = ((assessment.shortlisted / assessment.total) * 100).toFixed(2) + '%';
-                }
-            });
+                    };
 
-            return studentData;
-        }));
+                    for (const job of jobProfiles) {
+                        const hasApplied = job.Applied_Students?.includes(student._id) || false;
+                        if (hasApplied) {
+                            studentData.applications.total++;
+                            studentData.applications.jobProfiles.push({
+                                job_id: job.job_id || '',
+                                company_name: job.company_name || '',
+                                job_role: job.job_role || '',
+                                job_type: job.job_type || '',
+                                job_class: job.job_class || ''
+                            });
+                        }
+                        job.Hiring_Workflow?.forEach(step => {
+                            const assessmentType = step.step_type?.toLowerCase().replace(/\s+/g, '') || 'others';
+                            if (step.eligible_students?.includes(student._id)) {
+                                studentData.assessments[assessmentType].total++;
+                                if (step.shortlisted_students?.includes(student._id)) {
+                                    studentData.assessments[assessmentType].shortlisted++;
+                                } else if (step.absent_students?.includes(student._id)) {
+                                    studentData.assessments[assessmentType].absent++;
+                                } else {
+                                    studentData.assessments[assessmentType].rejected++;
+                                }
+                            }
+                        });
+                    }
+
+                    Object.keys(studentData.assessments).forEach(assessmentType => {
+                        const assessment = studentData.assessments[assessmentType];
+                        if (assessment.total > 0) {
+                            assessment.successRate = ((assessment.shortlisted / assessment.total) * 100).toFixed(2) + '%';
+                        }
+                    });
+
+                    return studentData;
+                } catch (error) {
+                    console.error(`Error processing student ${student.rollno}:`, error.message);
+                    // Return a minimal student object to avoid failing the entire Promise.all
+                    return {
+                        _id: student._id,
+                        rollno: student.rollno || '',
+                        name: student.name || 'Unknown',
+                        error: `Failed to process: ${error.message}`
+                    };
+                }
+            })
+        );
+
+        console.log(`Processed ${studentsAnalytics.length} students`);
 
         return res.status(200).json({
             success: true,

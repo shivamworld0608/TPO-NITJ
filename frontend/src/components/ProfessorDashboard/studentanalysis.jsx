@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Select } from '../ui/select';
 import { Button } from '../ui/button';
-import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User,Loader2 } from 'lucide-react';
+import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User, Loader2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 
@@ -23,41 +23,45 @@ const StudentAnalyticsDashboard = () => {
     backlogs_history: "",
     name: "",
     placementstatus: "",
+    category: "",
+    internshipstatus: "",
   });
   const [editMode, setEditMode] = useState(false);
   const [editedStudent, setEditedStudent] = useState(null);
   const [sortField, setSortField] = useState("name");
   const [sortDirection, setSortDirection] = useState("asc");
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleEditClick = (student) => {
     setEditMode(true);
     setEditedStudent({ ...student });
   };
 
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const handleApplyFilters = async () => {
+    try {
+      setLoading(true);
+      // Prepare query parameters from filters
+      const queryParams = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value && value !== "All") {
+          queryParams.append(key, value);
+        }
+      });
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/get`,
-          { withCredentials: true }
-        );
-
-        setData(response.data.data || []);
-      } catch (err) {
-        setError(err.response?.data?.error || "Failed to fetch students.");
-      }finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStudents();
-  }, []);
+      const response = await axios.get(
+        `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/get?${queryParams.toString()}`,
+        { withCredentials: true }
+      );
+      setData(response.data.data || []);
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to fetch students.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const clearFilters = () => {
     setFilters({
@@ -72,8 +76,11 @@ const StudentAnalyticsDashboard = () => {
       rollno: "",
       name: "",
       placementstatus: "",
+      category: "",
+      internshipstatus: "",
     });
   };
+
   const handleSaveClick = async () => {
     try {
       await axios.put(
@@ -83,12 +90,13 @@ const StudentAnalyticsDashboard = () => {
         editedStudent,
         { withCredentials: true }
       );
-      setEditMode(false);
-      const response = await axios.get(
-        `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/get`,
-        { withCredentials: true }
+      // Update data locally instead of refetching
+      setData((prevData) =>
+        prevData.map((student) =>
+          student._id === editedStudent._id ? { ...editedStudent } : student
+        )
       );
-      setData(response.data.data || []);
+      setEditMode(false);
     } catch (err) {
       setError(
         err.response?.data?.error || "Failed to update student details."
@@ -146,6 +154,23 @@ const StudentAnalyticsDashboard = () => {
     { value: false, label: "No" },
   ];
 
+  const categoryOptions = [
+    { value: "All", label: "All" },
+    { value: "General", label: "General" },
+    { value: "GEN-EWS", label: "GEN-EWS" },
+    { value: "SC", label: "SC" },
+    { value: "ST", label: "ST" },
+    { value: "OBC-NCL", label: "OBC-NCL" },
+  ];
+
+  const internshipStatusOptions = [
+    { value: "All", label: "All" },
+    { value: "No Intern", label: "No Intern" },
+    { value: "2m Intern", label: "2m Intern" },
+    { value: "6m Intern", label: "6m Intern" },
+    { value: "11m Intern", label: "11m Intern" },
+  ];
+
   const [departmentOptions, setDepartmentOptions] = useState([]);
 
   const courseOptions = [
@@ -154,7 +179,7 @@ const StudentAnalyticsDashboard = () => {
     { value: "M.Tech", label: "M.Tech" },
     { value: "MBA", label: "MBA" },
     { value: "M.Sc.", label: "M.Sc." },
-    { value: "PHD", label: "PHD" },
+   /*  { value: "PHD", label: "PHD" }, */
   ];
 
   const btechdepartmentOptions = [
@@ -380,9 +405,6 @@ const StudentAnalyticsDashboard = () => {
 
   const mbadepartmentOptions = [
     {value:"HUMANITIES AND MANAGEMENT", label:"HUMANITIES AND MANAGEMENT"},
-    // { value: "Finance", label: "Finance" },
-    // { value: "Human Resource", label: "Human Resource" },
-    // { value: "Marketing", label: "Marketing" },
   ];
 
   const mscdepartmentOptions = [
@@ -391,33 +413,8 @@ const StudentAnalyticsDashboard = () => {
     { value: "PHYSICS", label: "PHYSICS" },
   ];
 
-  const phddepartmentOptions = [
-    // { value: "Biotechnology", label: "Biotechnology" },
-    // { value: "Chemical Engineering", label: "Chemical Engineering" },
-    // { value: "Civil Engineering", label: "Civil Engineering" },
-    // {
-    //   value: "Computer Science and Engineering",
-    //   label: "Computer Science and Engineering",
-    // },
-    // { value: "Electrical Engineering", label: "Electrical Engineering" },
-    // {
-    //   value: "Electronics and Communication Engineering",
-    //   label: "Electronics and Communication Engineering",
-    // },
-    // {
-    //   value: "Industrial and Production Engineering",
-    //   label: "Industrial and Production Engineering",
-    // },
-    // { value: "Information Technology", label: "Information Technology" },
-    // {
-    //   value: "Instrumentation and Control Engineering",
-    //   label: "Instrumentation and Control Engineering",
-    // },
-    // { value: "Mechanical Engineering", label: "Mechanical Engineering" },
-    // { value: "Textile Technology", label: "Textile Technology" },
-  ];
+  const phddepartmentOptions = [];
 
-  // Combine all department options into a single array
   const allDepartments = [
     ...btechdepartmentOptions.flatMap((group) => group.options),
     ...mtechdepartmentOptions.flatMap((group) => group.options),
@@ -426,30 +423,25 @@ const StudentAnalyticsDashboard = () => {
     ...phddepartmentOptions,
   ];
 
-  // Extract unique values using a Set
   const uniqueDepartments = [
     ...new Set(allDepartments.map((dept) => dept.value)),
   ];
 
-  // Sort the unique values alphabetically
   const sortedUniqueDepartments = uniqueDepartments.sort((a, b) =>
     a.localeCompare(b)
   );
 
-  // Format the result into the desired structure
   const formattedDepartments = sortedUniqueDepartments.map((dept) => ({
     value: dept,
     label: dept,
   }));
 
-  useEffect(() => {
-    // Reset department filter when course changes
+  React.useEffect(() => {
     setFilters((prevFilters) => ({
       ...prevFilters,
-      department: "", // Reset department to default value
+      department: "",
     }));
 
-    // Update department options based on the selected course
     switch (filters.course) {
       case "B.Tech":
         setDepartmentOptions(btechdepartmentOptions);
@@ -470,7 +462,7 @@ const StudentAnalyticsDashboard = () => {
         setDepartmentOptions(formattedDepartments);
         break;
     }
-  }, [filters.course]); // Trigger when filters.course changes
+  }, [filters.course]);
 
   const filteredStudents = data.filter((student) => {
     return (
@@ -505,7 +497,13 @@ const StudentAnalyticsDashboard = () => {
       (filters.name === "" ||
         student.name.toLowerCase().includes(filters.name.toLowerCase())) &&
       (filters.rollno === "" ||
-        student.rollno.toLowerCase().includes(filters.rollno.toLowerCase()))
+        student.rollno.toLowerCase().includes(filters.rollno.toLowerCase())) &&
+      (filters.category === "" ||
+        filters.category === "All" ||
+        student.category === filters.category) &&
+      (filters.internshipstatus === "" ||
+        filters.internshipstatus === "All" ||
+        student.internshipstatus === filters.internshipstatus)
     );
   });
 
@@ -588,7 +586,7 @@ const StudentAnalyticsDashboard = () => {
         </div>
         <div className="flex items-center gap-4">
           <div className="bg-white rounded-lg p-3 shadow-sm">
-          {loading ? (
+            {loading ? (
               <div className="flex items-center gap-2">
                 <Loader2 className="h-6 w-6 animate-spin text-custom-blue" />
                 <span className="text-sm text-gray-600">Loading...</span>
@@ -736,6 +734,34 @@ const StudentAnalyticsDashboard = () => {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">
+                Category
+              </label>
+              <Select
+                options={categoryOptions}
+                value={filters.category}
+                onValueChange={(value) =>
+                  setFilters({ ...filters, category: value })
+                }
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Internship Status
+              </label>
+              <Select
+                options={internshipStatusOptions}
+                value={filters.internshipstatus}
+                onValueChange={(value) =>
+                  setFilters({ ...filters, internshipstatus: value })
+                }
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
                 Search Name
               </label>
               <div className="relative">
@@ -769,7 +795,7 @@ const StudentAnalyticsDashboard = () => {
             </div>
           </div>
 
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4 flex justify-end gap-4">
             <Button
               variant="outline"
               className="flex items-center gap-2"
@@ -777,6 +803,18 @@ const StudentAnalyticsDashboard = () => {
             >
               <X className="h-4 w-4" />
               Clear Filters
+            </Button>
+            <Button
+              className="flex items-center gap-2 bg-custom-blue text-white hover:bg-blue-700"
+              onClick={handleApplyFilters}
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Filter className="h-4 w-4" />
+              )}
+              Apply Filters
             </Button>
           </div>
         </CardContent>
@@ -995,9 +1033,27 @@ const StudentAnalyticsDashboard = () => {
                               </p>
                             )}
                           </div>
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">
+                              Category
+                            </label>
+                            {editMode ? (
+                              <Select
+                                options={categoryOptions}
+                                value={editedStudent.category}
+                                onValueChange={(value) =>
+                                  handleChange("category", value)
+                                }
+                                className="mt-1"
+                              />
+                            ) : (
+                              <p className="mt-1 text-gray-900">
+                                {student.category}
+                              </p>
+                            )}
+                          </div>
                         </CardContent>
                       </Card>
-                 
                     </div>
 
                     {/* Right Column */}
@@ -1054,6 +1110,25 @@ const StudentAnalyticsDashboard = () => {
                             ) : (
                               <p className="mt-1 text-gray-900">
                                 {student.debarred ? "Yes" : "No"}
+                              </p>
+                            )}
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">
+                              Internship Status
+                            </label>
+                            {editMode ? (
+                              <Select
+                                options={internshipStatusOptions}
+                                value={editedStudent.internshipstatus}
+                                onValueChange={(value) =>
+                                  handleChange("internshipstatus", value)
+                                }
+                                className="mt-1"
+                              />
+                            ) : (
+                              <p className="mt-1 text-gray-900">
+                                {student.internshipstatus}
                               </p>
                             )}
                           </div>
@@ -1269,8 +1344,7 @@ const StudentAnalyticsDashboard = () => {
                         <BarChart data={getAssessmentData(student)}>
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="name" />
-                          <YAxis /> //extra margin due to this y-axis
-                          automatically added
+                          <YAxis />
                           <Tooltip />
                           <Bar dataKey="total" fill="#6366f1" name="Total" />
                           <Bar
