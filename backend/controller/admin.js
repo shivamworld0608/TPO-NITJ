@@ -140,6 +140,42 @@ export const deleteStudentProfiles = async (req, res) => {
   }
 };
 
+export const deactivateStudentProfiles = async (req, res) => {
+  const studentId = req.params.id;
+  const {deactivate} = req.body;
+
+  // Validation
+  if (!studentId|| studentId.length === 0) {
+    return res.status(400).json({ message: "Invalid student ID provided" });
+  }
+
+  try {
+    //for any amount of delete
+    const deactivatedProfile = await Student.findByIdAndUpdate(studentId, 
+      {account_deactivate:deactivate},
+      {new:true}
+    )
+
+    //Checking for successful delete
+    if (!deactivatedProfile) {
+      return res.status(404).json({ 
+        message: "No student profiles found to delete" 
+      });
+    }
+
+    //return success response with details of deletion
+    res.status(200).json({ 
+      message: `Successfully deactivated ${deactivatedProfile}`
+    });
+  } catch (error) {
+    console.error('Error deactivating student profiles:', error);
+    res.status(500).json({ 
+      message: "Error deactivating student profiles", 
+      error: error.message 
+    });
+  }
+};
+
 export const addNewStudent = async (req, res) => {
   try {
     // Create a new student document using the request body
