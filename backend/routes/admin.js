@@ -9,6 +9,7 @@ import {
   getAllStudents,
   updateStudentProfile,
   deleteStudentProfiles,
+  deactivateStudentProfiles,
   addNewStudent,
   getAllRecruiters,
   updateRecruiterProfile,
@@ -26,6 +27,7 @@ router.get("/students", getAllStudents);
 router.put("/students/:id",updateStudentProfile);
 router.post("/students",addNewStudent);
 router.delete("/students", deleteStudentProfiles);
+router.patch("/students/deactivate/:id", deactivateStudentProfiles);
 //recruiter profile routes
 router.get("/recruiters", getAllRecruiters);
 router.put("/recruiters/:id",updateRecruiterProfile);
