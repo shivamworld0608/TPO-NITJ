@@ -18,13 +18,13 @@ import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
 import AdminDashboard from "./Pages/Admindashboard";
+import Downloads from "./Pages/Downloads";
 import TeamPage from "./Pages/TeamPage";
 import FAQ from "./Pages/Faqs";
 import ErrorPage from "./Pages/ErrorPage";
 /* import Signup from "./Pages/Signup"; */
 import AlumniLogin from "./Pages/ALogin";
 import AssessmentAttemptPage from "./Pages/Mock-test";
-
 
 const App = () => {
   const dispatch = useDispatch();
@@ -76,6 +76,7 @@ const App = () => {
         <Route path="/recruiter" element={<Recruiter />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/team" element={<TeamPage />} />
+        <Route path="/downloads" element={<Downloads />} />
         <Route
           path="/sdashboard/assessment-attempt/:attemptId"
           element={

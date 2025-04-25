@@ -9,6 +9,7 @@ lerna-debug.log*
 
 todo.txt
 node_modules
+.package-lock.json
 dist
 dist-ssr
 *.local
@@ -23,3 +24,5 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+.env

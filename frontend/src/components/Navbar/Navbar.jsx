@@ -1,32 +1,21 @@
-// Navbar.jsx
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Facebook,
-  Instagram,
-  Twitter,
-  Linkedin,
-  Youtube,
-  Search,
-  Home,
-  Menu,
-  X
-} from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Home, Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const instituteNames = [
     {
-      title: "Dr BR AMBEDKAR NATIONAL INSTITUTE OF",
-      subtitle: "TECHNOLOGY JALANDHAR, PUNJAB (INDIA)"
+      title: "Dr BR AMBEDKAR NATIONAL INSTITUTE OF TECHNOLOGY",
+      subtitle: "JALANDHAR, PUNJAB (INDIA)",
     },
     {
       title: "ਡਾ ਬੀ ਆਰ ਅੰਬੇਡਕਰ ਨੈਸ਼ਨਲ ਇੰਸਟੀਚਿਊਟ ਟੈਕਨਾਲੋਜੀ",
-      subtitle: "ਜਲੰਧਰ, ਪੰਜਾਬ (ਭਾਰਤ)"
+      subtitle: "ਜਲੰਧਰ, ਪੰਜਾਬ (ਭਾਰਤ)",
     },
     {
       title: "डॉ बी आर अम्बेडकर राष्ट्रीय प्रौद्योगिकी संस्थान",
-      subtitle: "जालंधर, पंजाब (भारत)"
-    }
+      subtitle: "जालंधर, पंजाब (भारत)",
+    },
   ];
 
   const [index, setIndex] = useState(0);
@@ -39,14 +28,6 @@ const Navbar = () => {
 
     return () => clearInterval(interval);
   }, []);
-
-  const scrollToWhyRecruit = () => {
-    const whyRecruitSection = document.getElementById('why-recruit');
-    if (whyRecruitSection) {
-      whyRecruitSection.scrollIntoView({ behavior: 'smooth' });
-    }
-    setIsMobileMenuOpen(false);
-  };
 
   return (
     <div className="w-full m-0">
@@ -62,7 +43,7 @@ const Navbar = () => {
       {/* Institute Name */}
       <div className="flex flex-col md:flex-row justify-evenly bg-white">
         {/* Visible only on small screens */}
-        <div className="py-4 block md:hidden">
+        <div className="bg-white py-4 block md:hidden">
           <div className="container mx-auto px-4">
             <div className="flex flex-row items-center gap-4 justify-around">
               <img
@@ -74,7 +55,9 @@ const Navbar = () => {
                 <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold break-words">
                   {instituteNames[index].title}
                 </h1>
-                <h2 className="text-sm sm:text-md md:text-lg">{instituteNames[index].subtitle}</h2>
+                <h2 className="text-sm sm:text-md md:text-lg">
+                  {instituteNames[index].subtitle}
+                </h2>
               </div>
             </div>
           </div>
@@ -88,7 +71,9 @@ const Navbar = () => {
                 <h1 className="text-base sm:text-lg md:text-xl lg:text-xl font-semibold whitespace-nowrap">
                   {instituteNames[index].title}
                 </h1>
-                <h2 className="text-sm sm:text-md md:text-lg font-semibold">{instituteNames[index].subtitle}</h2>
+                <h2 className="text-sm sm:text-md md:text-lg">
+                  {instituteNames[index].subtitle}
+                </h2>
               </div>
             </div>
           </div>
@@ -99,9 +84,11 @@ const Navbar = () => {
             <div className="flex flex-col md:flex-row items-center justify-center gap-8">
               <div className="text-center">
                 <h1 className="text-base sm:text-lg md:text-xl lg:text-xl font-semibold whitespace-nowrap">
-                  {instituteNames[(index+1)%3].title}
+                  {instituteNames[index].title}
                 </h1>
-                <h2 className="text-sm sm:text-md md:text-lg font-semibold">{instituteNames[(index+1)%3].subtitle}</h2>
+                <h2 className="text-sm sm:text-md md:text-lg">
+                  {instituteNames[index].subtitle}
+                </h2>
               </div>
             </div>
           </div>
@@ -123,11 +110,29 @@ const Navbar = () => {
             {/* Desktop Navigation - Left Side */}
             <div className="hidden md:flex items-center space-x-6 flex-1 justify-evenly font-semibold">
               <Link to="/">
-                <Home size={20} className="hover:text-blue-200 cursor-pointer" />
+                <Home
+                  size={20}
+                  className="hover:text-blue-200 cursor-pointer"
+                />
               </Link>
-              <Link to="/placements" className="hover:text-blue-200 text-base lg:text-lg">PLACEMENTS</Link>
-              <Link to="/internships" className="hover:text-blue-200 text-base lg:text-lg">INTERNSHIPS</Link>
-              <Link to="/alumini" className="hover:text-blue-200 text-base lg:text-lg">ALUMINI</Link>
+              <Link
+                to="/placements"
+                className="hover:text-blue-200 text-base lg:text-lg"
+              >
+                PLACEMENTS
+              </Link>
+              <Link
+                to="/internships"
+                className="hover:text-blue-200 text-base lg:text-lg"
+              >
+                INTERNSHIPS
+              </Link>
+              <Link
+                to="/downloads"
+                className="hover:text-blue-200 text-base lg:text-lg"
+              >
+                DOWNLOADS
+              </Link>
             </div>
 
             {/* Logo */}
@@ -148,64 +153,72 @@ const Navbar = () => {
 
             {/* Desktop Navigation - Right Side */}
             <div className="hidden md:flex items-center space-x-6 flex-1 justify-evenly font-semibold">
-              <Link to="/faq" className="hover:text-blue-200 text-base lg:text-lg">FAQ's</Link>
-              <Link to="/team" className="hover:text-blue-200 text-base lg:text-lg">PEOPLE</Link>
-              <button 
-                onClick={scrollToWhyRecruit}
+              <Link
+                to="/faq"
                 className="hover:text-blue-200 text-base lg:text-lg"
               >
-                WHY RECRUIT
-              </button>
+                FAQ&apos;s
+              </Link>
+              <Link
+                to="/team"
+                className="hover:text-blue-200 text-base lg:text-lg"
+              >
+                PEOPLE
+              </Link>
+              <Link
+                to="/login"
+                className="hover:text-blue-200 text-base lg:text-lg"
+              >
+                LOGIN
+              </Link>
             </div>
 
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
               <div className="absolute top-10 w-full bg-custom-blue md:hidden shadow-lg z-40">
                 <div className="flex flex-col items-center py-4 space-y-4">
-                  <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Home size={20} className="hover:text-blue-200 cursor-pointer" />
+                  <Link to="/">
+                    <Home
+                      size={20}
+                      className="hover:text-blue-200 cursor-pointer"
+                    />
                   </Link>
-                  <Link 
-                    to="/placements" 
+                  <Link
+                    to="/placements"
                     className="hover:text-blue-200 text-base lg:text-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     PLACEMENTS
                   </Link>
-                  <Link 
-                    to="/internships" 
+                  <Link
+                    to="/internships"
                     className="hover:text-blue-200 text-base lg:text-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     INTERNSHIPS
                   </Link>
-                  <Link 
-                    to="/alumini" 
+                  <Link
+                    to="/downloads"
                     className="hover:text-blue-200 text-base lg:text-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    ALUMINI
+                    DOWNLOADS
                   </Link>
-                  <Link 
-                    to="/faq" 
+                  <Link
+                    to="/faq"
                     className="hover:text-blue-200 text-base lg:text-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    FAQ's
+                    FAQ&apos;s
                   </Link>
-                  <Link 
-                    to="/team" 
+                  <Link
+                    to="/team"
                     className="hover:text-blue-200 text-base lg:text-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     PEOPLE
                   </Link>
-                  <button 
-                    onClick={scrollToWhyRecruit}
+                  <Link
+                    to="/login"
                     className="hover:text-blue-200 text-base lg:text-lg"
                   >
-                    WHY RECRUIT
-                  </button>
+                    LOGIN
+                  </Link>
                 </div>
               </div>
             )}
