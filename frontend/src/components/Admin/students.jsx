@@ -51,7 +51,22 @@ const StudentManager = () => {
     gender: '',
     category: '',
     activeBacklogs: '',
-    deactivated: ''
+    deactivated: '',
+    internshipstatus: '',
+    batch: '',
+    address: '',
+    phone: '',
+    email: '',
+    password: '',
+    name: '',
+    rollno: '',
+    cgpa: '',
+    active_backlogs: "",
+    backlogs_history: "",
+    debarred: "",
+    disability: "",
+    account_deactivate: ""
+  
   });
   const [currentPage, setCurrentPage] = useState(1);
   const studentsPerPage = 100;
@@ -424,11 +439,38 @@ const StudentManager = () => {
           (filters.activeBacklogs === 'no' && !student.active_backlogs)) &&
         (filters.deactivated === '' || 
           (filters.deactivated === 'yes' && student.account_deactivate) || 
-          (filters.deactivated === 'no' && !student.account_deactivate))
+          (filters.deactivated === 'no' && !student.account_deactivate)) &&
+        (!filters.internshipstatus || student.internshipstatus === filters.internshipstatus) &&
+        (!filters.batch || String(student.batch) === String(filters.batch)) &&
+        (!filters.address || (student.address && student.address.toLowerCase().includes(filters.address.toLowerCase()))) &&
+        (!filters.phone || (student.phone && student.phone.includes(filters.phone))) &&
+        (!filters.email || (student.email && student.email.toLowerCase().includes(filters.email.toLowerCase()))) &&
+        (!filters.name || (student.name && student.name.toLowerCase().includes(filters.name.toLowerCase()))) &&
+        (!filters.rollno || (student.rollno && student.rollno.toLowerCase().includes(filters.rollno.toLowerCase()))) &&
+        (!filters.cgpa || (student.cgpa && student.cgpa.toString().includes(filters.cgpa))) &&
+        (!filters.active_backlogs || (
+          student.active_backlogs !== undefined && 
+          student.active_backlogs === (filters.active_backlogs === "true")
+        )) &&
+        (!filters.backlogs_history || (
+          student.backlogs_history !== undefined && 
+          student.backlogs_history === (filters.backlogs_history === "true")
+        )) &&
+        (!filters.debarred || (
+          student.debarred !== undefined && 
+          student.debarred === (filters.debarred === "true")
+        )) &&
+        (!filters.disability || (
+          student.disability !== undefined && 
+          student.disability === (filters.disability === "true")
+        )) &&
+        (!filters.account_deactivate || (
+          student.account_deactivate !== undefined && 
+          student.account_deactivate === (filters.account_deactivate === "true")
+        ))
       );
     });
   };
-
   // Pagination logic
   const filteredStudents = applyFilters();
   const indexOfLastStudent = currentPage * studentsPerPage;
@@ -565,6 +607,156 @@ const StudentManager = () => {
           <option value="yes">Deactivated</option>
           <option value="no">Active</option>
         </select>
+        <select
+          value={filters.internshipstatus}
+          onChange={(e) => {
+            setFilters({ ...filters, internshipstatus: e.target.value });
+            setCurrentPage(1);
+          }}
+          className="border p-2 rounded"
+        >
+          <option value="">Internship Status</option> 
+          {internshipStatuses.map(status => (
+            <option key={status} value={status}>{status}</option>
+          ))}
+        </select>
+        <select
+          value={filters.batch}
+          onChange={(e) => {
+            setFilters({ ...filters, batch: e.target.value });
+            setCurrentPage(1);
+          }}
+          className="border p-2 rounded"
+        >
+          <option value="">Batch</option>
+          {Array.from({ length: 10 }, (_, i) => (
+            <option key={i} value={2020 + i}>{2020 + i}</option>
+          ))}
+        </select>
+        <input
+          type="text"
+          placeholder="Address"
+          value={filters.address}
+          onChange={(e) => {
+            setFilters({ ...filters, address: e.target.value });
+            setCurrentPage(1);
+          }}
+          className="border p-2 rounded"
+        />
+            <input
+          type="text"
+          placeholder="Phone"
+          value={filters.phone}
+          onChange={(e) => {
+            setFilters({ ...filters, phone: e.target.value });
+            setCurrentPage(1);
+          }}
+          className="border p-2 rounded"
+        />    
+        <input
+          type="text"
+          placeholder="Email"
+          value={filters.email}
+          onChange={(e) => {
+            setFilters({ ...filters, email: e.target.value });
+            setCurrentPage(1);
+          }}
+          className="border p-2 rounded"
+        />
+        <input
+          type="text"
+          placeholder="Name"
+          value={filters.name}
+          onChange={(e) => {
+            setFilters({ ...filters, name: e.target.value });
+            setCurrentPage(1);
+          }}
+          className="border p-2 rounded"
+        />
+        <input
+          type="text"
+          placeholder="Roll No"
+          value={filters.rollno}
+          onChange={(e) => {
+            setFilters({ ...filters, rollno: e.target.value });
+            setCurrentPage(1);
+          }}
+          className="border p-2 rounded"
+        />
+        <input
+          type="text"
+          placeholder="CGPA"
+          value={filters.cgpa}
+          onChange={(e) => {
+            setFilters({ ...filters, cgpa: e.target.value });
+            setCurrentPage(1);
+          }}
+          className="border p-2 rounded"
+        /><select
+        value={filters.active_backlogs}
+        onChange={(e) => {
+          setFilters({ ...filters, active_backlogs: e.target.value });
+          setCurrentPage(1);
+        }}
+        className="border p-2 rounded"
+      >
+        <option value="">Active Backlogs</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      
+      <select
+        value={filters.backlogs_history}
+        onChange={(e) => {
+          setFilters({ ...filters, backlogs_history: e.target.value });
+          setCurrentPage(1);
+        }}
+        className="border p-2 rounded"
+      >
+        <option value="">Backlogs History</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      
+      <select
+        value={filters.debarred}
+        onChange={(e) => {
+          setFilters({ ...filters, debarred: e.target.value });
+          setCurrentPage(1);
+        }}
+        className="border p-2 rounded"
+      >
+        <option value="">Debarred</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      
+      <select
+        value={filters.disability}
+        onChange={(e) => {
+          setFilters({ ...filters, disability: e.target.value });
+          setCurrentPage(1);
+        }}
+        className="border p-2 rounded"
+      >
+        <option value="">Disability</option>
+        <option value="true">Yes</option>
+        <option value="false">No</option>
+      </select>
+      
+      <select
+        value={filters.account_deactivate}
+        onChange={(e) => {
+          setFilters({ ...filters, account_deactivate: e.target.value });
+          setCurrentPage(1);
+        }}
+        className="border p-2 rounded"
+      >
+        <option value="">Account Status</option>
+        <option value="true">Deactivated</option>
+        <option value="false">Active</option>
+      </select>
+
       </div>
 
       {/* Student Table */}
@@ -591,6 +783,7 @@ const StudentManager = () => {
                   <th className="border p-2">Roll No</th>
                   <th className="border p-2">Email</th>
                   <th className="border p-2">Phone</th>
+                  <th className="border p-2">Address</th>
                   <th className="border p-2">Department</th>
                   <th className="border p-2">Course</th>
                   <th className="border p-2">Batch</th>
@@ -617,7 +810,8 @@ const StudentManager = () => {
                     <td className="border p-2">{student.name}</td>
                     <td className="border p-2">{student.rollno}</td>
                     <td className="border p-2">{student.email}</td>
-                    <td className="border p-2">{student.phone}</td>
+                    <td className="border p-2">{student.phone?student.phone:''}</td>
+                    <td className="border p-2">{student.address?student.address:''}</td>
                     <td className="border p-2">{student.department}</td>
                     <td className="border p-2">{student.course}</td>
                     <td className="border p-2">{student.batch}</td>
@@ -629,6 +823,7 @@ const StudentManager = () => {
                     </td>
                     <td className="border p-2">{student.internshipstatus}</td>
                     <td className="border p-2">{student.placementstatus}</td>
+
                     <td className="border p-2">
                       <span className={`px-2 py-1 rounded text-xs ${student.account_deactivate ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'}`}>
                         {student.account_deactivate ? 'Deactivated' : 'Active'}
