@@ -21,7 +21,7 @@ function Card({ title, content, link, downloadName, index }) {
       >
         <div className="relative overflow-hidden p-8 flex flex-col items-center text-center gap-4 flex-[1]">
           <img
-            className="absolute top-0 left-0 w-full h-full object-cover"
+            className="absolute top-0 left-0 w-full h-full object-cover blur-sm"
             src={Logo}
           />
           <div className="z-[100] absolute top-0 left-0 w-full h-full bg-black opacity-50"></div>
