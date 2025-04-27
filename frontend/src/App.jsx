@@ -24,6 +24,7 @@ import ErrorPage from "./Pages/ErrorPage";
 /* import Signup from "./Pages/Signup"; */
 import AlumniLogin from "./Pages/ALogin";
 import AssessmentAttemptPage from "./Pages/Mock-test";
+import WhyRecruitPage from "./Pages/WhyRecruitPage";
 
 
 const App = () => {
@@ -76,6 +77,7 @@ const App = () => {
         <Route path="/recruiter" element={<Recruiter />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/team" element={<TeamPage />} />
+        <Route path="/whyrecruit" element={<WhyRecruitPage/>} />
         <Route
           path="/sdashboard/assessment-attempt/:attemptId"
           element={
