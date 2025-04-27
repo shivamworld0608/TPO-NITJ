@@ -13,6 +13,7 @@ import {
   FaTwitter,
   FaTwitch,
   FaTwitterSquare,
+  FaUserTie,
 } from "react-icons/fa";
 import {
   Chart as ChartJS,
@@ -33,6 +34,7 @@ const PlacementHighlights = () => {
   const [averagePackage, setAveragePackage] = useState(0);
   const [totalOffers, setTotalOffers] = useState(0);
   const [internshipConversion, setInternshipConversion] = useState(0);
+  const [companiesVisited, setCompaniesVisited] = useState(0);
 
   useEffect(() => {
     // Default update speed
@@ -47,9 +49,10 @@ const PlacementHighlights = () => {
 
     const counters = [
       updateValues(setPlacementRate, 95),
-      updateValues(setHighestPackage, 60),
+      updateValues(setHighestPackage, 1.2),
       updateValues(setAveragePackage, 12),
       updateValues(setInternshipConversion, 85),
+      updateValues(setCompaniesVisited, 100),
     ];
 
     return () => {
@@ -95,7 +98,7 @@ const PlacementHighlights = () => {
     },
     {
       title: "Highest Package",
-      value: `₹${highestPackage} LPA`,
+      value: `₹${highestPackage} CR`,
       icon: <FaChartLine className="text-4xl mx-auto" />,
       bgColor: "bg-yellow-100",
       textColor: "text-yellow-800",
@@ -121,14 +124,22 @@ const PlacementHighlights = () => {
       bgColor: "bg-purple-100",
       textColor: "text-purple-800",
     },
+    {
+      title: "Companies Visited",
+      value: `${companiesVisited}+`,
+      icon: <FaUserTie className="text-4xl mx-auto" />,
+      bgColor: "bg-sky-100",
+      textColor: "text-sky-800",
+    },
   ];
 
   const insightsData = [
-    { title: "Top Companies", content: "Google, Microsoft, Amazon, Infosys, TCS, Wipro, Deloitte, Accenture." },
-    { title: "Internship Highlights", content: "Over 85% of students secured paid internships at top companies." },
-    { title: "Key Achievements", content: "Highest package of ₹60 LPA secured by multiple students." },
-    { title: "Top Sectors", content: "Significant placements in IT, Core Engineering, and Consulting sectors." },
-    { title: "Alumni Achievements", content: "Multiple alumni featured in Forbes 30 Under 30 and other accolades." },
+      { title: "Top Companies", content: "Google, Microsoft, Amazon, Infosys, TCS, Wipro, Deloitte, Accenture." },
+      { title: "Internship Highlights", content: "Over 85% of students secured paid internships at top companies." },
+      { title: "Key Achievements", content: "Highest package of ₹60 LPA secured by multiple students." },
+      { title: "Top Sectors", content: "Significant placements in IT, Core Engineering, and Consulting sectors." },
+      { title: "Alumni Achievements", content: "Multiple alumni featured in Forbes 30 Under 30 and other accolades." },
+      { title: "Placement Statistics", content: "More than 95% of eligible students placed across various sectors." }    
   ];
 
   const handleSocialMediaShare = (platform) => {
