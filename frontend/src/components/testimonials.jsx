@@ -1,40 +1,64 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from "react";
+import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const testimonials = [
   {
-    name: "Emily Rodriguez",
-    course: "Web Development Bootcamp",
-    quote: "This program completely transformed my career. I went from zero coding knowledge to landing a job at a tech startup in just six months!",
+    name: "Tanishka Pahuja",
+    course: "Intern at Optum",
+    quote:
+      "Securing an internship at Optum has been a truly rewarding experience for me. My journey at NIT Jalandhar has played a crucial role in shaping my technical skills, problem-solving abilities, and professional attitude.",
     rating: 5,
-    image: "https://randomuser.me/api/portraits/men/57.jpg",
-    background: "bg-gradient-to-br from-blue-100 to-blue-200"
+    background: "bg-gradient-to-br from-blue-100 to-blue-200",
   },
   {
-    name: "Michael Chang",
-    course: "Data Science Masterclass",
-    quote: "The curriculum was challenging but incredibly supportive. The instructors helped me build a portfolio that impressed my future employers.",
+    name: "Raghav",
+    course: "Intern at Expedia",
+    quote:
+      "Securing an internship at Expedia has been an incredibly fulfilling moment in my journey at NIT Jalandhar. The institute’s strong technical culture, continuous encouragement from faculty, and vibrant peer community helped me stay focused and confident throughout the process.",
     rating: 5,
-    image: "https://randomuser.me/api/portraits/men/29.jpg",
-    background: "bg-gradient-to-br from-green-100 to-green-50"
+    background: "bg-gradient-to-br from-green-100 to-green-50",
   },
   {
-    name: "Sara Johnson",
-    course: "UX Design Intensive",
-    quote: "Learning design thinking and practical skills has been a game-changer. I now confidently design user-centered digital experiences.",
+    name: "Danish",
+    course: "Microsoft Intern",
+    quote:
+      "Getting an internship at Microsoft has been a dream come true. My journey at NIT Jalandhar has been instrumental in shaping my skills and mindset — from late-night coding sessions to countless mock interviews and constant support from peers and mentors..",
     rating: 5,
-    image: "https://randomuser.me/api/portraits/men/57.jpg",
-    background: "bg-gradient-to-br from-purple-100 to-purple-200"
+    background: "bg-gradient-to-br from-purple-100 to-purple-200",
   },
   {
-    name: "Alex Kim",
-    course: "AI & Machine Learning Program",
-    quote: "The hands-on projects and expert mentorship gave me the skills to develop cutting-edge AI solutions and launch my tech career.",
+    name: "Vivek Yadav",
+    course: "Optum Intern",
+    quote:
+      "I'm thrilled to have secured an internship at Optum! My time at NIT Jalandhar has been key in building the skills and confidence needed for this opportunity.",
     rating: 5,
-    image: "https://randomuser.me/api/portraits/women/44.jpg",
-    background: "bg-gradient-to-br from-red-100 to-red-200"
-  }
+    background: "bg-gradient-to-br from-red-100 to-red-200",
+  },
+  {
+    name: "Sarishti",
+    course: "Amazon Intern",
+    quote:
+      "Securing an internship at Amazon has been a truly rewarding achievement for me. My time at NIT Jalandhar helped me build a strong technical base, sharpen my problem-solving skills, and stay persistent throughout the preparation journey.",
+    rating: 5,
+    background: "bg-gradient-to-br from-red-100 to-red-200",
+  },
+  {
+    name: "Raghav",
+    course: "Intern at Accenture",
+    quote:
+      "I'm incredibly excited to have secured an internship at Accenture! My journey at NIT Jalandhar has been filled with learning, growth, and constant encouragement from faculty and peers.",
+    rating: 5,
+    background: "bg-gradient-to-br from-red-100 to-red-200",
+  },
+  {
+    name: "Rajdeep",
+    course: "Google Intern",
+    quote:
+      "Getting an internship at Google has been a dream come true. My experience at NIT Jalandhar has been a huge part of this journey — from building strong fundamentals to constantly challenging myself to improve.",
+    rating: 5,
+    background: "bg-gradient-to-br from-red-100 to-red-200",
+  },
 ];
 
 const StudentTestimonials = () => {
@@ -66,18 +90,20 @@ const StudentTestimonials = () => {
 
   const handlePrev = () => {
     setDirection(-1);
-    setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setActiveIndex(
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length
+    );
   };
 
   const renderStars = (rating) => {
     return Array.from({ length: 5 }).map((_, index) => (
-      <Star 
-        key={index} 
+      <Star
+        key={index}
         className={`
           inline-block mx-0.5 
-          ${index < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}
-        `} 
-        size={20} 
+          ${index < rating ? "text-yellow-400 fill-current" : "text-gray-300"}
+        `}
+        size={20}
       />
     ));
   };
@@ -94,23 +120,19 @@ const StudentTestimonials = () => {
           Student Success Stories
         </motion.h2> */}
 
-
-
-        
         <h1 className="font-bold text-3xl lg:text-4xl text-center tracking-wide mb-7">
-        What Our&nbsp;
-        <span className="bg-custom-blue text-transparent bg-clip-text">
-         Students Say
-        </span>
-      </h1>
+          What Our&nbsp;
+          <span className="bg-custom-blue text-transparent bg-clip-text">
+            Students Say
+          </span>
+        </h1>
 
-
-        <div 
+        <div
           className="relative h-[500px] w-full group"
           onMouseEnter={stopAutoPlay}
           onMouseLeave={startAutoPlay}
         >
-          <button 
+          <button
             onClick={handlePrev}
             className="
               absolute left-0 top-1/2 -translate-y-1/2 z-30 
@@ -122,7 +144,7 @@ const StudentTestimonials = () => {
             <ChevronLeft size={32} className="text-gray-700" />
           </button>
 
-          <button 
+          <button
             onClick={handleNext}
             className="
               absolute right-0 top-1/2 -translate-y-1/2 z-30 
@@ -135,66 +157,69 @@ const StudentTestimonials = () => {
           </button>
 
           <AnimatePresence initial={false} custom={direction}>
-            {testimonials.map((testimonial, index) => (
-              activeIndex === index && (
-                <motion.div
-                  key={index}
-                  custom={direction}
-                  variants={{
-                    enter: (direction) => ({
-                      x: direction > 0 ? 1000 : -1000,
-                      opacity: 0
-                    }),
-                    center: {
-                      zIndex: 1,
-                      x: 0,
-                      opacity: 1
-                    },
-                    exit: (direction) => ({
-                      zIndex: 0,
-                      x: direction < 0 ? 1000 : -1000,
-                      opacity: 0
-                    })
-                  }}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{
-                    x: { type: "spring", stiffness: 300, damping: 30 },
-                    opacity: { duration: 0.2 }
-                  }}
-                  className={`
+            {testimonials.map(
+              ({ background, name, course, quote, rating }, index) =>
+                activeIndex === index && (
+                  <motion.div
+                    key={index}
+                    custom={direction}
+                    variants={{
+                      enter: (direction) => ({
+                        x: direction > 0 ? 1000 : -1000,
+                        opacity: 0,
+                      }),
+                      center: {
+                        zIndex: 1,
+                        x: 0,
+                        opacity: 1,
+                      },
+                      exit: (direction) => ({
+                        zIndex: 0,
+                        x: direction < 0 ? 1000 : -1000,
+                        opacity: 0,
+                      }),
+                    }}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                      x: { type: "spring", stiffness: 300, damping: 30 },
+                      opacity: { duration: 0.2 },
+                    }}
+                    className={`
                     absolute inset-0 rounded-2xl shadow-2xl 
-                    ${testimonial.background} 
+                    ${background} 
                     flex flex-col items-center justify-center p-12
                   `}
-                >
-                  <div className="max-w-2xl">
-                    <Quote className="text-blue-500 mb-6 mx-auto" size={64} />
-                    
-                    <p className="text-md font-medium text-gray-800 mb-8 italic">
-                      "{testimonial.quote}"
-                    </p>
-                    
-                    <div className="flex items-center justify-center mb-6">
-                      {renderStars(testimonial.rating)}
-                    </div>
+                  >
+                    <div className="max-w-2xl">
+                      <Quote className="text-blue-500 mb-6 mx-auto" size={64} />
 
-                    <div className="flex items-center justify-center">
-                      <img 
-                        src={testimonial.image} 
-                        alt={testimonial.name} 
-                        className="w-24 h-24 rounded-full border-4 border-white shadow-lg mr-6"
-                      />
-                      <div className="text-left">
-                        <h3 className="text-2xl font-bold text-gray-900">{testimonial.name}</h3>
-                        <p className="text-md text-gray-600">{testimonial.course}</p>
+                      <p className="text-md font-medium text-gray-800 mb-8 italic">
+                        &quot;{quote}&quot;
+                      </p>
+
+                      <div className="flex items-center justify-center mb-6">
+                        {renderStars(rating)}
+                      </div>
+
+                      <div className="flex items-center justify-center">
+                        <img
+                          src={`/testimonials/testimonial-${index + 1}.jpg`}
+                          alt={name}
+                          className="w-24 h-24 rounded-full border-4 border-white shadow-lg mr-6"
+                        />
+                        <div className="text-left">
+                          <h3 className="text-2xl font-bold text-gray-900">
+                            {name}
+                          </h3>
+                          <p className="text-md text-gray-600">{course}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              )
-            ))}
+                  </motion.div>
+                )
+            )}
           </AnimatePresence>
         </div>
 
@@ -205,9 +230,11 @@ const StudentTestimonials = () => {
               onClick={() => setActiveIndex(index)}
               className={`
                 w-3 h-3 rounded-full transition-all duration-300
-                ${activeIndex === index 
-                  ? 'bg-custom-blue w-8' 
-                  : 'bg-gray-300 hover:bg-blue-300'}
+                ${
+                  activeIndex === index
+                    ? "bg-custom-blue w-8"
+                    : "bg-gray-300 hover:bg-blue-300"
+                }
               `}
             />
           ))}
