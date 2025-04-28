@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Quote, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -66,11 +66,11 @@ const StudentTestimonials = () => {
   const [direction, setDirection] = useState(0);
   const intervalRef = useRef(null);
 
-  const startAutoPlay = () => {
+  const startAutoPlay = useCallback(() => {
     intervalRef.current = setInterval(() => {
       handleNext();
     }, 5000);
-  };
+  }, []);
 
   const stopAutoPlay = () => {
     if (intervalRef.current) {
@@ -81,7 +81,7 @@ const StudentTestimonials = () => {
   useEffect(() => {
     startAutoPlay();
     return stopAutoPlay;
-  }, []);
+  }, [startAutoPlay]);
 
   const handleNext = () => {
     setDirection(1);
