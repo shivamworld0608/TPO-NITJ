@@ -1,28 +1,12 @@
-// Navbar.jsx
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import {
-  Facebook,
-  Instagram,
-  Twitter,
-  Linkedin,
-  Youtube,
-  Search,
-  Home,
-  Menu,
-  X,
-} from "lucide-react";
-
-import { FaGlobe } from "react-icons/fa";
-import WhyRecruit from "../WhyRecruit";
-import Footer from "../footer";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { Home, Menu, X } from "lucide-react";
 
 const Navbar = () => {
-  const navigate = useNavigate()
   const instituteNames = [
     {
-      title: "Dr BR AMBEDKAR NATIONAL INSTITUTE OF",
-      subtitle: "TECHNOLOGY JALANDHAR, PUNJAB (INDIA)",
+      title: "Dr BR AMBEDKAR NATIONAL INSTITUTE OF TECHNOLOGY",
+      subtitle: "JALANDHAR, PUNJAB (INDIA)",
     },
     {
       title: "ਡਾ ਬੀ ਆਰ ਅੰਬੇਡਕਰ ਨੈਸ਼ਨਲ ਇੰਸਟੀਚਿਊਟ ਟੈਕਨਾਲੋਜੀ",
@@ -36,7 +20,6 @@ const Navbar = () => {
 
   const [index, setIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const location = useLocation();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -46,35 +29,13 @@ const Navbar = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const scrollToWhyRecruit = () => {
-    const whyRecruitSection = document.getElementById("why-recruit");
-    if (whyRecruitSection) {
-      whyRecruitSection.scrollIntoView({ behavior: "smooth" });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
-  const handleWhyRecruit = () => {
-    if (location.pathname === "/") scrollToWhyRecruit();
-    else
-      navigate("/whyrecruit")
-  };
-
   return (
     <div className="w-full m-0">
       {/* Top Bar */}
       <div className="bg-custom-blue text-white m-0">
         <div className="container mx-auto px-4">
-          <div className="flex justify-between items-center h-8 sm:mx-12">
+          <div className="flex justify-between items-center h-8">
             {/* Add social icons or other content here if needed */}
-            <a
-              href="https://www.nitj.ac.in"
-              target="_blank"
-              className="my-auto text-sm flex items-center gap-1"
-            >
-              <FaGlobe className="inline my-auto text-lg" />
-              NITJ Website
-            </a>
           </div>
         </div>
       </div>
@@ -82,7 +43,7 @@ const Navbar = () => {
       {/* Institute Name */}
       <div className="flex flex-col md:flex-row justify-evenly bg-white">
         {/* Visible only on small screens */}
-        <div className="py-4 block md:hidden">
+        <div className="bg-white py-4 block md:hidden">
           <div className="container mx-auto px-4">
             <div className="flex flex-row items-center gap-4 justify-around">
               <img
@@ -110,7 +71,7 @@ const Navbar = () => {
                 <h1 className="text-base sm:text-lg md:text-xl lg:text-xl font-semibold whitespace-nowrap">
                   {instituteNames[index].title}
                 </h1>
-                <h2 className="text-sm sm:text-md md:text-lg font-semibold">
+                <h2 className="text-sm sm:text-md md:text-lg">
                   {instituteNames[index].subtitle}
                 </h2>
               </div>
@@ -123,10 +84,10 @@ const Navbar = () => {
             <div className="flex flex-col md:flex-row items-center justify-center gap-8">
               <div className="text-center">
                 <h1 className="text-base sm:text-lg md:text-xl lg:text-xl font-semibold whitespace-nowrap">
-                  {instituteNames[(index + 1) % 3].title}
+                  {instituteNames[index].title}
                 </h1>
-                <h2 className="text-sm sm:text-md md:text-lg font-semibold">
-                  {instituteNames[(index + 1) % 3].subtitle}
+                <h2 className="text-sm sm:text-md md:text-lg">
+                  {instituteNames[index].subtitle}
                 </h2>
               </div>
             </div>
@@ -167,10 +128,10 @@ const Navbar = () => {
                 INTERNSHIPS
               </Link>
               <Link
-                to="/alumini"
+                to="/downloads"
                 className="hover:text-blue-200 text-base lg:text-lg"
               >
-                ALUMINI
+                DOWNLOADS
               </Link>
             </div>
 
@@ -196,7 +157,7 @@ const Navbar = () => {
                 to="/faq"
                 className="hover:text-blue-200 text-base lg:text-lg"
               >
-                FAQ's
+                FAQ&apos;s
               </Link>
               <Link
                 to="/team"
@@ -204,19 +165,19 @@ const Navbar = () => {
               >
                 PEOPLE
               </Link>
-              <button
-                onClick={handleWhyRecruit}
+              <Link
+                to="/login"
                 className="hover:text-blue-200 text-base lg:text-lg"
               >
-                WHY RECRUIT
-              </button>
+                LOGIN
+              </Link>
             </div>
 
             {/* Mobile Menu */}
             {isMobileMenuOpen && (
               <div className="absolute top-10 w-full bg-custom-blue md:hidden shadow-lg z-40">
                 <div className="flex flex-col items-center py-4 space-y-4">
-                  <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Link to="/">
                     <Home
                       size={20}
                       className="hover:text-blue-200 cursor-pointer"
@@ -225,44 +186,39 @@ const Navbar = () => {
                   <Link
                     to="/placements"
                     className="hover:text-blue-200 text-base lg:text-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     PLACEMENTS
                   </Link>
                   <Link
                     to="/internships"
                     className="hover:text-blue-200 text-base lg:text-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     INTERNSHIPS
                   </Link>
                   <Link
-                    to="/alumini"
+                    to="/downloads"
                     className="hover:text-blue-200 text-base lg:text-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    ALUMINI
+                    DOWNLOADS
                   </Link>
                   <Link
                     to="/faq"
                     className="hover:text-blue-200 text-base lg:text-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    FAQ's
+                    FAQ&apos;s
                   </Link>
                   <Link
                     to="/team"
                     className="hover:text-blue-200 text-base lg:text-lg"
-                    onClick={() => setIsMobileMenuOpen(false)}
                   >
                     PEOPLE
                   </Link>
-                  <button
-                    onClick={handleWhyRecruit}
+                  <Link
+                    to="/login"
                     className="hover:text-blue-200 text-base lg:text-lg"
                   >
-                    WHY RECRUIT
-                  </button>
+                    LOGIN
+                  </Link>
                 </div>
               </div>
             )}
