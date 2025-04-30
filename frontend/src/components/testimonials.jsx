@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const testimonials = [
   {
     name: "Tanishka Pahuja",
-    course: "SDE Intern at Optum",
+    course: "Intern at Optum",
     quote:
       "Securing an internship at Optum has been a truly rewarding experience for me. My journey at NIT Jalandhar has played a crucial role in shaping my technical skills, problem-solving abilities, and professional attitude.",
     rating: 5,
@@ -15,7 +15,7 @@ const testimonials = [
     name: "Raghav",
     course: "Intern at Expedia",
     quote:
-      "Getting an Internship at Expedia has been a dream come true! My time at NIT Jalandhar has been transformative — from strengthening my technical foundation to building the confidence to crack challenging interviews.",
+      "Securing an internship at Expedia has been an incredibly fulfilling moment in my journey at NIT Jalandhar. The institute’s strong technical culture, continuous encouragement from faculty, and vibrant peer community helped me stay focused and confident throughout the process.",
     rating: 5,
     background: "bg-gradient-to-br from-green-100 to-green-50",
   },
@@ -23,9 +23,41 @@ const testimonials = [
     name: "Danish",
     course: "Microsoft Intern",
     quote:
-      "Getting an internship at Microsoft has been a dream come true. My journey at NIT Jalandhar has been instrumental in shaping my skills and mindset — from late-night coding sessions to countless mock interviews and constant support from peers and mentors",
+      "Getting an internship at Microsoft has been a dream come true. My journey at NIT Jalandhar has been instrumental in shaping my skills and mindset — from late-night coding sessions to countless mock interviews and constant support from peers and mentors..",
     rating: 5,
     background: "bg-gradient-to-br from-purple-100 to-purple-200",
+  },
+  {
+    name: "Vivek Yadav",
+    course: "Optum Intern",
+    quote:
+      "I'm thrilled to have secured an internship at Optum! My time at NIT Jalandhar has been key in building the skills and confidence needed for this opportunity.",
+    rating: 5,
+    background: "bg-gradient-to-br from-red-100 to-red-200",
+  },
+  {
+    name: "Sarishti",
+    course: "Amazon Intern",
+    quote:
+      "Securing an internship at Amazon has been a truly rewarding achievement for me. My time at NIT Jalandhar helped me build a strong technical base, sharpen my problem-solving skills, and stay persistent throughout the preparation journey.",
+    rating: 5,
+    background: "bg-gradient-to-br from-red-100 to-red-200",
+  },
+  {
+    name: "Raghav",
+    course: "Intern at Accenture",
+    quote:
+      "I'm incredibly excited to have secured an internship at Accenture! My journey at NIT Jalandhar has been filled with learning, growth, and constant encouragement from faculty and peers.",
+    rating: 5,
+    background: "bg-gradient-to-br from-red-100 to-red-200",
+  },
+  {
+    name: "Rajdeep",
+    course: "Google Intern",
+    quote:
+      "Getting an internship at Google has been a dream come true. My experience at NIT Jalandhar has been a huge part of this journey — from building strong fundamentals to constantly challenging myself to improve.",
+    rating: 5,
+    background: "bg-gradient-to-br from-red-100 to-red-200",
   },
 ];
 
@@ -126,7 +158,7 @@ const StudentTestimonials = () => {
 
           <AnimatePresence initial={false} custom={direction}>
             {testimonials.map(
-              (testimonial, index) =>
+              ({ background, name, course, quote, rating }, index) =>
                 activeIndex === index && (
                   <motion.div
                     key={index}
@@ -156,7 +188,7 @@ const StudentTestimonials = () => {
                     }}
                     className={`
                     absolute inset-0 rounded-2xl shadow-2xl 
-                    ${testimonial.background} 
+                    ${background} 
                     flex flex-col items-center justify-center p-12
                   `}
                   >
@@ -164,26 +196,24 @@ const StudentTestimonials = () => {
                       <Quote className="text-blue-500 mb-6 mx-auto" size={64} />
 
                       <p className="text-md font-medium text-gray-800 mb-8 italic">
-                        &quot;{testimonial.quote}&quot;
+                        &quot;{quote}&quot;
                       </p>
 
                       <div className="flex items-center justify-center mb-6">
-                        {renderStars(testimonial.rating)}
+                        {renderStars(rating)}
                       </div>
 
                       <div className="flex items-center justify-center">
                         <img
-                          src={`/images/testimonial${index + 1}.jpg`}
-                          alt={testimonial.name}
+                          src={`/testimonials/testimonial-${index + 1}.jpg`}
+                          alt={name}
                           className="w-24 h-24 rounded-full border-4 border-white shadow-lg mr-6"
                         />
                         <div className="text-left">
                           <h3 className="text-2xl font-bold text-gray-900">
-                            {testimonial.name}
+                            {name}
                           </h3>
-                          <p className="text-md text-gray-600">
-                            {testimonial.course}
-                          </p>
+                          <p className="text-md text-gray-600">{course}</p>
                         </div>
                       </div>
                     </div>
