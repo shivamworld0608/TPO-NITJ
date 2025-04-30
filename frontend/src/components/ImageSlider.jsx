@@ -66,8 +66,8 @@ const ImageSlider = () => {
 
   return (
     <>
-      <h1 className="text-4xl font-semibold text-center mb-8 text-custom-blue">
-        Top <span className="text-custom-blue">Recruiters</span> Offering Placements
+      <h1 className="text-4xl font-bold text-center mb-8">
+        Top <span className="text-custom-blue">Recruiters</span>
       </h1>
       <div className="w-full h-auto py-8 flex justify-center items-center">
         <motion.div
@@ -77,7 +77,7 @@ const ImageSlider = () => {
           {companies.map((company, index) => (
             <motion.div
               key={index}
-              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 transform-gpu cursor-pointer"
+              className="bg-white p-6 rounded-lg shadow-lg border border-blue-200 hover:shadow-2xl transition-shadow duration-300 transform-gpu cursor-pointer"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: index * 0.2 }}

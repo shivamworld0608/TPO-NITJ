@@ -7,7 +7,7 @@ const formFieldSchema = new mongoose.Schema({
   },
   fieldType: {
     type: String,
-    enum: ['text', 'number', 'email', 'date', 'select', 'file', 'checkbox'],
+    enum: ['text', 'number', 'email', 'date', 'select'],
     required: true
   },
   value: String,
@@ -16,6 +16,10 @@ const formFieldSchema = new mongoose.Schema({
     default: false
   },
   isAutoFill: {
+    type: Boolean,
+    default: false
+  },
+  fieldStar: {
     type: Boolean,
     default: false
   },

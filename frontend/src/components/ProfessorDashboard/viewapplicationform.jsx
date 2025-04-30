@@ -50,7 +50,7 @@ const ViewApplicationForm = ({ jobId, onHide }) => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
+    <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 -mt-10">
       <div className="mb-6">
         <button
           className="flex items-center text-blue-600 hover:text-blue-800"

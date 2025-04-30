@@ -98,19 +98,19 @@ const Pdashboard = () => {
   const menuItems = [
     { label: "Dashboard", icon: faHome, path: "/pdashboard/home" },
     { label: "JAF",  icon: faFileWaveform, path: "/pdashboard/jaf" },
-    { label: "Job Profile Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
+    { label: "Job Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
+    {label:"Student",icon:faUser, path:"/pdashboard/student-analysis"},
+    { label: "Placement Reports", icon: faChartBar, path: "/pdashboard/placement-insights" },
+    { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
+    { label: "Add Recruiter", icon: faUserCheck, path: "/pdashboard/add-recruiter" },
 /* { label: "Mailbox", icon: faEnvelope, path: "/pdashboard/pmailbox" }, */
     { label: "Help Requests", icon: faQuestionCircle, path: "/pdashboard/help-requests" },
     { label: "Shared Experiences", icon: faShareAlt, path: "/pdashboard/experience-sharing" },
-    {label:"Student",icon:faUser, path:"/pdashboard/student-analysis"},
-    {label:"Mock Assessment",icon:faUser, path:"/pdashboard/mock-assessment"},
-    { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
-    // {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
-    { label: "Placement Reports", icon: faChartBar, path: "/pdashboard/placement-insights" },
- /*    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" }, */
     { label: "User Requests", icon: faContactCard, path: "/pdashboard/contact-request" },
-    { label: "Add students", icon: faUserPlus, path: "/pdashboard/add-students" },
-    { label: "Add Recruiter", icon: faUserCheck, path: "/pdashboard/add-recruiter" },
+    // {label:"Mock Assessment",icon:faUser, path:"/pdashboard/mock-assessment"},
+    // {label:"Companies",icon:faBuilding, path:"/pdashboard/company-analysis"},
+ /*    { label: "Upload Doc", icon: faUpload, path: "/pdashboard/uploads" }, */
+    // { label: "Add students", icon: faUserPlus, path: "/pdashboard/add-students" },
     
   ];
 
@@ -269,7 +269,7 @@ const Pdashboard = () => {
           <button
             onClick={toggleSidebar}
             className={`fixed top-16 bg-white rounded-r p-2 shadow-md transition-all duration-300 hover:bg-gray-100 ${
-              isSidebarExpanded ? "left-64 ml-3" : "left-16"
+              isSidebarExpanded ? "left-56 ml-3" : "left-16"
             }`}
           >
             {isSidebarExpanded ? (
@@ -300,22 +300,22 @@ const Pdashboard = () => {
             {/* <Route path="pmailbox" element={<Mailbox />} /> */}
             <Route path="help-requests" element={<RequestHelpManager />} />
             <Route path="student-analysis" element={<StudentAnalyticsDashboard />} />
-            <Route path="mock-assessment" element={<MockAssessmentProfessorDashboard/>} />
+            {/* <Route path="mock-assessment" element={<MockAssessmentProfessorDashboard/>} /> */}
             <Route path="experience-sharing" element={<ExperienceSharing />} />
             <Route path="contact-request" element={<ContactRequests />} />
             <Route path="conversation" element={<ConversationLog />} />
             <Route path="placement-insights" element={<PlacementInsights />} />
-            <Route path="add-students" element={<AddStudentForm/>} />
+            {/* <Route path="add-students" element={<AddStudentForm/>} /> */}
             <Route path="add-recruiter" element={<RecruiterForm/>} />
-            <Route path="placement-policy" element={<PlacementPolicy />} />
+            {/* <Route path="placement-policy" element={<PlacementPolicy />} /> */}
             <Route path="profile" element={<Profile />} />
             <Route path="team" element={<TeamSection />} />
-            <Route path="uploads" element={<Upload />} />
+            {/* <Route path="uploads" element={<Upload />} /> */}
             </Routes>
         </div>
 
         {/* Footer */}
-        <footer className="bg-slate-800 text-white p-4">
+{/*         <footer className="bg-slate-800 text-white p-4">
           <div className="container mx-auto text-center">
             <div className="flex flex-col md:flex-row items-center justify-center gap-4">
               <span className="text-sm">
@@ -331,7 +331,7 @@ const Pdashboard = () => {
               </span>
             </div>
           </div>
-        </footer>
+        </footer> */}
       </main>
     </div>
   );

@@ -54,6 +54,7 @@ configureWebSocket(server); */
 
 
 dotenv.config();
+console.log(process.env.CLIENT_URL);
 app.use(cors({credentials: true, origin: process.env.CLIENT_URL}));
 app.use(cookieParser());
 app.use(express.json());
@@ -136,6 +137,6 @@ app.use('/mock-assessment',authenticate,mockassessmentRoutes);
 app.use('/attempt/:assessment',authenticate,mockassessmentRoutes);
 
 const port = process.env.PORT || 7000;
-app.listen(port, () => {
+app.listen(port,'0.0.0.0', () => {
   console.log("App running on port: ", port);
 });

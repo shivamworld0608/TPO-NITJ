@@ -14,6 +14,7 @@ const formSubmissionSchema = new mongoose.Schema({
   fields: [{
     fieldName: String,
     fieldType: String,
+    fieldStar: Boolean,
     value: String,
     isAutoFilled: Boolean,
     studentPropertyPath: String

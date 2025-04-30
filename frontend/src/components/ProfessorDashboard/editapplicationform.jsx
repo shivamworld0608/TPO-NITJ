@@ -18,14 +18,14 @@ const EditApplicationForm = ({ jobId, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const studentProperties = ['gender','department', 'cgpa','name','email','course','batch','active_backlogs','backlogs_history'];
+  const studentProperties = ['gender', 'department', 'cgpa', 'name', 'email', 'course', 'batch', 'active_backlogs', 'backlogs_history', 'rollno', 'cgpa %'];
 
   useEffect(() => {
     const fetchForm = async () => {
       try {
         const response = await axios.get(
           `${import.meta.env.REACT_APP_BASE_URL}/api/form-templates/${jobId}`,
-           {withCredentials:true}
+          { withCredentials: true }
         );
         const data = response.data;
         setTitle(data.title);
@@ -73,6 +73,17 @@ const EditApplicationForm = ({ jobId, onClose }) => {
     ));
   };
 
+  const removeOption = (index, optionIndex) => {
+    setFields(fields.map((field, i) => 
+      i === index 
+        ? {
+            ...field,
+            options: field.options.filter((_, j) => j !== optionIndex)
+          }
+        : field
+    ));
+  };
+
   const addField = () => {
     setFields([
       ...fields,
@@ -81,6 +92,7 @@ const EditApplicationForm = ({ jobId, onClose }) => {
         fieldType: 'text',
         isRequired: false,
         isAutoFill: false,
+        fieldStar: false,
         studentPropertyPath: '',
         options: []
       }
@@ -115,7 +127,7 @@ const EditApplicationForm = ({ jobId, onClose }) => {
       // Show confirmation dialog
       const result = await Swal.fire({
         title: 'Confirm Changes',
-        text: 'Please make sure that Email field has type "email" and neccessary field has been marked autofill?',
+        text: 'Please make sure that Email field has type "email" and necessary fields have been marked autofill?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes, save changes',
@@ -131,7 +143,7 @@ const EditApplicationForm = ({ jobId, onClose }) => {
       const response = await axios.put(
         `${import.meta.env.REACT_APP_BASE_URL}/api/form-templates/${jobId}`,
         { title, fields },
-        {withCredentials:true}
+        { withCredentials: true }
       );
       
       toast.success('Form template updated successfully!');
@@ -152,7 +164,7 @@ const EditApplicationForm = ({ jobId, onClose }) => {
   }
 
   return (
-    <Card className="max-w-4xl mx-auto bg-white shadow-xl">
+    <Card className="-mt-12 max-w-5xl mx-auto bg-white shadow-xl">
       <CardHeader>
         <div className="mt-0 ml-1">
           <button className="flex items-center text-blue-600 hover:text-blue-800" onClick={onClose}>
@@ -219,8 +231,6 @@ const EditApplicationForm = ({ jobId, onClose }) => {
                     { value: "email", label: "Email" },
                     { value: "date", label: "Date" },
                     { value: "select", label: "Select" },
-                    { value: "file", label: "File" },
-                    { value: "checkbox", label: "Checkbox" },
                   ]}
                 />
               </div>
@@ -241,6 +251,13 @@ const EditApplicationForm = ({ jobId, onClose }) => {
                   onChange={() => handleCheckboxChange(index, 'isAutoFill')}
                 />
                 <Label htmlFor={`autofill-${index}`}>Auto-Fill</Label>
+
+                <Checkbox
+                  id={`star-${index}`}
+                  checked={field.fieldStar}
+                  onChange={() => handleCheckboxChange(index, 'fieldStar')}
+                />
+                <Label htmlFor={`star-${index}`}>Star</Label>
               </div>
             </div>
 
@@ -268,14 +285,22 @@ const EditApplicationForm = ({ jobId, onClose }) => {
               <div className="space-y-4">
                 <Label>Options</Label>
                 {field.options?.map((option, optionIndex) => (
-                  <Input
-                    key={optionIndex}
-                    value={option}
-                    onChange={(e) => 
-                      handleOptionChange(index, optionIndex, e.target.value)
-                    }
-                    placeholder={`Option ${optionIndex + 1}`}
-                  />
+                  <div key={optionIndex} className="flex items-center space-x-4">
+                    <Input
+                      value={option}
+                      onChange={(e) => 
+                        handleOptionChange(index, optionIndex, e.target.value)
+                      }
+                      placeholder={`Option ${optionIndex + 1}`}
+                    />
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => removeOption(index, optionIndex)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
                 ))}
                 <Button
                   type="button"

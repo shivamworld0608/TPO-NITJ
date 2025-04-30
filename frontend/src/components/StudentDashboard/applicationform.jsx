@@ -61,6 +61,7 @@ const [noFormAvailable, setNoFormAvailable] = useState(false);
           withCredentials: true,
         });
         const studentData = studentResponse.data;
+        console.log("studentData", studentData);
 
         // Fetch existing submission (if any)
         const submissionResponse = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/api/get-already/${jobId}`, {
@@ -72,17 +73,43 @@ const [noFormAvailable, setNoFormAvailable] = useState(false);
           setExistingSubmission(submissionData);
         }
 
-        // Populate fields with existing submission or default values
+        // const populatedFields = templateFields.map((field) => {
+        //   const existingField = submissionData?.fields?.find((f) => f.fieldName === field.fieldName);
+        //   return {
+        //     ...field,
+        //     value: existingField
+        //       ? existingField.value
+        //       : field.isAutoFill
+        //       ? studentData[field.studentPropertyPath] ?? '' // Use ?? to preserve falsy values like false
+        //       : '',
+        //     isLocked: field.isAutoFill,
+        //   };
+        // });
+
         const populatedFields = templateFields.map((field) => {
           const existingField = submissionData?.fields?.find((f) => f.fieldName === field.fieldName);
+          let value = '';
+        
+          if (existingField) {
+            value = existingField.value;
+          } else if (field.isAutoFill) {
+            if (field.studentPropertyPath === 'cgpa %') {
+              // multiply cgpa by 10 if exists
+              value = studentData['cgpa'] != null ? studentData['cgpa'] * 10 : '';
+            } else {
+              value = studentData[field.studentPropertyPath] ?? '';
+            }
+          }
           return {
             ...field,
-            value: existingField ? existingField.value : field.isAutoFill ? studentData[field.studentPropertyPath] || '' : '',
+            value,
             isLocked: field.isAutoFill,
           };
         });
+        
 
         setFields(populatedFields);
+        console.log("populatedFields", populatedFields);
       } catch (err) {
         if (err.response && err.response.status === 404) {
           setNoFormAvailable(true);
@@ -258,7 +285,7 @@ const [noFormAvailable, setNoFormAvailable] = useState(false);
               onChange={(e) => handleFieldChange(index, e.target.value)}
               required={field.isRequired}
             >
-              <option value="">Select {field.fieldName}</option>
+              <option value="">Select {/* {field.fieldName} */}</option>
               {field.options?.map((option, i) => (
                 <option key={i} value={option}>
                   {option}

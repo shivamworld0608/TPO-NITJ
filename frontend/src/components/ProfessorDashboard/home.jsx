@@ -24,7 +24,7 @@ const StatCard = ({
   bgColor,
   borderColor,
   textColor,
-  icon: Icon, 
+  icon: Icon,
   isLoading,
 }) => {
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -102,8 +102,6 @@ const Home = () => {
     companiesVisited: 0,
     averagePackage: 0,
   });
-  
-
 
   const [placements, setPlacements] = useState([]);
 
@@ -125,12 +123,12 @@ const Home = () => {
   const fetchPlacements = async () => {
     setLoading(true);
     try {
-      const apiUrl = `${import.meta.env.REACT_APP_BASE_URL
-        }/placements/insights`;
+      const apiUrl = `${
+        import.meta.env.REACT_APP_BASE_URL
+      }/placements/insights`;
       const response = await axios.get(apiUrl);
       setStats(response.data);
     } catch (error) {
-
     } finally {
       // Simulate minimum loading time for better UX
       setTimeout(() => setLoading(false), 800);
@@ -139,14 +137,13 @@ const Home = () => {
   const recentplacements = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/placements/last-seven-days`, { withCredentials: true });
+      const response = await axios.get(
+        `${import.meta.env.REACT_APP_BASE_URL}/placements/last-seven-days`,
+        { withCredentials: true }
+      );
       setPlacements(response.data);
-
-    }
-    catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
 
   useEffect(() => {
     fetchPlacements();
@@ -156,135 +153,62 @@ const Home = () => {
     recentplacements();
   }, []);
 
- 
   return (
     <div className="min-h-screen p-8 bg-gray-50">
       <div className="max-w-7xl mx-auto font-sans">
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6 ">
-  <StatCard
-    value={stats.totalStudentsPlaced}
-    label="Total Placements"
-    bgColor="bg-[#ffead6]"
-    borderColor="border-2 border-[#e4bca0]"
+          <StatCard
+            value={stats.totalStudentsPlaced}
+            label="Total Placements"
+            bgColor="bg-[#ffead6]"
+            borderColor="border-2 border-[#e4bca0]"
             textColor="text-[#b87748]"
-    icon={FaUserTie} // Pass the icon
-    isLoading={loading}
-  />
-  <StatCard
-    value={stats.companiesVisited}
-    label="Companies Visited"
-    bgColor="bg-[#f3e5fa]"
-    borderColor="border-2 border-[#d3b8e3]"
-    textColor="text-[#a578c0]"
-    icon={FaBuilding} // Pass the icon
-    isLoading={loading}
-  />
-  <StatCard
-    value={
-      stats.averagePackage != 0
-        ? stats.averagePackage >= 10000000
-          ? `${(stats.averagePackage / 10000000).toFixed(2)} Cr`
-          : `${(stats.averagePackage / 100000).toFixed(2)} LPA`
-        : "N/A"
-    }
-    label="Average Package"
-    bgColor="bg-[#d7f7e5]"
-    borderColor="border-2 border-[#b3d4c2]"
-    textColor="text-[#6a987b]"
-    icon={FaMoneyBillAlt} // Pass the icon
-    isLoading={loading}
-  />
-  </div>
+            icon={FaUserTie} // Pass the icon
+            isLoading={loading}
+          />
+          <StatCard
+            value={stats.companiesVisited}
+            label="Companies Visited"
+            bgColor="bg-[#f3e5fa]"
+            borderColor="border-2 border-[#d3b8e3]"
+            textColor="text-[#a578c0]"
+            icon={FaBuilding} // Pass the icon
+            isLoading={loading}
+          />
+          <StatCard
+            value={
+              stats.averagePackage != 0
+                ? stats.averagePackage >= 10000000
+                  ? `${(stats.averagePackage / 10000000).toFixed(2)} Cr`
+                  : `${(stats.averagePackage / 100000).toFixed(2)} LPA`
+                : "N/A"
+            }
+            label="Average Package"
+            bgColor="bg-[#d7f7e5]"
+            borderColor="border-2 border-[#b3d4c2]"
+            textColor="text-[#6a987b]"
+            icon={FaMoneyBillAlt} // Pass the icon
+            isLoading={loading}
+          />
+        </div>
 
         <div className="grid  gap-6 mb-6">
           {/* Recent Placements Card */}
 
-          <RecentPlacements placements={placements} loading={loading} />
-
+          {/* <RecentPlacements placements={placements} loading={loading} /> */}
 
           {/* Recent Internships Card */}
-          <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-2xl h-[320px]">
-  {/* Header */}
-  <div className="px-6 py-4 bg-custom-blue text-white">
-    <h2 className="text-xl font-semibold">Recent Internships</h2>
-  </div>
-
-  {/* Content */}
-  <div
-    className={`p-6 h-[calc(100%-72px)] ${
-      internships.length > 2
-        ? "overflow-y-auto scrollbar-thin scrollbar-thumb-[#3b82f6] scrollbar-track-gray-200"
-        : "overflow-y-hidden"
-    }`}
-  >
-    {loading ? (
-      <CardSkeleton />
-    ) : internships.length === 0 ? (
-      <div className="min-h-[300px] flex items-center justify-center">
-        <div className="p-6 bg-white rounded-lg text-center w-full max-w-md mx-auto shadow-sm">
-          {/* Icon */}
-          <div className="flex justify-center mb-3">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 text-custom-blue animate-bounce"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-              />
-            </svg>
-          </div>
-          {/* Message */}
-          <p className="text-sm text-gray-800 font-medium">
-            No Recent Internships
-          </p>
-          <p className="text-xs text-gray-500 mt-1">You're all caught up!</p>
-        </div>
-      </div>
-    ) : (
-      <div className="relative">
-        {/* Timeline Line */}
-        <div className="absolute left-4 top-0 h-full w-0.5 bg-gray-200"></div>
-
-        {/* Internships as Timeline Items */}
-        {internships.map((internship, index) => (
-          <div
-            key={index}
-            className="group relative pl-8 pb-6"
-          >
-            {/* Timeline Dot */}
-            <div className="absolute left-0 top-1 h-3 w-3 bg-custom-blue rounded-full border-2 border-white transform -translate-x-1/2"></div>
-
-            {/* Internship Details */}
-            <div className="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border-l-4 border-custom-blue hover:border-purple-600">
-              <div className="text-gray-800 font-medium mb-1">
-                {internship.company}
-              </div>
-              <div className="text-sm text-gray-600">{internship.role}</div>
-              <div className="text-xs text-gray-500 mt-1">
-                {internship.date}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-</div>
+     
         </div>
         <div className="flex gap-3">
-
-        <h1 className="text-custom-blue font-bold text-4xl mt-20 mb-6">Placement</h1>
-        <h1 className="text-black font-bold text-4xl mt-20 mb-6">Calendar</h1>
+          <h1 className="text-custom-blue font-bold text-4xl mt-15 mb-6">
+            Placement
+          </h1>
+          <h1 className="text-black font-bold text-4xl mt-15 mb-6">Calendar</h1>
         </div>
-        <Notification/>
-              <Calendar/>
+        {/* <Notification/> */}
+        <Calendar />
         <Graph />
       </div>
     </div>

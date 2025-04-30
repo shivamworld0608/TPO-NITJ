@@ -11,7 +11,7 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
   const [fields, setFields] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const studentProperties = ['gender', 'department', 'cgpa', 'name', 'email', 'course', 'batch', 'active_backlogs', 'backlogs_history'];
+  const studentProperties = ['name', 'email', 'gender', 'rollno', 'department', 'cgpa', 'course', 'batch', 'active_backlogs', 'backlogs_history', 'cgpa %'];
 
   const addField = () => {
     setFields([...fields, { 
@@ -19,11 +19,23 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
       fieldType: 'text', 
       isRequired: false,
       isAutoFill: false,
+      fieldStar: false,
       studentPropertyPath: '',
       options: [] 
     }]);
   };
 
+  const removeOption = (fieldIndex, optionIndex) => {
+    const updatedFields = fields.map((field, i) => {
+      if (i === fieldIndex) {
+        const updatedOptions = field.options.filter((_, idx) => idx !== optionIndex);
+        return { ...field, options: updatedOptions };
+      }
+      return field;
+    });
+    setFields(updatedFields);
+  };
+  
   const removeField = (index) => {
     setFields(fields.filter((_, i) => i !== index));
   };
@@ -82,7 +94,7 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
     // Show confirmation dialog
     const result = await Swal.fire({
       title: 'Confirm Submission',
-      text: 'Please make sure that Email field has type "email" and neccessary field has been marked autofill?',
+      text: 'Please make sure that Email field has type "email" and necessary field has been marked autofill?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Yes, create it!',
@@ -114,14 +126,13 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 mt-10">
+    <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 -mt-10">
       <div className="mb-6">
         <button
           className="flex items-center text-blue-600 hover:text-blue-800"
           onClick={onClose}
         >
           <FaArrowLeft className="mr-2" />
-          <span>Back</span>
         </button>
       </div>
       
@@ -172,8 +183,6 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
                 <option value="email">Email</option>
                 <option value="date">Date</option>
                 <option value="select">Select</option>
-                <option value="file">File</option>
-                <option value="checkbox">Checkbox</option>
               </select>
             </div>
 
@@ -182,16 +191,25 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
                 <label className="block text-gray-700 font-medium mb-2">Options:</label>
                 <div className="space-y-2">
                   {field.options.map((option, optionIndex) => (
-                    <input
-                      key={optionIndex}
-                      type="text"
-                      className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder={`Option ${optionIndex + 1}`}
-                      value={option}
-                      onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
-                    />
+                    <div key={optionIndex} className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        className="flex-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder={`Option ${optionIndex + 1}`}
+                        value={option}
+                        onChange={(e) => handleOptionChange(index, optionIndex, e.target.value)}
+                      />
+                      <button
+                        type="button"
+                        className="text-red-500 hover:text-red-700"
+                        onClick={() => removeOption(index, optionIndex)}
+                      >
+                        Remove
+                      </button>
+                    </div>
                   ))}
                   <button
+                    type="button"
                     className="bg-gray-500 text-white py-1 px-3 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors duration-200"
                     onClick={() => addOption(index)}
                   >
@@ -220,6 +238,16 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
                   onChange={(e) => handleFieldChange(index, 'isAutoFill', e.target.checked)}
                 />
                 <span className="text-gray-700">Auto-Fill</span>
+              </label>
+
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  className="h-5 w-5 text-blue-500 focus:ring-blue-500 border-gray-300 rounded"
+                  checked={field.fieldStar}
+                  onChange={(e) => handleFieldChange(index, 'fieldStar', e.target.checked)}
+                />
+                <span className="text-gray-700">Star</span>
               </label>
 
               {field.isAutoFill && (
