@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
 import { Select } from '../ui/select';
 import { Button } from '../ui/button';
-import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User,Loader2 } from 'lucide-react';
+import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User, Loader2 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 
@@ -23,41 +23,45 @@ const StudentAnalyticsDashboard = () => {
     backlogs_history: "",
     name: "",
     placementstatus: "",
+    category: "",
+    internshipstatus: "",
   });
   const [editMode, setEditMode] = useState(false);
   const [editedStudent, setEditedStudent] = useState(null);
   const [sortField, setSortField] = useState("name");
   const [sortDirection, setSortDirection] = useState("asc");
+  const [selectedStudent, setSelectedStudent] = useState(null);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleEditClick = (student) => {
     setEditMode(true);
     setEditedStudent({ ...student });
   };
 
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [data, setData] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const handleApplyFilters = async () => {
+    try {
+      setLoading(true);
+      // Prepare query parameters from filters
+      const queryParams = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value && value !== "All") {
+          queryParams.append(key, value);
+        }
+      });
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/get`,
-          { withCredentials: true }
-        );
-
-        setData(response.data.data || []);
-      } catch (err) {
-        setError(err.response?.data?.error || "Failed to fetch students.");
-      }finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStudents();
-  }, []);
+      const response = await axios.get(
+        `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/get?${queryParams.toString()}`,
+        { withCredentials: true }
+      );
+      setData(response.data.data || []);
+    } catch (err) {
+      setError(err.response?.data?.error || "Failed to fetch students.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const clearFilters = () => {
     setFilters({
@@ -72,8 +76,11 @@ const StudentAnalyticsDashboard = () => {
       rollno: "",
       name: "",
       placementstatus: "",
+      category: "",
+      internshipstatus: "",
     });
   };
+
   const handleSaveClick = async () => {
     try {
       await axios.put(
@@ -83,12 +90,13 @@ const StudentAnalyticsDashboard = () => {
         editedStudent,
         { withCredentials: true }
       );
-      setEditMode(false);
-      const response = await axios.get(
-        `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/get`,
-        { withCredentials: true }
+      // Update data locally instead of refetching
+      setData((prevData) =>
+        prevData.map((student) =>
+          student._id === editedStudent._id ? { ...editedStudent } : student
+        )
       );
-      setData(response.data.data || []);
+      setEditMode(false);
     } catch (err) {
       setError(
         err.response?.data?.error || "Failed to update student details."
@@ -146,6 +154,23 @@ const StudentAnalyticsDashboard = () => {
     { value: false, label: "No" },
   ];
 
+  const categoryOptions = [
+    { value: "All", label: "All" },
+    { value: "General", label: "General" },
+    { value: "GEN-EWS", label: "GEN-EWS" },
+    { value: "SC", label: "SC" },
+    { value: "ST", label: "ST" },
+    { value: "OBC-NCL", label: "OBC-NCL" },
+  ];
+
+  const internshipStatusOptions = [
+    { value: "All", label: "All" },
+    { value: "No Intern", label: "No Intern" },
+    { value: "2m Intern", label: "2m Intern" },
+    { value: "6m Intern", label: "6m Intern" },
+    { value: "11m Intern", label: "11m Intern" },
+  ];
+
   const [departmentOptions, setDepartmentOptions] = useState([]);
 
   const courseOptions = [
@@ -153,274 +178,243 @@ const StudentAnalyticsDashboard = () => {
     { value: "B.Tech", label: "B.Tech" },
     { value: "M.Tech", label: "M.Tech" },
     { value: "MBA", label: "MBA" },
-    { value: "M.Sc", label: "M.Sc" },
-    { value: "PHD", label: "PHD" },
+    { value: "M.Sc.", label: "M.Sc." },
+   /*  { value: "PHD", label: "PHD" }, */
   ];
 
   const btechdepartmentOptions = [
     {
-      label: "Biotechnology",
-      options: [{ value: "Biotechnology", label: "Biotechnology" }],
+      label: "BIO TECHNOLOGY",
+      options: [{ value: "BIO TECHNOLOGY", label: "BIO TECHNOLOGY" }],
     },
     {
-      label: "Chemical Engineering",
-      options: [
-        { value: "Chemical Engineering", label: "Chemical Engineering" },
-      ],
+      label: "CHEMICAL ENGINEERING",
+      options: [{ value: "CHEMICAL ENGINEERING", label: "CHEMICAL ENGINEERING" }],
     },
     {
-      label: "Civil Engineering",
-      options: [{ value: "Civil Engineering", label: "Civil Engineering" }],
+      label: "CIVIL ENGINEERING",
+      options: [{ value: "CIVIL ENGINEERING", label: "CIVIL ENGINEERING" }],
     },
     {
-      label: "Computer Science & Engineering",
+      label: "COMPUTER SCIENCE AND ENGINEERING",
       options: [
         {
-          value: "Computer Science & Engineering",
-          label: "Computer Science & Engineering",
+          value: "COMPUTER SCIENCE AND ENGINEERING",
+          label: "COMPUTER SCIENCE AND ENGINEERING",
         },
         {
-          value: "Data Science and Engineering",
-          label: "Data Science and Engineering",
+          value: "DATA SCIENCE AND ENGINEERING",
+          label: "DATA SCIENCE AND ENGINEERING",
         },
       ],
     },
     {
-      label: "Electrical Engineering",
+      label: "ELECTRICAL ENGINEERING",
       options: [
-        { value: "Electrical Engineering", label: "Electrical Engineering" },
+        { value: "ELECTRICAL ENGINEERING", label: "ELECTRICAL ENGINEERING" },
       ],
     },
     {
-      label: "Electronics & Communication Engineering",
+      label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
       options: [
         {
-          value: "Electronics & Communication Engineering",
-          label: "Electronics & Communication Engineering",
+          value: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+          label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
         },
         {
-          value: "Electronics and VLSI Engineering",
-          label: "Electronics and VLSI Engineering",
-        },
-      ],
-    },
-    {
-      label: "Industrial and Production Engineering",
-      options: [
-        {
-          value: "Industrial and Production Engineering",
-          label: "Industrial and Production Engineering",
+          value: "ELECTRONICS AND VLSI ENGINEERING",
+          label: "ELECTRONICS AND VLSI ENGINEERING",
         },
       ],
     },
     {
-      label: "Information Technology",
-      options: [
-        { value: "Information Technology", label: "Information Technology" },
-      ],
-    },
-    {
-      label: "Instrumentation and Control Engineering",
+      label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
       options: [
         {
-          value: "Instrumentation and Control Engineering",
-          label: "Instrumentation and Control Engineering",
+          value: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+          label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
         },
       ],
     },
     {
-      label: "Mathematics and Computing",
+      label: "INFORMATION TECHNOLOGY",
+      options: [
+        { value: "INFORMATION TECHNOLOGY", label: "INFORMATION TECHNOLOGY" },
+      ],
+    },
+    {
+      label: "INSTRUMENTATION AND CONTROL ENGINEERING",
       options: [
         {
-          value: "Mathematics and Computing",
-          label: "Mathematics and Computing",
+          value: "INSTRUMENTATION AND CONTROL ENGINEERING",
+          label: "INSTRUMENTATION AND CONTROL ENGINEERING",
         },
       ],
     },
     {
-      label: "Mechanical Engineering",
+      label: "MATHEMATICS AND COMPUTING",
       options: [
-        { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+        {
+          value: "MATHEMATICS AND COMPUTING",
+          label: "MATHEMATICS AND COMPUTING",
+        },
       ],
     },
     {
-      label: "Textile Technology",
-      options: [{ value: "Textile Technology", label: "Textile Technology" }],
+      label: "MECHANICAL ENGINEERING",
+      options: [
+        { value: "MECHANICAL ENGINEERING", label: "MECHANICAL ENGINEERING" },
+      ],
+    },
+    {
+      label: "TEXTILE TECHNOLOGY",
+      options: [{ value: "TEXTILE TECHNOLOGY", label: "TEXTILE TECHNOLOGY" }],
     },
   ];
 
   const mtechdepartmentOptions = [
     {
-      label: "Biotechnology",
-      options: [{ value: "Biotechnology", label: "Biotechnology" }],
+      label: "BIO TECHNOLOGY",
+      options: [{ value: "BIO TECHNOLOGY", label: "BIO TECHNOLOGY" }],
     },
     {
-      label: "Chemical Engineering",
-      options: [
-        { value: "Chemical Engineering", label: "Chemical Engineering" },
-      ],
+      label: "CHEMICAL ENGINEERING",
+      options: [{ value: "CHEMICAL ENGINEERING", label: "CHEMICAL ENGINEERING" }],
     },
     {
-      label: "Civil Engineering",
+      label: "CIVIL ENGINEERING",
       options: [
         {
-          value: "Structural and Construction Engineering",
-          label: "Structural and Construction Engineering",
+          value: "STRUCTURAL AND CONSTRUCTION ENGINEERING",
+          label: "STRUCTURAL AND CONSTRUCTION ENGINEERING",
         },
         {
-          value: "Geotechnical and Geo-Environmental Engineering",
-          label: "Geotechnical and Geo-Environmental Engineering",
+          value: "GEOTECHNICAL AND GEO-ENVIRONMENTAL ENGINEERING",
+          label: "GEOTECHNICAL AND GEO-ENVIRONMENTAL ENGINEERING",
         },
       ],
     },
     {
-      label: "Computer Science & Engineering",
+      label: "COMPUTER SCIENCE AND ENGINEERING",
       options: [
         {
-          value: "Computer Science & Engineering",
-          label: "Computer Science & Engineering",
+          value: "COMPUTER SCIENCE AND ENGINEERING",
+          label: "COMPUTER SCIENCE AND ENGINEERING",
         },
-        { value: "Information Security", label: "Information Security" },
+        { value: "COMPUTER SCIENCE AND ENGINEERING (INFORMATION SECURITY)", label: "COMPUTER SCIENCE AND ENGINEERING (INFORMATION SECURITY)" },
         {
-          value: "Data Science and Engineering",
-          label: "Data Science and Engineering",
-        },
-      ],
-    },
-    {
-      label: "Electrical Engineering",
-      options: [
-        { value: "Electric Vehicle Design", label: "Electric Vehicle Design" },
-      ],
-    },
-    {
-      label: "Electronics & Communication Engineering",
-      options: [
-        {
-          value: "Signal Processing and Machine Learning",
-          label: "Signal Processing and Machine Learning",
-        },
-        { value: "VLSI Design", label: "VLSI Design" },
-      ],
-    },
-    {
-      label: "Industrial & Production Engineering",
-      options: [
-        {
-          value: "Industrial Engineering and Data Analytics",
-          label: "Industrial Engineering and Data Analytics",
-        },
-        {
-          value: "Manufacturing Technology With Machine Learning",
-          label: "Manufacturing Technology With Machine Learning",
+          value: "DATA SCIENCE AND ENGINEERING",
+          label: "DATA SCIENCE AND ENGINEERING",
         },
       ],
     },
     {
-      label: "Information Technology",
-      options: [{ value: "Data Analytics", label: "Data Analytics" }],
-    },
-    {
-      label: "Instrumentation and Control Engineering",
+      label: "ELECTRICAL ENGINEERING",
       options: [
-        {
-          value: "Control and Instrumentation",
-          label: "Control and Instrumentation",
-        },
-        {
-          value: "Machine Intelligence and Automation",
-          label: "Machine Intelligence and Automation",
-        },
+        { value: "ELECTRIC VEHICLE DESIGN", label: "ELECTRIC VEHICLE DESIGN" },
       ],
     },
     {
-      label: "Mathematics and Computing",
+      label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
       options: [
         {
-          value: "Mathematics and Computing",
-          label: "Mathematics and Computing",
+          value: "SIGNAL PROCESSING AND MACHINE LEARNING",
+          label: "SIGNAL PROCESSING AND MACHINE LEARNING",
         },
+        { value: "VLSI DESIGN", label: "VLSI DESIGN" },
       ],
     },
     {
-      label: "Mechanical Engineering",
+      label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
       options: [
-        { value: "Design Engineering", label: "Design Engineering" },
         {
-          value: "Thermal and Energy Engineering",
-          label: "Thermal and Energy Engineering",
-        },
+          value: "INDUSTRIAL ENGINEERING AND DATA ANALYTICS",
+          label: "INDUSTRIAL ENGINEERING AND DATA ANALYTICS",
+        }
       ],
     },
     {
-      label: "Textile Engineering",
+      label: "INFORMATION TECHNOLOGY",
+      options: [{ value: "DATA ANALYTICS", label: "DATA ANALYTICS" }],
+    },
+    {
+      label: "CONTROL AND INSTRUMENTATION ENGINEERING",
       options: [
         {
-          value: "Textile Engineering and Management",
-          label: "Textile Engineering and Management",
+          value: "CONTROL AND INSTRUMENTATION ENGINEERING",
+          label: "CONTROL AND INSTRUMENTATION ENGINEERING",
+        },
+        {
+          value: "MACHINE INTELLIGENCE AND AUTOMATION",
+          label: "MACHINE INTELLIGENCE AND AUTOMATION",
         },
       ],
     },
     {
-      label: "Renewable Energy",
-      options: [{ value: "Renewable Energy", label: "Renewable Energy" }],
-    },
-    {
-      label: "Artificial Intelligence",
+      label: "MATHEMATICS AND COMPUTING",
       options: [
-        { value: "Artificial Intelligence", label: "Artificial Intelligence" },
+        {
+          value: "MATHEMATICS AND COMPUTING",
+          label: "MATHEMATICS AND COMPUTING",
+        },
       ],
     },
     {
-      label: "Power Systems and Reliability",
+      label: "MECHANICAL ENGINEERING",
+      options: [
+        { value: "DESIGN ENGINEERING", label: "DESIGN ENGINEERING" },
+        {
+          value: "THERMAL AND ENERGY ENGINEERING",
+          label: "THERMAL AND ENERGY ENGINEERING",
+        },
+      ],
+    },
+    {
+      label: "TEXTILE TECHNOLOGY",
       options: [
         {
-          value: "Power Systems and Reliability",
-          label: "Power Systems and Reliability",
+          value: "TEXTILE TECHNOLOGY",
+          label: "TEXTILE TECHNOLOGY",
+        },
+        {
+          value: "TEXTILE ENGINEERING AND MANAGEMENT",
+          label: "TEXTILE ENGINEERING AND MANAGEMENT",
+        },
+      ],
+    },
+    {
+      label: "RENEWABLE ENERGY",
+      options: [{ value: "RENEWABLE ENERGY", label: "RENEWABLE ENERGY" }],
+    },
+    {
+      label: "ARTIFICIAL INTELLIGENCE",
+      options: [
+        { value: "ARTIFICIAL INTELLIGENCE", label: "ARTIFICIAL INTELLIGENCE" },
+      ],
+    },
+    {
+      label: "POWER SYSTEMS AND RELIABILITY",
+      options: [
+        {
+          value: "POWER SYSTEMS AND RELIABILITY",
+          label: "POWER SYSTEMS AND RELIABILITY",
         },
       ],
     },
   ];
 
   const mbadepartmentOptions = [
-    { value: "Finance", label: "Finance" },
-    { value: "Human Resource", label: "Human Resource" },
-    { value: "Marketing", label: "Marketing" },
+    {value:"HUMANITIES AND MANAGEMENT", label:"HUMANITIES AND MANAGEMENT"},
   ];
 
   const mscdepartmentOptions = [
-    { value: "Chemistry", label: "Chemistry" },
-    { value: "Mathematics", label: "Mathematics" },
-    { value: "Physics", label: "Physics" },
+    { value: "CHEMISTRY", label: "CHEMISTRY" },
+    { value: "MATHEMATICS", label: "MATHEMATICS" },
+    { value: "PHYSICS", label: "PHYSICS" },
   ];
 
-  const phddepartmentOptions = [
-    { value: "Biotechnology", label: "Biotechnology" },
-    { value: "Chemical Engineering", label: "Chemical Engineering" },
-    { value: "Civil Engineering", label: "Civil Engineering" },
-    {
-      value: "Computer Science and Engineering",
-      label: "Computer Science and Engineering",
-    },
-    { value: "Electrical Engineering", label: "Electrical Engineering" },
-    {
-      value: "Electronics and Communication Engineering",
-      label: "Electronics and Communication Engineering",
-    },
-    {
-      value: "Industrial and Production Engineering",
-      label: "Industrial and Production Engineering",
-    },
-    { value: "Information Technology", label: "Information Technology" },
-    {
-      value: "Instrumentation and Control Engineering",
-      label: "Instrumentation and Control Engineering",
-    },
-    { value: "Mechanical Engineering", label: "Mechanical Engineering" },
-    { value: "Textile Technology", label: "Textile Technology" },
-  ];
+  const phddepartmentOptions = [];
 
-  // Combine all department options into a single array
   const allDepartments = [
     ...btechdepartmentOptions.flatMap((group) => group.options),
     ...mtechdepartmentOptions.flatMap((group) => group.options),
@@ -429,30 +423,25 @@ const StudentAnalyticsDashboard = () => {
     ...phddepartmentOptions,
   ];
 
-  // Extract unique values using a Set
   const uniqueDepartments = [
     ...new Set(allDepartments.map((dept) => dept.value)),
   ];
 
-  // Sort the unique values alphabetically
   const sortedUniqueDepartments = uniqueDepartments.sort((a, b) =>
     a.localeCompare(b)
   );
 
-  // Format the result into the desired structure
   const formattedDepartments = sortedUniqueDepartments.map((dept) => ({
     value: dept,
     label: dept,
   }));
 
-  useEffect(() => {
-    // Reset department filter when course changes
+  React.useEffect(() => {
     setFilters((prevFilters) => ({
       ...prevFilters,
-      department: "", // Reset department to default value
+      department: "",
     }));
 
-    // Update department options based on the selected course
     switch (filters.course) {
       case "B.Tech":
         setDepartmentOptions(btechdepartmentOptions);
@@ -463,7 +452,7 @@ const StudentAnalyticsDashboard = () => {
       case "MBA":
         setDepartmentOptions(mbadepartmentOptions);
         break;
-      case "M.Sc":
+      case "M.Sc.":
         setDepartmentOptions(mscdepartmentOptions);
         break;
       case "PHD":
@@ -473,7 +462,7 @@ const StudentAnalyticsDashboard = () => {
         setDepartmentOptions(formattedDepartments);
         break;
     }
-  }, [filters.course]); // Trigger when filters.course changes
+  }, [filters.course]);
 
   const filteredStudents = data.filter((student) => {
     return (
@@ -508,7 +497,13 @@ const StudentAnalyticsDashboard = () => {
       (filters.name === "" ||
         student.name.toLowerCase().includes(filters.name.toLowerCase())) &&
       (filters.rollno === "" ||
-        student.rollno.toLowerCase().includes(filters.rollno.toLowerCase()))
+        student.rollno.toLowerCase().includes(filters.rollno.toLowerCase())) &&
+      (filters.category === "" ||
+        filters.category === "All" ||
+        student.category === filters.category) &&
+      (filters.internshipstatus === "" ||
+        filters.internshipstatus === "All" ||
+        student.internshipstatus === filters.internshipstatus)
     );
   });
 
@@ -591,7 +586,7 @@ const StudentAnalyticsDashboard = () => {
         </div>
         <div className="flex items-center gap-4">
           <div className="bg-white rounded-lg p-3 shadow-sm">
-          {loading ? (
+            {loading ? (
               <div className="flex items-center gap-2">
                 <Loader2 className="h-6 w-6 animate-spin text-custom-blue" />
                 <span className="text-sm text-gray-600">Loading...</span>
@@ -739,6 +734,34 @@ const StudentAnalyticsDashboard = () => {
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">
+                Category
+              </label>
+              <Select
+                options={categoryOptions}
+                value={filters.category}
+                onValueChange={(value) =>
+                  setFilters({ ...filters, category: value })
+                }
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
+                Internship Status
+              </label>
+              <Select
+                options={internshipStatusOptions}
+                value={filters.internshipstatus}
+                onValueChange={(value) =>
+                  setFilters({ ...filters, internshipstatus: value })
+                }
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">
                 Search Name
               </label>
               <div className="relative">
@@ -772,7 +795,7 @@ const StudentAnalyticsDashboard = () => {
             </div>
           </div>
 
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4 flex justify-end gap-4">
             <Button
               variant="outline"
               className="flex items-center gap-2"
@@ -780,6 +803,18 @@ const StudentAnalyticsDashboard = () => {
             >
               <X className="h-4 w-4" />
               Clear Filters
+            </Button>
+            <Button
+              className="flex items-center gap-2 bg-custom-blue text-white hover:bg-blue-700"
+              onClick={handleApplyFilters}
+              disabled={loading}
+            >
+              {loading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Filter className="h-4 w-4" />
+              )}
+              Apply Filters
             </Button>
           </div>
         </CardContent>
@@ -998,129 +1033,22 @@ const StudentAnalyticsDashboard = () => {
                               </p>
                             )}
                           </div>
-                        </CardContent>
-                      </Card>
-                      <Card className="border-0 shadow-sm">
-                        <CardHeader>
-                          <CardTitle className="text-lg">
-                            Academic Details
-                          </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-4">
                           <div>
                             <label className="text-sm font-medium text-gray-700">
-                              Department
+                              Category
                             </label>
                             {editMode ? (
                               <Select
-                                options={departmentOptions}
-                                value={editedStudent.department}
+                                options={categoryOptions}
+                                value={editedStudent.category}
                                 onValueChange={(value) =>
-                                  handleChange("department", value)
+                                  handleChange("category", value)
                                 }
                                 className="mt-1"
                               />
                             ) : (
                               <p className="mt-1 text-gray-900">
-                                {student.department}
-                              </p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              Course
-                            </label>
-                            {editMode ? (
-                              <Select
-                                options={courseOptions}
-                                value={editedStudent.course}
-                                onValueChange={(value) =>
-                                  handleChange("course", value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.course}
-                              </p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              CGPA
-                            </label>
-                            {editMode ? (
-                              <Input
-                                type="number"
-                                min="0"
-                                max="10"
-                                value={editedStudent.cgpa}
-                                onChange={(e) =>
-                                  handleChange("cgpa", e.target.value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.cgpa}
-                              </p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              Batch
-                            </label>
-                            {editMode ? (
-                              <Select
-                                options={batchOptions}
-                                value={editedStudent.batch}
-                                onValueChange={(value) =>
-                                  handleChange("batch", value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.batch}
-                              </p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              Active Backlog
-                            </label>
-                            {editMode ? (
-                              <Select
-                                options={backlogOptions}
-                                value={editedStudent.active_backlogs}
-                                onValueChange={(value) =>
-                                  handleChange("active_backlogs", value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.active_backlogs ? "Yes" : "No"}
-                              </p>
-                            )}
-                          </div>
-
-                          <div>
-                            <label className="text-sm font-medium text-gray-700">
-                              Backlogs History
-                            </label>
-                            {editMode ? (
-                              <Select
-                                options={backlogOptions}
-                                value={editedStudent.backlogs_history}
-                                onValueChange={(value) =>
-                                  handleChange("backlogs_history", value)
-                                }
-                                className="mt-1"
-                              />
-                            ) : (
-                              <p className="mt-1 text-gray-900">
-                                {student.backlogs_history ? "Yes" : "No"}
+                                {student.category}
                               </p>
                             )}
                           </div>
@@ -1182,6 +1110,25 @@ const StudentAnalyticsDashboard = () => {
                             ) : (
                               <p className="mt-1 text-gray-900">
                                 {student.debarred ? "Yes" : "No"}
+                              </p>
+                            )}
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium text-gray-700">
+                              Internship Status
+                            </label>
+                            {editMode ? (
+                              <Select
+                                options={internshipStatusOptions}
+                                value={editedStudent.internshipstatus}
+                                onValueChange={(value) =>
+                                  handleChange("internshipstatus", value)
+                                }
+                                className="mt-1"
+                              />
+                            ) : (
+                              <p className="mt-1 text-gray-900">
+                                {student.internshipstatus}
                               </p>
                             )}
                           </div>
@@ -1397,8 +1344,7 @@ const StudentAnalyticsDashboard = () => {
                         <BarChart data={getAssessmentData(student)}>
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="name" />
-                          <YAxis /> //extra margin due to this y-axis
-                          automatically added
+                          <YAxis />
                           <Tooltip />
                           <Bar dataKey="total" fill="#6366f1" name="Total" />
                           <Bar

@@ -3,12 +3,13 @@ import axios from "axios";
 import { FaArrowLeft } from "react-icons/fa";
 import ApplicationForm from "./applicationform";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  Clock, 
-  MapPin, 
-  CheckCircle, 
-  Info 
-} from 'lucide-react';
+import {Calendar, Users, FileText, Award } from 'lucide-react';
+import {
+  Clock,
+  MapPin,
+  CheckCircle,
+  Info,
+} from "lucide-react";
 import Swal from "sweetalert2";
 import {
   faMapMarkerAlt,
@@ -17,6 +18,54 @@ import {
   faBriefcase,
   faIndianRupeeSign,
 } from "@fortawesome/free-solid-svg-icons";
+
+const getStepIcon = (stepType) => {
+  switch (stepType) {
+    case "OA":
+      return <FileText className="w-4 h-4 text-indigo-600" />;
+    case "Interview":
+      return <Users className="w-4 h-4 text-emerald-600" />;
+    case "Others":
+      return <Award className="w-4 h-4 text-amber-600" />;
+    default:
+      return <Calendar className="w-4 h-4 text-gray-600" />;
+  }
+};
+
+// Function to get the color theme based on step type
+const getStepTheme = (stepType) => {
+  switch (stepType) {
+    case "OA":
+      return {
+        border: "border-indigo-500",
+        bg: "bg-indigo-50",
+        hover: "hover:border-indigo-600 hover:bg-indigo-100",
+        dot: "bg-indigo-500"
+      };
+    case "Interview":
+      return {
+        border: "border-emerald-500",
+        bg: "bg-emerald-50",
+        hover: "hover:border-emerald-600 hover:bg-emerald-100",
+        dot: "bg-emerald-500"
+      };
+    case "Others":
+      return {
+        border: "border-amber-500",
+        bg: "bg-amber-50",
+        hover: "hover:border-amber-600 hover:bg-amber-100",
+        dot: "bg-amber-500"
+      };
+    default:
+      return {
+        border: "border-gray-300",
+        bg: "bg-gray-50",
+        hover: "hover:border-gray-400 hover:bg-gray-100",
+        iconBorder: "border-gray-300",
+        dot: "bg-gray-400"
+      };
+  }
+};
 
 
 const Jobdetail = ({ job_id, onBack, onShow }) => {
@@ -96,10 +145,8 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
         }
       };
 
-      // Update the countdown every second
       const interval = setInterval(updateCountdown, 1000);
 
-      // Clear the interval when the component unmounts
       return () => clearInterval(interval);
     }
   }, [jobDetails.deadline]);
@@ -181,12 +228,10 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
     );
   }
 
-  // First, determine if we're dealing with an internship type
   const isInternship = ["Intern", "Intern+PPO", "Intern+FTE"].includes(
     jobDetails.job_type
   );
-  
- 
+
   const details = [
     {
       icon: faClipboardList,
@@ -208,13 +253,11 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
       label: "JOB ROLE",
       value: jobDetails.job_role || "N/A",
     },
-    // CTC box
     {
       icon: faIndianRupeeSign,
       label: isInternship ? "CTC(BASE)" : "CTC",
       value: isInternship ? `${jobDetails.job_salary?.ctc}(${jobDetails.job_salary?.base_salary})` : jobDetails.job_salary?.ctc || "N/A",
     },
-    // Base salary or stipend box
     {
       icon: faIndianRupeeSign,
       label: isInternship ? "STIPEND" : "BASE SALARY",
@@ -245,164 +288,173 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
     return iconMap[stepType] || iconMap['default'];
   };
 
+  
   const info = {
     jobDescription: (
       <div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-2 sm:p-4">
-        {details.map((detail, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center bg-white rounded-lg border border-gray-300 p-3 sm:p-4 shadow-sm hover:scale-105 transition-transform duration-200"
-          >
-            <FontAwesomeIcon
-              icon={detail.icon}
-              className="text-custom-blue text-xl sm:text-2xl mb-2"
-            />
-            <hr className="w-full sm:w-10 border-gray-300 my-1 sm:my-2" />
-            <span className="text-xs sm:text-sm font-semibold text-gray-500 text-center">
-              {detail.label}
-            </span>
-            <hr className="w-full sm:w-10 border-gray-300 my-1 sm:my-2" />
-            {detail.label !== "DESCRIPTION" ? (
-              <span className="text-black font-medium text-xs sm:text-sm text-center">
-                {detail.value}
-              </span>
-            ) : (
-              <button
-                className="text-custom-blue p-1 border border-custom-blue rounded-lg text-sm font-semibold"
-                onClick={() => setDescription(true)} // ✅ Corrected function
-              >
-                Click Here
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Popup Modal */}
-      {description && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="relative p-6 bg-white rounded-lg shadow-lg w-80">
-            {/* Close Button */}
-            <button
-              onClick={() => setDescription(false)} // ✅ Fixed setter function
-              className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-xl"
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-2 sm:p-4">
+          {details.map((detail, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center bg-white rounded-lg border border-gray-300 p-3 sm:p-4 shadow-sm hover:scale-105 transition-transform duration-200"
             >
-              &times;
-            </button>
-
-            {/* Popup Content */}
-            <h2 className="text-lg text-custom-blue text-center font-semibold">Description</h2>
-            <p className="mt-2 text-gray-800">{jobDetails.jobdescription || "No description available"}</p>
-          </div>
+              <FontAwesomeIcon
+                icon={detail.icon}
+                className="text-custom-blue text-xl sm:text-2xl mb-2"
+              />
+              <hr className="w-full sm:w-10 border-gray-300 my-1 sm:my-2" />
+              <span className="text-xs sm:text-sm font-semibold text-gray-500 text-center">
+                {detail.label}
+              </span>
+              <hr className="w-full sm:w-10 border-gray-300 my-1 sm:my-2" />
+              {detail.label !== "DESCRIPTION" ? (
+                <span className="text-black font-medium text-xs sm:text-sm text-center">
+                  {detail.value}
+                </span>
+              ) : (
+                <button
+                  className="text-custom-blue p-1 border border-custom-blue rounded-lg text-sm font-semibold"
+                  onClick={() => setDescription(true)}
+                >
+                  Click Here
+                </button>
+              )}
+            </div>
+          ))}
         </div>
-      )}
-    </div>
+
+        {description && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
+            <div className="relative p-6 bg-white rounded-lg shadow-lg w-80 sm:w-96 max-h-[80vh] overflow-y-auto">
+              <button
+                onClick={() => setDescription(false)}
+                className="absolute top-2 right-2 text-gray-600 hover:text-gray-800 text-xl"
+              >
+                ×
+              </button>
+              <h2 className="text-lg text-custom-blue text-center font-semibold mb-4">Description</h2>
+              <div
+                className="text-gray-800 prose prose-sm sm:prose-base max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html: jobDetails.jobdescription || "<p>No description available</p>",
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     ),
 
     hiringFlow: (
-      <div className=" py-16 px-4 sm:px-6 lg:px-8">
+      <div className="py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-
-        <div className="relative border-l-4 border-custom-blue">
-          {jobDetails?.Hiring_Workflow?.map((step, index) => (
-            <div 
-              key={index} 
-              className="mb-10 ml-10 pl-6 pb-6 border-b border-gray-200 last:border-b-0"
-            >
-              {/* Timeline Dot */}
-              <div 
-                className="absolute -left-[26px] w-12 h-12 bg-white border-4 border-custom-blue 
-                rounded-full flex items-center justify-center"
+        <div className="relative">
+          {/* Timeline line */}
+          <div className="absolute left-5 inset-y-0 w-0.5 bg-gradient-to-b from-blue-400 via-indigo-500 to-purple-600 rounded-full"></div>
+          
+          {jobDetails?.Hiring_Workflow?.map((step, index) => {
+            const theme = getStepTheme(step.step_type);
+            
+            return (
+              <div
+                key={index}
+                className={`mb-6 ml-5 pl-8 relative group`}
               >
-                {getStepIcon(step.step_type)}
-              </div>
-
-              {/* Step Card */}
-              <div className="bg-white rounded-lg shadow-lg p-6 border-2 border-custom-blue hover:border-blue-500 hover:shadow-2xl">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-semibold text-gray-800">
-                    {step.step_type || "Upcoming Stage"}
-                  </h3>
-                  <span className="text-sm text-custom-blue">
-                    Stage {index + 1}
-                  </span>
+                {/* Timeline dot */}
+                <div className={`absolute -left-2 w-4 h-4 ${theme.dot} rounded-full border-2 border-white shadow-sm transition-all duration-300 group-hover:scale-110`}></div>
+                
+                {/* Step container */}
+                <div className={`relative ${theme.bg} ${theme.border} border rounded-lg shadow-sm transition-all duration-300 overflow-hidden ${theme.hover} group-hover:shadow-md transform group-hover:-translate-y-0.5`}>
+                  {/* Header with colored accent */}
+                  <div className={`flex justify-between items-center p-3 border-b ${theme.border} bg-white`}>
+                    <div className="flex items-center">
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center border mr-2 shadow-sm`}>
+                        {getStepIcon(step.step_type)}
+                      </div>
+                      <h3 className="text-sm font-bold text-gray-800">
+                        {step.step_type || "Upcoming Stage"}
+                      </h3>
+                    </div>
+                    <span className="px-2 py-0.5 rounded-full bg-gray-100 text-gray-800 text-xs font-medium">
+                      Stage {index + 1}
+                    </span>
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="p-3 space-y-2 text-sm">
+                    {step.step_type === "OA" && (
+                      <>
+                        <div className="flex items-center text-gray-700">
+                          <Calendar className="mr-2 w-3.5 h-3.5 text-indigo-500" />
+                          <span className="font-medium">
+                            Date: <span className="font-normal">{step.details?.oa_date || "TBA"}</span>
+                          </span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <Clock className="mr-2 w-3.5 h-3.5 text-indigo-500" />
+                          <span className="font-medium">
+                            Login: <span className="font-normal">{step.details?.oa_login_time || "N/A"}</span>
+                          </span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <CheckCircle className="mr-2 w-3.5 h-3.5 text-indigo-500" />
+                          <span className="font-medium">
+                            Duration: <span className="font-normal">{step.details?.oa_duration || "N/A"}</span>
+                          </span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {step.step_type === "Interview" && (
+                      <>
+                        <div className="flex items-center text-gray-700">
+                          <Users className="mr-2 w-3.5 h-3.5 text-emerald-500" />
+                          <span className="font-medium">
+                            Type: <span className="font-normal">{step.details?.interview_type || "N/A"}</span>
+                          </span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <Calendar className="mr-2 w-3.5 h-3.5 text-emerald-500" />
+                          <span className="font-medium">
+                            Date: <span className="font-normal">{step.details?.interview_date || "TBA"}</span>
+                          </span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <Clock className="mr-2 w-3.5 h-3.5 text-emerald-500" />
+                          <span className="font-medium">
+                            Time: <span className="font-normal">{step.details?.interview_time || "N/A"}</span>
+                          </span>
+                        </div>
+                      </>
+                    )}
+                    
+                    {step.step_type === "Others" && (
+                      <>
+                        <div className="flex items-center text-gray-700">
+                          <Award className="mr-2 w-3.5 h-3.5 text-amber-500" />
+                          <span className="font-medium">
+                            Round: <span className="font-normal">{step.details?.others_round_name || "N/A"}</span>
+                          </span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <Calendar className="mr-2 w-3.5 h-3.5 text-amber-500" />
+                          <span className="font-medium">
+                            Date: <span className="font-normal">{step.details?.others_date || "TBA"}</span>
+                          </span>
+                        </div>
+                        <div className="flex items-center text-gray-700">
+                          <Clock className="mr-2 w-3.5 h-3.5 text-amber-500" />
+                          <span className="font-medium">
+                            Duration: <span className="font-normal">{step.details?.others_duration || "N/A"}</span>
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
-
-                {/* Step Details */}
-                <div className="space-y-2">
-                  {step.step_type === "OA" && (
-                    <>
-                      <div className="flex items-center text-gray-600">
-                        <Clock className="mr-2 w-5 h-5 text-blue-500" />
-                        <span>
-                          Date: {step.details.oa_date || "To be announced"}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <Clock className="mr-2 w-5 h-5 text-green-500" />
-                        <span>
-                          Login Time: {step.details.oa_login_time || "N/A"}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <CheckCircle className="mr-2 w-5 h-5 text-purple-500" />
-                        <span>
-                          Duration: {step.details.oa_duration || "N/A"}
-                        </span>
-                      </div>
-                    </>
-                  )}
-
-                  {step.step_type === "Interview" && (
-                    <>
-                      <div className="flex items-center text-gray-600">
-                        <MapPin className="mr-2 w-5 h-5 text-red-500" />
-                        <span>
-                          Type: {step.details.interview_type || "N/A"}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <Clock className="mr-2 w-5 h-5 text-blue-500" />
-                        <span>
-                          Date: {step.details.interview_date || "To be announced"}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <Clock className="mr-2 w-5 h-5 text-green-500" />
-                        <span>
-                          Time: {step.details.interview_time || "N/A"}
-                        </span>
-                      </div>
-                    </>
-                  )}
-
-                  {step.step_type === "Others" && (
-                    <>
-                      <div className="flex items-center text-gray-600">
-                        <CheckCircle className="mr-2 w-5 h-5 text-purple-500" />
-                        <span>
-                          Round: {step.details.others_round_name || "N/A"}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <Clock className="mr-2 w-5 h-5 text-blue-500" />
-                        <span>
-                          Date: {step.details.others_date || "To be announced"}
-                        </span>
-                      </div>
-                      <div className="flex items-center text-gray-600">
-                        <Clock className="mr-2 w-5 h-5 text-green-500" />
-                        <span>
-                          Duration: {step.details.others_duration || "N/A"}
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
@@ -548,7 +600,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
                   day: "numeric",
                   hour: "2-digit",
                   minute: "2-digit",
-                  hour12: true, // Use 12-hour format (AM/PM)
+                  hour12: true,
                 })
               : "Not Provided"}
           </strong>

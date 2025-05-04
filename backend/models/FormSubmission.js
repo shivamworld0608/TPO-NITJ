@@ -13,6 +13,7 @@ const formSubmissionSchema = new mongoose.Schema({
   },
   fields: [{
     fieldName: String,
+    fieldType: String,
     value: String,
     isAutoFilled: Boolean,
     studentPropertyPath: String
@@ -22,7 +23,7 @@ const formSubmissionSchema = new mongoose.Schema({
   },
   visible: {
     type: Boolean,
-    default: false
+    default: true
   }
 });
 

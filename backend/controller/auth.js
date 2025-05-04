@@ -159,6 +159,7 @@ export const LockedResendOTP = async (req, res) => {
   
   export const login = async (req, res) => {
       try {
+         console.log("hello from login");
           const { email, password/* code */ } = req.body;
           let loginAttempt = await LoginAttempt.findOne({ email });
           if (loginAttempt && loginAttempt.isLocked) {
@@ -247,23 +248,38 @@ export const LockedResendOTP = async (req, res) => {
               secure: process.env.NODE_ENV === "production",
               expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           });
-
+        console.log("hello");
           if (userType === "Student" && student) {
             try {
                 const rollNumbers = [student.rollno];
-                const response = await axios.post(`${process.env.ERP_SERVER}`, { rollNumbers });
+                const course = student.course;
+                const response = await axios.post(`${process.env.ERP_SERVER}`, rollNumbers, {
+                    });
                 const erpStudents = response.data.data;
                 const erpData = erpStudents[0];
-
-                const updatedStudent = {
-                    ...student.toObject(),
-                    cgpa: erpData.cgpa,
-                    batch: erpData.batch,
-                    active_backlogs: erpData.active_backlogs,
-                    backlogs_history: erpData.backlogs_history,
+                const erpBatch = erpData.batch;
+                const courseDurations = {
+                "B.Tech": 4,
+                "M.Tech": 2,
+                "B.Sc.-B.Ed.": 4,
+                "MBA": 2,
+                "M.Sc.": 2
                 };
+               const adjustment = courseDurations[course] || 0; // Default to 0 if course not found
+               const adjustedBatch = String(Number(erpBatch) + adjustment);
+                const updatedStudent = await Student.findByIdAndUpdate(
+                    student._id,
+                    {
+                        cgpa: erpData.cgpa,
+                        batch: adjustedBatch,
+                        active_backlogs: erpData.active_backlogs === 'true',
+                        backlogs_history: erpData.backlogs_history === 'true'
+                    },
+                    { new: true }
+                );
+                console.log(updatedStudent);
 
-                return res.status(200).json({ message: "Login Successful", user: updatedStudent, userType });
+                return res.status(200).json({ message: "Login Successful",  user: updatedStudent, userType });
             } catch (error) {
                 console.error("Error fetching ERP data:", error);
                 return res.status(500).json({ message: "Login Successful, but failed to fetch ERP data", user, userType });

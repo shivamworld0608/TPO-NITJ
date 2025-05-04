@@ -1,14 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Oswald&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+ @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 @media print {
 	body {
 		margin: 0 !important;
 	}
 }
+body{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	/* font-family: 'Jost',sans-serif; */
+}
 #root
 {
 	overflow-x: hidden;
+}
+.bg-custom-ck{
+	background-color: #205781;
+}
+.text-custom-ck{
+	color: #205781;
+}
+.text-custom-ck-hover:hover{
+	color: #205781;
 }
 .main-container {
 	font-family: 'Lato';
@@ -29,7 +45,7 @@
 }
 
 .ck-content h3.category {
-	font-family: 'Oswald';
+	font-family: 'Lato';
 	font-size: 20px;
 	font-weight: bold;
 	color: #555;
@@ -39,7 +55,7 @@
 }
 
 .ck-content h2.document-title {
-	font-family: 'Oswald';
+	font-family: 'Lato';
 	font-size: 50px;
 	font-weight: bold;
 	margin: 0;
@@ -48,7 +64,7 @@
 }
 
 .ck-content h3.document-subtitle {
-	font-family: 'Oswald';
+	font-family: 'Lato';
 	font-size: 20px;
 	color: #555;
 	margin: 0 0 1em;
@@ -79,7 +95,7 @@
 }
 
 .ck-content blockquote.side-quote {
-	font-family: 'Oswald';
+	font-family: 'Lato';
 	font-style: normal;
 	float: right;
 	width: 35%;
@@ -181,23 +197,24 @@
 
 /* Customizing the scrollbar for webkit browsers */
 ::-webkit-scrollbar {
-    width: 14px; /* Set width for vertical scrollbar */
-    
+    width: 6px; /* Set width for vertical scrollbar */
 }
 
 ::-webkit-scrollbar-thumb {
-    background: linear-gradient(to bottom, #0369A0, #2563eb); /* Gradient color for the scrollbar thumb */
-    border-radius: 6px; /* Round the edges */
-    border: 3px solid #f1f1f1; /* Border around the thumb */
+	width: 4px;
+	margin-left: 1px;
+    background: rgba(255, 255, 255,0.7);
+	transition: 0.1s ease-in;
+	border-radius: 2px;
+	border: 1.5px solid #000;
+	cursor: pointer;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(to bottom, #ff6f61, #f97d7d); /* Darker gradient on hover */
+    background: #fff;
 }
 
 ::-webkit-scrollbar-track {
-    background: linear-gradient(to bottom, #f1f1f1, #93c5fd); /* Gradient color for the scrollbar track */
-    border-radius: 6px;
+    background: #000;
 }
 
 /* Custom SweetAlert2 Popup Styles */
@@ -278,4 +295,11 @@
 	font-weight: 500;
 	color: #555;
 	margin-bottom: 0.5rem;
+  }
+  .ck-hover-text{
+	color: rgb(255, 255, 255,0.7);
+	transition: 0.1s ease-in-out;
+  }
+  .ck-hover-text:hover{
+	color: #fff;
   }

@@ -50,7 +50,7 @@ export const pprofile = async (req, res) => {
 export const updatesProfile = async (req, res) => {
     try {
         const userId = req.user.userId;
-        const { name, email, phone,rollno,department,year,batch,address,cgpa,gender } = req.body;
+        const { name, email, phone,rollno,department,batch,address,cgpa,gender } = req.body;
 
         if (!name || !email) {
             return res.status(400).json({ message: 'Name, email are required' });
@@ -65,7 +65,6 @@ export const updatesProfile = async (req, res) => {
         student.address = address;
         if(rollno!="") student.rollno = rollno;
         if(department!="") student.department = department;
-        if(year!="") student.year = year;
         if(batch!="") student.batch = batch;
         if(cgpa!="") student.cgpa = cgpa;
         if(gender!="") student.gender = gender;

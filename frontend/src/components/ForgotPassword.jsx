@@ -134,7 +134,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex justify-center items-center -mt-20">
       <div className="border border-custom-blue relative w-full max-w-sm mx-4 p-6 bg-white rounded-lg shadow-lg">
         <div className="text-center">
           <h1 className="text-2xl font-extrabold text-custom-blue">

@@ -5,264 +5,267 @@ import toast from "react-hot-toast";
 import { FaArrowLeft } from "react-icons/fa";
 import { AlertCircle, GripVertical, X, Edit2 } from "lucide-react";
 import CompanySearchDropdown from "../RecruiterDashboard/CompanySearchDropdown.jsx";
+import ReactQuill from "react-quill"; // Import React Quill
+import "react-quill/dist/quill.snow.css"; // Import Quill styles
 
 const btechdepartmentOptions = [
   {
-    label: "Biotechnology",
-    options: [{ value: "Biotechnology", label: "Biotechnology" }],
+    label: "BIO TECHNOLOGY",
+    options: [{ value: "BIO TECHNOLOGY", label: "BIO TECHNOLOGY" }],
   },
   {
-    label: "Chemical Engineering",
-    options: [{ value: "Chemical Engineering", label: "Chemical Engineering" }],
+    label: "CHEMICAL ENGINEERING",
+    options: [{ value: "CHEMICAL ENGINEERING", label: "CHEMICAL ENGINEERING" }],
   },
   {
-    label: "Civil Engineering",
-    options: [{ value: "Civil Engineering", label: "Civil Engineering" }],
+    label: "CIVIL ENGINEERING",
+    options: [{ value: "CIVIL ENGINEERING", label: "CIVIL ENGINEERING" }],
   },
   {
-    label: "Computer Science & Engineering",
+    label: "COMPUTER SCIENCE AND ENGINEERING",
     options: [
       {
-        value: "Computer Science & Engineering",
-        label: "Computer Science & Engineering",
+        value: "COMPUTER SCIENCE AND ENGINEERING",
+        label: "COMPUTER SCIENCE AND ENGINEERING",
       },
       {
-        value: "Data Science and Engineering",
-        label: "Data Science and Engineering",
-      },
-    ],
-  },
-  {
-    label: "Electrical Engineering",
-    options: [
-      { value: "Electrical Engineering", label: "Electrical Engineering" },
-    ],
-  },
-  {
-    label: "Electronics & Communication Engineering",
-    options: [
-      {
-        value: "Electronics & Communication Engineering",
-        label: "Electronics & Communication Engineering",
-      },
-      {
-        value: "Electronics and VLSI Engineering",
-        label: "Electronics and VLSI Engineering",
+        value: "DATA SCIENCE AND ENGINEERING",
+        label: "DATA SCIENCE AND ENGINEERING",
       },
     ],
   },
   {
-    label: "Industrial and Production Engineering",
+    label: "ELECTRICAL ENGINEERING",
+    options: [
+      { value: "ELECTRICAL ENGINEERING", label: "ELECTRICAL ENGINEERING" },
+    ],
+  },
+  {
+    label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
     options: [
       {
-        value: "Industrial and Production Engineering",
-        label: "Industrial and Production Engineering",
+        value: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+        label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+      },
+      {
+        value: "ELECTRONICS AND VLSI ENGINEERING",
+        label: "ELECTRONICS AND VLSI ENGINEERING",
       },
     ],
   },
   {
-    label: "Information Technology",
-    options: [
-      { value: "Information Technology", label: "Information Technology" },
-    ],
-  },
-  {
-    label: "Instrumentation and Control Engineering",
+    label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
     options: [
       {
-        value: "Instrumentation and Control Engineering",
-        label: "Instrumentation and Control Engineering",
+        value: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+        label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
       },
     ],
   },
   {
-    label: "Mathematics and Computing",
+    label: "INFORMATION TECHNOLOGY",
+    options: [
+      { value: "INFORMATION TECHNOLOGY", label: "INFORMATION TECHNOLOGY" },
+    ],
+  },
+  {
+    label: "INSTRUMENTATION AND CONTROL ENGINEERING",
     options: [
       {
-        value: "Mathematics and Computing",
-        label: "Mathematics and Computing",
+        value: "INSTRUMENTATION AND CONTROL ENGINEERING",
+        label: "INSTRUMENTATION AND CONTROL ENGINEERING",
       },
     ],
   },
   {
-    label: "Mechanical Engineering",
+    label: "MATHEMATICS AND COMPUTING",
     options: [
-      { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+      {
+        value: "MATHEMATICS AND COMPUTING",
+        label: "MATHEMATICS AND COMPUTING",
+      },
     ],
   },
   {
-    label: "Textile Technology",
-    options: [{ value: "Textile Technology", label: "Textile Technology" }],
+    label: "MECHANICAL ENGINEERING",
+    options: [
+      { value: "MECHANICAL ENGINEERING", label: "MECHANICAL ENGINEERING" },
+    ],
+  },
+  {
+    label: "TEXTILE TECHNOLOGY",
+    options: [{ value: "TEXTILE TECHNOLOGY", label: "TEXTILE TECHNOLOGY" }],
   },
 ];
 
 const mtechdepartmentOptions = [
   {
-    label: "Biotechnology",
-    options: [{ value: "Biotechnology", label: "Biotechnology" }],
+    label: "BIO TECHNOLOGY",
+    options: [{ value: "BIO TECHNOLOGY", label: "BIO TECHNOLOGY" }],
   },
   {
-    label: "Chemical Engineering",
-    options: [{ value: "Chemical Engineering", label: "Chemical Engineering" }],
+    label: "CHEMICAL ENGINEERING",
+    options: [{ value: "CHEMICAL ENGINEERING", label: "CHEMICAL ENGINEERING" }],
   },
   {
-    label: "Civil Engineering",
+    label: "CIVIL ENGINEERING",
     options: [
       {
-        value: "Structural and Construction Engineering",
-        label: "Structural and Construction Engineering",
+        value: "STRUCTURAL AND CONSTRUCTION ENGINEERING",
+        label: "STRUCTURAL AND CONSTRUCTION ENGINEERING",
       },
       {
-        value: "Geotechnical and Geo-Environmental Engineering",
-        label: "Geotechnical and Geo-Environmental Engineering",
+        value: "GEOTECHNICAL AND GEO-ENVIRONMENTAL ENGINEERING",
+        label: "GEOTECHNICAL AND GEO-ENVIRONMENTAL ENGINEERING",
       },
     ],
   },
   {
-    label: "Computer Science & Engineering",
+    label: "COMPUTER SCIENCE AND ENGINEERING",
     options: [
       {
-        value: "Computer Science & Engineering",
-        label: "Computer Science & Engineering",
+        value: "COMPUTER SCIENCE AND ENGINEERING",
+        label: "COMPUTER SCIENCE AND ENGINEERING",
       },
-      { value: "Information Security", label: "Information Security" },
+      { value: "COMPUTER SCIENCE AND ENGINEERING (INFORMATION SECURITY)", label: "COMPUTER SCIENCE AND ENGINEERING (INFORMATION SECURITY)" },
       {
-        value: "Data Science and Engineering",
-        label: "Data Science and Engineering",
-      },
-    ],
-  },
-  {
-    label: "Electrical Engineering",
-    options: [
-      { value: "Electric Vehicle Design", label: "Electric Vehicle Design" },
-    ],
-  },
-  {
-    label: "Electronics & Communication Engineering",
-    options: [
-      {
-        value: "Signal Processing and Machine Learning",
-        label: "Signal Processing and Machine Learning",
-      },
-      { value: "VLSI Design", label: "VLSI Design" },
-    ],
-  },
-  {
-    label: "Industrial & Production Engineering",
-    options: [
-      {
-        value: "Industrial Engineering and Data Analytics",
-        label: "Industrial Engineering and Data Analytics",
-      },
-      {
-        value: "Manufacturing Technology With Machine Learning",
-        label: "Manufacturing Technology With Machine Learning",
+        value: "DATA SCIENCE AND ENGINEERING",
+        label: "DATA SCIENCE AND ENGINEERING",
       },
     ],
   },
   {
-    label: "Information Technology",
-    options: [{ value: "Data Analytics", label: "Data Analytics" }],
-  },
-  {
-    label: "Instrumentation and Control Engineering",
+    label: "ELECTRICAL ENGINEERING",
     options: [
-      {
-        value: "Control and Instrumentation",
-        label: "Control and Instrumentation",
-      },
-      {
-        value: "Machine Intelligence and Automation",
-        label: "Machine Intelligence and Automation",
-      },
+      { value: "ELECTRIC VEHICLE DESIGN", label: "ELECTRIC VEHICLE DESIGN" },
     ],
   },
   {
-    label: "Mathematics and Computing",
+    label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
     options: [
       {
-        value: "Mathematics and Computing",
-        label: "Mathematics and Computing",
+        value: "SIGNAL PROCESSING AND MACHINE LEARNING",
+        label: "SIGNAL PROCESSING AND MACHINE LEARNING",
       },
+      { value: "VLSI DESIGN", label: "VLSI DESIGN" },
     ],
   },
   {
-    label: "Mechanical Engineering",
+    label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
     options: [
-      { value: "Design Engineering", label: "Design Engineering" },
       {
-        value: "Thermal and Energy Engineering",
-        label: "Thermal and Energy Engineering",
-      },
+        value: "INDUSTRIAL ENGINEERING AND DATA ANALYTICS",
+        label: "INDUSTRIAL ENGINEERING AND DATA ANALYTICS",
+      }
     ],
   },
   {
-    label: "Textile Engineering",
+    label: "INFORMATION TECHNOLOGY",
+    options: [{ value: "DATA ANALYTICS", label: "DATA ANALYTICS" }],
+  },
+  {
+    label: "CONTROL AND INSTRUMENTATION ENGINEERING",
     options: [
       {
-        value: "Textile Engineering and Management",
-        label: "Textile Engineering and Management",
+        value: "CONTROL AND INSTRUMENTATION ENGINEERING",
+        label: "CONTROL AND INSTRUMENTATION ENGINEERING",
+      },
+      {
+        value: "MACHINE INTELLIGENCE AND AUTOMATION",
+        label: "MACHINE INTELLIGENCE AND AUTOMATION",
       },
     ],
   },
   {
-    label: "Renewable Energy",
-    options: [{ value: "Renewable Energy", label: "Renewable Energy" }],
-  },
-  {
-    label: "Artificial Intelligence",
+    label: "MATHEMATICS AND COMPUTING",
     options: [
-      { value: "Artificial Intelligence", label: "Artificial Intelligence" },
+      {
+        value: "MATHEMATICS AND COMPUTING",
+        label: "MATHEMATICS AND COMPUTING",
+      },
     ],
   },
   {
-    label: "Power Systems and Reliability",
+    label: "MECHANICAL ENGINEERING",
+    options: [
+      { value: "DESIGN ENGINEERING", label: "DESIGN ENGINEERING" },
+      {
+        value: "THERMAL AND ENERGY ENGINEERING",
+        label: "THERMAL AND ENERGY ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "TEXTILE TECHNOLOGY",
     options: [
       {
-        value: "Power Systems and Reliability",
-        label: "Power Systems and Reliability",
+        value: "TEXTILE TECHNOLOGY",
+        label: "TEXTILE TECHNOLOGY",
+      },
+      {
+        value: "TEXTILE ENGINEERING AND MANAGEMENT",
+        label: "TEXTILE ENGINEERING AND MANAGEMENT",
+      },
+    ],
+  },
+  {
+    label: "RENEWABLE ENERGY",
+    options: [{ value: "RENEWABLE ENERGY", label: "RENEWABLE ENERGY" }],
+  },
+  {
+    label: "ARTIFICIAL INTELLIGENCE",
+    options: [
+      { value: "ARTIFICIAL INTELLIGENCE", label: "ARTIFICIAL INTELLIGENCE" },
+    ],
+  },
+  {
+    label: "POWER SYSTEMS AND RELIABILITY",
+    options: [
+      {
+        value: "POWER SYSTEMS AND RELIABILITY",
+        label: "POWER SYSTEMS AND RELIABILITY",
       },
     ],
   },
 ];
 
 const mbadepartmentOptions = [
-  { value: "Finance", label: "Finance" },
-  { value: "Human Resource", label: "Human Resource" },
-  { value: "Marketing", label: "Marketing" },
+  {value:"HUMANITIES AND MANAGEMENT", label:"HUMANITIES AND MANAGEMENT"},
+  // { value: "Finance", label: "Finance" },
+  // { value: "Human Resource", label: "Human Resource" },
+  // { value: "Marketing", label: "Marketing" },
 ];
 
 const mscdepartmentOptions = [
-  { value: "Chemistry", label: "Chemistry" },
-  { value: "Mathematics", label: "Mathematics" },
-  { value: "Physics", label: "Physics" },
+  { value: "CHEMISTRY", label: "CHEMISTRY" },
+  { value: "MATHEMATICS", label: "MATHEMATICS" },
+  { value: "PHYSICS", label: "PHYSICS" },
 ];
 
 const phddepartmentOptions = [
-  { value: "Biotechnology", label: "Biotechnology" },
-  { value: "Chemical Engineering", label: "Chemical Engineering" },
-  { value: "Civil Engineering", label: "Civil Engineering" },
-  {
-    value: "Computer Science and Engineering",
-    label: "Computer Science and Engineering",
-  },
-  { value: "Electrical Engineering", label: "Electrical Engineering" },
-  {
-    value: "Electronics and Communication Engineering",
-    label: "Electronics and Communication Engineering",
-  },
-  {
-    value: "Industrial and Production Engineering",
-    label: "Industrial and Production Engineering",
-  },
-  { value: "Information Technology", label: "Information Technology" },
-  {
-    value: "Instrumentation and Control Engineering",
-    label: "Instrumentation and Control Engineering",
-  },
-  { value: "Mechanical Engineering", label: "Mechanical Engineering" },
-  { value: "Textile Technology", label: "Textile Technology" },
+  // { value: "Biotechnology", label: "Biotechnology" },
+  // { value: "Chemical Engineering", label: "Chemical Engineering" },
+  // { value: "Civil Engineering", label: "Civil Engineering" },
+  // {
+  //   value: "Computer Science and Engineering",
+  //   label: "Computer Science and Engineering",
+  // },
+  // { value: "Electrical Engineering", label: "Electrical Engineering" },
+  // {
+  //   value: "Electronics and Communication Engineering",
+  //   label: "Electronics and Communication Engineering",
+  // },
+  // {
+  //   value: "Industrial and Production Engineering",
+  //   label: "Industrial and Production Engineering",
+  // },
+  // { value: "Information Technology", label: "Information Technology" },
+  // {
+  //   value: "Instrumentation and Control Engineering",
+  //   label: "Instrumentation and Control Engineering",
+  // },
+  // { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+  // { value: "Textile Technology", label: "Textile Technology" },
 ];
 
 const jobTypeOptions = [
@@ -288,6 +291,28 @@ const workflowStepOptions = [
   { value: "Interview", label: "Interview" },
   { value: "GD", label: "Group Discussion" },
   { value: "Others", label: "Others" },
+];
+
+// Configure React Quill toolbar
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["link"],
+    ["clean"],
+  ],
+};
+
+const quillFormats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "list",
+  "bullet",
+  "link",
 ];
 
 const CreateJob = ({ onJobCreated, onCancel }) => {
@@ -330,30 +355,36 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
           `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/`,
           { withCredentials: true }
         );
-  
+
         if (Array.isArray(response.data)) {
           setCompanies(response.data);
         } else {
           console.error("Unexpected response format:", response.data);
-          setCompanies([]); // Fallback to empty array
+          setCompanies([]);
         }
       } catch (error) {
         console.error("Error fetching companies:", error);
-        setCompanies([]); // Handle API failure
+        setCompanies([]);
       }
     };
-  
+
     fetchCompanies();
   }, []);
-  
-
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
-      ...(name === "course_allowed" && {}), // Clear departments when course changes
+      ...(name === "course_allowed" && {}),
+    });
+  };
+
+  // Handle React Quill changes for job description
+  const handleQuillChange = (value) => {
+    setFormData({
+      ...formData,
+      jobdescription: value,
     });
   };
 
@@ -506,16 +537,15 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
       onCancel();
     } catch (error) {
       toast.error("Error creating job application.");
-    }
-    finally {
-      isSubmitting(false);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <>
       <button
-        className=" text-gray-500 mx-4 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+        className="text-gray-500 mx-4 rounded-2xl hover:from-gray-600 hover:to-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
         onClick={onCancel}
       >
         <FaArrowLeft />
@@ -549,31 +579,6 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 onChange={handleChange}
               />
             </div>
-            {/* <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Company Name<span className="text-red-500"> *</span>
-              </label>
-              <input
-                required
-                type="text"
-                name="company_name"
-                value={formData.company_name}
-                onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-              />
-            </div> */}
-            {/* <div>
-              <label className="block text-gray-700 font-semibold mb-2">
-                Company Logo (URL)
-              </label>
-              <input
-                type="text"
-                name="company_logo"
-                value={formData.company_logo}
-                onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-              />
-            </div> */}
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 Job Role<span className="text-red-500"> *</span>
@@ -591,12 +596,13 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               <label className="block text-gray-700 font-semibold mb-2">
                 Job Description
               </label>
-              <textarea
-                name="jobdescription"
+              <ReactQuill
                 value={formData.jobdescription}
-                onChange={handleChange}
-                className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
-                rows={4}
+                onChange={handleQuillChange}
+                modules={quillModules}
+                formats={quillFormats}
+                className="border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
+                theme="snow"
               />
             </div>
             <div>
@@ -624,17 +630,6 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                 )}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
-                {/* <option value="">Select Job Type</option>
-                <option value="2m Intern">2-Month Internship</option>
-                <option value="6m Intern">6-Month Internship</option>
-                <option value="Intern+PPO">
-                  Intern + Pre Placement Offer(PPO)
-                </option>
-                <option value="Intern+FTE">
-                  Intern + Full-Time Employment(FTE)
-                </option>
-                <option value="FTE">Full-Time Employment(FTE)</option>
-              </select> */}
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -643,21 +638,13 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               <Select
                 required
                 options={jobCategoryOptions}
-                onChange={(option) =>
-                  handleSelectChange("job_category", option)
-                }
+                onChange={(option) => handleSelectChange("job_category", option)}
                 defaultValue={jobCategoryOptions.find(
                   (option) => option.value === formData.job_category
                 )}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
-                {/* <option value="">Select Job Category</option>
-                <option value="Tech">Tech</option>
-                <option value="Non-Tech">Non-Tech</option>
-                <option value="Tech+Non-Tech">Tech + Non-Tech</option>
-              </select> */}
             </div>
-
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
                 CTC
@@ -677,7 +664,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
               <input
                 type="number"
                 name="stipend"
-                value={formData.stipend} //baceknd me ctc ko stipend me change krna h
+                value={formData.stipend}
                 onChange={handleChange}
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
@@ -731,7 +718,7 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                   <option value="B.Tech">B.Tech</option>
                   <option value="M.Tech">M.Tech</option>
                   <option value="MBA">MBA</option>
-                  <option value="M.Sc">M.Sc</option>
+                  <option value="M.Sc.">M.Sc.</option>
                   <option value="PHD">PHD</option>
                 </select>
               </div>
@@ -748,18 +735,18 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
                       ? mtechdepartmentOptions
                       : formData.course_allowed === "MBA"
                       ? mbadepartmentOptions
-                      : formData.course_allowed === "M.Sc"
+                      : formData.course_allowed === "M.Sc."
                       ? mscdepartmentOptions
                       : formData.course_allowed === "PHD"
                       ? phddepartmentOptions
                       : []
-                  } // Show departmentOptions if course is selected, otherwise an empty array
+                  }
                   isMulti
                   onChange={handleDepartmentChange}
                   isDisabled={!formData.course_allowed}
-                  className="w-full border-2 p-1.5 border-gray-200 rounded-xl  focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300 "
+                  className="w-full border-2 p-1.5 border-gray-200 rounded-xl focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
                 />
-                {!formData.course_allowed && ( // Check if no course is selected
+                {!formData.course_allowed && (
                   <p className="text-red-500 text-sm mt-2">
                     Please choose a course first.
                   </p>
@@ -1096,10 +1083,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
             type="submit"
             className="mt-10 w-full px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold text-lg rounded-2xl hover:from-blue-700 hover:to-blue-900 transition-all duration-300"
             disabled={isSubmitting}
-            isSubmitting={isSubmitting}
           >
             {isSubmitting ? "Creating Job..." : "Create Job"}
-            
           </button>
         </form>
       </div>

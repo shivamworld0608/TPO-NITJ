@@ -21,6 +21,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 const WhyRecruit = () => {
   const [expandedSection, setExpandedSection] = useState(null);
 
+  const scrollTocontactUs = () => {
+    const contactUsSection = document.getElementById('contact-us');
+    if (contactUsSection) {
+      contactUsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   const stats = [
     {
       title: "Alumni Network",
@@ -198,6 +205,7 @@ const WhyRecruit = () => {
             Join leading companies who have found their star performers at NIT Jalandhar.
           </p>
           <Button
+          onClick={scrollTocontactUs}
             size="lg"
             className="bg-gradient-to-r from-custom-blue to-blue-600 hover:from-blue-600 hover:to-custom-blue text-white px-8 py-4 rounded-lg z-10"
           >

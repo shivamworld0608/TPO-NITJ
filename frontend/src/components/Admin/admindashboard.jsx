@@ -7,6 +7,10 @@ import axios from "axios";
 import { RiMenuFold3Fill, RiMenuFold4Fill } from "react-icons/ri";
 import {
   faHome,
+  faChild,
+  faUserTie,
+  faBriefcase,
+  faPersonChalkboard
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -17,7 +21,9 @@ import ProfileImage from "../../assets/chillguy.png";
 import NITJlogo from "../../assets/nitj-logo.png";
 
 import AdminJobProfileManager from "./jobprofiles";
-
+import StudentManager from "./students";
+import RecruiterManager from "./recruiter";
+import ProfessorManager from "./professor";
 
 const Admindashboard = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -63,6 +69,9 @@ const Admindashboard = () => {
 
   const menuItems = [
     { label: "Job Profiles Management", icon: faHome, path: "/admindashboard/home" },
+    { label: "Recruiter Management", icon: faUserTie, path: "/admindashboard/recruiters" },
+    { label: "Student Management", icon: faChild, path: "/admindashboard/students" },
+    { label: "Professor Management", icon: faPersonChalkboard, path: "/admindashboard/professor" },
   ];
 
 
@@ -242,6 +251,9 @@ const Admindashboard = () => {
           {/* Placeholder for route content */}
           <Routes>
             <Route path="/home" element={<AdminJobProfileManager />} />
+            <Route path="/students" element={<StudentManager />} />
+            <Route path="/recruiters" element={<RecruiterManager />} />
+            <Route path="/professor" element={<ProfessorManager />} />
             </Routes>
         </div>
 

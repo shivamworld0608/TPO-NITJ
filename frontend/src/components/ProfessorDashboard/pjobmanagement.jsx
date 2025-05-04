@@ -31,7 +31,7 @@ import {
 import { FaArrowLeft, FaSpinner, FaFileUpload } from "react-icons/fa";
 
 import Notification from "./Notification";
-import MealArrangementForm from "./mealarrangmentform";
+// import MealArrangementForm from "./mealarrangmentform";
 import GuestHouseBookingForm from "./roomarrangement";
 import VehicleRequisitionForm from "./vehiclerequisitionform";
 
@@ -42,7 +42,7 @@ const JobProfilesonp = () => {
     completed: [],
     feedbackByCompany: {},
     jafByCompany: {},
-    mealArrangements: [],
+    // mealArrangements: [],
     guestHouseBookings: [],
     vehicleRequisitions: [],
   });
@@ -64,93 +64,91 @@ const JobProfilesonp = () => {
 
   const btechdepartmentOptions = [
     {
-      label: "Biotechnology",
-      options: [{ value: "Biotechnology", label: "Biotechnology" }],
+      label: "BIO TECHNOLOGY",
+      options: [{ value: "BIO TECHNOLOGY", label: "BIO TECHNOLOGY" }],
     },
     {
-      label: "Chemical Engineering",
-      options: [
-        { value: "Chemical Engineering", label: "Chemical Engineering" },
-      ],
+      label: "CHEMICAL ENGINEERING",
+      options: [{ value: "CHEMICAL ENGINEERING", label: "CHEMICAL ENGINEERING" }],
     },
     {
-      label: "Civil Engineering",
-      options: [{ value: "Civil Engineering", label: "Civil Engineering" }],
+      label: "CIVIL ENGINEERING",
+      options: [{ value: "CIVIL ENGINEERING", label: "CIVIL ENGINEERING" }],
     },
     {
-      label: "Computer Science & Engineering",
+      label: "COMPUTER SCIENCE AND ENGINEERING",
       options: [
         {
-          value: "Computer Science & Engineering",
-          label: "Computer Science & Engineering",
+          value: "COMPUTER SCIENCE AND ENGINEERING",
+          label: "COMPUTER SCIENCE AND ENGINEERING",
         },
         {
-          value: "Data Science and Engineering",
-          label: "Data Science and Engineering",
+          value: "DATA SCIENCE AND ENGINEERING",
+          label: "DATA SCIENCE AND ENGINEERING",
         },
       ],
     },
     {
-      label: "Electrical Engineering",
+      label: "ELECTRICAL ENGINEERING",
       options: [
-        { value: "Electrical Engineering", label: "Electrical Engineering" },
+        { value: "ELECTRICAL ENGINEERING", label: "ELECTRICAL ENGINEERING" },
       ],
     },
     {
-      label: "Electronics & Communication Engineering",
+      label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
       options: [
         {
-          value: "Electronics & Communication Engineering",
-          label: "Electronics & Communication Engineering",
+          value: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+          label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
         },
         {
-          value: "Electronics and VLSI Engineering",
-          label: "Electronics and VLSI Engineering",
-        },
-      ],
-    },
-    {
-      label: "Industrial and Production Engineering",
-      options: [
-        {
-          value: "Industrial and Production Engineering",
-          label: "Industrial and Production Engineering",
+          value: "ELECTRONICS AND VLSI ENGINEERING",
+          label: "ELECTRONICS AND VLSI ENGINEERING",
         },
       ],
     },
     {
-      label: "Information Technology",
-      options: [
-        { value: "Information Technology", label: "Information Technology" },
-      ],
-    },
-    {
-      label: "Instrumentation and Control Engineering",
+      label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
       options: [
         {
-          value: "Instrumentation and Control Engineering",
-          label: "Instrumentation and Control Engineering",
+          value: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+          label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
         },
       ],
     },
     {
-      label: "Mathematics and Computing",
+      label: "INFORMATION TECHNOLOGY",
+      options: [
+        { value: "INFORMATION TECHNOLOGY", label: "INFORMATION TECHNOLOGY" },
+      ],
+    },
+    {
+      label: "INSTRUMENTATION AND CONTROL ENGINEERING",
       options: [
         {
-          value: "Mathematics and Computing",
-          label: "Mathematics and Computing",
+          value: "INSTRUMENTATION AND CONTROL ENGINEERING",
+          label: "INSTRUMENTATION AND CONTROL ENGINEERING",
         },
       ],
     },
     {
-      label: "Mechanical Engineering",
+      label: "MATHEMATICS AND COMPUTING",
       options: [
-        { value: "Mechanical Engineering", label: "Mechanical Engineering" },
+        {
+          value: "MATHEMATICS AND COMPUTING",
+          label: "MATHEMATICS AND COMPUTING",
+        },
       ],
     },
     {
-      label: "Textile Technology",
-      options: [{ value: "Textile Technology", label: "Textile Technology" }],
+      label: "MECHANICAL ENGINEERING",
+      options: [
+        { value: "MECHANICAL ENGINEERING", label: "MECHANICAL ENGINEERING" },
+      ],
+    },
+    {
+      label: "TEXTILE TECHNOLOGY",
+      options: [{ value: "TEXTILE TECHNOLOGY", label: "TEXTILE TECHNOLOGY" }],
     },
   ];
 
@@ -307,15 +305,15 @@ const JobProfilesonp = () => {
     setActiveComponent(componentName);
   };
 
-  const hasMealArrangement = jobProfiles.mealArrangements.find(
-    (meal) => meal.visitingOrganization === selectedCompany
-  );
+  // const hasMealArrangement = jobProfiles?.mealArrangements?.find(
+  //   (meal) => meal.visitingOrganization === selectedCompany
+  // );
 
-  const hasVehicleArrangement = jobProfiles.vehicleRequisitions.find(
+  const hasVehicleArrangement = jobProfiles?.vehicleRequisitions?.find(
     (vehicle) => vehicle.company === selectedCompany
   );
 
-  const hasRoomArrangement = jobProfiles.guestHouseBookings.find(
+  const hasRoomArrangement = jobProfiles?.guestHouseBookings?.find(
     (room) => room.organization === selectedCompany
   );
 
@@ -698,7 +696,7 @@ const JobProfilesonp = () => {
           <div className="mt-8">
             {/* Cards in a single row */}
             <div className="flex flex-wrap gap-4 mb-6">
-              {hasMealArrangement && (
+              {/* {hasMealArrangement && (
                 <Card
                   className="flex-1 min-w-64 cursor-pointer hover:shadow-lg transition-shadow"
                   onClick={() => handleCardClick("meal")}
@@ -709,7 +707,7 @@ const JobProfilesonp = () => {
                     </CardTitle>
                   </CardHeader>
                 </Card>
-              )}
+              )} */}
 
               {hasVehicleArrangement && (
                 <Card
@@ -739,7 +737,7 @@ const JobProfilesonp = () => {
             </div>
 
             {/* Display the selected component */}
-            {activeComponent === "meal" && hasMealArrangement && (
+            {/* {activeComponent === "meal" && hasMealArrangement && (
               <div className="w-full flex justify-center mt-6">
                 <div className="max-w-5xl w-full">
                   <h2 className="text-2xl font-bold text-custom-blue mb-4 text-center">
@@ -751,7 +749,7 @@ const JobProfilesonp = () => {
                   />
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Vehicle Arrangement */}
             {activeComponent === "vehicle" && hasVehicleArrangement && (
@@ -829,7 +827,7 @@ const JobProfilesonp = () => {
                   <option value="B.Tech">B.Tech</option>
                   <option value="M.Tech">M.Tech</option>
                   <option value="MBA">MBA</option>
-                  <option value="M.Sc">M.Sc</option>
+                  <option value="M.Sc.">M.Sc.</option>
                   <option value="PHD">PHD</option>
                 </select>
               </div>
