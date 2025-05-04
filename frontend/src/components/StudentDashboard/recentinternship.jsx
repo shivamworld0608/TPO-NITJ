@@ -1,10 +1,9 @@
 import React from 'react';
 import { Download } from 'lucide-react';
-import { pdf, Document, Page, Text, View, StyleSheet, Image,Font } from '@react-pdf/renderer';
-
+import { pdf, Document, Page, Text, View, StyleSheet, Image, Font } from '@react-pdf/renderer';
 
 // Assuming you have a way to load the NIT Jalandhar logo (replace with actual path or base64)
-import NITJlogo from "../../assets/nitj-logo.png";// Replace with actual logo path or base64
+import NITJlogo from "../../assets/nitj-logo.png"; // Replace with actual logo path or base64
 import NotoSansDevanagari from '../../assets/fonts/NotoSansDevanagari-Regular.ttf';
 
 Font.register({
@@ -24,11 +23,6 @@ const CardSkeleton = () => (
   </div>
 );
 
-Font.register({
-  family: 'NotoSansDevanagari',
-  src: NotoSansDevanagari,
-});
-
 // Styles for the PDF
 const styles = StyleSheet.create({
   page: { padding: 30, fontFamily: 'Helvetica', backgroundColor: '#f9fafb' },
@@ -40,7 +34,6 @@ const styles = StyleSheet.create({
   logo: { width: 60, height: 65, marginRight: 15 },
   headerText: { flex: 1 },
   collegeNameHindi: {
-    //make it to center
     textAlign: 'center',
     marginBottom: 5,
     fontSize: 15, 
@@ -79,8 +72,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 2
   },
-  label: { width: 100, fontSize: 10, color: '#1f2937',fontWeight: 'semibold', fontFamily: 'Helvetica' },
-  value: { fontSize: 10, color: '#1f2937',  flex: 1, fontFamily: 'Helvetica' },
+  label: { width: 100, fontSize: 10, color: '#1f2937', fontWeight: 'semibold', fontFamily: 'Helvetica' },
+  value: { fontSize: 10, color: '#1f2937', flex: 1, fontFamily: 'Helvetica' },
   table: { 
     border: '1px solid #e5e7eb', 
     borderRadius: 4, 
@@ -125,7 +118,7 @@ const InternshipDetailsDownload = ({ internship }) => {
             <Image src={NITJlogo} style={styles.logo} />
             <View style={styles.headerText}>
               <Text style={styles.collegeNameHindi}>
-              डॉ बी आर अंबेडकर राष्ट्रीय प्रौद्योगिकी संस्थान जालंधर
+                डॉ बी आर अंबेडकर राष्ट्रीय प्रौद्योगिकी संस्थान जालंधर
               </Text>
               <Text style={styles.collegeNameEnglish}>
                 Dr B R Ambedkar National Institute of Technology, Jalandhar - 144008
@@ -171,8 +164,8 @@ const InternshipDetailsDownload = ({ internship }) => {
             <Text style={styles.sectionTitle}>Selected Students</Text>
             <View style={styles.table}>
               <View style={styles.tableHeader}>
-                <Text style={[styles.tableCell,{fontWeight: 'semibold'},  { flex: 1 }]}>Student Name</Text>
-                <Text style={[styles.tableCell,{fontWeight: 'semibold'},  { flex: 1 }]}>Email Address</Text>
+                <Text style={[styles.tableCell, { fontWeight: 'semibold' }, { flex: 1 }]}>Student Name</Text>
+                <Text style={[styles.tableCell, { fontWeight: 'semibold' }, { flex: 1 }]}>Email Address</Text>
               </View>
               {internship?.shortlisted_students?.length > 0 ? (
                 internship.shortlisted_students.map((student, index) => (
@@ -196,10 +189,10 @@ const InternshipDetailsDownload = ({ internship }) => {
           </View>
 
           <Text style={styles.footer}>
-          Shortlisting generated from NITJ Placement Portal
+            Shortlisting generated from NITJ Placement Portal
             <View style={styles.headerMetadata}>
               <Text>
-                 Generated on {new Date().toLocaleDateString('en-US', {
+                Generated on {new Date().toLocaleDateString('en-US', {
                   day: 'numeric',
                   month: 'long',
                   year: 'numeric',
@@ -239,7 +232,7 @@ const InternshipDetailsDownload = ({ internship }) => {
           </div>
 
           <div className="text-xs text-gray-400 mt-2">
-          {new Date(internship.createdAt).toLocaleDateString('en-US', {
+            {new Date(internship.createdAt).toLocaleDateString('en-US', {
               day: 'numeric',
               month: 'long',
               year: 'numeric'
@@ -253,6 +246,7 @@ const InternshipDetailsDownload = ({ internship }) => {
     </div>
   );
 };
+
 const RecentInternship = ({ internships = [], loading = false }) => {
   if (loading) {
     return (
@@ -283,7 +277,7 @@ const RecentInternship = ({ internships = [], loading = false }) => {
       <div className="px-4 py-3 bg-custom-blue text-white">
         <h2 className="text-lg font-medium">Recent Internships</h2>
       </div>
-      <div className={`h-[calc(100%-48px)]`}>
+      <div className="h-[calc(100%-48px)] overflow-hidden">
         {loading ? (
           <CardSkeleton />
         ) : internships.length === 0 ? (
@@ -312,18 +306,52 @@ const RecentInternship = ({ internships = [], loading = false }) => {
             </div>
           </div>
         ) : (
-          <div className="relative">
-            {internships.map((internship, index) => (
-              <div
-                key={internship._id || index}
-                className="group relative px-4 py-3"
-              >
+          <div className="scroll-container">
+            <div className="scroll-content">
+              {internships.map((internship, index) => (
+                <div
+                  key={internship._id || index}
+                  className="group relative px-4 py-3"
+                >
                   <InternshipDetailsDownload internship={internship} />
-              </div>
-            ))}
+                </div>
+              ))}
+              {/* Duplicate content for seamless looping */}
+              {internships.map((internship, index) => (
+                <div
+                  key={`duplicate-${internship._id || index}`}
+                  className="group relative px-4 py-3"
+                >
+                  <InternshipDetailsDownload internship={internship} />
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
+      <style jsx>{`
+        .scroll-container {
+          height: 100%;
+          overflow: hidden;
+          position: relative;
+        }
+        .scroll-content {
+          animation: auto-scroll 20s linear infinite;
+          display: flex;
+          flex-direction: column;
+        }
+        .scroll-container:hover .scroll-content {
+          animation-play-state: paused;
+        }
+        @keyframes auto-scroll {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-50%);
+          }
+        }
+      `}</style>
     </div>
   );
 };

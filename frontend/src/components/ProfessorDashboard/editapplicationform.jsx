@@ -18,7 +18,7 @@ const EditApplicationForm = ({ jobId, onClose }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const studentProperties = ['gender', 'department', 'cgpa', 'name', 'email', 'course', 'batch', 'active_backlogs', 'backlogs_history', 'rollno', 'cgpa %'];
+  const studentProperties = ['gender', 'department', 'cgpa', 'name', 'email', 'course', 'batch', 'active_backlogs', 'backlogs_history', 'rollno', 'cgpa %', 'category'];
 
   useEffect(() => {
     const fetchForm = async () => {
@@ -127,7 +127,7 @@ const EditApplicationForm = ({ jobId, onClose }) => {
       // Show confirmation dialog
       const result = await Swal.fire({
         title: 'Confirm Changes',
-        text: 'Please make sure that Email field has type "email" and necessary fields have been marked autofill?',
+        text: 'Please make sure that necessary field has been marked autofill?',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes, save changes',

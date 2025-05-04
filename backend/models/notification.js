@@ -22,6 +22,9 @@ const notificationSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  batch:{
+    type:String,
+  }
 });
 
 const Notification = mongoose.model("Notification", notificationSchema);

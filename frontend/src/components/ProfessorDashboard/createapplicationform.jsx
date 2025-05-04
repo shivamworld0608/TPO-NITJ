@@ -11,7 +11,7 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
   const [fields, setFields] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const studentProperties = ['name', 'email', 'gender', 'rollno', 'department', 'cgpa', 'course', 'batch', 'active_backlogs', 'backlogs_history', 'cgpa %'];
+  const studentProperties = ['name', 'email', 'gender', 'rollno', 'department', 'cgpa', 'course', 'batch', 'active_backlogs', 'backlogs_history', 'cgpa %', 'category'];
 
   const addField = () => {
     setFields([...fields, { 
@@ -94,7 +94,7 @@ const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
     // Show confirmation dialog
     const result = await Swal.fire({
       title: 'Confirm Submission',
-      text: 'Please make sure that Email field has type "email" and necessary field has been marked autofill?',
+      text: 'Please make sure that necessary field has been marked autofill?',
       icon: 'question',
       showCancelButton: true,
       confirmButtonText: 'Yes, create it!',

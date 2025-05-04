@@ -4,8 +4,11 @@ import {
   Clock, 
   Link as LinkIcon, 
   CheckCircle, 
-  Info 
+  Info,
+  EyeOff,
+  XCircle
 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function OthersCard({
   company_name,
@@ -44,11 +47,24 @@ export default function OthersCard({
     if (!isLinkVisible) {
       return (
         <button
-          onClick={() => alert("Link visibility is off")}
-          className="rounded-lg px-1 text-sm text-custom-blue hover:bg-custom-blue hover:text-white transition-colors"
+          onClick={() => toast.error("Link visibility is off", {
+            icon: <EyeOff size={16} />,
+            duration: 3000,
+          })}
+          className="flex items-center rounded-lg px-1 text-sm text-custom-blue hover:bg-custom-blue hover:text-white transition-colors"
         >
+          <EyeOff size={16} className="mr-1" />
           Soon
         </button>
+      );
+    }
+
+    if (others_link === "No link available") {
+      return (
+        <span className="flex items-center text-sm text-gray-500">
+          <XCircle size={16} className="mr-1" />
+          Not Available
+        </span>
       );
     }
 
@@ -72,7 +88,9 @@ export default function OthersCard({
 
     return (
       <button
-        onClick={() => alert("Others link will be available soon")}
+        onClick={() => toast("Others link will be available soon", {
+          duration: 3000,
+        })}
         className="rounded-lg px-1 text-sm text-custom-blue hover:bg-custom-blue hover:text-white transition-colors"
       >
         Soon

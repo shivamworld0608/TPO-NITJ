@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 export const getEligibleUpcomingOAs = async (req, res) => {
   try {
     const studentId = req.user.userId;
+    console.log("Student ID:", req.user.userId);
     const studentObjectId = new mongoose.Types.ObjectId(studentId);
 
     const jobsWithOAs = await JobProfile.find({
@@ -47,7 +48,7 @@ export const getEligibleUpcomingOAs = async (req, res) => {
             oa_login_time: step.details?.oa_login_time || step.details?.login_time,
             oa_duration: step.details?.oa_duration,
             oa_info: step.details?.oa_info,
-            oa_link: isLinkVisible ? studentOALink?.interviewLink || "No link available" : "Link not visible",
+            oa_link: isLinkVisible ? studentOALink?.oaLink || "No link available" : "Link not visible",
             isLinkVisible,
             was_shortlisted:
             step.shortlisted_students?.length === 0
@@ -110,7 +111,7 @@ export const getEligiblePastOAs = async (req, res) => {
             oa_login_time: step.details?.oa_login_time || step.details?.login_time,
             oa_duration: step.details?.oa_duration,
             oa_info: step.details?.oa_info,
-            oa_link: isLinkVisible ? studentOALink?.interviewLink || "No link available" : "Link not visible",
+            oa_link: isLinkVisible ? studentOALink?.oaLink || "No link available" : "Link not visible",
             isLinkVisible,
             was_shortlisted:
               step.shortlisted_students?.length === 0

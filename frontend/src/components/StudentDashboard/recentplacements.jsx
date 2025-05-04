@@ -23,7 +23,7 @@ const CardSkeleton = () => (
   </div>
 );
 
-// Styles aligned with InternshipPDF
+// Styles aligned with PlacementPDF
 const styles = StyleSheet.create({
   page: { padding: 30, fontFamily: 'Helvetica', backgroundColor: '#f9fafb' },
   header: { 
@@ -165,7 +165,7 @@ const PlacementPDF = ({ placement }) => (
                 <Text style={[styles.tableCell, { flex: 1 }]}>
                   {student.name || 'N/A'}
                 </Text>
-                <Text style={[styles.tableCell, { flex: 1 }]}>
+                <Text style={[styles.tableCell,{ flex: 1 }]}>
                   {student.email || 'N/A'}
                 </Text>
               </View>
@@ -221,7 +221,7 @@ const PlacementDetailsDownload = ({ placement }) => {
       <div className="flex justify-between items-start">
         <div>
           <div className="text-md font-semibold text-gray-800 mb-1">
-            {placement.company_name || 'Company Name Not Available'}
+            {placement.company_name || 'N/A'}
           </div>
           <div className="text-xs text-gray-600">
             {`${placement.placement_type || 'N/A'} - ${placement.degree || 'N/A'}`}
@@ -272,7 +272,7 @@ const RecentPlacement = ({ placements = [], loading = false }) => {
       <div className="px-4 py-3 bg-custom-blue text-white">
         <h2 className="text-lg font-medium">Recent Placements</h2>
       </div>
-      <div className="h-[calc(100%-48px)]">
+      <div className="h-[calc(100%-48px)] overflow-hidden">
         {loading ? (
           <CardSkeleton />
         ) : placements.length === 0 ? (
@@ -301,18 +301,52 @@ const RecentPlacement = ({ placements = [], loading = false }) => {
             </div>
           </div>
         ) : (
-          <div className="relative">
-            {placements.map((placement, index) => (
-              <div
-                key={placement._id || index}
-                className="group relative px-4 py-3"
-              >
-                <PlacementDetailsDownload placement={placement} />
-              </div>
-            ))}
+          <div className="scroll-container">
+            <div className="scroll-content">
+              {placements.map((placement, index) => (
+                <div
+                  key={placement._id || index}
+                  className="group relative px-4 py-3"
+                >
+                  <PlacementDetailsDownload placement={placement} />
+                </div>
+              ))}
+              {/* Duplicate content for seamless looping */}
+              {placements.map((placement, index) => (
+                <div
+                  key={`duplicate-${placement._id || index}`}
+                  className="group relative px-4 py-3"
+                >
+                  <PlacementDetailsDownload placement={placement} />
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
+      <style jsx>{`
+        .scroll-container {
+          height: 100%;
+          overflow: hidden;
+          position: relative;
+        }
+        .scroll-content {
+          animation: auto-scroll 20s linear infinite;
+          display: flex;
+          flex-direction: column;
+        }
+        .scroll-container:hover .scroll-content {
+          animation-play-state: paused;
+        }
+        @keyframes auto-scroll {
+          0% {
+            transform: translateY(0);
+          }
+          100% {
+            transform: translateY(-50%);
+          }
+        }
+      `}</style>
     </div>
   );
 };

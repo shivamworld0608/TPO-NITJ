@@ -84,12 +84,12 @@ export const getPlacementReports = async (req, res) => {
     }
     console.log(item, studentCounts[item.roll_no]);
   });
-  results = results.map(item => {
-    if (studentCounts[item.roll_no] > 1) {
-      return { ...item, student_status: 'Double Placed' };
-    }
-    return item;
-  });
+//   results = results.map(item => {
+//     if (studentCounts[item.roll_no] > 1) {
+//       return { ...item, student_status: 'Double Placed' };
+//     }
+//     return item;
+//   });
 
   res.status(200).json({
     success: true,

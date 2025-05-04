@@ -4,8 +4,11 @@ import {
   Clock, 
   Link as LinkIcon, 
   CheckCircle, 
-  Info 
+  Info,
+  EyeOff,
+  XCircle
 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
 
 export default function InterviewCard({
   company_name,
@@ -44,11 +47,24 @@ export default function InterviewCard({
     if (!isLinkVisible) {
       return (
         <button
-          onClick={() => alert("Link visibility is off")}
-          className="rounded-lg px-1 text-sm text-custom-blue hover:bg-custom-blue hover:text-white transition-colors"
+          onClick={() => toast.error("Link visibility is off", {
+            icon: <EyeOff size={16} />,
+            duration: 3000,
+          })}
+          className="flex items-center rounded-lg px-1 text-sm text-custom-blue hover:bg-custom-blue hover:text-white transition-colors"
         >
+          <EyeOff size={16} className="mr-1" />
           Soon
         </button>
+      );
+    }
+
+    if (interview_link === "No link available") {
+      return (
+        <span className="flex items-center text-sm text-gray-500">
+          <XCircle size={16} className="mr-1" />
+          Not Available
+        </span>
       );
     }
 
@@ -63,7 +79,7 @@ export default function InterviewCard({
           href={validLink}
           target="_blank"
           rel="noopener noreferrer"
-          className=" rounded-lg px-1 text-sm text-green-500 hover:bg-green-500 hover:text-white transition-colors"
+          className="rounded-lg px-1 text-sm text-green-500 hover:bg-green-500 hover:text-white transition-colors"
         >
           Join
         </a>
@@ -72,8 +88,10 @@ export default function InterviewCard({
 
     return (
       <button
-        onClick={() => alert("Interview link will be available soon")}
-        className=" rounded-lg px-1 text-sm text-custom-blue hover:bg-custom-blue hover:text-white transition-colors"
+        onClick={() => toast("Interview link will be available soon", {
+          duration: 3000,
+        })}
+        className="rounded-lg px-1 text-sm text-custom-blue hover:bg-custom-blue hover:text-white transition-colors"
       >
         Soon
       </button>

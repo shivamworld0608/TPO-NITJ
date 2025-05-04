@@ -803,7 +803,7 @@ const PPlacementReport = () => {
   const doublePlacedClass = "bg-blue-50 border-l-4 border-blue-400";
 
   return (
-    <div className="font-sans p-6 min-h-screen">
+    <div className="font-sans p-1 min-h-screen">
       {loading && <div className="flex justify-center py-10"><FaSpinner className="animate-spin text-custom-blue text-4xl" /></div>}
 
       <div className="bg-white rounded-lg shadow-lg p-6">
@@ -942,6 +942,7 @@ const PPlacementReport = () => {
                 <th className="py-3 px-4 text-center font-semibold border-b-2 bg-custom-blue whitespace-nowrap w-[5%]">Profile</th>
                 <th className="py-3 px-4 text-center font-semibold border-b-2 bg-custom-blue whitespace-nowrap w-[5%]">Company</th>
                 <th className="py-3 px-4 text-center font-semibold border-b-2 bg-custom-blue whitespace-nowrap w-[5%]">Package(LPA)</th>
+                <th className="py-3 px-4 text-center font-semibold border-b-2 bg-custom-blue whitespace-nowrap w-[5%]">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -962,6 +963,7 @@ const PPlacementReport = () => {
                     <td className="py-3 px-4 border-b border-gray-200 text-center">{item.profile}</td>
                     <td className="py-3 px-4 border-b border-gray-200 text-center">{item.company}</td>
                     <td className="py-3 px-4 border-b border-gray-200 text-center">{item.package}</td>
+                    <td className="py-3 px-4 border-b border-gray-200 text-center">{item.student_status}</td>
                   </tr>
                 ))
               ) : (

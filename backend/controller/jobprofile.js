@@ -1559,6 +1559,7 @@ export const addshortlistStudents = async (req, res) => {
 
         // Check for existing Placement
         if (createPlacement) {
+          console.log("placement create ho rhi hai");
           let placement = await Placement.findOne({
             jobId: group.jobId,
             batch: group.batch,
@@ -1608,13 +1609,13 @@ export const addshortlistStudents = async (req, res) => {
 
     await job.save();
     
-    const notification = new Notification({
-      type: "STUDENT_SHORTLISTED",
-      message: `${students.length} students shortlisted for ${job.company_name} - ${job.job_role}`,
-      jobId: job._id,
-    });
+    // const notification = new Notification({
+    //   type: "STUDENT_SHORTLISTED",
+    //   message: `${students.length} students shortlisted for ${job.company_name} - ${job.job_role}`,
+    //   jobId: job._id,
+    // });
 
-    await notification.save();
+    // await notification.save();
 
     res.status(200).json({ message: 'Students processed successfully.' });
   } catch (error) {
