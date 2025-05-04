@@ -19,8 +19,17 @@ const PlacementSchema = new mongoose.Schema(
     },
     placement_type: {
       type: String,
+      enum:['Intern','Intern+PPO','Intern+FTE','FTE'],
+    },
+    placement_category:{
+      type:String,
       enum: ['Tech', 'Non-Tech','Tech+Non-Tech'],
     },
+    placement_sector:{
+      type:String,
+      enum:['PSU','Private'],
+      default:'Private'
+   },
     batch:{
         type:String,
         enum:['2022','2023','2024','2025','2026','2027','2028','2029','2030']

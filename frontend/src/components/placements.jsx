@@ -2,6 +2,242 @@ import { CSVLink } from 'react-csv';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const btechdepartmentOptions = [
+  {
+    label: "BIO TECHNOLOGY",
+    options: [{ value: "BIO TECHNOLOGY", label: "BIO TECHNOLOGY" }],
+  },
+  {
+    label: "CHEMICAL ENGINEERING",
+    options: [{ value: "CHEMICAL ENGINEERING", label: "CHEMICAL ENGINEERING" }],
+  },
+  {
+    label: "CIVIL ENGINEERING",
+    options: [{ value: "CIVIL ENGINEERING", label: "CIVIL ENGINEERING" }],
+  },
+  {
+    label: "COMPUTER SCIENCE AND ENGINEERING",
+    options: [
+      {
+        value: "COMPUTER SCIENCE AND ENGINEERING",
+        label: "COMPUTER SCIENCE AND ENGINEERING",
+      },
+      {
+        value: "DATA SCIENCE AND ENGINEERING",
+        label: "DATA SCIENCE AND ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "ELECTRICAL ENGINEERING",
+    options: [
+      { value: "ELECTRICAL ENGINEERING", label: "ELECTRICAL ENGINEERING" },
+    ],
+  },
+  {
+    label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+    options: [
+      {
+        value: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+        label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+      },
+      {
+        value: "ELECTRONICS AND VLSI ENGINEERING",
+        label: "ELECTRONICS AND VLSI ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+    options: [
+      {
+        value: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+        label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "INFORMATION TECHNOLOGY",
+    options: [
+      { value: "INFORMATION TECHNOLOGY", label: "INFORMATION TECHNOLOGY" },
+    ],
+  },
+  {
+    label: "INSTRUMENTATION AND CONTROL ENGINEERING",
+    options: [
+      {
+        value: "INSTRUMENTATION AND CONTROL ENGINEERING",
+        label: "INSTRUMENTATION AND CONTROL ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "MATHEMATICS AND COMPUTING",
+    options: [
+      {
+        value: "MATHEMATICS AND COMPUTING",
+        label: "MATHEMATICS AND COMPUTING",
+      },
+    ],
+  },
+  {
+    label: "MECHANICAL ENGINEERING",
+    options: [
+      { value: "MECHANICAL ENGINEERING", label: "MECHANICAL ENGINEERING" },
+    ],
+  },
+  {
+    label: "TEXTILE TECHNOLOGY",
+    options: [{ value: "TEXTILE TECHNOLOGY", label: "TEXTILE TECHNOLOGY" }],
+  },
+];
+
+const mtechdepartmentOptions = [
+  {
+    label: "BIO TECHNOLOGY",
+    options: [{ value: "BIO TECHNOLOGY", label: "BIO TECHNOLOGY" }],
+  },
+  {
+    label: "CHEMICAL ENGINEERING",
+    options: [{ value: "CHEMICAL ENGINEERING", label: "CHEMICAL ENGINEERING" }],
+  },
+  {
+    label: "CIVIL ENGINEERING",
+    options: [
+      {
+        value: "STRUCTURAL AND CONSTRUCTION ENGINEERING",
+        label: "STRUCTURAL AND CONSTRUCTION ENGINEERING",
+      },
+      {
+        value: "GEOTECHNICAL AND GEO-ENVIRONMENTAL ENGINEERING",
+        label: "GEOTECHNICAL AND GEO-ENVIRONMENTAL ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "COMPUTER SCIENCE AND ENGINEERING",
+    options: [
+      {
+        value: "COMPUTER SCIENCE AND ENGINEERING",
+        label: "COMPUTER SCIENCE AND ENGINEERING",
+      },
+      {
+        value: "COMPUTER SCIENCE AND ENGINEERING (INFORMATION SECURITY)",
+        label: "COMPUTER SCIENCE AND ENGINEERING (INFORMATION SECURITY)",
+      },
+      {
+        value: "DATA SCIENCE AND ENGINEERING",
+        label: "DATA SCIENCE AND ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "ELECTRICAL ENGINEERING",
+    options: [
+      { value: "ELECTRIC VEHICLE DESIGN", label: "ELECTRIC VEHICLE DESIGN" },
+    ],
+  },
+  {
+    label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+    options: [
+      {
+        value: "SIGNAL PROCESSING AND MACHINE LEARNING",
+        label: "SIGNAL PROCESSING AND MACHINE LEARNING",
+      },
+      { value: "VLSI DESIGN", label: "VLSI DESIGN" },
+    ],
+  },
+  {
+    label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+    options: [
+      {
+        value: "INDUSTRIAL ENGINEERING AND DATA ANALYTICS",
+        label: "INDUSTRIAL ENGINEERING AND DATA ANALYTICS",
+      },
+    ],
+  },
+  {
+    label: "INFORMATION TECHNOLOGY",
+    options: [{ value: "DATA ANALYTICS", label: "DATA ANALYTICS" }],
+  },
+  {
+    label: "CONTROL AND INSTRUMENTATION ENGINEERING",
+    options: [
+      {
+        value: "CONTROL AND INSTRUMENTATION ENGINEERING",
+        label: "CONTROL AND INSTRUMENTATION ENGINEERING",
+      },
+      {
+        value: "MACHINE INTELLIGENCE AND AUTOMATION",
+        label: "MACHINE INTELLIGENCE AND AUTOMATION",
+      },
+    ],
+  },
+  {
+    label: "MATHEMATICS AND COMPUTING",
+    options: [
+      {
+        value: "MATHEMATICS AND COMPUTING",
+        label: "MATHEMATICS AND COMPUTING",
+      },
+    ],
+  },
+  {
+    label: "MECHANICAL ENGINEERING",
+    options: [
+      { value: "DESIGN ENGINEERING", label: "DESIGN ENGINEERING" },
+      {
+        value: "THERMAL AND ENERGY ENGINEERING",
+        label: "THERMAL AND ENERGY ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "TEXTILE TECHNOLOGY",
+    options: [
+      {
+        value: "TEXTILE TECHNOLOGY",
+        label: "TEXTILE TECHNOLOGY",
+      },
+      {
+        value: "TEXTILE ENGINEERING AND MANAGEMENT",
+        label: "TEXTILE ENGINEERING AND MANAGEMENT",
+      },
+    ],
+  },
+  {
+    label: "RENEWABLE ENERGY",
+    options: [{ value: "RENEWABLE ENERGY", label: "RENEWABLE ENERGY" }],
+  },
+  {
+    label: "ARTIFICIAL INTELLIGENCE",
+    options: [
+      { value: "ARTIFICIAL INTELLIGENCE", label: "ARTIFICIAL INTELLIGENCE" },
+    ],
+  },
+  {
+    label: "POWER SYSTEMS AND RELIABILITY",
+    options: [
+      {
+        value: "POWER SYSTEMS AND RELIABILITY",
+        label: "POWER SYSTEMS AND RELIABILITY",
+      },
+    ],
+  },
+];
+
+const mbadepartmentOptions = [
+  { value: "HUMANITIES AND MANAGEMENT", label: "HUMANITIES AND MANAGEMENT" },
+];
+
+const mscdepartmentOptions = [
+  { value: "CHEMISTRY", label: "CHEMISTRY" },
+  { value: "MATHEMATICS", label: "MATHEMATICS" },
+  { value: "PHYSICS", label: "PHYSICS" },
+];
+
+const phddepartmentOptions = [];
+
 const Icon = ({ type }) => {
   const icons = {
     company: (
@@ -102,7 +338,6 @@ const Icon = ({ type }) => {
         </text>
       </svg>
     ),
-
     student: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +395,6 @@ const Icon = ({ type }) => {
           d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
         />
       </svg>
-
     )
   };
 
@@ -245,12 +479,16 @@ const StatCard = ({
 };
 
 // Filter component
-const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }) => {
+const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters, departments }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
+    setFilters(prev => ({
+      ...prev,
+      [name]: value,
+      ...(name === 'degree' && { department: '' })
+    }));
   };
 
   return (
@@ -330,6 +568,28 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 <div className="flex items-center gap-2">
+                  <Icon type="degree" />
+                  Degree
+                </div>
+              </label>
+              <select
+                name="degree"
+                value={filters.degree}
+                onChange={handleFilterChange}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+              >
+                <option value="">All</option>
+                <option value="B.Tech">B.Tech</option>
+                <option value="M.Tech">M.Tech</option>
+                <option value="MBA">MBA</option>
+                <option value="M.Sc">M.Sc</option>
+                <option value="PHD">PHD</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="flex items-center gap-2">
                   <Icon type="department" />
                   Department
                 </div>
@@ -338,26 +598,11 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
                 name="department"
                 value={filters.department}
                 onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                disabled={!filters.degree}
+                className={`w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none ${!filters.degree ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <option value="">All</option>
-                {[
-                  "CSE",
-                  "ECE",
-                  "EE",
-                  "ME",
-                  "CE",
-                  "IT",
-                  "CH",
-                  "ICE",
-                  "BT",
-                  "TT",
-                  "IPE",
-                  "DS",
-                  "VLSI",
-                  "AI",
-                  "HM",
-                ].map((dept) => (
+                {departments.map((dept) => (
                   <option key={dept} value={dept}>
                     {dept}
                   </option>
@@ -379,31 +624,9 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
                 className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
               >
                 <option value="">All</option>
-                <option value="Tech">Tech</option>
-                <option value="Non-Tech">Non-Tech</option>
-                <option value="Tech+Non-Tech">Tech+Non-Tech</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <div className="flex items-center gap-2">
-                  <Icon type="degree" />
-                  Degree
-                </div>
-              </label>
-              <select
-                name="degree"
-                value={filters.degree}
-                onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-              >
-                <option value="">All</option>
-                <option value="B.Tech">B.Tech</option>
-                <option value="M.Tech">M.Tech</option>
-                <option value="MBA">MBA</option>
-                <option value="M.Sc.">M.Sc.</option>
-                <option value="PHD">PHD</option>
+                <option value="Intern+PPO">Intern+PPO</option>
+                <option value="Intern+FTE">Intern+FTE</option>
+                <option value="FTE">FTE</option>
               </select>
             </div>
 
@@ -619,6 +842,8 @@ const PlacementInsights = () => {
     ctc: "",
   });
 
+  const [departments, setDepartments] = useState([]);
+
   const [placements, setPlacements] = useState([]);
   const [insights, setInsights] = useState({
     totalStudentsPlaced: 0,
@@ -631,6 +856,38 @@ const PlacementInsights = () => {
   const [sortBy, setSortBy] = useState("newest");
   const [page, setPage] = useState(1);
   const itemsPerPage = 9;
+
+  useEffect(() => {
+    if (filters.degree) {
+      let deptOptions = [];
+      switch (filters.degree) {
+        case 'B.Tech':
+          deptOptions = btechdepartmentOptions.flatMap(group => group.options.map(opt => opt.value));
+          break;
+        case 'M.Tech':
+          deptOptions = mtechdepartmentOptions.flatMap(group => group.options.map(opt => opt.value));
+          break;
+        case 'MBA':
+          deptOptions = mbadepartmentOptions.map(opt => opt.value);
+          break;
+        case 'M.Sc':
+          deptOptions = mscdepartmentOptions.map(opt => opt.value);
+          break;
+        case 'PHD':
+          deptOptions = phddepartmentOptions.map(opt => opt.value);
+          break;
+        default:
+          deptOptions = [];
+      }
+      setDepartments(deptOptions);
+    } else {
+      setDepartments([]);
+      setFilters(prev => ({
+        ...prev,
+        department: ''
+      }));
+    }
+  }, [filters.degree]);
 
   const fetchPlacements = async (updatedFilters = filters) => {
     setLoading(true);
@@ -666,6 +923,7 @@ const PlacementInsights = () => {
       department: "",
       ctc: "",
     });
+    setDepartments([]);
     fetchPlacements({});
   };
 
@@ -716,7 +974,6 @@ const PlacementInsights = () => {
     }));
   };
 
-
   return (
     <div className="bg-gray-50 min-h-screen py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -764,13 +1021,13 @@ const PlacementInsights = () => {
           />
         </div>
 
-
         {/* Filters Section */}
         <FilterSection
           filters={filters}
           setFilters={setFilters}
           handleClearFilters={handleClearFilters}
           applyFilters={applyFilters}
+          departments={departments}
         />
 
         {/* Controls Section */}
@@ -854,7 +1111,6 @@ const PlacementInsights = () => {
           </div>
         ) : (
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
-
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -933,7 +1189,6 @@ const PlacementInsights = () => {
                                 >
                                   <Icon type="eye" />
                                 </button>
-
                               )}
                             </div>
                           </td>
@@ -948,7 +1203,7 @@ const PlacementInsights = () => {
                                     onClick={() => setExpandedRow(null)}
                                     className="text-blue-600 hover:text-blue-800 rounded-full p-1 hover:bg-blue-100"
                                   >
-                                    <Icon type="close" />
+                                    <Icon type="chevron" style={{ transform: 'rotate(180deg)' }} />
                                   </button>
                                 </div>
                                 <div className="p-4">
@@ -977,7 +1232,6 @@ const PlacementInsights = () => {
                             </td>
                           </tr>
                         )}
-
                       </React.Fragment>
                     ))
                   ) : (
@@ -1143,4 +1397,5 @@ const PlacementInsights = () => {
     </div>
   );
 };
+
 export default PlacementInsights;

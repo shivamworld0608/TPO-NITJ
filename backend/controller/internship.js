@@ -30,7 +30,6 @@ export const getInternshipsInsights = async (req, res) => {
     const {
       company_name,
       student_name,
-      internship_type,
       batch,
       degree,
       gender,
@@ -42,7 +41,6 @@ export const getInternshipsInsights = async (req, res) => {
 
     const filters = {};
     if (company_name) filters.company_name = { $regex: company_name, $options: "i" };
-    if (internship_type) filters.internship_type = internship_type;
     if (batch) filters.batch = batch;
     if (degree) filters.degree = degree;
     if (stipend) filters.stipend = stipend;
@@ -100,7 +98,6 @@ export const getFilteredInternships = async (req, res) => {
     const {
       company_name,
       student_name,
-      internship_type,
       batch,
       degree,
       gender,
@@ -112,7 +109,6 @@ export const getFilteredInternships = async (req, res) => {
 
     const filters = {};
     if (company_name) filters.company_name = { $regex: company_name, $options: "i" };
-    if (internship_type) filters.internship_type = internship_type;
     if (batch) filters.batch = batch;
     if (degree) filters.degree = degree;
     if (stipend) filters.stipend = stipend;
@@ -143,7 +139,6 @@ export const getFilteredInternships = async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
-
 export const getLastSevenDaysInternships = async (req, res) => {
   try {
     const today = new Date();

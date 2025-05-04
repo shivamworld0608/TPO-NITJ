@@ -19,7 +19,16 @@ const InternshipSchema = new mongoose.Schema(
     },
     internship_type: {
       type: String,
+      enum:['Intern','Intern+PPO','Intern+FTE','FTE'],
+    },
+    internship_category:{
+      type:String,
       enum: ['Tech', 'Non-Tech','Tech+Non-Tech'],
+    },
+    internship_sector:{
+      type:String,
+      enum:['PSU','Private'],
+      default:'Private'
     },
     internship_duration: {
        type:String,

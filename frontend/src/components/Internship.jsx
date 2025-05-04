@@ -2,6 +2,242 @@ import { CSVLink } from 'react-csv';
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
+const btechdepartmentOptions = [
+  {
+    label: "BIO TECHNOLOGY",
+    options: [{ value: "BIO TECHNOLOGY", label: "BIO TECHNOLOGY" }],
+  },
+  {
+    label: "CHEMICAL ENGINEERING",
+    options: [{ value: "CHEMICAL ENGINEERING", label: "CHEMICAL ENGINEERING" }],
+  },
+  {
+    label: "CIVIL ENGINEERING",
+    options: [{ value: "CIVIL ENGINEERING", label: "CIVIL ENGINEERING" }],
+  },
+  {
+    label: "COMPUTER SCIENCE AND ENGINEERING",
+    options: [
+      {
+        value: "COMPUTER SCIENCE AND ENGINEERING",
+        label: "COMPUTER SCIENCE AND ENGINEERING",
+      },
+      {
+        value: "DATA SCIENCE AND ENGINEERING",
+        label: "DATA SCIENCE AND ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "ELECTRICAL ENGINEERING",
+    options: [
+      { value: "ELECTRICAL ENGINEERING", label: "ELECTRICAL ENGINEERING" },
+    ],
+  },
+  {
+    label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+    options: [
+      {
+        value: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+        label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+      },
+      {
+        value: "ELECTRONICS AND VLSI ENGINEERING",
+        label: "ELECTRONICS AND VLSI ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+    options: [
+      {
+        value: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+        label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "INFORMATION TECHNOLOGY",
+    options: [
+      { value: "INFORMATION TECHNOLOGY", label: "INFORMATION TECHNOLOGY" },
+    ],
+  },
+  {
+    label: "INSTRUMENTATION AND CONTROL ENGINEERING",
+    options: [
+      {
+        value: "INSTRUMENTATION AND CONTROL ENGINEERING",
+        label: "INSTRUMENTATION AND CONTROL ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "MATHEMATICS AND COMPUTING",
+    options: [
+      {
+        value: "MATHEMATICS AND COMPUTING",
+        label: "MATHEMATICS AND COMPUTING",
+      },
+    ],
+  },
+  {
+    label: "MECHANICAL ENGINEERING",
+    options: [
+      { value: "MECHANICAL ENGINEERING", label: "MECHANICAL ENGINEERING" },
+    ],
+  },
+  {
+    label: "TEXTILE TECHNOLOGY",
+    options: [{ value: "TEXTILE TECHNOLOGY", label: "TEXTILE TECHNOLOGY" }],
+  },
+];
+
+const mtechdepartmentOptions = [
+  {
+    label: "BIO TECHNOLOGY",
+    options: [{ value: "BIO TECHNOLOGY", label: "BIO TECHNOLOGY" }],
+  },
+  {
+    label: "CHEMICAL ENGINEERING",
+    options: [{ value: "CHEMICAL ENGINEERING", label: "CHEMICAL ENGINEERING" }],
+  },
+  {
+    label: "CIVIL ENGINEERING",
+    options: [
+      {
+        value: "STRUCTURAL AND CONSTRUCTION ENGINEERING",
+        label: "STRUCTURAL AND CONSTRUCTION ENGINEERING",
+      },
+      {
+        value: "GEOTECHNICAL AND GEO-ENVIRONMENTAL ENGINEERING",
+        label: "GEOTECHNICAL AND GEO-ENVIRONMENTAL ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "COMPUTER SCIENCE AND ENGINEERING",
+    options: [
+      {
+        value: "COMPUTER SCIENCE AND ENGINEERING",
+        label: "COMPUTER SCIENCE AND ENGINEERING",
+      },
+      {
+        value: "COMPUTER SCIENCE AND ENGINEERING (INFORMATION SECURITY)",
+        label: "COMPUTER SCIENCE AND ENGINEERING (INFORMATION SECURITY)",
+      },
+      {
+        value: "DATA SCIENCE AND ENGINEERING",
+        label: "DATA SCIENCE AND ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "ELECTRICAL ENGINEERING",
+    options: [
+      { value: "ELECTRIC VEHICLE DESIGN", label: "ELECTRIC VEHICLE DESIGN" },
+    ],
+  },
+  {
+    label: "ELECTRONICS AND COMMUNICATION ENGINEERING",
+    options: [
+      {
+        value: "SIGNAL PROCESSING AND MACHINE LEARNING",
+        label: "SIGNAL PROCESSING AND MACHINE LEARNING",
+      },
+      { value: "VLSI DESIGN", label: "VLSI DESIGN" },
+    ],
+  },
+  {
+    label: "INDUSTRIAL AND PRODUCTION ENGINEERING",
+    options: [
+      {
+        value: "INDUSTRIAL ENGINEERING AND DATA ANALYTICS",
+        label: "INDUSTRIAL ENGINEERING AND DATA ANALYTICS",
+      },
+    ],
+  },
+  {
+    label: "INFORMATION TECHNOLOGY",
+    options: [{ value: "DATA ANALYTICS", label: "DATA ANALYTICS" }],
+  },
+  {
+    label: "CONTROL AND INSTRUMENTATION ENGINEERING",
+    options: [
+      {
+        value: "CONTROL AND INSTRUMENTATION ENGINEERING",
+        label: "CONTROL AND INSTRUMENTATION ENGINEERING",
+      },
+      {
+        value: "MACHINE INTELLIGENCE AND AUTOMATION",
+        label: "MACHINE INTELLIGENCE AND AUTOMATION",
+      },
+    ],
+  },
+  {
+    label: "MATHEMATICS AND COMPUTING",
+    options: [
+      {
+        value: "MATHEMATICS AND COMPUTING",
+        label: "MATHEMATICS AND COMPUTING",
+      },
+    ],
+  },
+  {
+    label: "MECHANICAL ENGINEERING",
+    options: [
+      { value: "DESIGN ENGINEERING", label: "DESIGN ENGINEERING" },
+      {
+        value: "THERMAL AND ENERGY ENGINEERING",
+        label: "THERMAL AND ENERGY ENGINEERING",
+      },
+    ],
+  },
+  {
+    label: "TEXTILE TECHNOLOGY",
+    options: [
+      {
+        value: "TEXTILE TECHNOLOGY",
+        label: "TEXTILE TECHNOLOGY",
+      },
+      {
+        value: "TEXTILE ENGINEERING AND MANAGEMENT",
+        label: "TEXTILE ENGINEERING AND MANAGEMENT",
+      },
+    ],
+  },
+  {
+    label: "RENEWABLE ENERGY",
+    options: [{ value: "RENEWABLE ENERGY", label: "RENEWABLE ENERGY" }],
+  },
+  {
+    label: "ARTIFICIAL INTELLIGENCE",
+    options: [
+      { value: "ARTIFICIAL INTELLIGENCE", label: "ARTIFICIAL INTELLIGENCE" },
+    ],
+  },
+  {
+    label: "POWER SYSTEMS AND RELIABILITY",
+    options: [
+      {
+        value: "POWER SYSTEMS AND RELIABILITY",
+        label: "POWER SYSTEMS AND RELIABILITY",
+      },
+    ],
+  },
+];
+
+const mbadepartmentOptions = [
+  { value: "HUMANITIES AND MANAGEMENT", label: "HUMANITIES AND MANAGEMENT" },
+];
+
+const mscdepartmentOptions = [
+  { value: "CHEMISTRY", label: "CHEMISTRY" },
+  { value: "MATHEMATICS", label: "MATHEMATICS" },
+  { value: "PHYSICS", label: "PHYSICS" },
+];
+
+const phddepartmentOptions = [];
+
 const Icon = ({ type }) => {
   const icons = {
     company: (
@@ -15,19 +251,6 @@ const Icon = ({ type }) => {
       >
         <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
         <polyline points="9 22 9 12 15 12 15 22" />
-      </svg>
-    ),
-    type: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      >
-        <path d="M10 16l-4-4 4-4" />
-        <path d="M14 8l4 4-4 4" />
       </svg>
     ),
     calendar: (
@@ -102,7 +325,6 @@ const Icon = ({ type }) => {
         </text>
       </svg>
     ),
-
     student: (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -160,7 +382,32 @@ const Icon = ({ type }) => {
           d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
         />
       </svg>
-
+    ),
+    clock: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+    ),
+    mode: (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className="h-5 w-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+      >
+        <path d="M3 12h18"></path>
+        <path d="M12 3v18"></path>
+      </svg>
     )
   };
 
@@ -244,12 +491,16 @@ const StatCard = ({
   );
 };
 
-const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }) => {
+const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters, departments }) => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
+    setFilters(prev => ({
+      ...prev,
+      [name]: value,
+      ...(name === 'degree' && { department: '' })
+    }));
   };
 
   return (
@@ -269,7 +520,7 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
 
       {isFilterOpen && (
         <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Company Name */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -329,6 +580,29 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
               </select>
             </div>
 
+            {/* Degree */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                <div className="flex items-center gap-2">
+                  <Icon type="degree" />
+                  Degree
+                </div>
+              </label>
+              <select
+                name="degree"
+                value={filters.degree}
+                onChange={handleFilterChange}
+                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+              >
+                <option value="">All</option>
+                <option value="B.Tech">B.Tech</option>
+                <option value="M.Tech">M.Tech</option>
+                <option value="MBA">MBA</option>
+                <option value="M.Sc">M.Sc</option>
+                <option value="PHD">PHD</option>
+              </select>
+            </div>
+
             {/* Department */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -341,57 +615,15 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
                 name="department"
                 value={filters.department}
                 onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
+                disabled={!filters.degree}
+                className={`w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none ${!filters.degree ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <option value="">All</option>
-                {[
-                  "INTEGRATED TEACHER EDUCATION PROGRAMME", "BIO TECHNOLOGY", "CHEMICAL ENGINEERING", "CIVIL ENGINEERING", 
-                  "COMPUTER SCIENCE AND ENGINEERING", "ELECTRICAL ENGINEERING", "ELECTRONICS AND COMMUNICATION ENGINEERING", 
-                  "INDUSTRIAL AND PRODUCTION ENGINEERING", "INFORMATION TECHNOLOGY", "INSTRUMENTATION AND CONTROL ENGINEERING", 
-                  "MECHANICAL ENGINEERING", "TEXTILE TECHNOLOGY", "DATA SCIENCE AND ENGINEERING", "ELECTRONICS AND VLSI ENGINEERING", 
-                  "MATHEMATICS AND COMPUTING", "CHEMISTRY", "MATHEMATICS", "PHYSICS", "ARTIFICIAL INTELLIGENCE", 
-                  "COMPUTER SCIENCE AND ENGINEERING (INFORMATION SECURITY)", "CONTROL AND INSTRUMENTATION ENGINEERING", 
-                  "DATA ANALYTICS", "DESIGN ENGINEERING", "ELECTRIC VEHICLE DESIGN", "GEOTECHNICAL AND GEO-ENVIRONMENTAL ENGINEERING", 
-                  "INDUSTRIAL ENGINEERING AND DATA ANALYTICS", "POWER SYSTEMS AND RELIABILITY", "RENEWABLE ENERGY", 
-                  "SIGNAL PROCESSING AND MACHINE LEARNING", "STRUCTURAL AND CONSTRUCTION ENGINEERING", "TEXTILE ENGINEERING AND MANAGEMENT", 
-                  "VLSI DESIGN", "MACHINE INTELLIGENCE AND AUTOMATION", "THERMAL AND ENERGY ENGINEERING", "HUMANITIES AND MANAGEMENT"
-                  // "Biotechnology", "Chemical Engineering", "Civil Engineering", "Computer Science & Engineering",
-                  // "Data Science and Engineering", "Electrical Engineering", "Electronics & Communication Engineering",
-                  // "Electronics and VLSI Engineering", "Industrial and Production Engineering", "Information Technology",
-                  // "Instrumentation and Control Engineering", "Mathematics and Computing", "Mechanical Engineering",
-                  // "Textile Technology", "Structural and Construction Engineering", "Geotechnical and Geo-Environmental Engineering",
-                  // "Information Security", "Electric Vehicle Design", "Signal Processing and Machine Learning", "VLSI Design",
-                  // "Industrial Engineering and Data Analytics", "Manufacturing Technology With Machine Learning", "Data Analytics",
-                  // "Control and Instrumentation", "Machine Intelligence and Automation", "Design Engineering",
-                  // "Thermal and Energy Engineering", "Textile Engineering and Management", "Renewable Energy",
-                  // "Artificial Intelligence", "Power Systems and Reliability", "Finance", "Human Resource", "Marketing",
-                  // "Chemistry", "Mathematics", "Physics"
-                ].map((dept) => (
+                {departments.map((dept) => (
                   <option key={dept} value={dept}>
                     {dept}
                   </option>
                 ))}
-              </select>
-            </div>
-
-            {/* Internship Type */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <div className="flex items-center gap-2">
-                  <Icon type="type" />
-                  Internship Type
-                </div>
-              </label>
-              <select
-                name="internship_type"
-                value={filters.internship_type}
-                onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-              >
-                <option value="">All</option>
-                <option value="Tech">Tech</option>
-                <option value="Non-Tech">Non-Tech</option>
-                <option value="Tech+Non-Tech">Tech+Non-Tech</option>
               </select>
             </div>
 
@@ -433,29 +665,6 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
                 <option value="">All</option>
                 <option value="On-Campus">On-Campus</option>
                 <option value="Off-Campus">Off-Campus</option>
-              </select>
-            </div>
-
-            {/* Degree */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <div className="flex items-center gap-2">
-                  <Icon type="degree" />
-                  Degree
-                </div>
-              </label>
-              <select
-                name="degree"
-                value={filters.degree}
-                onChange={handleFilterChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none"
-              >
-                <option value="">All</option>
-                <option value="B.Tech">B.Tech</option>
-                <option value="M.Tech">M.Tech</option>
-                <option value="MBA">MBA</option>
-                <option value="M.Sc.">M.Sc.</option>
-                <option value="PHD">PHD</option>
               </select>
             </div>
 
@@ -522,14 +731,12 @@ const FilterSection = ({ filters, setFilters, handleClearFilters, applyFilters }
   );
 };
 
-
 const InternshipCard = ({ internship }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showAllStudents, setShowAllStudents] = useState(false);
   const {
     company_name = "",
     company_logo = "",
-    internship_type = "",
     internship_offer_mode = "On-Campus",
     batch = "",
     degree = "",
@@ -567,9 +774,6 @@ const InternshipCard = ({ internship }) => {
                 {company_name}
               </h3>
               <div className="flex flex-wrap items-center mt-1 gap-2 text-gray-600 text-sm">
-                <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs">
-                  {internship_type}
-                </span>
                 <span className="bg-purple-50 text-purple-700 px-2 py-1 rounded-md text-xs">
                   {internship_offer_mode}
                 </span>
@@ -668,7 +872,6 @@ const InternshipInsights = () => {
   const [filters, setFilters] = useState({
     company_name: "",
     student_name: "",
-    internship_type: "",
     batch: "",
     degree: "",
     gender: "",
@@ -677,6 +880,8 @@ const InternshipInsights = () => {
     internship_duration: "",
     internship_offer_mode: "",
   });
+
+  const [departments, setDepartments] = useState([]);
 
   const [internships, setInternships] = useState([]);
   const [insights, setInsights] = useState({
@@ -692,6 +897,38 @@ const InternshipInsights = () => {
   const [page, setPage] = useState(1);
   const itemsPerPage = 9;
 
+  useEffect(() => {
+    if (filters.degree) {
+      let deptOptions = [];
+      switch (filters.degree) {
+        case 'B.Tech':
+          deptOptions = btechdepartmentOptions.flatMap(group => group.options.map(opt => opt.value));
+          break;
+        case 'M.Tech':
+          deptOptions = mtechdepartmentOptions.flatMap(group => group.options.map(opt => opt.value));
+          break;
+        case 'MBA':
+          deptOptions = mbadepartmentOptions.map(opt => opt.value);
+          break;
+        case 'M.Sc':
+          deptOptions = mscdepartmentOptions.map(opt => opt.value);
+          break;
+        case 'PHD':
+          deptOptions = phddepartmentOptions.map(opt => opt.value);
+          break;
+        default:
+          deptOptions = [];
+      }
+      setDepartments(deptOptions);
+    } else {
+      setDepartments([]);
+      setFilters(prev => ({
+        ...prev,
+        department: ''
+      }));
+    }
+  }, [filters.degree]);
+
   const fetchInternships = async (updatedFilters = filters) => {
     setLoading(true);
     try {
@@ -704,7 +941,6 @@ const InternshipInsights = () => {
       setInternships(response.data);
 
       const insightsUrl = `${import.meta.env.REACT_APP_BASE_URL}/internships/insights?${queryParams}`;
-
       const insightsResponse = await axios.get(insightsUrl);
       setInsights(insightsResponse.data);
     } catch (error) {
@@ -722,7 +958,6 @@ const InternshipInsights = () => {
     setFilters({
       company_name: "",
       student_name: "",
-      internship_type: "",
       batch: "",
       degree: "",
       gender: "",
@@ -731,6 +966,7 @@ const InternshipInsights = () => {
       internship_duration: "",
       internship_offer_mode: "",
     });
+    setDepartments([]);
     fetchInternships({});
   };
 
@@ -772,7 +1008,6 @@ const InternshipInsights = () => {
     return sortedInternships.map(internship => ({
       'Company Name': internship.company_name,
       'Role': internship.role || 'N/A',
-      'Internship Type': internship.internship_type || 'N/A',
       'Offer Mode': internship.internship_offer_mode || 'N/A',
       'Batch': internship.batch || 'N/A',
       'Degree': internship.degree || 'N/A',
@@ -834,13 +1069,13 @@ const InternshipInsights = () => {
           />
         </div>
 
-
         {/* Filters Section */}
         <FilterSection
           filters={filters}
           setFilters={setFilters}
           handleClearFilters={handleClearFilters}
           applyFilters={applyFilters}
+          departments={departments}
         />
 
         {/* Controls Section */}
@@ -926,7 +1161,6 @@ const InternshipInsights = () => {
           </div>
         ) : (
           <div className="bg-white rounded-lg shadow-md overflow-hidden">
-
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
@@ -936,9 +1170,6 @@ const InternshipInsights = () => {
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Role
-                    </th>
-                    <th className="px-7 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Type
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Batch
@@ -977,11 +1208,6 @@ const InternshipInsights = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                             {internship.role || "N/A"}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
-                            <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded-md text-xs">
-                              {internship.internship_type}
-                            </span>
-                          </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                             {internship.batch}
                           </td>
@@ -1009,14 +1235,13 @@ const InternshipInsights = () => {
                                 >
                                   <Icon type="eye" />
                                 </button>
-
                               )}
                             </div>
                           </td>
                         </tr>
                         {expandedRow === internship._id && (
                           <tr>
-                            <td colSpan="8" className="px-0 py-0">
+                            <td colSpan="7" className="px-0 py-0">
                               <div className="m-2 rounded-lg bg-gray-50 border border-gray-200 overflow-hidden shadow-sm">
                                 <div className="bg-gray-100 px-4 py-2 flex justify-between items-center">
                                   <h4 className="font-medium text-custom-blue">Shortlisted Students</h4>
@@ -1024,7 +1249,7 @@ const InternshipInsights = () => {
                                     onClick={() => setExpandedRow(null)}
                                     className="text-blue-600 hover:text-blue-800 rounded-full p-1 hover:bg-blue-100"
                                   >
-                                    <Icon type="close" />
+                                    <Icon type="chevron" style={{ transform: 'rotate(180deg)' }} />
                                   </button>
                                 </div>
                                 <div className="p-4">
@@ -1053,12 +1278,11 @@ const InternshipInsights = () => {
                             </td>
                           </tr>
                         )}
-
                       </React.Fragment>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="8" className="px-6 py-12 text-center">
+                      <td colSpan="7" className="px-6 py-12 text-center">
                         <div className="flex flex-col items-center justify-center">
                           <h3 className="mt-4 text-lg font-medium text-gray-900">No internships found</h3>
                           <p className="mt-1 text-sm text-gray-500">
@@ -1219,4 +1443,5 @@ const InternshipInsights = () => {
     </div>
   );
 };
+
 export default InternshipInsights;

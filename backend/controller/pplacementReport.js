@@ -5,7 +5,6 @@ export const getPlacementReports = async (req, res) => {
   console.log('Received request for placement reports');
   try {
     const { batch, degree, department, type } = req.query;
-
     const filter = {};
     if (batch) filter.batch = batch;
     if (degree) filter.degree = degree;
@@ -28,8 +27,8 @@ export const getPlacementReports = async (req, res) => {
               date_result: new Date(placement.createdAt).toLocaleDateString(),
               profile: placement.role,
               company: placement.company_name,
-              package: placement.ctc ? (placement.ctc / 100000).toFixed(1): 'N/A',
-              student_status: 'Placed',
+              package: placement.ctc ? (placement.ctc): 'N/A',
+              student_status: placement.placement_type|| 'Placed',
               placement_type: 'Placement',
               batch: placement.batch,
               degree: placement.degree
@@ -58,8 +57,8 @@ export const getPlacementReports = async (req, res) => {
               date_result: new Date(internship.createdAt).toLocaleDateString(),
               profile: internship.role,
               company: internship.company_name,
-              package: internship.stipend ? (internship.stipend / 100000).toFixed(1): 'N/A',
-              student_status: 'Intern',
+              package: internship.stipend ? (internship.stipend): 'N/A',
+              student_status: internship.internship_type || 'Intern',
               placement_type: 'Internship',
               duration: internship.internship_duration,
               batch: internship.batch,

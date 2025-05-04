@@ -1458,6 +1458,7 @@ import { Button } from '../ui/button';
 import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User, Loader2, Briefcase } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import { toast } from 'react-hot-toast';
 import Notification from "./Notification";
 
 const StudentAnalyticsDashboard = () => {
@@ -1515,7 +1516,6 @@ const StudentAnalyticsDashboard = () => {
         `${import.meta.env.REACT_APP_BASE_URL}/student-analysis/get?${queryParams.toString()}`,
         { withCredentials: true }
       );
-      console.log(response);
       setData(response.data.data || []);
     } catch (err) {
       setError(err.response?.data?.error || "Failed to fetch students.");
@@ -1604,17 +1604,21 @@ const StudentAnalyticsDashboard = () => {
   };
 
   const addNewOffer = () => {
+    const newOffer = {
+      offer_type: null,
+      offer_category: null,
+      offer_sector: null,
+      jobId: null
+    };
+
+    if (!newOffer.offer_type || !newOffer.offer_category || !newOffer.offer_sector) {
+      toast.error("Please select Offer Type, Offer Category, and Offer Sector");
+      return;
+    }
+
     setEditedOfferTracker((prev) => ({
       ...prev,
-      offer: [
-        ...prev.offer,
-        {
-          offer_type: 'FTE',
-          offer_category: 'Not Considered',
-          offer_sector: 'Private',
-          jobId: null
-        }
-      ]
+      offer: [...prev.offer, newOffer]
     }));
   };
 
@@ -2599,7 +2603,7 @@ const StudentAnalyticsDashboard = () => {
                                   Remove
                                 </Button>
                               </div>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                   <label className="text-sm font-medium">Offer Type</label>
                                   <Select
@@ -2627,43 +2631,116 @@ const StudentAnalyticsDashboard = () => {
                                     className="mt-1"
                                   />
                                 </div>
+                              </div>
+                            </div>
+                          ))}
+                          <div className="space-y-4">
+                            <div className="border p-4 rounded-lg space-y-4">
+                              <h4 className="font-semibold">New Offer</h4>
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
-                                  <label className="text-sm font-medium">Job Profile</label>
+                                  <label className="text-sm font-medium">Offer Type *</label>
                                   <Select
-                                    options={[
-                                      { value: null, label: 'None' },
-                                      ...jobProfiles.map(job => ({
-                                        value: job._id,
-                                        label: `${job.company_name} - ${job.job_role}`
-                                      }))
-                                    ]}
-                                    value={offer.jobId}
-                                    onValueChange={(value) => handleOfferChange(index, 'jobId', value)}
+                                    options={offerTypeOptions}
+                                    value={null}
+                                    onValueChange={(value) => {
+                                      if (value !== "Select Offer Type") {
+                                        setEditedOfferTracker((prev) => ({
+                                          ...prev,
+                                          newOffer: {
+                                            ...prev.newOffer,
+                                            offer_type: value
+                                          }
+                                        }));
+                                      }
+                                    }}
+                                    className="mt-1"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium">Offer Category *</label>
+                                  <Select
+                                    options={offerCategoryOptions}
+                                    value={null}
+                                    onValueChange={(value) => {
+                                      if (value !== "Select Offer Category") {
+                                        setEditedOfferTracker((prev) => ({
+                                          ...prev,
+                                          newOffer: {
+                                            ...prev.newOffer,
+                                            offer_category: value
+                                          }
+                                        }));
+                                      }
+                                    }}
+                                    className="mt-1"
+                                  />
+                                </div>
+                                <div>
+                                  <label className="text-sm font-medium">Offer Sector *</label>
+                                  <Select
+                                    options={offerSectorOptions}
+                                    value={null}
+                                    onValueChange={(value) => {
+                                      if (value !== "Select Offer Sector") {
+                                        setEditedOfferTracker((prev) => ({
+                                          ...prev,
+                                          newOffer: {
+                                            ...prev.newOffer,
+                                            offer_sector: value
+                                          }
+                                        }));
+                                      }
+                                    }}
                                     className="mt-1"
                                   />
                                 </div>
                               </div>
                             </div>
-                          ))}
-                          <div className="mt-4 flex gap-4">
-                            <Button
-                              className="bg-custom-blue text-white"
-                              onClick={addNewOffer}
-                            >
-                              Add New Offer
-                            </Button>
-                            <Button
-                              className="bg-green-500 text-white"
-                              onClick={handleOfferSaveClick}
-                            >
-                              Save
-                            </Button>
-                            <Button
-                              variant="outline"
-                              onClick={handleOfferCancelClick}
-                            >
-                              Cancel
-                            </Button>
+                            <div className="flex gap-4">
+                              <Button
+                                className="bg-custom-blue text-white"
+                                onClick={() => {
+                                  const newOffer = editedOfferTracker?.newOffer;
+                                  if (!newOffer?.offer_type || !newOffer?.offer_category || !newOffer?.offer_sector) {
+                                    toast.error("Please select Offer Type, Offer Category, and Offer Sector");
+                                    return;
+                                  }
+                                  setEditedOfferTracker((prev) => ({
+                                    ...prev,
+                                    offer: [
+                                      ...prev.offer,
+                                      {
+                                        offer_type: newOffer.offer_type,
+                                        offer_category: newOffer.offer_category,
+                                        offer_sector: newOffer.offer_sector,
+                                        jobId: null
+                                      }
+                                    ],
+                                    newOffer: {
+                                      offer_type: null,
+                                      offer_category: null,
+                                      offer_sector: null,
+                                      jobId: null
+                                    }
+                                  }));
+                                }}
+                              >
+                                Add New Offer
+                              </Button>
+                              <Button
+                                className="bg-green-500 text-white"
+                                onClick={handleOfferSaveClick}
+                              >
+                                Save
+                              </Button>
+                              <Button
+                                variant="outline"
+                                onClick={handleOfferCancelClick}
+                              >
+                                Cancel
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       ) : (
