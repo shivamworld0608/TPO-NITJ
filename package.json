@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "xlsx-style": "^0.8.13"
+  }
+}

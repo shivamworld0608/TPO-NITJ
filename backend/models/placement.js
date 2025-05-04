@@ -56,7 +56,7 @@ const PlacementSchema = new mongoose.Schema(
         },
         department: {
           type: String,
-          enum: [ "Biotechnology","Chemical Engineering","Civil Engineering","Computer Science & Engineering","Data Science and Engineering","Electrical Engineering",
+          enum: ["Biotechnology","Chemical Engineering","Civil Engineering","Computer Science & Engineering","Data Science and Engineering","Electrical Engineering",
             "Electronics & Communication Engineering","Electronics and VLSI Engineering","Industrial and Production Engineering",
             "Information Technology","Instrumentation and Control Engineering","Mathematics and Computing","Mechanical Engineering",
             "Textile Technology","Structural and Construction Engineering","Geotechnical and Geo-Environmental Engineering",
@@ -77,5 +77,3 @@ const PlacementSchema = new mongoose.Schema(
 
 const Placement = mongoose.model("Placement", PlacementSchema);
 export default Placement;
-
-

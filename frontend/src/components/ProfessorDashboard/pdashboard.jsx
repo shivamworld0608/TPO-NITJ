@@ -36,7 +36,7 @@ import InterviewManagement from "./pinterviewmanagement";
 import PNotifications from "./pnotifications";
 // import Mailbox from "./pmailbox";
 import ExperienceSharing from "./pexperiencesharing";
-import PlacementInsights from "./pplacementinsights";
+import PPlacementReport from "./pplacementinsights";
 import PlacementPolicy from "./pplacementpolicy";
 import RequestHelpManager from "./Request";
 import Profile from "./pProfile.jsx";
@@ -304,7 +304,7 @@ const Pdashboard = () => {
             <Route path="experience-sharing" element={<ExperienceSharing />} />
             <Route path="contact-request" element={<ContactRequests />} />
             <Route path="conversation" element={<ConversationLog />} />
-            <Route path="placement-insights" element={<PlacementInsights />} />
+            <Route path="placement-insights" element={<PPlacementReport />} />
             <Route path="add-students" element={<AddStudentForm/>} />
             <Route path="add-recruiter" element={<RecruiterForm/>} />
             <Route path="placement-policy" element={<PlacementPolicy />} />
