@@ -29,6 +29,7 @@ import companiesanalysisRoutes from "./routes/companiesanalysis.js";
 import contactusRoutes from "./routes/contactus.js";
 import conversationRoutes from "./routes/conversation.js";
 /* import mailboxRoutes from "./routes/mailbox.js"; */
+import pplacementReportroutes from "./routes/pplacementReportRoute.js";
 import resumeroutes from "./routes/resume.js"
 import otherRoutes from "./routes/other.js";
 import notificationRoutes from "./routes/notification.js";
@@ -111,6 +112,7 @@ app.use('/devteam',devteamroutes);
 app.use('/jobprofile',authenticate,jobprofileroutes);
 app.use('/sharedexperience',authenticate,sharedexperienceroutes);
 app.use("/placements",placementroutes);
+app.use('/pplacementReport', pplacementReportroutes);
 app.use("/internships",internshiptroutes);
 app.use("/reqhelp",authenticate,reqhelproutes);
 app.use("/job-events",jobEventroutes);

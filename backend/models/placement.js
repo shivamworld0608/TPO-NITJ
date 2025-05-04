@@ -100,5 +100,3 @@ const PlacementSchema = new mongoose.Schema(
 
 const Placement = mongoose.model("Placement", PlacementSchema);
 export default Placement;
-
-
