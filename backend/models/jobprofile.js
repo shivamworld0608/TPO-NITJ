@@ -223,6 +223,7 @@ const JobProfileSchema = new mongoose.Schema(
       type: {
         ctc: {
           type: String,
+          default: 0,
         },
         base_salary: {
           type: String,

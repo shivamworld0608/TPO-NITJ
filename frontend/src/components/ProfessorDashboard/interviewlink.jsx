@@ -5,6 +5,7 @@ import{FaArrowLeft} from 'react-icons/fa';
 
 const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpdateLinks }) => {
   const [students, setStudents] = useState([]);
+  const [starredFields, setStarredFields] = useState([]);
   const [commonLink, setCommonLink] = useState('');
   const [loading, setLoading] = useState(false);
   const [allLinksVisible, setAllLinksVisible] = useState(false);
@@ -20,7 +21,8 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpd
           { jobId, stepIndex },
           { withCredentials: true }
         );
-        const updatedStudents = response.data.eligibleStudents.map((student) => {
+        const { eligibleStudents, starredFields } = response.data;
+        const updatedStudents = eligibleStudents.map((student) => {
           const studentLink = interviewLinks.find(link => link.studentId === student.studentId);
           return {
             ...student,
@@ -29,6 +31,7 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpd
           };
         });
         setStudents(updatedStudents);
+        setStarredFields(starredFields || []);
       } catch (err) {
         console.error('Error fetching eligible students:', err);
         toast.error('Failed to fetch eligible students');
@@ -79,7 +82,7 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpd
     const studentsWithLinks = students
     .filter(student => student.interviewLink.trim() !== '')
     .map(student => ({
-      email: student.email,
+      studentId: student.studentId,
       interviewLink: student.interviewLink,
       visibility: student.visibility
     }));
@@ -162,8 +165,9 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpd
         <table className="w-full text-sm text-left text-gray-500 border-collapse">
           <thead className="text-xs text-gray-700 uppercase bg-gray-100">
             <tr>
-              <th className="px-4 py-2 border">Name</th>
-              <th className="px-4 py-2 border">Email</th>
+            {starredFields.map((field, index) => (
+                        <th key={index} className="px-4 py-2 border">{field.fieldName}</th>
+                      ))}
               <th className="px-4 py-2 border">Interview Link</th>
               <th className="px-4 py-2 border">Visibility</th>
             </tr>
@@ -171,8 +175,11 @@ const InterviewLinkManager = ({ jobId, stepIndex, onClose, interviewLinks, onUpd
           <tbody>
             {students.map((student, index) => (
               <tr key={index} className="bg-white border-b">
-                <td className="px-4 py-2 border">{student.name}</td>
-                <td className="px-4 py-2 border">{student.email}</td>
+                {starredFields.map((field, fieldIndex) => (
+                          <td key={fieldIndex} className="px-4 py-2 border">
+                            {student[field.fieldName]}
+                          </td>
+                        ))}
                 <td className="px-4 py-2 border">
                   <input
                     type="text"

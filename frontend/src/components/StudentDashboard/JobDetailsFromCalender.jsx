@@ -13,6 +13,9 @@ import {
   faArrowLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import ApplicationForm from "./applicationform";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const JobdetailFromCalender = () => {
   const { job_id } = useParams();
@@ -188,8 +191,8 @@ const JobdetailFromCalender = () => {
   const details = [
     {
       icon: faClipboardList,
-      label: "JOB ID",
-      value: jobDetails.job_id || "N/A",
+      label: "JOB SECTOR",
+      value: jobDetails.job_sector || "N/A",
     },
     {
       icon: faBriefcase,
@@ -241,6 +244,25 @@ const JobdetailFromCalender = () => {
       default: <Info className={`${iconClasses} text-gray-600`} />,
     };
     return iconMap[stepType] || iconMap["default"];
+  };
+
+  const sliderSettings = {
+    dots: true,
+    infinite: jobDetails.eligibility_criteria?.length > 1,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    arrows: true,
+    autoplay: false,
+    responsive: [
+      {
+        breakpoint: 640,
+        settings: {
+          arrows: false,
+          dots: true,
+        },
+      },
+    ],
   };
 
   const info = {
@@ -402,72 +424,83 @@ const JobdetailFromCalender = () => {
 
     eligibilityCriteria: (
       <div className="bg-white p-3 sm:p-6">
-        <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-4 sm:mb-6">
-          Eligibility Criteria
-        </h3>
-        <div className="space-y-3 sm:space-y-4">
-          {[
-            {
-              label: "Course Allowed",
-              value: jobDetails.eligibility_criteria?.course_allowed,
-            },
-            {
-              label: "Branch Allowed",
-              value:
-                jobDetails.eligibility_criteria?.department_allowed?.join(", "),
-            },
-            {
-              label: "Gender Allowed",
-              value: jobDetails.eligibility_criteria?.gender_allowed,
-            },
-            {
-              label: "Eligible Batch",
-              value: jobDetails.eligibility_criteria?.eligible_batch,
-            },
-            {
-              label: "Minimum CGPA",
-              value: jobDetails.eligibility_criteria?.minimum_cgpa,
-            },
-            {
-              label: "Active Backlogs",
-              value:
-                jobDetails.eligibility_criteria?.active_backlogs === false
-                  ? "No active backlogs allowed"
-                  : "Active Backlogs allowed",
-            },
-            {
-              label: "Backlogs History",
-              value:
-                jobDetails.eligibility_criteria?.history_backlogs === false
-                  ? "No Backlogs History allowed"
-                  : "Backlogs History allowed",
-            },
-          ].map((item, index) => (
-            <div
-              key={index}
-              className="flex flex-col sm:flex-row sm:justify-between sm:items-center"
-            >
-              <p className="text-sm sm:text-base text-gray-600 font-medium">
-                {item.label}:
-              </p>
-              <span className="text-sm sm:text-base text-gray-900 font-semibold mt-1 sm:mt-0">
-                {item.value || "N/A"}
-              </span>
-            </div>
-          ))}
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
-            <p className="text-sm sm:text-base text-gray-600 font-medium">
-              Student Status:
-            </p>
-            <span
-              className={`text-sm sm:text-base font-semibold mt-1 sm:mt-0 ${
-                status.eligible ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              {status.eligible ? "Eligible" : "Not Eligible"}
-              {status.reason ? ` (${status.reason})` : ""}
-            </span>
-          </div>
+        {jobDetails.eligibility_criteria?.length > 0 ? (
+          <Slider {...sliderSettings} className="mb-6">
+            {jobDetails.eligibility_criteria.map((criteria, index) => (
+              <div key={index} className="pxČ-2">
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 sm:p-6 rounded-lg shadow-md border border-indigo-200">
+                  <h4 className="text-base sm:text-lg font-semibold text-custom-blue mb-4">
+                    Criteria Set {index + 1}
+                  </h4>
+                  <div className="space-y-3 sm:space-y-4">
+                    {[
+                      {
+                        label: "Eligible Batch",
+                        value: criteria.eligible_batch,
+                      },
+                      {
+                        label: "Course Allowed",
+                        value: criteria.course_allowed,
+                      },
+                      {
+                        label: "Branch Allowed",
+                        value: criteria.department_allowed?.join(", "),
+                      },
+                      {
+                        label: "Gender Allowed",
+                        value: criteria.gender_allowed,
+                      },
+                      {
+                        label: "Minimum CGPA",
+                        value: criteria.minimum_cgpa,
+                      },
+                      {
+                        label: "Active Backlogs",
+                        value: criteria.active_backlogs === false
+                          ? "No active backlogs allowed"
+                          : "Active backlogs allowed",
+                      },
+                      {
+                        label: "Backlogs History",
+                        value: criteria.history_backlogs === false
+                          ? "No backlog history allowed"
+                          : "Backlog history allowed",
+                      },
+                    ].map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex flex-col sm:flex-row sm:justify-between sm:items-center"
+                      >
+                        <p className="text-sm sm:text-base text-gray-600 font-medium">
+                          {item.label}:
+                        </p>
+                        <span className="text-sm sm:text-base text-gray-900 font-semibold mt-1 sm:mt-0">
+                          {item.value || "N/A"}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </Slider>
+        ) : (
+          <p className="text-gray-600 text-sm sm:text-base">
+            No eligibility criteria specified.
+          </p>
+        )}
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4">
+          <p className="text-sm sm:text-base text-gray-600 font-medium">
+            Student Status:
+          </p>
+          <span
+            className={`text-sm sm:text-base font-semibold mt-1 sm:mt-0 ${
+              status.eligible ? "text-green-600" : "text-red-600"
+            }`}
+          >
+            {status.eligible ? "Eligible" : "Not Eligible"}
+            {status.reason ? ` (${status.reason})` : ""}
+          </span>
         </div>
         <div className="mt-6 flex justify-end space-x-4">
           {isdeadlineOver ? (
@@ -481,11 +514,11 @@ const JobdetailFromCalender = () => {
             ) : (
               <button
                 className={`w-full sm:w-auto px-4 sm:px-5 py-2 rounded-lg font-semibold text-white transition-all duration-200 
-                                    ${
-                                      status.eligible
-                                        ? "bg-gray-500 cursor-not-allowed"
-                                        : "bg-gray-300 cursor-not-allowed"
-                                    }`}
+                            ${
+                              status.eligible
+                                ? "bg-gray-500 cursor-not-allowed"
+                                : "bg-gray-300 cursor-not-allowed"
+                            }`}
                 disabled
               >
                 {status.eligible ? "Closed" : "Not Eligible"}
@@ -511,11 +544,11 @@ const JobdetailFromCalender = () => {
               ) : (
                 <button
                   className={`w-full sm:w-auto px-4 sm:px-5 py-2 rounded-lg font-semibold text-white transition-all duration-200 
-                                        ${
-                                          status.eligible
-                                            ? "bg-green-500 hover:bg-green-600"
-                                            : "bg-gray-300 cursor-not-allowed"
-                                        }`}
+                              ${
+                                status.eligible
+                                  ? "bg-green-500 hover:bg-green-600"
+                                  : "bg-gray-300 cursor-not-allowed"
+                              }`}
                   disabled={!status.eligible}
                   onClick={() => setApplication(true)}
                 >
@@ -587,11 +620,11 @@ const JobdetailFromCalender = () => {
             key={key}
             onClick={() => setActiveInfo(key)}
             className={`px-3 sm:px-6 py-2 sm:py-3 rounded-md text-xs sm:text-base font-semibold transition duration-200
-                            ${
-                              activeInfo === key
-                                ? "bg-custom-blue text-white"
-                                : "bg-white text-custom-blue border border-custom-blue hover:bg-gray-100"
-                            }`}
+                        ${
+                          activeInfo === key
+                            ? "bg-custom-blue text-white"
+                            : "bg-white text-custom-blue border border-custom-blue hover:bg-gray-100"
+                        }`}
           >
             {key
               .replace(/([A-Z])/g, " $1")

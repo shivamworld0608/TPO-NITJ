@@ -1,5 +1,7 @@
 import Student from '../models/user_model/student.js';
 import JobProfile from '../models/jobprofile.js';
+import OfferTracker from '../models/offertracker.js';
+import mongoose from 'mongoose';
 import axios from 'axios';
 
 export const getStudentAnalytics = async (req, res) => {
@@ -110,6 +112,8 @@ export const getStudentAnalytics = async (req, res) => {
                         adjustedBatch = String(Number(erpData.batch) + adjustment);
                     }
 
+                    const offers = await OfferTracker.findOne({ studentId: student._id });
+
                     const studentData = {
                         _id: student._id,
                         name: student.name || '',
@@ -127,6 +131,7 @@ export const getStudentAnalytics = async (req, res) => {
                         debarred: student.debarred ?? false,
                         active_backlogs: erpData?.active_backlogs ?? student.active_backlogs ?? false,
                         backlogs_history: erpData?.backlogs_history ?? student.backlogs_history ?? false,
+                        offers:  offers? offers?.offer : [],
                         applications: {
                             total: 0,
                             jobProfiles: []
@@ -267,4 +272,68 @@ export const Studentprofileupdate = async (req, res) => {
         console.error('Error updating user profile:', error);
         res.status(500).json({ message: 'Server error' });
     }
+};
+
+
+export const updateOfferTracker = async (req, res) => {
+  try {
+    const studentId = req.params.id;
+    const { offer } = req.body;
+
+    // Validate student exists
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    // Validate offer data
+    if (!Array.isArray(offer)) {
+      return res.status(400).json({ message: 'Offer must be an array' });
+    }
+
+    const validOfferTypes = ['Intern', 'Intern+PPO', 'Intern+FTE', 'FTE'];
+    const validCategories = ['Not Considered', 'Below Dream', 'Dream', 'Super Dream'];
+    const validSectors = ['PSU', 'Private'];
+
+    for (const offerItem of offer) {
+      if (!validOfferTypes.includes(offerItem.offer_type)) {
+        return res.status(400).json({ message: `Invalid offer type: ${offerItem.offer_type}` });
+      }
+      if (!validCategories.includes(offerItem.offer_category)) {
+        return res.status(400).json({ message: `Invalid offer category: ${offerItem.offer_category}` });
+      }
+      if (!validSectors.includes(offerItem.offer_sector)) {
+        return res.status(400).json({ message: `Invalid offer sector: ${offerItem.offer_sector}` });
+      }
+      console.log(offerItem.jobId);
+      if (offerItem.jobId && !mongoose.Types.ObjectId.isValid(offerItem.jobId)) {
+        return res.status(400).json({ message: `Invalid jobId: ${offerItem.jobId}` });
+      }
+      // Validate jobId exists
+      if (offer.jobId) {
+        const job = await JobProfile.findById(offerItem.jobId);
+        if (!job) {
+          return res.status(404).json({ message: `Job profile not found for jobId: ${offerItem.jobId}` });
+        }
+      }
+    }
+
+    // Update or create offer tracker
+    let offerTracker = await OfferTracker.findOne({ studentId });
+    
+    if (offerTracker) {
+      offerTracker.offer = offer;
+      await offerTracker.save();
+    } else {
+      offerTracker = await OfferTracker.create({
+        studentId,
+        offer
+      });
+    }
+
+    res.status(200).json({ message: 'Offer tracker updated successfully', data: offerTracker });
+  } catch (error) {
+    console.error('Error updating offer tracker:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 };

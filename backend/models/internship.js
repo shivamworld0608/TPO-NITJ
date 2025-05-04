@@ -2,6 +2,10 @@ import mongoose from "mongoose";
 
 const InternshipSchema = new mongoose.Schema(
   {
+    jobId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "JobProfile",
+    },
     company_name: {
       type: String,
     },

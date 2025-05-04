@@ -890,8 +890,8 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
   const details = [
     {
       icon: faClipboardList,
-      label: "JOB ID",
-      value: jobDetails.job_id || "N/A",
+      label: "JOB SECTOR",
+      value: jobDetails.job_sector || "N/A",
     },
     {
       icon: faBriefcase,

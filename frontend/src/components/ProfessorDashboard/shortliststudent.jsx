@@ -456,25 +456,26 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
   };
 
   const handleInitialSubmit = () => {
-    const shortlistedStudents = students.filter(
-      (student) => student.shortlisted || student.absent || uploadMethod !== 'shortlist'
-    );
-    if (shortlistedStudents.length === 0) {
-      toast.error('No students have been added or shortlisted');
-      return;
-    }
+    // const shortlistedStudents = students.filter(
+    //   (student) => student.shortlisted || student.absent || uploadMethod !== 'shortlist'
+    // );
+    // if (shortlistedStudents.length === 0) {
+    //   toast.error('No students have been added or shortlisted');
+    //   return;
+    // }
     setShowConfirmModal(true);
   };
 
   const handleFinalSubmit = async () => {
-    const shortlistedStudents = students.filter(
-      (student) => student.shortlisted || student.absent || uploadMethod !== 'shortlist'
-    );
+    // const shortlistedStudents = students.filter(
+    //   (student) => student.shortlisted || student.absent || uploadMethod !== 'shortlist'
+    // );
+    // console.log('shortlistedStudents', shortlistedStudents);
     setLoading(true);
     try {
       await axios.post(
         `${import.meta.env.REACT_APP_BASE_URL}/jobprofile/add-shortlist-students`,
-        { jobId, stepIndex, students: shortlistedStudents },
+        { jobId, stepIndex, students},
         { withCredentials: true }
       );
       toast.success('Students processed successfully!');
@@ -521,7 +522,7 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
           <div className="mb-6 bg-gray-50 p-6 rounded-2xl shadow-md border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">Upload Student Data</h3>
             <p className="text-sm text-gray-600 mb-4">
-              Upload an Excel file with columns: "name", {starredFields.map(f => `"${f.fieldName}"`).join(', ')}, "shortlisted", "absent".
+              Upload an Excel file with columns:  {starredFields.map(f => `"${f.fieldName}"`).join(', ')}, "shortlisted", "absent".
             </p>
             <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
               <input
@@ -567,7 +568,6 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
                   <thead className="text-xs text-gray-700 uppercase bg-gray-100">
                     <tr>
                       <th className="px-1 py-2 border text-center">SNo.</th>
-                      <th className="px-4 py-2 border">Name</th>
                       {starredFields.map((field, index) => (
                         <th key={index} className="px-4 py-2 border">{field.fieldName}</th>
                       ))}
@@ -579,7 +579,6 @@ const ShortlistStudents = ({ jobId, stepIndex, onClose }) => {
                     {students.map((student, index) => (
                       <tr key={index} className="bg-white border-b">
                         <td className="px-1 py-2 border text-center">{index + 1}.</td>
-                        <td className="px-4 py-2 border">{student.name}</td>
                         {starredFields.map((field, fieldIndex) => (
                           <td key={fieldIndex} className="px-4 py-2 border">
                             {student[field.fieldName]}
