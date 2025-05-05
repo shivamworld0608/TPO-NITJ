@@ -115,16 +115,16 @@ function HeroSection() {
             </div>
           </div>
             </motion.div>
-        {/*   <motion.div key={1003} initial={{opacity:0,translateY: "100%"}} animate={{opacity:1,translateY: 0}}  transition={{ duration: 0.5, ease: "easeOut",delay:1.5 }} className="buttons flex gap-5">
+          <motion.div key={1003} initial={{opacity:0,translateY: "100%"}} animate={{opacity:1,translateY: 0}}  transition={{ duration: 0.5, ease: "easeOut",delay:1.5 }} className="buttons flex gap-5">
             <button
               className="button text-white font-medium p-3 rounded-md z-0 border-[1.5px] border-white"
               onClick={() => {
                 navigate("/login")
               }}
             >
-              Register Now
+              Get In
             </button>
-          </motion.div> */}
+          </motion.div>
         </div>
       </div>
       <style jsx>
@@ -169,9 +169,9 @@ function HeroSection() {
           }
 
           .button:hover {
-            color: #000;
-            background:#fff;
-            box-shadow: 0 0 0 .2rem #fff;
+            color: #fff;
+            background:#0369A0;
+            box-shadow: 0 0 0 .1rem #fff;
           }
         `}
       </style>
