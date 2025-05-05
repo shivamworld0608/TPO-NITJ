@@ -2929,7 +2929,8 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
     if (!formData.job_role) errors.push("Job Role is required");
     if (!formData.job_type) errors.push("Job Type is required");
     if (!formData.job_category) errors.push("Job Category is required");
-    if (!formData.ctc || formData.ctc <= 0) errors.push("CTC must be a positive number");
+    if(["FTE", "Intern+FTE"].includes(formData.job_type)){
+    if (!formData.ctc || formData.ctc <=0) errors.push("CTC must be a positive number");}
     if (!formData.deadline) errors.push("Application Deadline is required");
     if (formData.eligibility_criteria.length === 0) {
       errors.push("At least one eligibility criteria set is required");

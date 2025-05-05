@@ -13,6 +13,9 @@ import JobAnnouncementForm from "../models/jaf.js";
 import axios from "axios";
 import OfferTracker from "../models/offertracker.js";
 import Recruiter from "../models/user_model/recuiter.js";
+import GuestHouseBooking from "../models/travel_planner/room.js";
+import VehicleRequisition from "../models/travel_planner/vehicle.js";
+
 
 export const getAllCompanies = async (req, res) => {
   try {
@@ -734,12 +737,16 @@ export const getJobProfilesForProfessors = async (req, res) => {
       acc[jaf.organizationName] = jaf;
       return acc;
     }, {});
+    const guestHouseBookings = await GuestHouseBooking.find({}).sort({ updatedAt: -1 });
+    const vehicleRequisitions = await VehicleRequisition.find({}).sort({ updatedAt: -1 });
     res.status(200).json({
       approved: approvedJobs,
       notApproved: notApprovedJobs,
       completed:completed,
       feedbackByCompany,
-      jafByCompany
+      jafByCompany,
+      guestHouseBookings,
+      vehicleRequisitions
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1246,9 +1253,7 @@ export const checkEligibility = async (req, res) => {
       }
       jobCategory=jobClassOrder[jobClassIndex];
       const offerHistory = studentOfferHistory?.offer || [];
-      console.log("yha toh bta rha hai",jobSector);
       const offerEligibility = checkEligible(offerHistory, jobType, jobCategory,jobSector);
-      console.log("offerEligibility",offerEligibility);
       if (offerEligibility !== "Eligible") {
         return res.json({
           eligible: false,
