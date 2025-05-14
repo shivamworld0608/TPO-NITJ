@@ -89,7 +89,7 @@ const StudentManager = () => {
   const placementStatuses = ['Not Placed', 'Below Dream', 'Dream', 'Super Dream'];
   const internshipStatuses = ['No Intern', '2m Intern', '6m Intern', '11m Intern'];
   const genders = ['Male', 'Female', 'Other'];
-  const categories = ['General', 'GEN-EWS', 'SC', 'ST', 'OBC-NCL'];
+  const categories = ['General', 'GEN-EWS', 'SC', 'ST', 'OBC-NCL', 'OBC'];
 
   useEffect(() => {
     fetchStudents();

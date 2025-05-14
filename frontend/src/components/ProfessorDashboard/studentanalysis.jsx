@@ -1448,12 +1448,11 @@
 // };
 
 // export default StudentAnalyticsDashboard;
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Input } from '../ui/input';
-import { Select } from '../ui/select';
+import Select from 'react-select';
 import { Button } from '../ui/button';
 import { X, Pencil, Save, Search, Filter, UserCog, GraduationCap, User, Loader2, Briefcase } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -1655,6 +1654,9 @@ const StudentAnalyticsDashboard = () => {
     { value: "2026", label: "2026" },
     { value: "2027", label: "2027" },
     { value: "2028", label: "2028" },
+    { value: "2029", label: "2029" },
+    { value: "2030", label: "2030" },
+    { value: "2031", label: "2031" },
   ];
 
   const placementStatusOptions = [
@@ -1674,9 +1676,10 @@ const StudentAnalyticsDashboard = () => {
     { value: "All", label: "All" },
     { value: "General", label: "General" },
     { value: "GEN-EWS", label: "GEN-EWS" },
+    { value: "OBC", label: "OBC" },
+    { value: "OBC-NCL", label: "OBC-NCL" },
     { value: "SC", label: "SC" },
     { value: "ST", label: "ST" },
-    { value: "OBC-NCL", label: "OBC-NCL" },
   ];
 
   const internshipStatusOptions = [
@@ -1938,37 +1941,62 @@ const StudentAnalyticsDashboard = () => {
   ];
 
   const mbadepartmentOptions = [
-    { value: "HUMANITIES AND MANAGEMENT", label: "HUMANITIES AND MANAGEMENT" },
+    {
+      label: "HUMANITIES AND MANAGEMENT",
+      options: [{ value: "HUMANITIES AND MANAGEMENT", label: "HUMANITIES AND MANAGEMENT" }],
+    },
   ];
 
   const mscdepartmentOptions = [
-    { value: "CHEMISTRY", label: "CHEMISTRY" },
-    { value: "MATHEMATICS", label: "MATHEMATICS" },
-    { value: "PHYSICS", label: "PHYSICS" },
+    {
+      label: "CHEMISTRY",
+      options: [{ value: "CHEMISTRY", label: "CHEMISTRY" }],
+    },
+    {
+      label: "MATHEMATICS",
+      options: [{ value: "MATHEMATICS", label: "MATHEMATICS" }],
+    },
+    {
+      label: "PHYSICS",
+      options: [{ value: "PHYSICS", label: "PHYSICS" }],
+    },
   ];
 
   const phddepartmentOptions = [];
 
   const allDepartments = [
-    ...btechdepartmentOptions.flatMap((group) => group.options),
-    ...mtechdepartmentOptions.flatMap((group) => group.options),
+    ...btechdepartmentOptions,
+    ...mtechdepartmentOptions,
     ...mbadepartmentOptions,
     ...mscdepartmentOptions,
     ...phddepartmentOptions,
   ];
 
-  const uniqueDepartments = [
-    ...new Set(allDepartments.map((dept) => dept.value)),
-  ];
-
-  const sortedUniqueDepartments = uniqueDepartments.sort((a, b) =>
-    a.localeCompare(b)
-  );
-
-  const formattedDepartments = sortedUniqueDepartments.map((dept) => ({
-    value: dept,
-    label: dept,
-  }));
+  // Custom styles for react-select
+  const customSelectStyles = {
+    groupHeading: (provided) => ({
+      ...provided,
+      fontWeight: 'bold',
+      fontSize: '14px',
+      color: '#1f2937', // gray-800
+      padding: '8px 12px',
+    }),
+    option: (provided, state) => ({
+      ...provided,
+      fontWeight: 'normal', // All options in normal weight
+      paddingLeft: state.isNested ? '24px' : '12px', // Indent nested options
+      backgroundColor: state.isSelected ? '#3b82f6' : state.isFocused ? '#f3f4f6' : 'white',
+      color: state.isSelected ? 'white' : '#1f2937',
+    }),
+    control: (provided) => ({
+      ...provided,
+      borderColor: '#d1d5db',
+      boxShadow: 'none',
+      '&:hover': {
+        borderColor: '#3b82f6',
+      },
+    }),
+  };
 
   useEffect(() => {
     setFilters((prevFilters) => ({
@@ -1976,24 +2004,35 @@ const StudentAnalyticsDashboard = () => {
       department: "",
     }));
 
+    // Format department options to mark nested options
+    const formatDepartmentOptions = (departments) => {
+      return departments.map(group => ({
+        label: group.label,
+        options: group.options.map(opt => ({
+          ...opt,
+          isNested: opt.value !== group.label, // Mark options that are not the main department as nested
+        })),
+      }));
+    };
+
     switch (filters.course) {
       case "B.Tech":
-        setDepartmentOptions(btechdepartmentOptions);
+        setDepartmentOptions(formatDepartmentOptions(btechdepartmentOptions));
         break;
       case "M.Tech":
-        setDepartmentOptions(mtechdepartmentOptions);
+        setDepartmentOptions(formatDepartmentOptions(mtechdepartmentOptions));
         break;
       case "MBA":
-        setDepartmentOptions(mbadepartmentOptions);
+        setDepartmentOptions(formatDepartmentOptions(mbadepartmentOptions));
         break;
       case "M.Sc.":
-        setDepartmentOptions(mscdepartmentOptions);
+        setDepartmentOptions(formatDepartmentOptions(mscdepartmentOptions));
         break;
       case "PHD":
-        setDepartmentOptions(phddepartmentOptions);
+        setDepartmentOptions(formatDepartmentOptions(phddepartmentOptions));
         break;
       default:
-        setDepartmentOptions(formattedDepartments);
+        setDepartmentOptions(formatDepartmentOptions(allDepartments));
         break;
     }
   }, [filters.course]);
@@ -2164,99 +2203,111 @@ const StudentAnalyticsDashboard = () => {
               <label className="text-sm font-medium text-gray-700">Course</label>
               <Select
                 options={courseOptions}
-                value={filters.course}
-                onValueChange={(value) => setFilters({ ...filters, course: value })}
+                value={courseOptions.find(opt => opt.value === filters.course) || null}
+                onChange={(option) => setFilters({ ...filters, course: option ? option.value : "" })}
                 className="w-full"
+                placeholder="Select Course"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Department</label>
               <Select
                 options={departmentOptions}
-                value={filters.department}
-                onValueChange={(value) => setFilters({ ...filters, department: value })}
+                value={departmentOptions.flatMap(group => group.options).find(opt => opt.value === filters.department) || null}
+                onChange={(option) => setFilters({ ...filters, department: option ? option.value : "" })}
+                styles={customSelectStyles}
                 className="w-full"
+                placeholder="Select Department"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Batch</label>
               <Select
                 options={batchOptions}
-                value={filters.batch}
-                onValueChange={(value) => setFilters({ ...filters, batch: value })}
+                value={batchOptions.find(opt => opt.value === filters.batch) || null}
+                onChange={(option) => setFilters({ ...filters, batch: option ? option.value : "" })}
                 className="w-full"
+                placeholder="Select Batch"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">CGPA</label>
               <Select
                 options={cgpaOptions}
-                value={filters.cgpa}
-                onValueChange={(value) => setFilters({ ...filters, cgpa: value })}
+                value={cgpaOptions.find(opt => opt.value === filters.cgpa) || null}
+                onChange={(option) => setFilters({ ...filters, cgpa: option ? option.value : "" })}
                 className="w-full"
+                placeholder="Select CGPA"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Placement Status</label>
               <Select
                 options={placementStatusOptions}
-                value={filters.placementstatus}
-                onValueChange={(value) => setFilters({ ...filters, placementstatus: value })}
+                value={placementStatusOptions.find(opt => opt.value === filters.placementstatus) || null}
+                onChange={(option) => setFilters({ ...filters, placementstatus: option ? option.value : "" })}
                 className="w-full"
+                placeholder="Select Placement Status"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Debarred</label>
               <Select
                 options={backlogOptions}
-                value={filters.debarred}
-                onValueChange={(value) => setFilters({ ...filters, debarred: value })}
+                value={backlogOptions.find(opt => opt.value === filters.debarred) || null}
+                onChange={(option) => setFilters({ ...filters, debarred: option ? option.value : "" })}
                 className="w-full"
+                placeholder="Select Debarred Status"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Active Backlogs</label>
               <Select
                 options={backlogOptions}
-                value={filters.active_backlogs}
-                onValueChange={(value) => setFilters({ ...filters, active_backlogs: value })}
+                value={backlogOptions.find(opt => opt.value === filters.active_backlogs) || null}
+                onChange={(option) => setFilters({ ...filters, active_backlogs: option ? option.value : "" })}
                 className="w-full"
+                placeholder="Select Active Backlogs"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Backlogs History</label>
               <Select
                 options={backlogOptions}
-                value={filters.backlogs_history}
-                onValueChange={(value) => setFilters({ ...filters, backlogs_history: value })}
+                value={backlogOptions.find(opt => opt.value === filters.backlogs_history) || null}
+                onChange={(option) => setFilters({ ...filters, backlogs_history: option ? option.value : "" })}
                 className="w-full"
+                placeholder="Select Backlogs History"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Gender</label>
               <Select
                 options={genderOptions}
-                value={filters.gender}
-                onValueChange={(value) => setFilters({ ...filters, gender: value })}
+                value={genderOptions.find(opt => opt.value === filters.gender) || null}
+                onChange={(option) => setFilters({ ...filters, gender: option ? option.value : "" })}
                 className="w-full"
+                placeholder="Select Gender"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Category</label>
               <Select
                 options={categoryOptions}
-                value={filters.category}
-                onValueChange={(value) => setFilters({ ...filters, category: value })}
+                value={categoryOptions.find(opt => opt.value === filters.category) || null}
+                onChange={(option) => setFilters({ ...filters, category: option ? option.value : "" })}
                 className="w-full"
+                placeholder="Select Category"
               />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Internship Status</label>
               <Select
                 options={internshipStatusOptions}
-                value={filters.internshipstatus}
-                onValueChange={(value) => setFilters({ ...filters, internshipstatus: value })}
+                value={internshipStatusOptions.find(opt => opt.value === filters.internshipstatus) || null}
+                onChange={(option) => setFilters({ ...filters, internshipstatus: option ? option.value : "" })}
                 className="w-full"
+                placeholder="Select Internship Status"
               />
             </div>
             <div className="space-y-2">
@@ -2463,8 +2514,8 @@ const StudentAnalyticsDashboard = () => {
                             {editMode ? (
                               <Select
                                 options={categoryOptions}
-                                value={editedStudent.category}
-                                onValueChange={(value) => handleChange("category", value)}
+                                value={categoryOptions.find(opt => opt.value === editedStudent.category) || null}
+                                onChange={(option) => handleChange("category", option ? option.value : "")}
                                 className="mt-1"
                               />
                             ) : (
@@ -2485,8 +2536,8 @@ const StudentAnalyticsDashboard = () => {
                             {editMode ? (
                               <Select
                                 options={placementStatusOptions}
-                                value={editedStudent.placementstatus}
-                                onValueChange={(value) => handleChange("placementstatus", value)}
+                                value={placementStatusOptions.find(opt => opt.value === editedStudent.placementstatus) || null}
+                                onChange={(option) => handleChange("placementstatus", option ? option.value : "")}
                                 className="mt-1"
                               />
                             ) : (
@@ -2510,8 +2561,8 @@ const StudentAnalyticsDashboard = () => {
                             {editMode ? (
                               <Select
                                 options={internshipStatusOptions}
-                                value={editedStudent.internshipstatus}
-                                onValueChange={(value) => handleChange("internshipstatus", value)}
+                                value={internshipStatusOptions.find(opt => opt.value === editedStudent.internshipstatus) || null}
+                                onChange={(option) => handleChange("internshipstatus", option ? option.value : "")}
                                 className="mt-1"
                               />
                             ) : (
@@ -2523,8 +2574,8 @@ const StudentAnalyticsDashboard = () => {
                             {editMode ? (
                               <Select
                                 options={backlogOptions}
-                                value={editedStudent.debarred}
-                                onValueChange={(value) => handleChange("debarred", value)}
+                                value={backlogOptions.find(opt => opt.value === editedStudent.debarred) || null}
+                                onChange={(option) => handleChange("debarred", option ? option.value : "")}
                                 className="mt-1"
                               />
                             ) : (
@@ -2536,38 +2587,38 @@ const StudentAnalyticsDashboard = () => {
                     </div>
                   </div>
                   <Card className="mt-6 border-0 shadow-sm">
-  <CardHeader>
-    <CardTitle className="text-lg">Academic Details</CardTitle>
-  </CardHeader>
-  <CardContent>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <label className="text-sm font-medium text-gray-700">Department</label>
-        <p className="mt-1 text-gray-900">{student.department}</p>
-      </div>
-      <div>
-        <label className="text-sm font-medium text-gray-700">Course</label>
-        <p className="mt-1 text-gray-900">{student.course}</p>
-      </div>
-      <div>
-        <label className="text-sm font-medium text-gray-700">CGPA</label>
-        <p className="mt-1 text-gray-900">{student.cgpa}</p>
-      </div>
-      <div>
-        <label className="text-sm font-medium text-gray-700">Batch</label>
-        <p className="mt-1 text-gray-900">{student.batch}</p>
-      </div>
-      <div>
-        <label className="text-sm font-medium text-gray-700">Active Backlog</label>
-        <p className="mt-1 text-gray-900">{student.active_backlogs ? "Yes" : "No"}</p>
-      </div>
-      <div>
-        <label className="text-sm font-medium text-gray-700">Backlogs History</label>
-        <p className="mt-1 text-gray-900">{student.backlogs_history ? "Yes" : "No"}</p>
-      </div>
-    </div>
-  </CardContent>
-</Card>
+                    <CardHeader>
+                      <CardTitle className="text-lg">Academic Details</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Department</label>
+                          <p className="mt-1 text-gray-900">{student.department}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Course</label>
+                          <p className="mt-1 text-gray-900">{student.course}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">CGPA</label>
+                          <p className="mt-1 text-gray-900">{student.cgpa}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Batch</label>
+                          <p className="mt-1 text-gray-900">{student.batch}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Active Backlog</label>
+                          <p className="mt-1 text-gray-900">{student.active_backlogs ? "Yes" : "No"}</p>
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium text-gray-700">Backlogs History</label>
+                          <p className="mt-1 text-gray-900">{student.backlogs_history ? "Yes" : "No"}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                   <Card className="mt-6 border-0 shadow-sm">
                     <CardHeader>
                       <CardTitle className="text-lg flex items-center justify-between">
@@ -2608,8 +2659,8 @@ const StudentAnalyticsDashboard = () => {
                                   <label className="text-sm font-medium">Offer Type</label>
                                   <Select
                                     options={offerTypeOptions}
-                                    value={offer.offer_type}
-                                    onValueChange={(value) => handleOfferChange(index, 'offer_type', value)}
+                                    value={offerTypeOptions.find(opt => opt.value === offer.offer_type) || null}
+                                    onChange={(option) => handleOfferChange(index, 'offer_type', option ? option.value : "")}
                                     className="mt-1"
                                   />
                                 </div>
@@ -2617,8 +2668,8 @@ const StudentAnalyticsDashboard = () => {
                                   <label className="text-sm font-medium">Offer Category</label>
                                   <Select
                                     options={offerCategoryOptions}
-                                    value={offer.offer_category}
-                                    onValueChange={(value) => handleOfferChange(index, 'offer_category', value)}
+                                    value={offerCategoryOptions.find(opt => opt.value === offer.offer_category) || null}
+                                    onChange={(option) => handleOfferChange(index, 'offer_category', option ? option.value : "")}
                                     className="mt-1"
                                   />
                                 </div>
@@ -2626,8 +2677,8 @@ const StudentAnalyticsDashboard = () => {
                                   <label className="text-sm font-medium">Offer Sector</label>
                                   <Select
                                     options={offerSectorOptions}
-                                    value={offer.offer_sector}
-                                    onValueChange={(value) => handleOfferChange(index, 'offer_sector', value)}
+                                    value={offerSectorOptions.find(opt => opt.value === offer.offer_sector) || null}
+                                    onChange={(option) => handleOfferChange(index, 'offer_sector', option ? option.value : "")}
                                     className="mt-1"
                                   />
                                 </div>
@@ -2643,13 +2694,13 @@ const StudentAnalyticsDashboard = () => {
                                   <Select
                                     options={offerTypeOptions}
                                     value={null}
-                                    onValueChange={(value) => {
-                                      if (value !== "Select Offer Type") {
+                                    onChange={(option) => {
+                                      if (option && option.value !== "Select Offer Type") {
                                         setEditedOfferTracker((prev) => ({
                                           ...prev,
                                           newOffer: {
                                             ...prev.newOffer,
-                                            offer_type: value
+                                            offer_type: option.value
                                           }
                                         }));
                                       }
@@ -2662,13 +2713,13 @@ const StudentAnalyticsDashboard = () => {
                                   <Select
                                     options={offerCategoryOptions}
                                     value={null}
-                                    onValueChange={(value) => {
-                                      if (value !== "Select Offer Category") {
+                                    onChange={(option) => {
+                                      if (option && option.value !== "Select Offer Category") {
                                         setEditedOfferTracker((prev) => ({
                                           ...prev,
                                           newOffer: {
                                             ...prev.newOffer,
-                                            offer_category: value
+                                            offer_category: option.value
                                           }
                                         }));
                                       }
@@ -2681,13 +2732,13 @@ const StudentAnalyticsDashboard = () => {
                                   <Select
                                     options={offerSectorOptions}
                                     value={null}
-                                    onValueChange={(value) => {
-                                      if (value !== "Select Offer Sector") {
+                                    onChange={(option) => {
+                                      if (option && option.value !== "Select Offer Sector") {
                                         setEditedOfferTracker((prev) => ({
                                           ...prev,
                                           newOffer: {
                                             ...prev.newOffer,
-                                            offer_sector: value
+                                            offer_sector: option.value
                                           }
                                         }));
                                       }

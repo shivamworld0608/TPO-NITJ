@@ -24,4 +24,4 @@ export const sendEmails = async (req, res) => {
       console.error("Error sending emails:", error);
       res.status(500).send("Failed to send emails");
     }
-  };
+};

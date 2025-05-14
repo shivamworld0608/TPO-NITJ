@@ -32,15 +32,6 @@ const studentSchema = new mongoose.Schema({
               "INDUSTRIAL ENGINEERING AND DATA ANALYTICS", "POWER SYSTEMS AND RELIABILITY", "RENEWABLE ENERGY", 
               "SIGNAL PROCESSING AND MACHINE LEARNING", "STRUCTURAL AND CONSTRUCTION ENGINEERING", "TEXTILE ENGINEERING AND MANAGEMENT", 
               "VLSI DESIGN", "MACHINE INTELLIGENCE AND AUTOMATION", "THERMAL AND ENERGY ENGINEERING", "HUMANITIES AND MANAGEMENT"
-              // "Biotechnology","Chemical Engineering","Civil Engineering","Computer Science & Engineering","Data Science and Engineering","Electrical Engineering",
-              // "Electronics & Communication Engineering","Electronics and VLSI Engineering","Industrial and Production Engineering",
-              // "Information Technology","Instrumentation and Control Engineering","Mathematics and Computing","Mechanical Engineering",
-              // "Textile Technology","Structural and Construction Engineering","Geotechnical and Geo-Environmental Engineering",
-              // "Information Security","Electric Vehicle Design","Signal Processing and Machine Learning","VLSI Design","Industrial Engineering and Data Analytics",
-              // "Manufacturing Technology With Machine Learning","Data Analytics","Control and Instrumentation","Machine Intelligence and Automation",
-              // "Mathematics and Computing","Design Engineering","Thermal and Energy Engineering","Textile Engineering and Management","Renewable Energy",
-              // "Artificial Intelligence","Power Systems and Reliability","Finance","Human Resource","Marketing","Chemistry","Mathematics",
-              // "Physics",
           ]
   },
   batch: {
@@ -62,7 +53,7 @@ const studentSchema = new mongoose.Schema({
   },
   category:{
     type:String,
-    enum: ['General','GEN-EWS', 'SC', 'ST', 'OBC-NCL'],
+    enum: ['General','GEN-EWS', 'SC', 'ST', 'OBC-NCL','OBC'],
   },
   active_backlogs: {
     type: Boolean,
