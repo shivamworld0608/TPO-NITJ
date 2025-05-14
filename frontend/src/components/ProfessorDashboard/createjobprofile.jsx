@@ -3096,15 +3096,14 @@ const CreateJob = ({ onJobCreated, onCancel }) => {
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
-                CTC<span className="text-red-500"> *</span>
+                CTC<span className="text-red-500 text-sm">(in Lakhs) *</span>
               </label>
               <input
                 required
-                type="number"
+                type="text"
                 name="ctc"
                 value={formData.ctc}
                 onChange={handleChange}
-                min="0"
                 className="w-full border-2 border-gray-200 rounded-xl p-3 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 transition-all duration-300"
               />
             </div>

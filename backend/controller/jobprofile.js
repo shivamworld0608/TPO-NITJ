@@ -8,6 +8,7 @@ import Placement from '../models/placement.js';
 import Internship from "../models/internship.js";
 import Notification from "../models/notification.js"; 
 import mongoose from "mongoose";
+import nodemailer from "nodemailer";
 import Feedback from "../models/Feedback.js";
 import JobAnnouncementForm from "../models/jaf.js";
 import axios from "axios";
@@ -343,6 +344,47 @@ export const getAllCompanies = async (req, res) => {
 //     });
 //   }
 // };
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+// Function to send email to a single student
+const sendEmailToStudent = async (student, jobProfile) => {
+    const deadlineDateTime = new Date(jobProfile.deadline).toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short", 
+    timeZone: "Asia/Kolkata", 
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: student.email,
+    subject: `New Job Opportunity: ${jobProfile.job_role} at ${jobProfile.company_name}`,
+    html: `
+      <h3>Dear ${student.name},</h3>
+      <p>We are excited to inform you about a new job opportunity!</p>
+      <p><strong>Company:</strong> ${jobProfile.company_name}</p>
+      <p><strong>Job Role:</strong> ${jobProfile.job_role}</p>
+      <p><strong>Location:</strong> ${jobProfile.joblocation}</p>
+      <p><strong>CTC:</strong> ${jobProfile.job_salary.ctc} LPA</p>
+      <p><strong>Deadline to Apply:</strong> ${deadlineDateTime}</p>
+      <p>Please login to <a href="https://ctp.nitj.ac.in">TPO NITJ Portal</a> to apply and view more details.</p>
+      <p>Best regards,<br>TPO-NITJ</p>
+    `,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log(`Email sent to ${student.email}`);
+  } catch (error) {
+    console.error(`Failed to send email to ${student.email}:`, error);
+  }
+};
 export const createJobProfilecopy = async (req, res) => {
   try {
     // Extract recruiter ID from authenticated user
@@ -445,7 +487,7 @@ export const createJobProfilecopy = async (req, res) => {
     } else {
       job_class = "Below Dream"; // Default for invalid/undefined CTC
     }
-
+   console.log(job_class);
     // Create new JobProfile
     const jobProfile = new JobProfile({
       recruiter_id,
@@ -478,6 +520,39 @@ export const createJobProfilecopy = async (req, res) => {
 
     // Save JobProfile to database
     const savedProfile = await jobProfile.save();
+
+    //sending mail to eligible students
+    const eligibleStudents = await Promise.all(
+      eligibility_criteria.map(async (criteria) => {
+        const query = {
+          course: criteria.course_allowed,
+          department: { $in: criteria.department_allowed },
+          batch: criteria.eligible_batch,
+          // active_backlogs: criteria.active_backlogs,
+          // backlogs_history: criteria.history_backlogs,
+          // cgpa: { $gte: criteria.minimum_cgpa },
+          // account_deactivate: false,
+        };
+        return await Student.find(query).select("name email");
+      })
+    );
+
+    // Flatten the array of students and remove duplicates (if any)
+    const uniqueStudents = [];
+    const studentEmails = new Set();
+    eligibleStudents.flat().forEach((student) => {
+      if (!studentEmails.has(student.email)) {
+        studentEmails.add(student.email);
+        uniqueStudents.push(student);
+      }
+    });
+
+    // Send email to each eligible student
+    await Promise.all(
+      uniqueStudents.map(async (student) => {
+        await sendEmailToStudent(student, savedProfile);
+      })
+    );
 
     // Create and save notification
     const notification = new Notification({
