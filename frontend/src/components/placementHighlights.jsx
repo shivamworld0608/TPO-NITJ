@@ -57,9 +57,9 @@ const PlacementHighlights = () => {
     const counters = [
       updateValues(setPlacementRate, 95),
       updateValues(setHighestPackage, 1.2),
-      updateValues(setAveragePackage, 12),
-      updateValues(setInternshipConversion, 85),
-      updateValues(setCompaniesVisited, 100),
+      updateValues(setAveragePackage, 17),
+      updateValues(setInternshipConversion, 90),
+      updateValues(setCompaniesVisited, 150),
     ];
 
     return () => {
@@ -78,7 +78,7 @@ const PlacementHighlights = () => {
       },
       {
         label: "Average Package (LPA)",
-        data: [8, 10, 12],
+        data: [8, 10, 16],
         backgroundColor: ["#2563eb", "#059669", "#f59e0b"],
       },
     ],
@@ -117,7 +117,7 @@ const PlacementHighlights = () => {
     },
     {
       title: "Highest Package",
-      value: `₹${highestPackage} LPA`,
+      value: `₹${highestPackage} Cr`,
       icon: <FaChartLine className="text-4xl mx-auto" />,
       bgColor: "bg-yellow-100",
       textColor: "text-yellow-800",

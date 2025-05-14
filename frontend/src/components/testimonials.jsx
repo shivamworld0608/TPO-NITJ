@@ -36,7 +36,7 @@ const testimonials = [
     background: "bg-gradient-to-br from-red-100 to-red-200",
   },
   {
-    name: "Sarishti",
+    name: "Sarishti Garg",
     course: "Amazon Intern",
     quote:
       "Securing an internship at Amazon has been a truly rewarding achievement for me. My time at NIT Jalandhar helped me build a strong technical base, sharpen my problem-solving skills, and stay persistent throughout the preparation journey.",
