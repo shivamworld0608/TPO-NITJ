@@ -360,7 +360,18 @@ const sendEmailToStudent = async (student, jobProfile) => {
     timeStyle: "short", 
     timeZone: "Asia/Kolkata", 
   });
-
+// Determine salary details based on job_type
+  let salaryDetails = "";
+  if (jobProfile.job_type === "Intern") {
+    salaryDetails = `<p><strong>Stipend:</strong> ${jobProfile.job_salary.stipend}</p>`;
+  } else if (["Intern+PPO", "Intern+FTE"].includes(jobProfile.job_type)) {
+    salaryDetails = `
+      <p><strong>Stipend:</strong> ${jobProfile.job_salary.stipend}</p>
+      <p><strong>CTC:</strong> ${jobProfile.job_salary.ctc} LPA</p>
+    `;
+  } else if (jobProfile.job_type === "FTE") {
+    salaryDetails = `<p><strong>CTC:</strong> ${jobProfile.job_salary.ctc} LPA</p>`;
+  }
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: student.email,
@@ -371,7 +382,7 @@ const sendEmailToStudent = async (student, jobProfile) => {
       <p><strong>Company:</strong> ${jobProfile.company_name}</p>
       <p><strong>Job Role:</strong> ${jobProfile.job_role}</p>
       <p><strong>Location:</strong> ${jobProfile.joblocation}</p>
-      <p><strong>CTC:</strong> ${jobProfile.job_salary.ctc} LPA</p>
+      ${salaryDetails}
       <p><strong>Deadline to Apply:</strong> ${deadlineDateTime}</p>
       <p>Please login to <a href="https://ctp.nitj.ac.in">TPO NITJ Portal</a> to apply and view more details.</p>
       <p>Best regards,<br>TPO-NITJ</p>

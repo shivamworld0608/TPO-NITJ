@@ -42,8 +42,19 @@ const TeamPage = () => {
         fetchTeamData();
     }, []);
 
-    if (loading) return <BouncingLoader size="medium" text="Loading..." />;
-    if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
+     if (loading){
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-custom-blue"></div>
+      </div>
+    )};
+     if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-600">
+        {error}
+      </div>
+    );
+  }
 
     return (
         <div className="min-h-screen bg-white">
