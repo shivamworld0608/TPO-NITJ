@@ -801,7 +801,7 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
     return (
       <div className="space-y-4 text-gray-700">
         <div className="flex items-center">
-          <strong className="w-1/3 text-gray-800">CTC:</strong>
+          <strong className="w-1/3 text-gray-800">CTC: <span className="text-xs text-red-500">(in Lakhs)</span></strong>
           {editingSection === "salary" ? (
             <input
               type="text"
@@ -816,7 +816,7 @@ const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
           )}
         </div>
         <div className="flex items-center">
-          <strong className="w-1/3 text-gray-800">Base Salary:</strong>
+          <strong className="w-1/3 text-gray-800">Base Salary: <span className="text-xs text-red-500">(in Lakhs)</span></strong>
           {editingSection === "salary" ? (
             <input
               type="text"
