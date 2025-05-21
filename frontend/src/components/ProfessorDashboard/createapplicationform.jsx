@@ -8,7 +8,126 @@ import Swal from 'sweetalert2';
 
 const CreateApplicationForm = ({ jobId, onClose, onSubmit }) => {
   const [title, setTitle] = useState('');
-  const [fields, setFields] = useState([]);
+  const [fields, setFields] = useState([
+  {
+    fieldName: 'Full Name',
+    fieldType: 'text',
+    isRequired: true,
+    isAutoFill: true,
+    fieldStar: true,
+    studentPropertyPath: 'name',
+    options: []
+  },
+  {
+    fieldName: 'Email',
+    fieldType: 'email',
+    isRequired: true,
+    isAutoFill: true,
+    fieldStar: true,
+    studentPropertyPath: 'email',
+    options: []
+  },
+  {
+    fieldName: 'Gender',
+    fieldType: 'text',
+    isRequired: true,
+    isAutoFill: true,
+    fieldStar: false,
+    studentPropertyPath: 'gender',
+    options: []
+  },
+  {
+    fieldName: 'Roll Number',
+    fieldType: 'text',
+    isRequired: true,
+    isAutoFill: true,
+    fieldStar: false,
+    studentPropertyPath: 'rollno',
+    options: []
+  },
+  {
+    fieldName: 'Department',
+    fieldType: 'text',
+    isRequired: true,
+    isAutoFill: true,
+    fieldStar: false,
+    studentPropertyPath: 'department',
+    options: []
+  },
+  {
+    fieldName: 'CGPA',
+    fieldType: 'number',
+    isRequired: true,
+    isAutoFill: true,
+    fieldStar: false,
+    studentPropertyPath: 'cgpa',
+    options: []
+  },
+  {
+    fieldName: 'Course',
+    fieldType: 'text',
+    isRequired: true,
+    isAutoFill: true,
+    fieldStar: false,
+    studentPropertyPath: 'course',
+    options: []
+  },
+  {
+    fieldName: 'Batch',
+    fieldType: 'text',
+    isRequired: true,
+    isAutoFill: true,
+    fieldStar: false,
+    studentPropertyPath: 'batch',
+    options: []
+  },
+  {
+    fieldName: 'Active Backlogs',
+    fieldType: 'number',
+    isRequired: true,
+    isAutoFill: true,
+    fieldStar: false,
+    studentPropertyPath: 'active_backlogs',
+    options: []
+  },
+  {
+    fieldName: 'Backlogs History',
+    fieldType: 'number',
+    isRequired: true,
+    isAutoFill: true,
+    fieldStar: false,
+    studentPropertyPath: 'backlogs_history',
+    options: []
+  },
+  {
+    fieldName: '12th %',
+    fieldType: 'number',
+    isRequired: true,
+    isAutoFill: false,
+    fieldStar: false,
+    studentPropertyPath: '',
+    options: []
+  },
+  {
+    fieldName: '10th %',
+    fieldType: 'number',
+    isRequired: true,
+    isAutoFill: false,
+    fieldStar: false,
+    studentPropertyPath: '',
+    options: []
+  },
+  {
+    fieldName: 'Address',
+    fieldType: 'text',
+    isRequired: true,
+    isAutoFill: false,
+    fieldStar: false,
+    studentPropertyPath: '',
+    options: []
+  }
+]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const studentProperties = ['name', 'email', 'gender', 'rollno', 'department', 'cgpa', 'course', 'batch', 'active_backlogs', 'backlogs_history', 'cgpa %', 'category'];

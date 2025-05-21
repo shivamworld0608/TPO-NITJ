@@ -105,16 +105,16 @@ const RecruiterDashboards = () => {
       label: "Mailbox", 
       icon: faEnvelope 
     }, */
-    {
-      path: "/rdashboard/guidelines",
-      label: "Policy Guidelines",
-      icon: faNewspaper,
-    },
-    {
-      path: "/rdashboard/request-help",
-      label: "Request Help",
-      icon: faHandsHelping,
-    },
+    // {
+    //   path: "/rdashboard/guidelines",
+    //   label: "Policy Guidelines",
+    //   icon: faNewspaper,
+    // },
+    // {
+    //   path: "/rdashboard/request-help",
+    //   label: "Request Help",
+    //   icon: faHandsHelping,
+    // },
   ];
 
   const MenuItem = ({ item, onClick, isSidebarExpanded }) => {
@@ -298,7 +298,7 @@ const RecruiterDashboards = () => {
               <Route path="home" element={<RHome />} />
               <Route path="jaf" element={<JobAnnouncementForm />} />
               <Route path="createdjob" element={<CreatedJobs />} />
-              <Route path="request-help" element={<Request />} />
+              {/* <Route path="request-help" element={<Request />} /> */}
               <Route path="feedback" element={<FeedbackForm/>} />
               <Route path="travel" element={<TravelPlanner/>} />
               {/* <Route path="mailbox" element={<MailboxComponent />} /> */}

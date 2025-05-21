@@ -323,10 +323,10 @@ const StudentDashboard = () => {
           />
           <StatCard
             value={
-              stats.averagePackage != 0
-                ? stats.averagePackage >= 10000000
-                  ? `${(stats.averagePackage / 10000000).toFixed(2)} Cr`
-                  : `${(stats.averagePackage / 100000).toFixed(2)} LPA`
+              stats.average_ctc != 0
+                ? stats.average_ctc >= 100
+                  ? `${(stats.average_ctc / 100).toFixed(2)} Cr`
+                  : `${stats.average_ctc} LPA`
                 : "N/A"
             }
             label="Average Package"

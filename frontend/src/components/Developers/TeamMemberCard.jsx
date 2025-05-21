@@ -60,17 +60,7 @@ const TeamMemberCard = ({ image, name, department,batch, linkedinUrl, githubUrl,
                     <FaGlobe size={20} />
                 </a>
             )}
-             {resumeUrl && (
-    <a 
-        href={resumeUrl} 
-        target="_blank" 
-        rel="noopener noreferrer"
-        className="p-3  rounded-full text-orange-600 hover:bg-orange-600 hover:text-white transition-all"
-        
-    >
-        <FaFileAlt size={20} /> {/* You can replace this with any other icon */}
-    </a>
-)}
+
 
         </div>
     </div>

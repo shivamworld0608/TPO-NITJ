@@ -47,7 +47,10 @@ const ContactRequests = () => {
                   <h4 className="text-lg font-semibold text-gray-800">{form.name}</h4>
                   <p className="text-sm text-gray-600 mt-2">{form.email}</p>
                   {form.phone && <p className="text-sm text-gray-600 mt-1">{form.phone}</p>}
-                  <p className="text-sm text-gray-600 mt-2">{form.message}</p>
+                  <p className="text-sm text-gray-600 mt-2 break-words overflow-auto max-h-40 whitespace-pre-line">
+  {form.message}
+</p>
+
                   <p className="text-xs text-gray-500 mt-4">
                     Submitted on: {new Date(form.createdAt).toLocaleDateString()}
                   </p>

@@ -40,6 +40,7 @@ import captchaRoutes from "./routes/captcha.js";
 import addRecruiterRoutes from "./routes/addrecruiter.js";
 import questionbankRoutes from "./routes/questionbank.js";
 import mockassessmentRoutes from "./routes/mock-assessement.js"
+import brochureRoutes from "./routes/Brochure.js"
 
 import { mkdir } from 'fs/promises';
 try {
@@ -114,6 +115,7 @@ app.use('/sharedexperience',authenticate,sharedexperienceroutes);
 app.use("/placements",placementroutes);
 app.use('/pplacementReport', pplacementReportroutes);
 app.use("/internships",internshiptroutes);
+app.use('/brochure',brochureRoutes);
 app.use("/reqhelp",authenticate,reqhelproutes);
 app.use("/job-events",jobEventroutes);
 app.use("/feedback",authenticate,feedbackRoutes);
@@ -137,6 +139,7 @@ app.use('/add-recruiter', authenticate, addRecruiterRoutes);
 app.use('/question-bank', authenticate, questionbankRoutes);
 app.use('/mock-assessment',authenticate,mockassessmentRoutes);
 app.use('/attempt/:assessment',authenticate,mockassessmentRoutes);
+app.use('/admin/brochure',authenticate,brochureRoutes);
 
 const port = process.env.PORT || 7000;
 app.listen(port,'0.0.0.0', () => {

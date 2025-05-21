@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import Swal from "sweetalert2";
 import { UserX, X } from "lucide-react";
 import { Button } from "../ui/button";
+import { Category } from "@mui/icons-material";
 
 const AppliedStudentp = ({ jobId, onClose, company_name }) => {
   const [submissions, setSubmissions] = useState([]);
@@ -51,7 +52,7 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
         acc[field.fieldName] = field.value;
         return acc;
       }, {});
-      return { College_Mail_ID: submission.studentId?submission.studentId.email:"NA", ...formattedFields, Resume: submission.resumeUrl };
+      return { College_Mail_ID: submission.studentId?submission.studentId.email:"NA",Category: submission.studentId?submission.studentId.category:"NA", ...formattedFields, Resume: submission.resumeUrl };
     });
     exportToExcel(data, company_name);
   };
@@ -364,6 +365,9 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
               <th className="border border-gray-300 px-4 py-2 bg-gray-50">
                 College Mail Id
               </th>
+              <th className="border border-gray-300 px-4 py-2 bg-gray-50">
+                Category
+              </th>
               {uniqueFieldNames.map((fieldName, index) => (
                 <th
                   key={index}
@@ -391,6 +395,9 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
               <tr key={index} className="hover:bg-gray-50">
                 <td className="border border-gray-300 px-4 py-2">
                   {submission.studentId?submission.studentId.email:"NA"}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {submission.studentId?submission.studentId.category:"NA"}
                 </td>
                 {uniqueFieldNames.map((fieldName, fieldIndex) => {
                   const field = submission.fields.find((f) => f.fieldName === fieldName);
@@ -435,7 +442,7 @@ const AppliedStudentp = ({ jobId, onClose, company_name }) => {
             key={i + 1}
             onClick={() => paginate(i + 1)}
             className={`mx-1 px-4 py-2 rounded-lg ${
-              currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'
+              currentPage === i + 1 ? 'bg-custom-blue text-white' : 'bg-gray-200'
             }`}
           >
             {i + 1}

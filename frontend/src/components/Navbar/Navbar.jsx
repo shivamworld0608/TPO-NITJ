@@ -399,10 +399,10 @@ const Navbar = () => {
                 INTERNSHIPS
               </Link>
               <Link
-                to="/downloads"
+                to="/departmental-brochure"
                 className="hover:text-blue-200 text-base lg:text-lg"
               >
-                DOWNLOAD
+               BROCHURES
               </Link>
             </div>
 
@@ -469,11 +469,11 @@ const Navbar = () => {
                     INTERNSHIPS
                   </Link>
                   <Link
-                    to="/downloads"
+                    to="/departmental-brochure"
                     className="hover:text-blue-200 text-base lg:text-lg"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    DOWNLOAD
+                    BROCHUREs
                   </Link>
                   <Link
                     to="/faq"

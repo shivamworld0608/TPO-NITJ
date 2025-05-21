@@ -77,7 +77,7 @@ const App = () => {
         <Route path="/recruiter" element={<Recruiter />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/team" element={<TeamPage />} />
-        <Route path="/downloads" element={<Downloads />} />
+        <Route path="/departmental-brochure" element={<Downloads />} />
         <Route path="/whyrecruit" element={< WhyRecruitPage/>} />
         <Route
           path="/sdashboard/assessment-attempt/:attemptId"

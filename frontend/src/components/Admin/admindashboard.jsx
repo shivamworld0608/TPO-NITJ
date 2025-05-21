@@ -24,6 +24,7 @@ import AdminJobProfileManager from "./jobprofiles";
 import StudentManager from "./students";
 import RecruiterManager from "./recruiter";
 import ProfessorManager from "./professor";
+import BrochureManager from "./brochure";
 
 const Admindashboard = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -72,6 +73,7 @@ const Admindashboard = () => {
     { label: "Recruiter Management", icon: faUserTie, path: "/admindashboard/recruiters" },
     { label: "Student Management", icon: faChild, path: "/admindashboard/students" },
     { label: "Professor Management", icon: faPersonChalkboard, path: "/admindashboard/professor" },
+    { label: "Brochure Management", icon: faBriefcase, path: "/admindashboard/brochure" },
   ];
 
 
@@ -254,6 +256,7 @@ const Admindashboard = () => {
             <Route path="/students" element={<StudentManager />} />
             <Route path="/recruiters" element={<RecruiterManager />} />
             <Route path="/professor" element={<ProfessorManager />} />
+            <Route path="/brochure" element={<BrochureManager />} />
             </Routes>
         </div>
 

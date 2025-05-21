@@ -391,7 +391,7 @@ const sendEmailToStudent = async (student, jobProfile) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`Email sent to ${student.email}`);
+    // console.log(`Email sent to ${student.email}`);
   } catch (error) {
     console.error(`Failed to send email to ${student.email}:`, error);
   }

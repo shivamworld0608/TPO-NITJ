@@ -218,7 +218,6 @@ export const LockedResendOTP = async (req, res) => {
               }
   
               await loginAttempt.save();
-              console.log("saved");
               return res.status(401).json({ message: "Invalid password" });
           }
   
@@ -277,7 +276,7 @@ export const LockedResendOTP = async (req, res) => {
                     },
                     { new: true }
                 );
-                console.log(updatedStudent);
+               
 
                 return res.status(200).json({ message: "Login Successful",  user: updatedStudent, userType });
             } catch (error) {

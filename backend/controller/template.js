@@ -29,10 +29,13 @@ export const createFormTemplate = async (req, res) => {
 export const deleteFormTemplate = async (req, res) => {
   try {
     const { jobId } = req.params;
-    const deletedFormTemplate = await FormTemplate.findOneAndDelete(jobId);
+    console.log(jobId);
+    const deletedFormTemplate = await FormTemplate.findOneAndDelete({jobId});
+    console.log(deletedFormTemplate);
     if (!deletedFormTemplate) {
       return res.status(404).json({ message: 'Form Template not found' });
     }
+    console.log("deleted");
     res.status(200).json({ message: 'Form Template deleted successfully', deletedFormTemplate });
   } catch (err) {
     res.status(500).json({ message: 'Failed to delete form template', error: err.message });
