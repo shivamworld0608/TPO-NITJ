@@ -138,7 +138,7 @@ export default function GDCard({
               {was_shortlisted === true
                 ? "Shortlisted"
                 : was_shortlisted === false
-                  ? "Not Selected"
+                  ? "Not Shortlisted"
                   : "Pending"
               }
             </span>

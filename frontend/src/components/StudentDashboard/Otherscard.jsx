@@ -145,7 +145,7 @@ export default function OthersCard({
               {was_shortlisted === true
                 ? "Shortlisted"
                 : was_shortlisted === false
-                  ? "Not Selected"
+                  ? "Not Shortlisted"
                   : "Pending"
               }
             </span>

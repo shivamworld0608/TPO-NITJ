@@ -53,7 +53,7 @@ const JobApplications = () => {
 
   if (visibleDetailId) {
     return (
-      <div className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6 ">
         <Jobdetail job_id={visibleDetailId} onBack={() => setVisibleDetailId(null)} />
       </div>
     );

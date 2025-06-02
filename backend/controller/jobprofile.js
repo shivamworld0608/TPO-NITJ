@@ -443,6 +443,7 @@ export const createJobProfilecopy = async (req, res) => {
             oa_duration: step.details?.oa_duration || "",
             oa_info: step.details?.oa_info || "",
             oa_link: [],
+            oa_venue: step.details?.oa_venue || "",
           };
           break;
 
@@ -453,6 +454,7 @@ export const createJobProfilecopy = async (req, res) => {
             interview_time: step.details?.interview_time || "",
             interview_info: step.details?.interview_info || "",
             interview_link: [],
+            interview_venue: step.details?.interview_venue || "",
           };
           break;
 
@@ -462,6 +464,7 @@ export const createJobProfilecopy = async (req, res) => {
             gd_time: step.details?.gd_time || "",
             gd_info: step.details?.gd_info || "",
             gd_link: [],
+            gd_venue: step.details?.gd_venue || "",
           };
           break;
 
@@ -473,6 +476,7 @@ export const createJobProfilecopy = async (req, res) => {
             others_duration: step.details?.others_duration || "",
             others_info: step.details?.others_info || "",
             others_link: [],
+            others_venue: step.details?.others_venue || "",
           };
           break;
 
@@ -733,14 +737,80 @@ export const deleteJob = async (req, res) => {
   }
 };
 
+// export const getJobProfiletostudent = async (req, res) => {
+//   try {
+//     const studentId = req.user.userId;
+//     if (!studentId) {
+//       return res.status(400).json({ message: "User ID is missing in the request." });
+//     }
+//     const student = await Student.findById({_id:studentId});
+//     let batch;
+//     try {
+//       const rollNumbers = [student.rollno];
+//       const course = student.course;
+//       const response = await axios.post(`${process.env.ERP_SERVER}`, rollNumbers);
+//       const erpStudents = response.data.data;
+//       const erpData = erpStudents[0];
+//       const erpBatch = erpData.batch;
+//       const courseDurations = {
+//         "B.Tech": 4,
+//         "M.Tech": 2,
+//         "B.Sc.-B.Ed.": 4,
+//         "MBA": 2,
+//         "M.Sc.": 2
+//         };
+//        const adjustment = courseDurations[course] || 0; // Default to 0 if course not found
+//        const adjustedBatch = String(Number(erpBatch) + adjustment);
+//       batch = adjustedBatch;
+//     } catch (erpError) {
+//       console.error("ERP server error, falling back to database batch:", erpError);
+//       batch = student.batch;
+//     }
+//     const JobProfiles = await JobProfile.find({
+//       Approved_Status: true,
+//       'eligibility_criteria.eligible_batch': batch
+//   });
+  
+//     const applied = [];
+//     const notApplied = [];
+//     const liveButNotApplied = [];
+
+//     const currentDate = new Date();
+
+//     JobProfiles.forEach((job) => {
+//       const isApplied = job.Applied_Students.includes(studentId);
+//       const isLive = new Date(job.deadline) > currentDate;
+
+//       if (isApplied) {
+//         applied.push(job);
+//       } else if (!isApplied && isLive) {
+//         liveButNotApplied.push(job);
+//       } else {
+//         notApplied.push(job);
+//       }
+//     });
+
+//     return res.status(200).json({
+//       applied,
+//       notApplied,
+//       liveButNotApplied,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching job status:", error);
+//     return res.status(500).json({ message: "An error occurred while fetching job status." });
+//   }
+// };
+
 export const getJobProfiletostudent = async (req, res) => {
   try {
     const studentId = req.user.userId;
     if (!studentId) {
       return res.status(400).json({ message: "User ID is missing in the request." });
     }
-    const student = await Student.findById({_id:studentId});
+
+    const student = await Student.findById({ _id: studentId });
     let batch;
+
     try {
       const rollNumbers = [student.rollno];
       const course = student.course;
@@ -748,25 +818,34 @@ export const getJobProfiletostudent = async (req, res) => {
       const erpStudents = response.data.data;
       const erpData = erpStudents[0];
       const erpBatch = erpData.batch;
+
       const courseDurations = {
         "B.Tech": 4,
         "M.Tech": 2,
         "B.Sc.-B.Ed.": 4,
         "MBA": 2,
-        "M.Sc.": 2
-        };
-       const adjustment = courseDurations[course] || 0; // Default to 0 if course not found
-       const adjustedBatch = String(Number(erpBatch) + adjustment);
+        "M.Sc.": 2,
+      };
+      const adjustment = courseDurations[course] || 0;
+      const adjustedBatch = String(Number(erpBatch) + adjustment);
       batch = adjustedBatch;
     } catch (erpError) {
       console.error("ERP server error, falling back to database batch:", erpError);
       batch = student.batch;
     }
+
+    const course = student.course;
+
     const JobProfiles = await JobProfile.find({
       Approved_Status: true,
-      'eligibility_criteria.eligible_batch': batch
-  });
-  
+      eligibility_criteria: {
+        $elemMatch: {
+          eligible_batch: batch,
+          course_allowed: course,
+        },
+      },
+    });
+
     const applied = [];
     const notApplied = [];
     const liveButNotApplied = [];
@@ -796,6 +875,7 @@ export const getJobProfiletostudent = async (req, res) => {
     return res.status(500).json({ message: "An error occurred while fetching job status." });
   }
 };
+
 
 export const getJobProfiledetails = async (req, res) => {
   try {
@@ -1204,7 +1284,6 @@ export const checkEligibility = async (req, res) => {
       console.error("ERP server error, falling back to database data:", erpError);
       updatedStudent = student.toObject();
     }
-
     const eligibilityCriteria = job.eligibility_criteria;
     let isEligible = false;
     let maxFailureDepth = -1; // Tracks the deepest failure across all criteria

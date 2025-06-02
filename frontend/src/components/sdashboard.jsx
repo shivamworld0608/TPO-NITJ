@@ -38,6 +38,7 @@ import NITJlogo from "../assets/nitj-logo.png";
 import Request from "./StudentDashboard/Request";
 import TeamSection from "./Developers/TeamSection.jsx";
 import ResumeBuilder from "./StudentDashboard/resume.jsx";
+import NOC from "./StudentDashboard/noc.jsx";
 import ChangePasswordForm from "./changepass.jsx";
 import Others from "./StudentDashboard/others.jsx";
 import QuestionBank from "./StudentDashboard/questionbank.jsx";
@@ -117,10 +118,15 @@ const StudentDashboard = () => {
       icon: faBook,
     },
     {
-      path: "/sdashboard/mock-assessment",
-      label: "Mock Assessment",
-      icon: faCheckSquare,
+      path: "/sdashboard/noc",
+      label: "NOC",
+      icon: faBook,
     },
+    // {
+    //   path: "/sdashboard/mock-assessment",
+    //   label: "Mock Assessment",
+    //   icon: faCheckSquare,
+    // },
 /*     { path: "/sdashboard/policy-guidlines", label: "Policy & Guidlines", icon: faNoteSticky },
 /*     { path: "/sdashboard/resume", label: "Resume", icon: faNoteSticky }, */
     { path: "/sdashboard/change-pass", label: "Change Password", icon: faHammer },
@@ -313,7 +319,8 @@ const StudentDashboard = () => {
             {/* <Route path="mailbox" element={<MailboxComponent />} /> */}
             <Route path="shared-experience" element={<SharedExperience />} />
             <Route path="question-bank" element={<QuestionBank />} />
-            <Route path="mock-assessment" element={<MockAssessmentStudentDashboard/>} />
+            <Route path="noc" element={<NOC />} />
+            {/* <Route path="mock-assessment" element={<MockAssessmentStudentDashboard/>} /> */}
      {/*        <Route path="assessment-attempt/:attemptId" element={<AssessmentAttempt/>} /> */}
             <Route path="profile" element={<Profile />} />
             <Route path="jobs/:job_id" element={<JobdetailFromCalender />} />

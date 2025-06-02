@@ -51,6 +51,7 @@ import AddStudentForm from "./addstudents.jsx";
 import RecruiterForm from "./addrecruiter.jsx";
 import MockAssessmentProfessorDashboard from "./mockassessment.jsx"
 import { FaRegComment } from "react-icons/fa";
+import  NOCManagement from "./NOCManagement.jsx"
 
 
 const Pdashboard = () => {
@@ -100,6 +101,7 @@ const Pdashboard = () => {
     { label: "JAF",  icon: faFileWaveform, path: "/pdashboard/jaf" },
     { label: "Job Management", icon: faBriefcaseClock, path: "/pdashboard/job-profile-management" },
     {label:"Student",icon:faUser, path:"/pdashboard/student-analysis"},
+    {label:"NOC",icon:faUser, path:"/pdashboard/noc-management"},
     { label: "Placement Reports", icon: faChartBar, path: "/pdashboard/placement-insights" },
     { label: "Conversation Log", icon: faComment, path: "/pdashboard/conversation" },
     { label: "Add Recruiter", icon: faUserCheck, path: "/pdashboard/add-recruiter" },
@@ -294,12 +296,10 @@ const Pdashboard = () => {
             <Route path="home" element={<Home />} />
             <Route path="jaf" element={<JAF/>} />
             <Route path="job-profile-management" element={<JobManagement />} />
-            <Route path="oa-management" element={<OAManagement />} />
-            <Route path="interview-management" element={<InterviewManagement />} />
             <Route path="notifications" element={<PNotifications />} />
-            {/* <Route path="pmailbox" element={<Mailbox />} /> */}
             <Route path="help-requests" element={<RequestHelpManager />} />
             <Route path="student-analysis" element={<StudentAnalyticsDashboard />} />
+            <Route path="noc-management" element={<NOCManagement />} />
             {/* <Route path="mock-assessment" element={<MockAssessmentProfessorDashboard/>} /> */}
             <Route path="experience-sharing" element={<ExperienceSharing />} />
             <Route path="contact-request" element={<ContactRequests />} />

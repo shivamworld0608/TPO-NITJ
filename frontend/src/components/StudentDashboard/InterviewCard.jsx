@@ -145,7 +145,7 @@ export default function InterviewCard({
               {was_selected === true
                 ? "Shortlisted"
                 : was_selected === false
-                  ? "Not Selected"
+                  ? "Not Shortlisted"
                   : "Pending"
               }
             </span>

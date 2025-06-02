@@ -1210,7 +1210,6 @@ const formatDate = (dateString) => {
 
 const ViewJobDetails = ({ job, onClose, oneditingAllowedUpdate }) => {
   const [viewingAppliedStudents, setViewingAppliedStudents] = useState(false);
-  const [applicationFormexist, setApplicationFormexist] = useState(null);
   const [selectedJobForForm, setSelectedJobForForm] = useState(null);
   const [viewingApplicationForm, setViewingApplicationForm] = useState(false);
   const [editingApplicationForm, setEditingApplicationForm] = useState(false);

@@ -40,7 +40,8 @@ import captchaRoutes from "./routes/captcha.js";
 import addRecruiterRoutes from "./routes/addrecruiter.js";
 import questionbankRoutes from "./routes/questionbank.js";
 import mockassessmentRoutes from "./routes/mock-assessement.js"
-import brochureRoutes from "./routes/Brochure.js"
+import brochureRoutes from "./routes/Brochure.js";
+import nocRoutes from "./routes/noc.js";
 
 import { mkdir } from 'fs/promises';
 try {
@@ -80,8 +81,9 @@ const authenticate = (req, res, next) => {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = decoded;
+      console.log(req.user);
       next();
- 
+    
     }
     catch (err) {
       return res.status(401).json({ message: 'Invalid or Expired token' });
@@ -140,6 +142,7 @@ app.use('/question-bank', authenticate, questionbankRoutes);
 app.use('/mock-assessment',authenticate,mockassessmentRoutes);
 app.use('/attempt/:assessment',authenticate,mockassessmentRoutes);
 app.use('/admin/brochure',authenticate,brochureRoutes);
+app.use('/noc',authenticate,nocRoutes);
 
 const port = process.env.PORT || 7000;
 app.listen(port,'0.0.0.0', () => {

@@ -5,7 +5,7 @@ import fs from 'fs/promises'; // For async file operations
 import { existsSync, mkdirSync } from 'fs'; // Import synchronous methods
 
 // Ensure the uploads/brochures directory exists
-const uploadDir = path.join(process.cwd(), 'Uploads', 'brochures');
+const uploadDir = path.join(process.cwd(), 'uploads', 'brochures');
 if (!existsSync(uploadDir)) {
   mkdirSync(uploadDir, { recursive: true });
 }
@@ -69,7 +69,7 @@ export const addBrochure = [
         });
       }
 
-      const brochure_link = `/Uploads/brochures/${req.file.filename}`;
+      const brochure_link = `/uploads/brochures/${req.file.filename}`;
       console.log('Saving file to:', path.join(uploadDir, req.file.filename)); // Debug log
 
       const newBrochure = await Brochure.create({
@@ -126,7 +126,7 @@ export const updateBrochure = [
             }
           }
         }
-        updateData.brochure_link = `/Uploads/brochures/${req.file.filename}`;
+        updateData.brochure_link = `/uploads/brochures/${req.file.filename}`;
         console.log('Updating file to:', path.join(uploadDir, req.file.filename));
       }
 

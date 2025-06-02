@@ -146,7 +146,7 @@ export default function OACard({
               {was_shortlisted === true
                 ? "Shortlisted"
                 : was_shortlisted === false
-                  ? "Not Selected"
+                  ? "Not Shortlisted"
                   : "Pending"
               }
             </span>

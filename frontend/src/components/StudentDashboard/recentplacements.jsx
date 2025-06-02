@@ -144,9 +144,9 @@ const PlacementPDF = ({ placement }) => (
           <View style={styles.gridItem}>
             <Text style={styles.label}>CTC:</Text>
             <Text style={styles.value}>
-              {placement.ctc >= 1000000 
-                ? `₹${(placement.ctc / 1000000).toFixed(2)} LPA` 
-                : `₹${(placement.ctc / 100000).toFixed(2)} LPA`}
+              {placement.ctc >= 100 
+                ? `₹${(placement.ctc / 100).toFixed(2)} Cr` 
+                : `₹${placement.ctc} LPA`}
             </Text>
           </View>
         </View>

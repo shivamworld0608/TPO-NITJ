@@ -695,9 +695,9 @@ const getStepTheme = (stepType) => {
   switch (stepType) {
     case "OA":
       return {
-        border: "border-indigo-500",
+        border: "border-blue-400",
         bg: "bg-indigo-50",
-        hover: "hover:border-indigo-600 hover:bg-indigo-100",
+        hover: "hover:border-blue-600 hover:bg-indigo-100",
         dot: "bg-indigo-500"
       };
     case "Interview":
@@ -911,7 +911,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
     {
       icon: faIndianRupeeSign,
       label: isInternship ? "CTC(BASE)" : "CTC",
-      value: isInternship ? `${jobDetails.job_salary?.ctc}(${jobDetails.job_salary?.base_salary})` : jobDetails.job_salary?.ctc || "N/A",
+      value: isInternship ? `${jobDetails.job_salary?.ctc} (${jobDetails.job_salary?.base_salary}) Lakh` : `${jobDetails.job_salary?.ctc} Lakh`  || "N/A",
     },
     {
       icon: faIndianRupeeSign,
@@ -1090,6 +1090,23 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
                           </div>
                         </>
                       )}
+                      {step.step_type === "GD" && (
+                        <>
+
+                          <div className="flex items-center text-gray-700">
+                            <Calendar className="mr-2 w-3.5 h-3.5 text-emerald-500" />
+                            <span className="font-medium">
+                              Date: <span className="font-normal">{step.details?.gd_date || "TBA"}</span>
+                            </span>
+                          </div>
+                          <div className="flex items-center text-gray-700">
+                            <Clock className="mr-2 w-3.5 h-3.5 text-emerald-500" />
+                            <span className="font-medium">
+                              Time: <span className="font-normal">{step.details?.gd_time || "N/A"}</span>
+                            </span>
+                          </div>
+                        </>
+                      )}
                       {step.step_type === "Others" && (
                         <>
                           <div className="flex items-center text-gray-700">
@@ -1260,33 +1277,157 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
       </div>
     ),
 
-    deadline: (
-      <div className="text-center">
-        <p className="text-sm sm:text-base">
-          <strong>
-            Please Apply before:{" "}
+    // deadline: (
+    //   <div className="text-center">
+    //     <p className="text-sm sm:text-base">
+    //       <strong>
+    //         Please Apply before:{" "}
+    //         {jobDetails.deadline
+    //           ? new Date(jobDetails.deadline).toLocaleString(undefined, {
+    //               year: "numeric",
+    //               month: "short",
+    //               day: "numeric",
+    //               hour: "2-digit",
+    //               minute: "2-digit",
+    //               hour12: true,
+    //             })
+    //           : "Not Provided"}
+    //       </strong>
+    //     </p>
+    //     {jobDetails.deadline && (
+    //       <p className="text-lg sm:text-2xl md:text-3xl mt-2 font-bold">
+    //         <span>Time Left: </span>
+    //         <span style={{ color: timeLeft.includes("0d") ? "red" : "green" }}>
+    //           {timeLeft || "Calculating..."}
+    //         </span>
+    //       </p>
+    //     )}
+    //   </div>
+    // ),
+    // Enhanced deadline section for your React component
+// Replace your existing deadline section with this updated version
+
+deadline: (
+  <div className="bg-white p-3 sm:p-6">
+    <div className="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-4 sm:p-6 rounded-lg shadow-md border border-indigo-200">
+      {/* Deadline Info Card */}
+      <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200 mb-6">
+        <div className="text-center">
+          <p className="text-sm text-gray-600 mb-2">Applications close on</p>
+          <p className="text-lg sm:text-xl font-bold text-gray-800">
             {jobDetails.deadline
-              ? new Date(jobDetails.deadline).toLocaleString(undefined, {
+              ? new Date(jobDetails.deadline).toLocaleDateString(undefined, {
+                  weekday: 'long',
                   year: "numeric",
-                  month: "short",
+                  month: "long",
                   day: "numeric",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
                 })
-              : "Not Provided"}
-          </strong>
-        </p>
-        {jobDetails.deadline && (
-          <p className="text-lg sm:text-2xl md:text-3xl mt-2 font-bold">
-            <span>Time Left: </span>
-            <span style={{ color: timeLeft.includes("0d") ? "red" : "green" }}>
-              {timeLeft || "Calculating..."}
-            </span>
+              : "Date Not Provided"}
           </p>
-        )}
+          {jobDetails.deadline && (
+            <p className="text-sm sm:text-base text-gray-600 mt-1">
+              at {new Date(jobDetails.deadline).toLocaleTimeString(undefined, {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+              })}
+            </p>
+          )}
+        </div>
       </div>
-    ),
+
+      {/* Countdown Timer */}
+      {jobDetails.deadline && (
+        <div className="bg-white p-4 sm:p-6 rounded-lg shadow-md border border-gray-200">
+          <p className="text-center text-sm text-gray-600 mb-4">Time Remaining</p>
+          
+          {!isdeadlineOver ? (
+            <div className="grid grid-cols-4 gap-2 sm:gap-4 text-center">
+              {timeLeft.split(' ').map((unit, index) => {
+                const [value, label] = [unit.slice(0, -1), unit.slice(-1)];
+                const labels = { 'd': 'Days', 'h': 'Hours', 'm': 'Minutes', 's': 'Seconds' };
+                
+                return (
+                  <div key={index} className="bg-custom-blue to-purple-600 text-white p-3 sm:p-4 rounded-lg shadow-md">
+                    <div className="text-xl sm:text-2xl font-bold">{value}</div>
+                    <div className="text-xs sm:text-sm opacity-90">{labels[label]}</div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center">
+              <div className="bg-red-500 text-white p-4 rounded-lg shadow-md">
+                <div className="flex items-center justify-center mb-2">
+                  <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="text-lg font-bold">Deadline Passed</span>
+                </div>
+                <p className="text-sm opacity-90">Applications are no longer accepted</p>
+              </div>
+            </div>
+          )}
+
+          {/* Urgency indicator */}
+          {!isdeadlineOver && jobDetails.deadline && (
+            <div className="mt-4 text-center">
+              {(() => {
+                const hoursLeft = Math.floor((new Date(jobDetails.deadline) - new Date()) / (1000 * 60 * 60));
+                if (hoursLeft <= 24) {
+                  return (
+                    <div className="bg-red-100 border border-red-300 text-red-700 p-3 rounded-lg">
+                      <div className="flex items-center justify-center">
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                        </svg>
+                        <span className="font-semibold text-sm">Urgent: Less than 24 hours left!</span>
+                      </div>
+                    </div>
+                  );
+                } else if (hoursLeft <= 72) {
+                  return (
+                    <div className="bg-yellow-100 border border-yellow-300 text-yellow-700 p-3 rounded-lg">
+                      <div className="flex items-center justify-center">
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="font-semibold text-sm">Apply soon - Only a few days left!</span>
+                      </div>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <div className="bg-green-100 border border-green-300 text-green-700 p-3 rounded-lg">
+                      <div className="flex items-center justify-center">
+                        <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span className="font-semibold text-sm">You have plenty of time to apply</span>
+                      </div>
+                    </div>
+                  );
+                }
+              })()}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Call to Action */}
+      {/* {!isdeadlineOver && status.eligible && !status.applied && (
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => setApplication(true)}
+            className="bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200"
+          >
+            Apply Now
+          </button>
+        </div>
+      )} */}
+    </div>
+  </div>
+),
   };
 
   return (
@@ -1309,7 +1450,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
         </h2>
       </div>
 
-      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-6 sm:mb-8">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-4 sm:mb-8">
         {Object.keys(info).map((key) => (
           <button
             key={key}
@@ -1328,7 +1469,7 @@ const Jobdetail = ({ job_id, onBack, onShow }) => {
         ))}
       </div>
 
-      <div className="w-full max-w-3xl mx-auto p-3 sm:p-6 bg-white rounded-lg shadow-lg">
+      <div className="w-full max-w-3xl mx-auto mt-2 bg-white rounded-lg">
         {info[activeInfo]}
       </div>
     </div>
