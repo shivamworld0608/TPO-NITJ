@@ -186,7 +186,7 @@ const [isUploading, setIsUploading] = useState(false);
     pdfDoc.registerFontkit(fontkit);
     const page = pdfDoc.addPage([595, 842]);
     const { width, height } = page.getSize();
-
+  
     const englishFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const englishBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
     const unicodeFont = await pdfDoc.embedFont(fontBuffer);
@@ -194,11 +194,11 @@ const [isUploading, setIsUploading] = useState(false);
     const fontSize = 12;
     const margin = 50;
     let y = height - margin;
-
+  
     const drawLine = (space = 1) => {
       y -= space * 10;
     };
-
+  
     const wrapText = (text, font, fontSize, maxWidth) => {
       const lines = [];
       const paragraphs = text.split('\n');
@@ -224,7 +224,7 @@ const [isUploading, setIsUploading] = useState(false);
       });
       return lines;
     };
-
+  
     const drawText = (
       text,
       {
@@ -244,32 +244,100 @@ const [isUploading, setIsUploading] = useState(false);
     ) => {
       if (!text || typeof text !== 'string') return;
       const lines = wrap && font !== unicodeFont ? wrapText(text, font, size, maxWidth) : [text];
+  
       lines.forEach((line, lineIndex) => {
         let x = overrideX !== undefined ? overrideX : margin;
-        let remainingLine = line;
         const totalTextWidth = font.widthOfTextAtSize(line, size);
+  
+        // Calculate alignment
         if (align === 'center') {
           x = width / 2 - totalTextWidth / 2;
         } else if (align === 'right') {
           x = width - margin - totalTextWidth;
         }
+  
+        // Handle justification
+        if (align === 'justify' && lineIndex < lines.length - 1 && line.trim().length > 0) {
+          const words = line.split(/\s+/).filter(word => word.length > 0);
+          if (words.length > 1) {
+            // Calculate total width of words and spaces
+            const totalWordsWidth = words.reduce((sum, word) => {
+              const wordFont = highlightPhrases.some(phrase => word.includes(phrase)) ? boldFont : font;
+              return sum + wordFont.widthOfTextAtSize(word, size);
+            }, 0);
+            const totalSpacesWidth = maxWidth - totalWordsWidth;
+            const spaceWidth = words.length > 1 ? totalSpacesWidth / (words.length - 1) : 0;
+  
+            let currentX = x;
+            words.forEach((word, wordIndex) => {
+              let wordFont = font;
+              let isHighlighted = false;
+              let isUnderlined = false;
+  
+              // Check for highlighted or underlined phrases
+              for (const phrase of highlightPhrases.concat(underlinePhrases)) {
+                if (word.includes(phrase)) {
+                  wordFont = highlightPhrases.includes(phrase) ? boldFont : font;
+                  isHighlighted = highlightPhrases.includes(phrase);
+                  isUnderlined = underlinePhrases.includes(phrase);
+                  break;
+                }
+              }
+  
+              const wordWidth = wordFont.widthOfTextAtSize(word, size);
+              page.drawText(word, {
+                x: currentX,
+                y: overrideY !== undefined ? overrideY : y,
+                size,
+                font: wordFont,
+                color,
+              });
+  
+              if (isUnderlined) {
+                page.drawLine({
+                  start: { x: currentX, y: (overrideY !== undefined ? overrideY : y) - 2 },
+                  end: { x: currentX + wordWidth, y: (overrideY !== undefined ? overrideY : y) - 2 },
+                  thickness: 1,
+                  color,
+                });
+              }
+  
+              currentX += wordWidth;
+              if (wordIndex < words.length - 1) {
+                currentX += spaceWidth;
+              }
+            });
+  
+            if (overrideY === undefined) y -= lineHeight;
+            return;
+          }
+        }
+  
+        // Handle non-justified text or text with highlights
+        let remainingLine = line;
         let currX = x;
         while (remainingLine.length > 0) {
           let matchedPhrase = null;
           let matchedLength = 0;
           let isHighlighted = false;
           let isUnderlined = false;
+  
+          // Check for matching phrases at the start of remainingLine
           for (const phrase of highlightPhrases.concat(underlinePhrases)) {
             if (remainingLine.startsWith(phrase) && phrase?.length > matchedLength) {
               matchedPhrase = phrase;
               matchedLength = phrase.length;
               isHighlighted = highlightPhrases.includes(phrase);
               isUnderlined = underlinePhrases.includes(phrase);
+              break; // Found the longest matching phrase at this position
             }
           }
+  
           if (matchedPhrase) {
+            // Draw highlighted/underlined phrase
             const wordFont = isHighlighted ? boldFont : font;
             const wordWidth = wordFont.widthOfTextAtSize(matchedPhrase, size);
+  
             page.drawText(matchedPhrase, {
               x: currX,
               y: overrideY !== undefined ? overrideY : y,
@@ -277,6 +345,7 @@ const [isUploading, setIsUploading] = useState(false);
               font: wordFont,
               color,
             });
+  
             if (isUnderlined) {
               page.drawLine({
                 start: { x: currX, y: (overrideY !== undefined ? overrideY : y) - 2 },
@@ -285,18 +354,23 @@ const [isUploading, setIsUploading] = useState(false);
                 color,
               });
             }
+  
             currX += wordWidth;
-            remainingLine = remainingLine.slice(matchedPhrase.length).trimStart();
-            if (remainingLine) {
+            remainingLine = remainingLine.slice(matchedPhrase.length);
+  
+            // Add space if there's more text
+            if (remainingLine.length > 0 && remainingLine[0] === ' ') {
               const spaceWidth = font.widthOfTextAtSize(' ', size);
               currX += spaceWidth;
-              remainingLine = remainingLine.trimStart();
+              remainingLine = remainingLine.slice(1);
             }
           } else {
+            // Draw normal text
             const nextSpace = remainingLine.indexOf(' ');
             const word = nextSpace === -1 ? remainingLine : remainingLine.slice(0, nextSpace);
             const displayWord = nextSpace === -1 ? word : word + ' ';
             const wordWidth = font.widthOfTextAtSize(displayWord, size);
+  
             page.drawText(displayWord, {
               x: currX,
               y: overrideY !== undefined ? overrideY : y,
@@ -304,34 +378,26 @@ const [isUploading, setIsUploading] = useState(false);
               font,
               color,
             });
+  
             currX += wordWidth;
             remainingLine = nextSpace === -1 ? '' : remainingLine.slice(nextSpace + 1);
           }
         }
+  
         if (overrideY === undefined) y -= lineHeight;
       });
     };
-
+  
     const logoWidth = 70;
     const logoHeight = 70;
     page.drawImage(logoImage, {
       x: margin,
-      y: height - margin - logoHeight,
+      y: height - margin - logoHeight+5,
       width: logoWidth,
       height: logoHeight,
     });
-
+  
     const textMaxWidth = width - margin * 3 - logoWidth;
-    drawText('डॉ बी आर अंबेडकर राष्ट्रीय प्रौद्योगिकी संस्थान जालंधर', {
-      font: unicodeFont,
-      size: 14,
-      align: 'left',
-      x: margin + logoWidth + 30,
-      maxWidth: textMaxWidth,
-      y: height - margin - 14,
-      lineHeight: 20,
-      wrap: false
-    });
     drawText('Dr B R Ambedkar National Institute of Technology, Jalandhar', {
       size: 13,
       align: 'left',
@@ -340,23 +406,23 @@ const [isUploading, setIsUploading] = useState(false);
       highlightPhrases: ['Dr B R Ambedkar', 'National Institute of Technology, Jalandhar'],
       maxWidth: textMaxWidth,
       x: margin + logoWidth + 30,
-      y: height - margin - 14 - 18,
+      y: height - margin - 14,
     });
     drawText('(An Institute of National Importance under Ministry of Education, Govt. of India)', {
       size: 10,
       align: 'left',
       maxWidth: textMaxWidth + 40,
-      x: margin + logoWidth + 30,
-      y: height - margin - 14 - 36,
+      x: margin + logoWidth + 30+10,
+      y: height - margin - 14 -18,
     });
     drawText('G T Road, Bye Pass, Jalandhar: 144027 (Punjab) India', {
       size: 10,
       align: 'left',
       maxWidth: textMaxWidth,
-      x: margin + logoWidth + 30,
-      y: height - margin - 14 - 54,
+      x: margin + logoWidth + 30+50,
+      y: height - margin - 14 - 18 - 18,
     });
-
+  
     drawLine(10);
     drawText('Training & Placement Centre', {
       size: 12,
@@ -367,7 +433,7 @@ const [isUploading, setIsUploading] = useState(false);
       highlightPhrases: ['Training & Placement Centre'],
     });
     drawLine(2);
-
+  
     const currentY = y;
     drawText(`Reference No. ${noc.nocId}`, {
       font: englishFont,
@@ -389,7 +455,7 @@ const [isUploading, setIsUploading] = useState(false);
     });
     y = currentY;
     drawLine(3);
-
+  
     drawText(`Subject: No Objection Certificate for Undergoing Internship at ${noc.companyName}`, {
       font: englishFont,
       size: 12,
@@ -398,7 +464,7 @@ const [isUploading, setIsUploading] = useState(false);
       underlinePhrases: [noc.companyName],
     });
     drawLine();
-
+  
     drawText('TO WHOMSOEVER, IT MAY CONCERN', {
       font: englishFont,
       align: 'center',
@@ -407,7 +473,7 @@ const [isUploading, setIsUploading] = useState(false);
       highlightPhrases: ['TO WHOMSOEVER, IT MAY CONCERN'],
     });
     drawLine();
-
+  
     drawText(
       `It is to certify that ${noc.salutation} ${noc.studentName}, with Roll No. ${noc.rollNo}, is currently studying in ${noc.course}, ${noc.year} Year, ${noc.semester} Semester, in the Department of ${noc.department} at Dr. B.R. Ambedkar National Institute of Technology (NIT) Jalandhar. The Centre for Training and Placement (CTP), NIT Jalandhar has no objection if ${noc.studentName} is allowed to undergo an internship at your esteemed organization from ${new Date(noc.internshipFrom).toLocaleDateString()} to ${new Date(noc.internshipTo).toLocaleDateString()}, for a duration of ${noc.internshipDuration}.`,
       {
@@ -419,13 +485,13 @@ const [isUploading, setIsUploading] = useState(false);
       }
     );
     drawLine();
-
+  
     drawText(
-      `This NOC has been issued upon the student’s request and is duly signed and stamped in its original form. It is valid only for the stated period and purpose. Furthermore, this NOC will be considered valid only if the student or an official from the company/industry/organization submits the student's joining letter to the CTP, NIT Jalandhar, within one week of receiving an offer based on this NOC. Failure to submit the joining letter will result in non-evaluation of internship/training for credit purposes. The permission is granted on the condition that the student will not seek any relaxation in academic activities due to this internship.`,
+      `This NOC has been issued upon the student's request and is duly signed and stamped in its original form. It is valid only for the stated period and purpose. Furthermore, this NOC will be considered valid only if the student or an official from the company/industry/organization submits the student's joining letter to the CTP, NIT Jalandhar, within one week of receiving an offer based on this NOC. Failure to submit the joining letter will result in non-evaluation of internship/training for credit purposes. The permission is granted on the condition that the student will not seek any relaxation in academic activities due to this internship.`,
       { font: englishFont, align: 'justify' }
     );
     drawLine(2);
-
+  
     drawText('Best regards,');
     drawLine(6);
     drawText(`Head\nDepartment of ${noc.department}`, {
@@ -434,16 +500,26 @@ const [isUploading, setIsUploading] = useState(false);
       highlightPhrases: ['Head', 'Department', 'of', noc.department],
     });
     drawLine(6);
-    drawText(
-      'Head, Internship\nCentre for Training and Placement\nDr. B.R. Ambedkar National Institute of Technology Jalandhar',
-      {
-        font: englishFont,
-        align: 'right',
-        boldFont: englishBoldFont,
-        highlightPhrases: ['Head, Internship', 'Centre for Training and Placement', 'Dr. B.R. Ambedkar National Institute of Technology Jalandhar'],
-      }
-    );
-
+  
+    // Fixed signature section with proper alignment
+    const signatureStartY = y;
+    drawText('Head, Internship', {
+      font: englishBoldFont,
+      align: 'right',
+      y: signatureStartY,
+    });
+    drawText('Centre for Training and Placement', {
+      font: englishBoldFont,
+      align: 'right',
+      y: signatureStartY - 18,
+    });
+    drawText('Dr. B.R. Ambedkar National Institute of Technology Jalandhar', {
+      font: englishBoldFont,
+      align: 'right',
+      y: signatureStartY - 36,
+    });
+    y = signatureStartY - 54;
+  
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const link = document.createElement('a');
