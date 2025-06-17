@@ -22,6 +22,21 @@ import {
   addNewProfessor,
   getProfessorById,
 } from "../controller/admin.js";
+import {
+  getAllDepartments,
+  updateDepartmentProfile,
+  deleteDepartmentProfiles,
+  addNewDepartment,
+  getDepartmentById,
+} from "../controller/Admin/Department.js";
+
+import{
+  getAllDevelopers,
+  updateDeveloperProfile,
+  deleteDeveloperProfiles,
+  addNewDeveloper,
+} from "../controller/Admin/Devteam.js";
+
 //job profile routes
 router.post("/jobprofiles", addJobProfile);
 router.get("/jobprofiles", getAllJobProfiles);
@@ -46,5 +61,17 @@ router.put("/professors/:id",updateProfessorProfile);
 router.post("/professors",addNewProfessor);
 router.delete("/professors", deleteProfessorProfiles);
 router.get("/professors/:id", getProfessorById);
+//department profile routes
+router.get("/departments", getAllDepartments);
+router.put("/departments/:id", updateDepartmentProfile);
+router.delete("/departments", deleteDepartmentProfiles);
+router.post("/departments", addNewDepartment);
+router.get("/departments/:id", getDepartmentById);
+
+//developer profile routes
+router.get("/devteam", getAllDevelopers);
+router.put("/devteam/:id", updateDeveloperProfile);
+router.delete("/devteam", deleteDeveloperProfiles);
+router.post("/devteam", addNewDeveloper);
 
 export default router;

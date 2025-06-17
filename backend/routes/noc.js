@@ -5,7 +5,7 @@ import fs from 'fs/promises'; // For async file operations
 import { existsSync, mkdirSync } from 'fs'; // Import synchronous methods
 const router = express.Router();
 
-import {createNOC, getAllNOCs, getNOCById, updateNOC, deleteNOC, uploadOfferLetter, getAllNOCstoprofessors} from '../controller/noc.js';
+import {createNOC, getAllNOCs, getNOCById, updateNOC, deleteNOC, uploadOfferLetter, getAllNOCstoprofessors, getAllNOCstodepartments} from '../controller/noc.js';
 
 const uploadDir = path.join(process.cwd(), 'uploads', 'offer-letters');
 if (!existsSync(uploadDir)) {
@@ -35,6 +35,7 @@ const upload = multer({
 router.post('/', createNOC);
 router.get('/', getAllNOCs);
 router.get('/getonp', getAllNOCstoprofessors);
+router.get('/getond', getAllNOCstodepartments);
 router.post('/upload-offer-letter/:id', upload.single('offerLetter'), uploadOfferLetter);
 router.get('/:id', getNOCById);
 router.put('/:id', updateNOC);

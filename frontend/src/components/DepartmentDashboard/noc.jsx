@@ -3,7 +3,7 @@ import axios from 'axios';
 import { FaDownload, FaEye, FaFastBackward, FaFastForward, FaTimes } from 'react-icons/fa';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import * as fontkit from 'fontkit';
-import NITJlogo from "../../assets/nitj-logo.png";
+import NITJlogo from '../../assets/nitj-logo.png';
 import NotoSansDevanagari from '../../assets/fonts/NotoSansDevanagari-Regular.ttf';
 
 const NOCManagement = () => {
@@ -23,7 +23,7 @@ const NOCManagement = () => {
     const fetchNOCs = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/noc/getonp`, {
+        const response = await axios.get(`${import.meta.env.REACT_APP_BASE_URL}/noc/getond`, {
           params: { page: currentPage, limit: nocsPerPage },
           withCredentials: true,
         });
@@ -109,7 +109,7 @@ const NOCManagement = () => {
     pdfDoc.registerFontkit(fontkit);
     const page = pdfDoc.addPage([595, 842]);
     const { width, height } = page.getSize();
-  
+
     const englishFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const englishBoldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
     const unicodeFont = await pdfDoc.embedFont(fontBuffer);
@@ -117,11 +117,11 @@ const NOCManagement = () => {
     const fontSize = 12;
     const margin = 50;
     let y = height - margin;
-  
+
     const drawLine = (space = 1) => {
       y -= space * 10;
     };
-  
+
     const wrapText = (text, font, fontSize, maxWidth) => {
       const lines = [];
       const paragraphs = text.split('\n');
@@ -290,7 +290,7 @@ const NOCManagement = () => {
       width: logoWidth,
       height: logoHeight,
     });
-  
+
     const textMaxWidth = width - margin * 3 - logoWidth;
     drawText('Dr. B.R. Ambedkar National Institute of Technology, Jalandhar', {
       size: 13,
@@ -315,7 +315,7 @@ const NOCManagement = () => {
       x: margin + logoWidth + 30 + 50,
       y: height - margin - 14 - 18 - 18,
     });
-  
+
     drawLine(10);
     drawText(`DEPARTMENT OF ${noc.department}`, {
       size: 12,
@@ -326,7 +326,7 @@ const NOCManagement = () => {
       highlightPhrases: [`DEPARTMENT OF ${noc.department}`],
     });
     drawLine(2);
-  
+
     const currentY = y;
     drawText(`Reference No. ${noc.nocId}`, {
       font: englishFont,
@@ -348,7 +348,7 @@ const NOCManagement = () => {
     });
     y = currentY;
     drawLine(3);
-  
+
     drawText(`Subject: No Objection Certificate for Undergoing Internship at ${noc.companyName}`, {
       font: englishFont,
       size: 12,
@@ -357,7 +357,7 @@ const NOCManagement = () => {
       underlinePhrases: [],
     });
     drawLine();
-  
+
     drawText('TO WHOMSOEVER, IT MAY CONCERN', {
       font: englishFont,
       align: 'center',
@@ -366,7 +366,7 @@ const NOCManagement = () => {
       highlightPhrases: ['TO WHOMSOEVER, IT MAY CONCERN'],
     });
     drawLine();
-  
+
     drawText(
       `It is to certify that ${noc.salutation} ${noc.studentName} , with Roll No. ${noc.rollNo}, is currently studying in ${noc.course}, ${noc.year} Year, ${noc.semester} Semester, in the Department of ${noc.department} at Dr. B.R. Ambedkar National Institute of Technology, Jalandhar. The Department of ${noc.department}, NIT Jalandhar has no objection if ${noc.studentName} is allowed to undergo an internship at your esteemed organization from ${new Date(noc.internshipFrom).toLocaleDateString()} to ${new Date(noc.internshipTo).toLocaleDateString()}, for a duration of ${noc.internshipDuration}.`,
       {
@@ -378,13 +378,13 @@ const NOCManagement = () => {
       }
     );
     drawLine();
-  
+
     drawText(
       `This NOC has been issued upon the student's request and is duly signed and stamped in its original form. It is valid only for the stated period and purpose. Furthermore, this NOC will be considered valid only if the student submits the joining letter to the their department, within one week of receiving an offer based on this NOC. Failure to submit the joining letter will result in non-evaluation of internship/training for credit purposes. The permission is granted on the condition that the student will not seek any relaxation in academic activities due to this internship.`,
       { font: englishFont, align: 'justify' }
     );
     drawLine(2);
-  
+
     drawText('Best regards,');
     drawLine(6);
     drawText('HEAD OF DEPARTMENT', {
@@ -432,29 +432,29 @@ const NOCManagement = () => {
     }
 
     return (
-      <div className="space-y-6 animate-fade-in">
-        <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold flex items-center space-x-3 text-gray-900">
-            <span>NOC <span className="text-custom-blue">Management</span></span>
-          </h2>
-          <div className="flex items-center space-x-3">
-            <input
-              type="text"
-              placeholder="Search by Roll No..."
-              value={searchQuery}
-              onChange={handleSearch}
-              className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-blue"
-            />
+      <div className="flex flex-col min-h-[calc(100vh-9rem)]">
+        <div className="mb-6 flex-grow">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-3xl font-bold flex items-center space-x-3 text-gray-900">
+              <span>NOC <span className="text-custom-blue">Management</span></span>
+            </h2>
+            <div className="flex items-center space-x-3">
+              <input
+                type="text"
+                placeholder="Search by Roll No..."
+                value={searchQuery}
+                onChange={handleSearch}
+                className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-custom-blue"
+              />
+            </div>
           </div>
-        </div>
-        {loading ? (
-          <div className="flex items-center justify-center min-h-[400px]">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-custom-blue"></div>
-          </div>
-        ) : filteredNocs?.length === 0 ? (
-          <p className="text-gray-600 italic">No NOCs available.</p>
-        ) : (
-          <>
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-custom-blue"></div>
+            </div>
+          ) : filteredNocs?.length === 0 ? (
+            <p className="text-gray-600 italic">No NOCs available.</p>
+          ) : (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {filteredNocs?.map((noc) => (
                 <div
@@ -498,7 +498,54 @@ const NOCManagement = () => {
                 </div>
               ))}
             </div>
-            <div className="flex items-center justify-between mt-6">
+          )}
+          {showContactPopup && selectedContact && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[2000]">
+              <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl relative transform transition-all animate-fade-in">
+                <button
+                  onClick={handleClosePopup}
+                  className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
+                  title="Close"
+                >
+                  <FaTimes size={20} />
+                </button>
+                <h3 className="text-xl font-bold text-gray-900 mb-4">Contact Person Information</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <span className="font-semibold text-gray-700">Name:</span>
+                    <span className="text-gray-600">{selectedContact.name}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-semibold text-gray-700">Designation:</span>
+                    <span className="text-gray-600">{selectedContact.designation}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-semibold text-gray-700">Email:</span>
+                    <a
+                      href={`mailto:${selectedContact.email}`}
+                      className="text-custom-blue hover:underline"
+                    >
+                      {selectedContact.email}
+                    </a>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-semibold text-gray-700">Phone:</span>
+                    <a
+                      href={`tel:${selectedContact.phone}`}
+                      className="text-custom-blue hover:underline"
+                    >
+                      {selectedContact.phone}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Pagination at the bottom */}
+        {!loading && filteredNocs?.length > 0 && (
+          <div className="mt-auto border-t border-gray-200 pt-4">
+            <div className="flex items-center justify-between">
               <span className="text-gray-600">
                 {startRange} - {endRange} / {totalItems}
               </span>
@@ -565,48 +612,6 @@ const NOCManagement = () => {
                 </div>
               </div>
             </div>
-          </>
-        )}
-        {showContactPopup && selectedContact && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[2000]">
-            <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-2xl relative transform transition-all animate-fade-in">
-              <button
-                onClick={handleClosePopup}
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-700"
-                title="Close"
-              >
-                <FaTimes size={20} />
-              </button>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Contact Person Information</h3>
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <span className="font-semibold text-gray-700">Name:</span>
-                  <span className="text-gray-600">{selectedContact.name}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-semibold text-gray-700">Designation:</span>
-                  <span className="text-gray-600">{selectedContact.designation}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-semibold text-gray-700">Email:</span>
-                  <a
-                    href={`mailto:${selectedContact.email}`}
-                    className="text-custom-blue hover:underline"
-                  >
-                    {selectedContact.email}
-                  </a>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="font-semibold text-gray-700">Phone:</span>
-                  <a
-                    href={`tel:${selectedContact.phone}`}
-                    className="text-custom-blue hover:underline"
-                  >
-                    {selectedContact.phone}
-                  </a>
-                </div>
-              </div>
-            </div>
           </div>
         )}
       </div>
@@ -614,7 +619,7 @@ const NOCManagement = () => {
   };
 
   return (
-    <div className="container mx-auto p-6 min-h-screen">
+    <div className="container mx-auto p-6">
       {toast.show && (
         <div
           className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg animate-fade-in-out z-[1000] ${

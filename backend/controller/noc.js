@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 import NOC from '../models/noc.js';
-import NOCIdTracker from '../models/nocidtracker.js';
+// import NOCIdTracker from '../models/nocidtracker.js';
+import Department from "../models/user_model/department.js";
 
 function getTodayDateString() {
   const today = new Date();
@@ -11,35 +12,36 @@ function getTodayDateString() {
 }
 
 export const createNOC = async (req, res) => {
-  console.log("req.body", req.body);
-  const session = await mongoose.startSession();
-  session.startTransaction();
+  // const session = await mongoose.startSession();
+  // session.startTransaction();
   try {
     const dateStr = getTodayDateString();
+    // let tracker = await NOCIdTracker.findOne({ date: dateStr }).session(session);
+    // if (!tracker) {
+    //   tracker = await NOCIdTracker.create([{ date: dateStr, lastNumber: 1898 }], { session });
+    //   tracker = tracker[0];
+    // }
 
-    let tracker = await NOCIdTracker.findOne({ date: dateStr }).session(session);
-    if (!tracker) {
-      tracker = await NOCIdTracker.create([{ date: dateStr, lastNumber: 1898 }], { session });
-      tracker = tracker[0];
-    }
+    // tracker.lastNumber += 1;
+    // await tracker.save({ session });
 
-    tracker.lastNumber += 1;
-    await tracker.save({ session });
-
-    const nocId = `NITJ/CTP/${dateStr}/${tracker.lastNumber}`;
+    // const nocId = `NITJ/NOC/${dateStr}/${tracker.lastNumber}`;
+    const nocId = `NITJ/NOC/${dateStr}/`;
     const studentId = req.user.userId;
 
     const newNOC = new NOC({ ...req.body, nocId, studentId });
-    await newNOC.save({ session });
+    // await newNOC.save({ session });
+    await newNOC.save();
 
-    await session.commitTransaction();
+    // await session.commitTransaction();
     res.status(201).json(newNOC);
   } catch (err) {
-    await session.abortTransaction();
-    res.status(500).json({ error: err.message });
-  } finally {
-    session.endSession();
+    // await session.abortTransaction();
+    res.status(500).json({ error: err.message }); 
   }
+  // finally {
+  //   session.endSession();
+  // }
 };
 export const uploadOfferLetter = async (req, res) => {
   try {
@@ -90,6 +92,37 @@ export const getAllNOCstoprofessors = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const nocs = await NOC.find()
+      .skip(skip)
+      .limit(limit);
+    
+    const total = await NOC.countDocuments();
+
+    res.status(200).json({
+      nocs,
+      total,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit)
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+export const getAllNOCstodepartments = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const departmentId = req.user.userId;
+    const departmentUser = await Department.findOne({ _id: departmentId });
+
+    if (!departmentUser) {
+      return res.status(404).json({ error: "Department not found" });
+    }
+    const filter = {
+      department: { $in: departmentUser.departments }
+    };
+
+    const nocs = await NOC.find(filter)
       .skip(skip)
       .limit(limit);
     

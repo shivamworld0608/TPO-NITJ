@@ -18,6 +18,7 @@ import Sdashboard from "./Pages/Sdashboard";
 import Rdashboard from "./Pages/Rdashboard";
 import Pdashboard from "./Pages/Pdashboard";
 import AdminDashboard from "./Pages/Admindashboard";
+import Ddashboard from "./Pages/Ddashboard";
 import Downloads from "./Pages/Downloads";
 import TeamPage from "./Pages/TeamPage";
 import FAQ from "./Pages/Faqs";
@@ -26,6 +27,7 @@ import ErrorPage from "./Pages/ErrorPage";
 import AlumniLogin from "./Pages/ALogin";
 import AssessmentAttemptPage from "./Pages/Mock-test";
 import WhyRecruitPage from "./Pages/WhyRecruitPage";
+import Placementstatistics from "./Pages/Placementstatistic";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -46,6 +48,8 @@ const App = () => {
           return "/rdashboard/home";
         case "Admin":
           return "/admindashboard/home";
+        case "Department":
+          return "/ddashboard/home";
         default:
           return "/";
       }
@@ -72,6 +76,7 @@ const App = () => {
           }
         />
         {/* <Route path="/signup" element={<Signup />} /> */}
+        <Route path="/placement-statistics" element={<Placementstatistics/>}/>
         <Route path="/placements" element={<Placement />} />
         <Route path="/internships" element={<Internship />} />
         <Route path="/recruiter" element={<Recruiter />} />
@@ -124,6 +129,16 @@ const App = () => {
           element={
             authUser && userType === "Professor" ? (
               <Pdashboard />
+            ) : (
+              <Navigate to={getDashboardPath()} />
+            )
+          }
+        />
+        <Route
+          path="/ddashboard/*"
+          element={
+            authUser && userType === "Department" ? (
+              <Ddashboard />
             ) : (
               <Navigate to={getDashboardPath()} />
             )

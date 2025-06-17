@@ -5,6 +5,12 @@ export default {
       colors: {
         "custom-blue":"#0369A0",
         },
+        fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+        grotesk: ['Space Grotesk', 'sans-serif'],
+        inter: ['Inter', 'sans-serif'],
+        outfit: ['Outfit', 'sans-serif'],
+      },
       animation: {
         verticalScroll: 'verticalScroll 10s linear infinite',
         'bounce-slow': 'bounce 3s infinite',

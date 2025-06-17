@@ -42,6 +42,7 @@ import questionbankRoutes from "./routes/questionbank.js";
 import mockassessmentRoutes from "./routes/mock-assessement.js"
 import brochureRoutes from "./routes/Brochure.js";
 import nocRoutes from "./routes/noc.js";
+import eventRoutes from "./routes/Event.js";
 
 import { mkdir } from 'fs/promises';
 try {
@@ -143,6 +144,7 @@ app.use('/mock-assessment',authenticate,mockassessmentRoutes);
 app.use('/attempt/:assessment',authenticate,mockassessmentRoutes);
 app.use('/admin/brochure',authenticate,brochureRoutes);
 app.use('/noc',authenticate,nocRoutes);
+app.use('/events',authenticate,eventRoutes);
 
 const port = process.env.PORT || 7000;
 app.listen(port,'0.0.0.0', () => {

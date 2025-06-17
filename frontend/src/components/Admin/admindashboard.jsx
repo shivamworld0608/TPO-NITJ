@@ -10,7 +10,9 @@ import {
   faChild,
   faUserTie,
   faBriefcase,
-  faPersonChalkboard
+  faPersonChalkboard,
+  faBuilding,
+  faCode,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { Menu, X, LogOut } from "lucide-react";
@@ -25,6 +27,8 @@ import StudentManager from "./students";
 import RecruiterManager from "./recruiter";
 import ProfessorManager from "./professor";
 import BrochureManager from "./brochure";
+import DepartmentManager from "./department";
+import DevteamManager from "./team";
 
 const Admindashboard = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -73,7 +77,9 @@ const Admindashboard = () => {
     { label: "Recruiter Management", icon: faUserTie, path: "/admindashboard/recruiters" },
     { label: "Student Management", icon: faChild, path: "/admindashboard/students" },
     { label: "Professor Management", icon: faPersonChalkboard, path: "/admindashboard/professor" },
+    { label: "Department Management", icon: faBuilding, path: "/admindashboard/department" },
     { label: "Brochure Management", icon: faBriefcase, path: "/admindashboard/brochure" },
+    { label: "Devteam Management", icon: faCode, path: "/admindashboard/devteam" },
   ];
 
 
@@ -144,13 +150,10 @@ const Admindashboard = () => {
             </button>
           ) : (
             <div className="flex items-center gap-4">
-              <span className="text-gray-600">👋 Hi, {userData.name}</span>
-              <img
-                onClick={() => navigate("/pdashboard/profile")}
-                src={userData?.image || ProfileImage}
-                alt="Profile"
-                className="w-8 h-8 rounded-full object-cover cursor-pointer"
-              />
+              <span className="font-inter text-gray-600 font-bold tracking-wide">Welcome  <span className="text-custom-blue">{userData.name} </span> 😊</span>
+              <div className="w-8 h-8 rounded-full bg-custom-blue flex items-center justify-center text-white font-bold">
+      {userData?.name?.charAt(0)?.toUpperCase() || "U"}
+    </div>
             </div>
           )}
         </div>
@@ -256,28 +259,35 @@ const Admindashboard = () => {
             <Route path="/students" element={<StudentManager />} />
             <Route path="/recruiters" element={<RecruiterManager />} />
             <Route path="/professor" element={<ProfessorManager />} />
+            <Route path="/department" element={<DepartmentManager/>} />
             <Route path="/brochure" element={<BrochureManager />} />
+            <Route path="/devteam" element={<DevteamManager />} />
             </Routes>
         </div>
 
         {/* Footer */}
-        <footer className="bg-slate-800 text-white p-4">
-          <div className="container mx-auto text-center">
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-              <span className="text-sm">
-                © Copyright 2022, All Rights Reserved NIT Jalandhar
-              </span>
-              <span 
-                onClick={() => {
-                  navigate("/team")
-                  onClick?.();
-                }}
-                className="text-yellow-300 hover:text-yellow-400 cursor-pointer">
-                Developed by Placement Portal Dev Team
-              </span>
-            </div>
-          </div>
-        </footer>
+        <footer className="bg-slate-800 text-white py-3">
+         <div className="container mx-auto text-center">
+           <div
+             onClick={() => {
+               navigate("/team");
+               onClick?.();
+             }}
+             className="group cursor-pointer inline-flex items-center justify-center gap-2 transition-all duration-300"
+           >
+             <FontAwesomeIcon
+               icon={faCode}
+               className="text-yellow-300 text-sm md:text-base group-hover:text-yellow-400 transition-all duration-300"
+             />
+             <span className="font-grotesk text-sm md:text-base text-gray-300 group-hover:text-yellow-400 tracking-wide">
+               Developed by
+             </span>
+             <span className="font-grotesk text-yellow-300 group-hover:text-yellow-400 font-semibold text-sm md:text-base  transition-all duration-300">
+               Placement Portal Dev Team
+             </span>
+           </div>
+         </div>
+       </footer>
       </main>
     </div>
   );

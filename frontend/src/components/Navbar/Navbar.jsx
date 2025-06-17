@@ -245,7 +245,7 @@ import {
   X,
 } from "lucide-react";
 
-import { FaGlobe } from "react-icons/fa";
+import { FaGlobe ,FaChartBar } from "react-icons/fa";
 import WhyRecruit from "../WhyRecruit";
 import Footer from "../footer";
 
@@ -306,6 +306,14 @@ const Navbar = () => {
             >
               <FaGlobe className="inline my-auto text-lg" />
               NITJ Website
+            </a>
+            <a
+              href="/placement-statistics"
+              target="_blank"
+              className="my-auto text-sm flex items-center gap-1"
+            >
+              <FaChartBar className="inline my-auto text-lg" />
+              Placement Statistics
             </a>
           </div>
         </div>

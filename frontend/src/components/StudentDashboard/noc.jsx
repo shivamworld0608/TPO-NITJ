@@ -19,7 +19,7 @@ const [isUploading, setIsUploading] = useState(false);
   const [formData, setFormData] = useState({
     companyName: '',
     dateSubmitted: '',
-    respondentEmail: '',
+    respondentEmail: userData?.email ||'',
     salutation: userData?.gender === 'female' ? 'Ms.' : 'Mr.',
     studentName: userData?.name || '',
     rollNo: userData?.rollno || '',
@@ -46,7 +46,7 @@ const [isUploading, setIsUploading] = useState(false);
     setFormData({
       companyName: '',
       dateSubmitted: '',
-      respondentEmail: '',
+      respondentEmail: userData?.email ||'',
       salutation: userData?.gender === 'female' ? 'Ms.' : 'Mr.',
       studentName: userData?.name || '',
       rollNo: userData?.rollno || '',
@@ -179,7 +179,7 @@ const [isUploading, setIsUploading] = useState(false);
   };
 
   // Generate and download PDF
-  const generatePDF = async (noc) => {
+const generatePDF = async (noc) => {
     const fontBuffer = await fetch(NotoSansDevanagari).then((res) => res.arrayBuffer());
     const logoBuffer = await fetch(NITJlogo).then((res) => res.arrayBuffer());
     const pdfDoc = await PDFDocument.create();
@@ -203,28 +203,30 @@ const [isUploading, setIsUploading] = useState(false);
       const lines = [];
       const paragraphs = text.split('\n');
       paragraphs.forEach((paragraph) => {
-        if (font.widthOfTextAtSize(paragraph, fontSize) <= maxWidth) {
-          lines.push(paragraph);
-        } else {
-          let currentLine = '';
-          let currentWidth = 0;
-          for (let char of paragraph) {
-            const charWidth = font.widthOfTextAtSize(char, fontSize);
-            if (currentWidth + charWidth <= maxWidth) {
-              currentLine += char;
-              currentWidth += charWidth;
-            } else {
-              lines.push(currentLine);
-              currentLine = char;
-              currentWidth = charWidth;
-            }
+        const words = paragraph.split(' ');
+        let currentLine = '';
+        let currentWidth = 0;
+
+        words.forEach((word, index) => {
+          const wordWithSpace = word + (index < words.length - 1 ? ' ' : '');
+          const wordWidth = font.widthOfTextAtSize(wordWithSpace, fontSize);
+
+          if (currentWidth + wordWidth <= maxWidth) {
+            currentLine += wordWithSpace;
+            currentWidth += wordWidth;
+          } else {
+            if (currentLine.trim()) lines.push(currentLine.trim());
+            currentLine = wordWithSpace;
+            currentWidth = wordWidth;
           }
-          if (currentLine) lines.push(currentLine);
-        }
+        });
+
+        if (currentLine.trim()) lines.push(currentLine.trim());
       });
+
       return lines;
     };
-  
+
     const drawText = (
       text,
       {
@@ -243,168 +245,144 @@ const [isUploading, setIsUploading] = useState(false);
       } = {}
     ) => {
       if (!text || typeof text !== 'string') return;
-      const lines = wrap && font !== unicodeFont ? wrapText(text, font, size, maxWidth) : [text];
-  
-      lines.forEach((line, lineIndex) => {
-        let x = overrideX !== undefined ? overrideX : margin;
-        const totalTextWidth = font.widthOfTextAtSize(line, size);
-  
-        // Calculate alignment
-        if (align === 'center') {
-          x = width / 2 - totalTextWidth / 2;
-        } else if (align === 'right') {
-          x = width - margin - totalTextWidth;
-        }
-  
-        // Handle justification
-        if (align === 'justify' && lineIndex < lines.length - 1 && line.trim().length > 0) {
-          const words = line.split(/\s+/).filter(word => word.length > 0);
-          if (words.length > 1) {
-            // Calculate total width of words and spaces
-            const totalWordsWidth = words.reduce((sum, word) => {
-              const wordFont = highlightPhrases.some(phrase => word.includes(phrase)) ? boldFont : font;
-              return sum + wordFont.widthOfTextAtSize(word, size);
-            }, 0);
-            const totalSpacesWidth = maxWidth - totalWordsWidth;
-            const spaceWidth = words.length > 1 ? totalSpacesWidth / (words.length - 1) : 0;
-  
-            let currentX = x;
-            words.forEach((word, wordIndex) => {
-              let wordFont = font;
-              let isHighlighted = false;
-              let isUnderlined = false;
-  
-              // Check for highlighted or underlined phrases
-              for (const phrase of highlightPhrases.concat(underlinePhrases)) {
-                if (word.includes(phrase)) {
-                  wordFont = highlightPhrases.includes(phrase) ? boldFont : font;
-                  isHighlighted = highlightPhrases.includes(phrase);
-                  isUnderlined = underlinePhrases.includes(phrase);
-                  break;
-                }
-              }
-  
-              const wordWidth = wordFont.widthOfTextAtSize(word, size);
-              page.drawText(word, {
-                x: currentX,
-                y: overrideY !== undefined ? overrideY : y,
-                size,
-                font: wordFont,
-                color,
-              });
-  
-              if (isUnderlined) {
-                page.drawLine({
-                  start: { x: currentX, y: (overrideY !== undefined ? overrideY : y) - 2 },
-                  end: { x: currentX + wordWidth, y: (overrideY !== undefined ? overrideY : y) - 2 },
-                  thickness: 1,
-                  color,
-                });
-              }
-  
-              currentX += wordWidth;
-              if (wordIndex < words.length - 1) {
-                currentX += spaceWidth;
-              }
-            });
-  
-            if (overrideY === undefined) y -= lineHeight;
-            return;
+
+      // STEP 1: Create segments for the entire text, identifying bold and underline phrases
+      const segments = [];
+      let remainingText = text;
+      let currentIndex = 0;
+
+      while (remainingText.length > 0) {
+        let matchIndex = remainingText.length;
+        let matchedPhrase = '';
+        let matchedType = ''; // 'bold' | 'underline' | 'normal'
+
+        // Check for matching phrases (bold or underline)
+        for (const phrase of [...highlightPhrases, ...underlinePhrases]) {
+          const index = remainingText.indexOf(phrase);
+          if (index !== -1 && index < matchIndex) {
+            matchIndex = index;
+            matchedPhrase = phrase;
+            matchedType = highlightPhrases.includes(phrase) && underlinePhrases.includes(phrase)
+  ? 'bold-underline'
+  : highlightPhrases.includes(phrase)
+  ? 'bold'
+  : 'underline';
+
           }
         }
-  
-        // Handle non-justified text or text with highlights
-        let remainingLine = line;
-        let currX = x;
-        while (remainingLine.length > 0) {
-          let matchedPhrase = null;
-          let matchedLength = 0;
-          let isHighlighted = false;
-          let isUnderlined = false;
-  
-          // Check for matching phrases at the start of remainingLine
-          for (const phrase of highlightPhrases.concat(underlinePhrases)) {
-            if (remainingLine.startsWith(phrase) && phrase?.length > matchedLength) {
-              matchedPhrase = phrase;
-              matchedLength = phrase.length;
-              isHighlighted = highlightPhrases.includes(phrase);
-              isUnderlined = underlinePhrases.includes(phrase);
-              break; // Found the longest matching phrase at this position
-            }
-          }
-  
-          if (matchedPhrase) {
-            // Draw highlighted/underlined phrase
-            const wordFont = isHighlighted ? boldFont : font;
-            const wordWidth = wordFont.widthOfTextAtSize(matchedPhrase, size);
-  
-            page.drawText(matchedPhrase, {
-              x: currX,
-              y: overrideY !== undefined ? overrideY : y,
-              size,
-              font: wordFont,
-              color,
-            });
-  
-            if (isUnderlined) {
-              page.drawLine({
-                start: { x: currX, y: (overrideY !== undefined ? overrideY : y) - 2 },
-                end: { x: currX + wordWidth, y: (overrideY !== undefined ? overrideY : y) - 2 },
-                thickness: 1,
-                color,
-              });
-            }
-  
-            currX += wordWidth;
-            remainingLine = remainingLine.slice(matchedPhrase.length);
-  
-            // Add space if there's more text
-            if (remainingLine.length > 0 && remainingLine[0] === ' ') {
-              const spaceWidth = font.widthOfTextAtSize(' ', size);
-              currX += spaceWidth;
-              remainingLine = remainingLine.slice(1);
-            }
-          } else {
-            // Draw normal text
-            const nextSpace = remainingLine.indexOf(' ');
-            const word = nextSpace === -1 ? remainingLine : remainingLine.slice(0, nextSpace);
-            const displayWord = nextSpace === -1 ? word : word + ' ';
-            const wordWidth = font.widthOfTextAtSize(displayWord, size);
-  
-            page.drawText(displayWord, {
-              x: currX,
-              y: overrideY !== undefined ? overrideY : y,
-              size,
-              font,
-              color,
-            });
-  
-            currX += wordWidth;
-            remainingLine = nextSpace === -1 ? '' : remainingLine.slice(nextSpace + 1);
-          }
+
+        if (matchIndex === 0) {
+          segments.push({ text: matchedPhrase, type: matchedType, startIndex: currentIndex });
+          currentIndex += matchedPhrase.length;
+          remainingText = remainingText.slice(matchedPhrase.length);
+        } else {
+          const endIndex = matchIndex === remainingText.length ? remainingText.length : matchIndex;
+          segments.push({ text: remainingText.slice(0, endIndex), type: 'normal', startIndex: currentIndex });
+          currentIndex += endIndex;
+          remainingText = remainingText.slice(endIndex);
         }
-  
-        if (overrideY === undefined) y -= lineHeight;
+      }
+
+// STEP 2: Split segments into lines while preserving styling
+const lines = [];
+const lineSegments = [];
+let currentLineSegments = [];
+let currentLineWidth = 0;
+
+for (const segment of segments) {
+  const words = segment.text.split(/(\s+)/); // Keep spaces
+  for (const word of words) {
+    if (word === '') continue;
+    const isSpace = /^\s+$/.test(word);
+    const fontToUse = segment.type.includes('bold') ? boldFont : font;
+    const wordWidth = fontToUse.widthOfTextAtSize(word, size);
+
+    if (wrap && !isSpace && currentLineWidth + wordWidth > maxWidth && currentLineSegments.length > 0) {
+      lines.push(currentLineSegments);
+      currentLineSegments = [];
+      currentLineWidth = 0;
+    }
+
+    currentLineSegments.push({
+      text: word,
+      font: fontToUse,
+      isUnderline: segment.type.includes('underline'),
+      isSpace,
+      width: wordWidth,
+    });
+    currentLineWidth += wordWidth;
+  }
+}
+
+if (currentLineSegments.length > 0) {
+  lines.push(currentLineSegments);
+}
+
+
+  // STEP 3: Draw each line with proper justification and styling
+  for (let i = 0; i < lines.length; i++) {
+  const line = lines[i];
+  const yPos = overrideY !== undefined ? overrideY : y;
+  const totalTextWidth = line.reduce((acc, w) => acc + w.width, 0);
+  const spaceCount = line.filter(w => w.isSpace).length;
+
+  const shouldJustify = align === 'justify' && spaceCount > 0 && i !== lines.length - 1;
+  const extraSpace = shouldJustify ? (maxWidth - totalTextWidth) / spaceCount : 0;
+
+  let x = overrideX !== undefined ? overrideX : margin;
+  if (align === 'center') {
+    x = width / 2 - totalTextWidth / 2;
+  } else if (align === 'right') {
+    x = width - margin - totalTextWidth;
+  }
+
+  let currentX = x;
+  for (const w of line) {
+    page.drawText(w.text, {
+      x: currentX,
+      y: yPos,
+      size,
+      font: w.font,
+      color,
+    });
+
+    if (w.isUnderline) {
+      page.drawLine({
+        start: { x: currentX, y: yPos - 3 }, // we can change offset of underline from here
+        end: { x: currentX + w.width, y: yPos - 3 },
+        thickness: 1,
+        color,
       });
+    }
+
+    currentX += w.width;
+    if (shouldJustify && w.isSpace) {
+      currentX += extraSpace;
+    }
+  }
+
+  if (overrideY === undefined) y -= lineHeight;
+}
+
     };
-  
+
     const logoWidth = 70;
     const logoHeight = 70;
     page.drawImage(logoImage, {
       x: margin,
-      y: height - margin - logoHeight+5,
+      y: height - margin - logoHeight + 7,
       width: logoWidth,
       height: logoHeight,
     });
   
     const textMaxWidth = width - margin * 3 - logoWidth;
-    drawText('Dr B R Ambedkar National Institute of Technology, Jalandhar', {
+    drawText('Dr. B.R. Ambedkar National Institute of Technology, Jalandhar', {
       size: 13,
       align: 'left',
       font: englishFont,
       boldFont: englishBoldFont,
-      highlightPhrases: ['Dr B R Ambedkar', 'National Institute of Technology, Jalandhar'],
-      maxWidth: textMaxWidth,
+      highlightPhrases: ['Dr. B.R. Ambedkar', 'National Institute of Technology, Jalandhar'],
+     
       x: margin + logoWidth + 30,
       y: height - margin - 14,
     });
@@ -412,25 +390,25 @@ const [isUploading, setIsUploading] = useState(false);
       size: 10,
       align: 'left',
       maxWidth: textMaxWidth + 40,
-      x: margin + logoWidth + 30+10,
-      y: height - margin - 14 -18,
+      x: margin + logoWidth + 30 + 10,
+      y: height - margin - 14 - 18,
     });
     drawText('G T Road, Bye Pass, Jalandhar: 144027 (Punjab) India', {
       size: 10,
       align: 'left',
       maxWidth: textMaxWidth,
-      x: margin + logoWidth + 30+50,
+      x: margin + logoWidth + 30 + 50,
       y: height - margin - 14 - 18 - 18,
     });
   
     drawLine(10);
-    drawText('Training & Placement Centre', {
+    drawText(`DEPARTMENT OF ${noc.department}`, {
       size: 12,
       align: 'center',
       font: englishFont,
       boldFont: englishBoldFont,
-      underlinePhrases: ['Training & Placement Centre'],
-      highlightPhrases: ['Training & Placement Centre'],
+      underlinePhrases: [`DEPARTMENT OF ${noc.department}`],
+      highlightPhrases: [`DEPARTMENT OF ${noc.department}`],
     });
     drawLine(2);
   
@@ -439,7 +417,7 @@ const [isUploading, setIsUploading] = useState(false);
       font: englishFont,
       size: 12,
       highlightPhrases: ['Reference No.'],
-      underlinePhrases: [noc.nocId],
+      underlinePhrases: [],
       y: currentY,
     });
     drawText(`Date: ${new Date(noc.dateSubmitted).toLocaleDateString('en-GB', {
@@ -461,7 +439,7 @@ const [isUploading, setIsUploading] = useState(false);
       size: 12,
       boldFont: englishBoldFont,
       highlightPhrases: [noc.companyName, 'Subject:'],
-      underlinePhrases: [noc.companyName],
+      underlinePhrases: [],
     });
     drawLine();
   
@@ -475,58 +453,49 @@ const [isUploading, setIsUploading] = useState(false);
     drawLine();
   
     drawText(
-      `It is to certify that ${noc.salutation} ${noc.studentName}, with Roll No. ${noc.rollNo}, is currently studying in ${noc.course}, ${noc.year} Year, ${noc.semester} Semester, in the Department of ${noc.department} at Dr. B.R. Ambedkar National Institute of Technology (NIT) Jalandhar. The Centre for Training and Placement (CTP), NIT Jalandhar has no objection if ${noc.studentName} is allowed to undergo an internship at your esteemed organization from ${new Date(noc.internshipFrom).toLocaleDateString()} to ${new Date(noc.internshipTo).toLocaleDateString()}, for a duration of ${noc.internshipDuration}.`,
+      `It is to certify that ${noc.salutation} ${noc.studentName} , with Roll No. ${noc.rollNo}, is currently studying in ${noc.course}, ${noc.year} Year, ${noc.semester} Semester, in the Department of ${noc.department} at Dr. B.R. Ambedkar National Institute of Technology, Jalandhar. The Department of ${noc.department}, NIT Jalandhar has no objection if ${noc.studentName} is allowed to undergo an internship at your esteemed organization from ${new Date(noc.internshipFrom).toLocaleDateString()} to ${new Date(noc.internshipTo).toLocaleDateString()}, for a duration of ${noc.internshipDuration}.`,
       {
         font: englishFont,
         align: 'justify',
         boldFont: englishBoldFont,
-        highlightPhrases: [noc.salutation, noc.studentName, noc.rollNo, noc.course, noc.year, noc.semester, noc.companyName, new Date(noc.internshipFrom).toLocaleDateString(), new Date(noc.internshipTo).toLocaleDateString(), noc.internshipDuration, 'Dr. B.R. Ambedkar National Institute of Technology (NIT) Jalandhar'],
+        highlightPhrases: [noc.salutation, noc.studentName, noc.rollNo, noc.course, noc.year, noc.semester, noc.department, noc.companyName, new Date(noc.internshipFrom).toLocaleDateString(), new Date(noc.internshipTo).toLocaleDateString(), noc.internshipDuration],
         underlinePhrases: [],
       }
     );
     drawLine();
   
     drawText(
-      `This NOC has been issued upon the student's request and is duly signed and stamped in its original form. It is valid only for the stated period and purpose. Furthermore, this NOC will be considered valid only if the student or an official from the company/industry/organization submits the student's joining letter to the CTP, NIT Jalandhar, within one week of receiving an offer based on this NOC. Failure to submit the joining letter will result in non-evaluation of internship/training for credit purposes. The permission is granted on the condition that the student will not seek any relaxation in academic activities due to this internship.`,
+      `This NOC has been issued upon the student's request and is duly signed and stamped in its original form. It is valid only for the stated period and purpose. Furthermore, this NOC will be considered valid only if the student submits the joining letter to the their department, within one week of receiving an offer based on this NOC. Failure to submit the joining letter will result in non-evaluation of internship/training for credit purposes. The permission is granted on the condition that the student will not seek any relaxation in academic activities due to this internship.`,
       { font: englishFont, align: 'justify' }
     );
     drawLine(2);
   
     drawText('Best regards,');
     drawLine(6);
-    drawText(`Head\nDepartment of ${noc.department}`, {
+    drawText('HEAD OF DEPARTMENT', {
       font: englishFont,
       boldFont: englishBoldFont,
-      highlightPhrases: ['Head', 'Department', 'of', noc.department],
+      highlightPhrases: ['HEAD OF DEPARTMENT'],
+    });
+    drawText(`${noc.department}`, {
+      font: englishFont,
+      boldFont: englishBoldFont,
+      highlightPhrases: [`${noc.department}`],
+    });
+     drawText('NIT JALANDHAR', {
+      font: englishFont,
+      boldFont: englishBoldFont,
+      highlightPhrases: ['NIT JALANDHAR'],
     });
     drawLine(6);
-  
-    // Fixed signature section with proper alignment
-    const signatureStartY = y;
-    drawText('Head, Internship', {
-      font: englishBoldFont,
-      align: 'right',
-      y: signatureStartY,
-    });
-    drawText('Centre for Training and Placement', {
-      font: englishBoldFont,
-      align: 'right',
-      y: signatureStartY - 18,
-    });
-    drawText('Dr. B.R. Ambedkar National Institute of Technology Jalandhar', {
-      font: englishBoldFont,
-      align: 'right',
-      y: signatureStartY - 36,
-    });
-    y = signatureStartY - 54;
-  
+
     const pdfBytes = await pdfDoc.save();
     const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = `NOC_${noc.studentName}_${noc.nocId}.pdf`;
     link.click();
-  };
+};
 
   const renderNOCList = () => (
     <div className="space-y-6 animate-fade-in">
@@ -729,6 +698,20 @@ const [isUploading, setIsUploading] = useState(false);
                   disabled
                 />
               </div>
+               <div>
+                <label className="block text-sm font-medium text-gray-600">
+                  Respondent Email <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  name="respondentEmail"
+                  value={formData.respondentEmail}
+                  onChange={handleInputChange}
+                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  required
+                  disabled
+                />
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600">
                   Year <span className="text-red-500">*</span>
@@ -763,23 +746,9 @@ const [isUploading, setIsUploading] = useState(false);
                   <option value="6th">6th</option>
                 </select>
               </div>
-              
               <div>
                 <label className="block text-sm font-medium text-gray-600">
-                  Company Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="companyName"
-                  value={formData.companyName}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-600">
-                  Date Submitted <span className="text-red-500">*</span>
+                  Date Submitted <span className='text-xs'>(When submitted to Department)</span> <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
@@ -792,12 +761,12 @@ const [isUploading, setIsUploading] = useState(false);
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600">
-                  Respondent Email <span className="text-red-500">*</span>
+                  Company Name <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="email"
-                  name="respondentEmail"
-                  value={formData.respondentEmail}
+                  type="text"
+                  name="companyName"
+                  value={formData.companyName}
                   onChange={handleInputChange}
                   className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
                   required
@@ -849,7 +818,7 @@ const [isUploading, setIsUploading] = useState(false);
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-600">
-                  Contact Person Name <span className="text-red-500">*</span>
+                  Name of Contact Person from Company <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"

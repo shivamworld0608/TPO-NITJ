@@ -3,6 +3,7 @@ import Professor from "../models/user_model/professor.js";
 import Student from "../models/user_model/student.js";
 import Alumni from "../models/user_model/alumni.js";
 import Admin from "../models/user_model/admin.js";
+import Department from "../models/user_model/department.js"
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import nodemailer from "nodemailer";
@@ -170,12 +171,13 @@ export const LockedResendOTP = async (req, res) => {
           const professor = await Professor.findOne({ email });
           const alumni = await Alumni.findOne({ email });
           const admin = await Admin.findOne({ email });
+          const department = await Department.findOne({ email });
   
-          if (!student && !recuiter && !professor && !alumni && !admin) {
+          if (!student && !recuiter && !professor && !alumni && !admin && !department) {
               return res.status(401).json({ message: "Email is not Registered" });
           }
   
-          const user = student || recuiter || professor || alumni || admin;
+          const user = student || recuiter || professor || alumni || admin || department;
   
           let isPasswordValid;
           if (user.password.startsWith('$2')) {
@@ -235,6 +237,7 @@ export const LockedResendOTP = async (req, res) => {
           else if (user == professor) userType = "Professor";
           else if (user == alumni) userType = "Alumni";
           else if (user == admin) userType = "Admin";
+          else if (user == department) userType = "Department";
   
           const token = jwt.sign({ userId: user._id, userType: userType }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
           if (!token) {

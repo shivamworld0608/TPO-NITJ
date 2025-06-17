@@ -50,16 +50,16 @@ const PlacementHighlights = () => {
 
     // Faster update speed for totalOffers
     const updateTotalOffers = setInterval(
-      () => setTotalOffers((prev) => (prev < 450 ? prev + 5 : 450)),
+      () => setTotalOffers((prev) => (prev < 450 ? prev + 5 : 1005)),
       10
     );
 
     const counters = [
-      updateValues(setPlacementRate, 95),
+      updateValues(setPlacementRate, 91.88),
       updateValues(setHighestPackage, 1.2),
-      updateValues(setAveragePackage, 17),
+      updateValues(setAveragePackage, 11.68),
       updateValues(setInternshipConversion, 90),
-      updateValues(setCompaniesVisited, 150),
+      updateValues(setCompaniesVisited, 266),
     ];
 
     return () => {
@@ -69,16 +69,16 @@ const PlacementHighlights = () => {
   }, []);
 
   const barData = {
-    labels: ["2021", "2022", "2023"],
+    labels: ["2023", "2024", "2025"],
     datasets: [
       {
-        label: "Placement Rate (%)",
-        data: [90, 92, 95],
+        label: "Placement Percentage (%)",
+        data: [80.63, 88.78, 91.88],
         backgroundColor: ["#3b82f6", "#10b981", "#facc15"],
       },
       {
         label: "Average Package (LPA)",
-        data: [8, 10, 16],
+        data: [10.41, 9.78, 9.78],
         backgroundColor: ["#2563eb", "#059669", "#f59e0b"],
       },
     ],
@@ -88,18 +88,14 @@ const PlacementHighlights = () => {
     labels: [
       "IT",
       "Core Engineering",
-      "Finance",
-      "Consulting",
       "Other Sectors",
     ],
     datasets: [
       {
-        data: [40, 25, 15, 10, 10],
+        data: [48, 39, 13],
         backgroundColor: [
           "#2563eb",
           "#10b981",
-          "#facc15",
-          "#f97316",
           "#db2777",
         ],
         hoverOffset: 6,
@@ -109,7 +105,7 @@ const PlacementHighlights = () => {
 
   const cardsData = [
     {
-      title: "Placement Rate",
+      title: "Placement Percentage",
       value: `${placementRate}%`,
       icon: <FaBriefcase className="text-4xl mx-auto" />,
       bgColor: "bg-blue-100",
