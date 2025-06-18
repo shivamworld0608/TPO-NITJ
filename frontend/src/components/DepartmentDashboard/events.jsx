@@ -557,6 +557,20 @@ const EventManager = () => {
                 />
               </div>
               <div>
+                <label className="block text-sm font-medium text-gray-600">
+                  Venue <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="venue"
+                  value={form.venue}
+                  onChange={handleChange}
+                  placeholder="e.g., 10:00 AM - 12:00 PM"
+                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:ring-custom-blue focus:border-custom-blue"
+                  required
+                />
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-gray-600">Upload Image</label>
                 <input
                   type="file"
