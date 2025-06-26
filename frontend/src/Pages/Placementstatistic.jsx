@@ -8,6 +8,14 @@ const Placementstatistics = () => {
 
   const batches = ['2025','2024', '2023', '2022', '2021'];
 
+  const batchImages = {
+  '2025': '/stats/2021-25.png',
+  '2024': '/stats/2020-24.png',
+  '2023': '/stats/2019-23.png', 
+  '2022': '/stats/2018-22.png',
+  '2021': '/stats/2017-21.png'
+};
+
   // Data for all years (same as before)
   const yearlyData = {
     '2025': {
@@ -45,7 +53,7 @@ const Placementstatistics = () => {
       ],
       summaryStats: {
         percentagePlacement: '91.88 %',
-        totalOffers: '1005',
+        totalOffers: '1003',
         maxCTC: '52 LPA',
         avgCTC: '9.78 LPA'
       },
@@ -233,7 +241,7 @@ const Placementstatistics = () => {
     return (
       <div className="mt-6">
         <h3 className="text-xl font-semibold text-gray-800 mb-4">
-          Companies Visited ({selectedBatch} Batch)
+          Companies Visited <span className='text-custom-blue text-sm'>( for {`${parseInt(selectedBatch) - 4}-${selectedBatch.slice(2)}`} Batch)</span>
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
           {companiesToShow.map((company, index) => (
@@ -283,7 +291,7 @@ const Placementstatistics = () => {
                       : 'bg-white text-gray-600 border-2 border-gray-200 hover:border-blue-300'
                   }`}
                 >
-                  {batch} Batch
+                  {`${parseInt(batch) - 4}-${batch.slice(2)}`} Batch
                 </button>
               ))}
             </div>
@@ -315,7 +323,7 @@ const Placementstatistics = () => {
             {/* UG Percentage Placement Chart */}
             <div className="bg-white rounded-xl p-6" style={{ boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.2)' }}>
               <h3 className="text-lg font-semibold text-gray-800 mb-8">
-                UG Percentage Placement ({selectedBatch}-{(parseInt(selectedBatch) + 1).toString().slice(-2)})
+                UG Percentage Placement ({(parseInt(selectedBatch) - 1)}-{(selectedBatch).slice(-2)})
               </h3>
               <ResponsiveContainer width="100%" height={400}>
                 <BarChart
@@ -395,6 +403,38 @@ const Placementstatistics = () => {
             </ResponsiveContainer>
           </div>
           
+
+       {/* Batch Image Section - Responsive */}
+<div className="bg-white rounded-xl px-2 py-6 mt-8" style={{ boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.2)' }}>
+  <div className="flex justify-center px-4">
+    <div className="w-full max-w-7xl">
+      <img
+        src={batchImages[selectedBatch]}
+        alt={`Batch ${parseInt(selectedBatch) - 4}-${selectedBatch.slice(2)} highlights`}
+        className="w-full object-contain rounded-xl shadow-lg border border-gray-200"
+        style={{ maxHeight: '400px', width: '100%', height: 'auto' }}
+        onError={(e) => {
+          e.target.style.display = 'none';
+          e.target.nextSibling.style.display = 'flex';
+        }}
+      />
+      {/* Fallback placeholder */}
+      <div 
+        className="hidden w-full bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl items-center justify-center border-2 border-dashed border-custom-blue"
+        style={{ display: 'none', height: '300px' }}
+      >
+        <div className="text-center text-custom-blue font-semibold">
+          <div className="text-5xl mb-4">🎓</div>
+          <p className="text-xl font-semibold">Batch {`${parseInt(selectedBatch) - 4}-${selectedBatch.slice(2)}`}</p>
+          <p className="text-sm mt-2">Image Coming Soon</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
           {/* Companies Section */}
           <div className="bg-white rounded-xl p-6 mt-8" style={{ boxShadow: '0 0 10px 0 rgba(0, 0, 0, 0.2)' }}>
             {renderCompanies()}

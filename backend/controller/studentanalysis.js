@@ -292,16 +292,16 @@ export const updateOfferTracker = async (req, res) => {
     }
 
     const validOfferTypes = ['Intern', 'Intern+PPO', 'Intern+FTE', 'FTE'];
-    const validCategories = ['Not Considered', 'Below Dream', 'Dream', 'Super Dream'];
+    // const validCategories = ['Not Considered', 'Below Dream', 'Dream', 'Super Dream'];
     const validSectors = ['PSU', 'Private'];
 
     for (const offerItem of offer) {
       if (!validOfferTypes.includes(offerItem.offer_type)) {
         return res.status(400).json({ message: `Invalid offer type: ${offerItem.offer_type}` });
       }
-      if (!validCategories.includes(offerItem.offer_category)) {
-        return res.status(400).json({ message: `Invalid offer category: ${offerItem.offer_category}` });
-      }
+    //   if (!validCategories.includes(offerItem.offer_category)) {
+    //     return res.status(400).json({ message: `Invalid offer category: ${offerItem.offer_category}` });
+    //   }
       if (!validSectors.includes(offerItem.offer_sector)) {
         return res.status(400).json({ message: `Invalid offer sector: ${offerItem.offer_sector}` });
       }

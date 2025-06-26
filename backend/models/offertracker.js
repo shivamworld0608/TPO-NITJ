@@ -13,12 +13,15 @@ const OfferTrackerSchema = new mongoose.Schema(
         },
         offer_category:{
             type:String,
-            enum:['Not Considered','Below Dream','Dream','Super Dream']
+            // enum:['Not Considered','Below Dream','Dream','Super Dream']
         },
         offer_sector:{
             type:String,
             enum:['PSU','Private'],
             default:'Private'
+        },
+        offer_ctc:{
+            type:String,
         },
         jobId:{
             type: mongoose.Schema.Types.ObjectId,
