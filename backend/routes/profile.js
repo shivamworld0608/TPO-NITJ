@@ -9,7 +9,7 @@ import url from 'url';
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const baseDir = path.join(__dirname, '..');
-const uploadsDir = path.join(baseDir, 'uploads');
+const uploadsDir = path.join(baseDir, 'uploads','profile');
 if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
             if (!student || !student.rollno) {
                 return cb(new Error('Student or roll number not found'));
             }
-
+           console.log("student info",student);
             const rollNo = student.rollno;
             const baseFilename = `${rollNo}_profilepic`;
             const newFilename = `${baseFilename}${path.extname(file.originalname)}`;

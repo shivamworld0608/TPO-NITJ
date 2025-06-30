@@ -1,5 +1,11 @@
 import express from "express";
 const router = express.Router();
+
+import multer from "multer";
+import path from "path";
+import fs from "fs";
+
+
 import {
   addJobProfile,
   getAllJobProfiles,
@@ -37,6 +43,23 @@ import{
   addNewDeveloper,
 } from "../controller/Admin/Devteam.js";
 
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadPath = "uploads/developers";
+    fs.mkdirSync(uploadPath, { recursive: true });
+    cb(null, uploadPath);
+  },
+  filename: function (req, file, cb) {
+    const ext = path.extname(file.originalname);
+    const name = file.fieldname + "-" + Date.now() + ext;
+    cb(null, name);
+  }
+});
+
+const upload = multer({ storage });
+
+
 //job profile routes
 router.post("/jobprofiles", addJobProfile);
 router.get("/jobprofiles", getAllJobProfiles);
@@ -70,8 +93,8 @@ router.get("/departments/:id", getDepartmentById);
 
 //developer profile routes
 router.get("/devteam", getAllDevelopers);
-router.put("/devteam/:id", updateDeveloperProfile);
+router.put("/devteam/:id",upload.single("imageFile"), updateDeveloperProfile);
 router.delete("/devteam", deleteDeveloperProfiles);
-router.post("/devteam", addNewDeveloper);
+router.post("/devteam",upload.single("imageFile"), addNewDeveloper);
 
 export default router;

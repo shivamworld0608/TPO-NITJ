@@ -1,4 +1,6 @@
 import Devteam from '../../models/devteam.js';
+import fs from 'fs';
+import path from 'path';
 
 export const getAllDevelopers = async (req, res) => {
   try {
@@ -12,11 +14,25 @@ export const getAllDevelopers = async (req, res) => {
 export const updateDeveloperProfile = async (req, res) => {
   const { id } = req.params;
   const updateData = req.body;
-
-  try {
-    const updatedProfile = await Devteam.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
+try {
+  const existingProfile = await Devteam.findById(id);
+  if (!existingProfile) {
+    return res.status(404).json({ message: "Developer profile not found" });
+  }
+  if (req.file) {
+   if (existingProfile.image) {
+        const oldImagePath = path.join(process.cwd(), existingProfile.image);
+        fs.unlink(oldImagePath, (err) => {
+          if (err) {
+            console.error("Failed to delete old image:", err.message);
+          }
+        });
+      }
+    updateData.image = `/uploads/developers/${req.file.filename}`;
+  }
+  const updatedProfile = await Devteam.findByIdAndUpdate(id, updateData, {
+    new: true,
+  });
     if (!updatedProfile) {
       return res.status(404).json({ message: "Developer profile not found" });
     }
@@ -62,9 +78,11 @@ export const deleteDeveloperProfiles = async (req, res) => {
 };
 
 export const addNewDeveloper = async (req, res) => {
-  const developerData = req.body;
-
   try {
+    const developerData = req.body;
+    if (req.file) {
+      developerData.image = `/uploads/developers/${req.file.filename}`;
+    }
     const newDeveloper = new Devteam(developerData);
     const savedDeveloper = await newDeveloper.save();
     res.status(201).json(savedDeveloper);

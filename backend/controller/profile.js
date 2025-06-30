@@ -101,7 +101,7 @@ export const updatesProfile = async (req, res) => {
   export const handlesProfilePhoto = async (req, res) => {
     try {
         const student = await Student.findOne({ _id: req.user.userId });
-        const imagePath = `/uploads/${req.file.filename}`;
+        const imagePath = `/uploads/profile/${req.file.filename}`;
         student.image = imagePath;
         await student.save();
         res.json({ 

@@ -64,32 +64,10 @@ export const deleteDepartmentProfiles = async (req, res) => {
 
 export const addNewDepartment = async (req, res) => {
   try {
-    //create a new Department document
     const newDepartment = new Department(req.body);
-
-    //save the new Department to the database
     const savedDepartment = await newDepartment.save();
-
-    //respond with the created student
     res.status(201).json(savedDepartment);
   } catch (error) {
-    //handle validation errors or database errors
-    if (error.name === 'ValidationError') {
-      //if there are validation errors
-      return res.status(400).json({ 
-        message: "Invalid Department data", 
-        errors: error.errors 
-      });
-    }
-
-    //handle duplicate key errors
-    if (error.code === 11000) {
-      return res.status(409).json({ 
-        message: "A Department with this identifier already exists" 
-      });
-    }
-
-    //server error for other types of errors
     res.status(500).json({ 
       message: "Error creating new Department profile", 
       error: error.message 

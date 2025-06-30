@@ -33,8 +33,11 @@ const DeveloperSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['Coordinator','Developer Team Lead','Developer'],
+    // enum: ['Coordinator','Developer Team Lead','Developer'],
   },
+  designation:{
+    type: String,
+  }
 });
 
 const Devteam= mongoose.model('Devteam', DeveloperSchema);
