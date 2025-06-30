@@ -25,12 +25,12 @@ const Footer = () => {
             </div>
             <div className="flex flex-row pb-[6px]">
               <i className="fas fa-envelope mt-1 pr-[8px]"></i>
-              <h3 className="opacity-90">webmaster@nitj.ac.in</h3>
+              <h3 className="opacity-90">ctp@nitj.ac.in</h3>
             </div>
             <div className="align-center flex flex-row pb-[14px]">
               <i className="fas fa-phone mt-1 pr-[8px]"></i>
               <h3 className="opacity-90">
-                +91-0181-5037855, 2690301, 2690453, 3082000
+                +91-7579279839, 9501030373, 9888813400
               </h3>
             </div>
             <div id="social-links" className="flex flex-col bg-slate-800">
@@ -75,7 +75,7 @@ const Footer = () => {
           <div className="flex flex-row p-[15px] gap-3">
             {[
               [
-                { text: "Admission", href: "https://www.nitj.ac.in/admissions/index.html#btech" },
+                { text: "Placement Stats", href: "https://ctp.nitj.ac.in/placement-statistics" },
                 { text: "UnderGrad Courses", href: "https://www.nitj.ac.in/admissions/courses_offered.html" },
                 { text: "PostGrad Courses", href: "https://www.nitj.ac.in/admissions/courses_offered.html" },
                 { text: "Departments", href: "https://www.nitj.ac.in/admin/BTech.html" },
@@ -84,8 +84,8 @@ const Footer = () => {
                 { text: "Campus Life", href: "https://www.nitj.ac.in/#campus-life" },
               ],
               [
-                { text: "Faculty", href: "https://nitj.irins.org/" },
-                { text: "Staff", href: "https://www.nitj.ac.in/admin/phonebook.html" },
+                { text: "Brochures", href: "https://ctp.nitj.ac.in/departmental-brochure" },
+                { text: "Placement Cell", href: "https://ctp.nitj.ac.in/team" },
                 { text: "Recruitment", href: "https://www.nitj.ac.in/template/index.html?id=6709163583b910f5bc5e2cf1?category=newpage" },
                 { text: "Research", href: "https://www.nitj.ac.in/research/researchProjects.html" },
                 { text: "Patent", href: "https://www.nitj.ac.in/research/iprs.html" },
