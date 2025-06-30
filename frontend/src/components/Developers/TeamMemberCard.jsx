@@ -1,16 +1,17 @@
 import React from 'react';
 import {  FaGithub, FaEnvelope, FaPhone, FaGlobe, FaLinkedinIn, FaFileAlt,FaInstagram } from 'react-icons/fa';
 
-const TeamMemberCard = ({ image, name, department,batch, linkedinUrl, githubUrl, email, mobile, website,resumeUrl,role }) => (
+const TeamMemberCard = ({ image, name, department,batch, linkedinUrl, githubUrl, email, mobile, website,resumeUrl,role,designation }) => (
     <div className="w-96 h-auto rounded-2xl shadow-lg bg-white p-6 flex flex-col items-center space-y-4 transform hover:scale-105 transition-all duration-300">
          <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-transparent shadow-md bg-gradient-to-r from-purple-400  to-blue-400 animate-border">
             <img
-                src={image || "/api/placeholder/150/150"}
+                src={`${import.meta.env.REACT_APP_BASE_URL}${image}`|| "/api/placeholder/150/150"}
                 alt={name}
                 className="w-full h-full object-cover"
             />
         </div>
-        <h3 className="text-2xl font-bold text-gray-900 text-center">{name}</h3>
+        <h3 className="text-2xl font-bold font-inter text-gray-900 text-center">{name}</h3>
+        {(role=='Coordinator') && <p className="text-gray-700 text-lg font-grotesk text-center">{designation}</p>}
         {(role=="Developer Team Lead" || role=="Developer") && <p className="text-gray-600 text-xl font-semibold text-center">{department}&apos;{batch}</p>}
         {/* <p className="text-gray-600 text-xl font-semibold text-center">{batch}</p> */}
         <div className="flex  mt-2">

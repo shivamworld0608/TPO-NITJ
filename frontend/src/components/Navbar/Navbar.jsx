@@ -433,10 +433,10 @@ const Navbar = () => {
             {/* Desktop Navigation - Right Side */}
             <div className="hidden md:flex items-center space-x-6 flex-1 justify-evenly font-semibold">
               <Link
-                to="/faq"
+                to="/placement-statistics"
                 className="hover:text-blue-200 text-base lg:text-lg"
               >
-                FAQ's
+                PLACEMENT-STATS
               </Link>
               <Link
                 to="/team"

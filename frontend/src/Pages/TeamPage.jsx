@@ -78,26 +78,25 @@ const TeamPage = () => {
                 <div className='flex justify-end'>
 
                 <div className="flex border-2 border-gray-300 rounded-3xl bg-white ">
-
-                <button
+                    <button
                         className={`px-4 py-2 rounded-3xl ${
                             activeTab === false
                             ? "bg-custom-blue text-white"
                             : "bg-white"
                         }`}
                         onClick={() => setActiveTab(false)}
-                        >
-                        Dev Team
+                        >   
+                        Placement Cell
                     </button>
-                    <button
+                <button
                         className={`px-4 py-2 rounded-3xl ${
                             activeTab === true
                             ? "bg-custom-blue text-white"
                             : "bg-white"
                         }`}
                         onClick={() => setActiveTab(true)}
-                        >   
-                        Coordinators
+                        >
+                        Dev Team
                     </button>
                         </div>
                         </div>
@@ -105,12 +104,12 @@ const TeamPage = () => {
                 <div className="space-y-16">
                     {
                         activeTab ? (
-                            <TeamSection title="Coordinator" members={teamData.coordinator} />
-                        ):(
                             <div>
                                 <TeamSection title="Developer Team Lead" members={teamData.devTeam} />
                                 <TeamSection title="Other Developers" members={teamData.developers} />                               
                             </div>
+                        ):(
+                            <TeamSection title="Placement Cell Committee" members={teamData.coordinator} />
                         )
                     }
                 </div>

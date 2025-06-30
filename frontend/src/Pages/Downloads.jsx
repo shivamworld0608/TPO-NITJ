@@ -181,7 +181,7 @@ export default function DepartmentCards() {
       <Header />
       <div className="min-h-screen bg-gray-50 py-12 px-4">
         <h1 className="text-4xl font-bold text-center mb-16 text-gray-800">
-          Departmental <span className="text-custom-blue">Brochures</span>
+         Institute & Departmental <span className="text-custom-blue">Brochures</span>
         </h1>
 
         {loading && departments.length === 0 ? (
