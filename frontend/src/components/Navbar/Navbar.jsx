@@ -484,11 +484,11 @@ const Navbar = () => {
                     BROCHUREs
                   </Link>
                   <Link
-                    to="/faq"
+                    to="/placement-statistics"
                     className="hover:text-blue-200 text-base lg:text-lg"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    FAQ's
+                    PLACEMENT-STATS
                   </Link>
                   <Link
                     to="/team"
