@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import JobCard from "./JobCard";
 import Jobdetail from "./Jobdetail";
-import BouncingLoader from "../BouncingLoader";
 import LowConnectivityWarning from "../LowConnectivityWarning"
 import Notification from "../ProfessorDashboard/Notification";
 import NoDataFound from "../NoData";
@@ -13,7 +12,6 @@ const JobApplications = () => {
   const [liveNotAppliedJobs, setLiveNotAppliedJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [visibleDetailId, setVisibleDetailId] = useState(null);
   const [activeTab, setActiveTab] = useState("upcoming");
 
   useEffect(() => {
@@ -51,14 +49,6 @@ const JobApplications = () => {
     return <p className="text-center text-lg text-red-500">{error}</p>;
   }
 
-  if (visibleDetailId) {
-    return (
-      <div className="container mx-auto px-4 py-6 ">
-        <Jobdetail job_id={visibleDetailId} onBack={() => setVisibleDetailId(null)} />
-      </div>
-    );
-  }
-
   const renderTabContent = () => {
     switch (activeTab) {
       case "upcoming":
@@ -74,7 +64,6 @@ const JobApplications = () => {
                 deadline={job.deadline}
                 jpid={job._id}
                 isVisible={false}
-                onShowDetails={() => setVisibleDetailId(job._id)}
               />
             ))}
           </div>
@@ -95,7 +84,6 @@ const JobApplications = () => {
                 deadline={job.deadline}
                 jpid={job._id}
                 isVisible={false}
-                onShowDetails={() => setVisibleDetailId(job._id)}
               />
             ))}
           </div>
@@ -116,7 +104,6 @@ const JobApplications = () => {
                 deadline={job.deadline}
                 jpid={job._id}
                 isVisible={false}
-                onShowDetails={() => setVisibleDetailId(job._id)}
               />
             ))}
           </div>
@@ -130,10 +117,7 @@ const JobApplications = () => {
   };
 
   return (
-
-
-    <>
-
+ <>
 <div className="fixed top-0 left-0 w-full z-50">
     <LowConnectivityWarning />
   </div>

@@ -28,6 +28,7 @@ import { Menu, X, LogOut } from "lucide-react";
 import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 import Home from "./StudentDashboard/home";
 import JobApplications from "./StudentDashboard/jobprofile";
+import Jobdetail from "./StudentDashboard/Jobdetail";
 import Interviews from "./StudentDashboard/interviews"; 
 import GD from "./StudentDashboard/gd";    
 // import MailboxComponent from "./StudentDashboard/mailbox";
@@ -327,6 +328,7 @@ const StudentDashboard = () => {
             <Route path="/" element={<Home />} />
             <Route path="home" element={<Home />} />
             <Route path="job-application" element={<JobApplications />} />
+            <Route path="job-application/:job_id" element={<Jobdetail/>} />
             <Route path="oa" element={<OnlineAssessment />} />
             <Route path="interviews" element={<Interviews />} />
             <Route path="gd" element={<GD />} />
@@ -337,7 +339,7 @@ const StudentDashboard = () => {
             <Route path="question-bank" element={<QuestionBank />} />
             <Route path="noc" element={<NOC />} />
             {/* <Route path="mock-assessment" element={<MockAssessmentStudentDashboard/>} /> */}
-     {/*        <Route path="assessment-attempt/:attemptId" element={<AssessmentAttempt/>} /> */}
+            {/*<Route path="assessment-attempt/:attemptId" element={<AssessmentAttempt/>} /> */}
             <Route path="profile" element={<Profile />} />
             <Route path="jobs/:job_id" element={<JobdetailFromCalender />} />
             <Route path="request-help" element={<Request />} />

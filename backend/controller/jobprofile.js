@@ -34,317 +34,6 @@ export const getAllCompanies = async (req, res) => {
 };
 
 
-
-// export const createJobProfilecopy = async (req, res) => {
-//   try {
-//     const recruiter_id = req.user.userId;
-//     const {
-//       job_id,
-//       company_name,
-//       company_logo,
-//       job_role,
-//       jobdescription,
-//       joblocation,
-//       job_type,
-//       job_category,
-//       ctc,
-//       base_salary,
-//       deadline,
-//       Hiring_Workflow,
-//       department_allowed,
-//       gender_allowed,
-//       eligible_batch,
-//       minimum_cgpa,
-//       course_allowed,
-//       active_backlogs,
-//       history_backlogs,
-//     } = req.body;
-
-//     const tpo= await Professor.findById(recruiter_id);
-//     let Approved_Status;
-//     if(tpo){
-//       Approved_Status=true;
-//     }
-//     else{
-//       Approved_Status=false;
-//     }
-//     const processedWorkflow = Hiring_Workflow.map(step => {
-//       const processedStep = {
-//         step_type: step.step_type,
-//         details: {},
-//         eligible_students: step.eligible_students || [],
-//         shortlisted_students: step.shortlisted_students || []
-//       };
-
-//       switch (step.step_type) {
-//         case 'OA':
-//           processedStep.details = {
-//             oa_date: step.details?.oa_date || '',
-//             oa_login_time: step.details?.oa_login_time || '',
-//             oa_duration: step.details?.oa_duration || '',
-//             oa_info: step.details?.oa_info || '',
-//             oa_link: [],
-//           };
-//           break;
-
-//         case 'Interview':
-//           processedStep.details = {
-//             interview_type: step.details?.interview_type || '',
-//             interview_date: step.details?.interview_date || '',
-//             interview_time: step.details?.interview_time || '',
-//             interview_info: step.details?.interview_info || '',
-//             interview_link: [],
-//           };
-//           break;
-
-//         case 'GD':
-//           processedStep.details = {
-//             gd_date: step.details?.gd_date || '',
-//             gd_time: step.details?.gd_time || '',
-//             gd_info: step.details?.gd_info || '',
-//             gd_link: [],
-//           };
-//           break;
-
-//         case 'Others':
-//           processedStep.details = {
-//             others_round_name:step.details?.others_round_name||'',
-//             others_date: step.details?.others_date || '',
-//             others_login_time: step.details?.others_login_time || '',
-//             others_duration: step.details?.others_duration || '',
-//             others_info: step.details?.others_info || '',
-//             others_link:[],
-//           };
-//           break;
-
-//         case 'Resume Shortlisting':
-//           processedStep.details = {};
-//           break;
-
-//         default:
-//           throw new Error(`Invalid step type: ${step.step_type}`);
-//       }
-//       return processedStep;
-//     });
-
-//     let job_class;
-//     if (ctc < 5) {
-//       job_class = "Below Dream";
-//     } else if (ctc >= 5 && ctc < 12) {
-//       job_class = "Dream";
-//     } else if (ctc >= 12) {
-//       job_class = "Super Dream";
-//     } else {
-//       throw new Error("Invalid CTC value");
-//     }
-
-//     const jobProfile = new JobProfile({
-//       recruiter_id,
-//       job_id,
-//       company_name,
-//       company_logo,
-//       job_role,
-//       jobdescription,
-//       joblocation,
-//       job_type,
-//       job_category,
-//       job_salary: {
-//         ctc,
-//         base_salary
-//       },
-//       Hiring_Workflow: processedWorkflow,
-//       eligibility_criteria: {
-//         department_allowed,
-//         gender_allowed,
-//         eligible_batch,
-//         minimum_cgpa,
-//         active_backlogs,
-//         history_backlogs,
-//         course_allowed
-//       },
-//       job_class,
-//       deadline,
-//       Approved_Status,
-//     });
-
-//     const savedProfile = await jobProfile.save();
-
-//     const notification = new Notification({
-//       type: "JOB_CREATED",
-//       message: `New job profile created for ${company_name} - ${job_role}`,
-//       jobId: savedProfile._id,
-//     });
-
-//     await notification.save();
-
-//     return res.status(201).json({ 
-//       message: "Job profile created successfully!", 
-//       data: savedProfile 
-//     });
-
-//   } catch (error) {
-//     console.error("Error creating job profile:", error);
-//     return res.status(500).json({ 
-//       message: "Failed to create job profile.", 
-//       error: error.message 
-//     });
-//   }
-// };
-// export const createJobProfilecopy = async (req, res) => {
-//   try {
-//     // Extract recruiter ID from authenticated user
-//     const recruiter_id = req.user.userId;
-
-//     // Destructure request body
-//     const {
-//       job_id,
-//       company_name,
-//       company_logo,
-//       job_role,
-//       jobdescription,
-//       joblocation,
-//       job_type,
-//       job_category,
-//       ctc,
-//       base_salary,
-//       deadline,
-//       Hiring_Workflow,
-//       eligibility_criteria,
-//     } = req.body;
-
-//     // Check if the recruiter is a TPO (Professor)
-//     const tpo = await Professor.findById(recruiter_id);
-//     const Approved_Status = !!tpo;
-
-//     // Process Hiring Workflow
-//     const processedWorkflow = Hiring_Workflow.map((step) => {
-//       const processedStep = {
-//         step_type: step.step_type,
-//         details: {},
-//         eligible_students: step.eligible_students || [],
-//         absent_students: [], // Added to match schema
-//         shortlisted_students: step.shortlisted_students || [],
-//       };
-
-//       switch (step.step_type) {
-//         case "OA":
-//           processedStep.details = {
-//             oa_date: step.details?.oa_date || "",
-//             oa_login_time: step.details?.oa_login_time || "",
-//             oa_duration: step.details?.oa_duration || "",
-//             oa_info: step.details?.oa_info || "",
-//             oa_link: [],
-//           };
-//           break;
-
-//         case "Interview":
-//           processedStep.details = {
-//             interview_type: step.details?.interview_type || "",
-//             interview_date: step.details?.interview_date || "",
-//             interview_time: step.details?.interview_time || "",
-//             interview_info: step.details?.interview_info || "",
-//             interview_link: [],
-//           };
-//           break;
-
-//         case "GD":
-//           processedStep.details = {
-//             gd_date: step.details?.gd_date || "",
-//             gd_time: step.details?.gd_time || "",
-//             gd_info: step.details?.gd_info || "",
-//             gd_link: [],
-//           };
-//           break;
-
-//         case "Others":
-//           processedStep.details = {
-//             others_round_name: step.details?.others_round_name || "",
-//             others_date: step.details?.others_date || "",
-//             others_login_time: step.details?.others_login_time || "",
-//             others_duration: step.details?.others_duration || "",
-//             others_info: step.details?.others_info || "",
-//             others_link: [],
-//           };
-//           break;
-
-//         case "Resume Shortlisting":
-//           processedStep.details = {};
-//           break;
-
-//         default:
-//           // Log unknown step type but continue processing
-//           console.warn(`Unknown step type: ${step.step_type}`);
-//           processedStep.details = step.details || {};
-//       }
-//       return processedStep;
-//     });
-
-//     // Determine job_class based on CTC
-//     let job_class;
-//     if (ctc < 5) {
-//       job_class = "Below Dream";
-//     } else if (ctc >= 5 && ctc < 12) {
-//       job_class = "Dream";
-//     } else if (ctc >= 12) {
-//       job_class = "Super Dream";
-//     } else {
-//       job_class = "Below Dream"; // Default for invalid/undefined CTC
-//     }
-
-//     // Create new JobProfile
-//     const jobProfile = new JobProfile({
-//       recruiter_id,
-//       job_id: job_id || "",
-//       company_name: company_name || "",
-//       company_logo: company_logo || "",
-//       job_role: job_role || "",
-//       jobdescription: jobdescription || "",
-//       joblocation: joblocation || "",
-//       job_type: job_type || "",
-//       job_category: job_category || "",
-//       job_salary: {
-//         ctc: ctc || 0,
-//         base_salary: base_salary || "",
-//       },
-//       Hiring_Workflow: processedWorkflow || [],
-//       eligibility_criteria: eligibility_criteria || [], // Store as array of objects
-//       job_class,
-//       deadline: deadline || new Date(),
-//       Approved_Status,
-//       Applied_Students: [], // Initialize empty array
-//       completed: false,
-//       visibility: true,
-//       recruiter_editing_allowed: false,
-//       auditLogs: [], // Initialize empty array
-//     });
-
-//     // Save JobProfile to database
-//     const savedProfile = await jobProfile.save();
-
-//     // Create and save notification
-//     const notification = new Notification({
-//       type: "JOB_CREATED",
-//       message: `New job profile created for ${company_name || "Unknown Company"} - ${job_role || "Unknown Role"}`,
-//       jobId: savedProfile._id,
-//     });
-//     await notification.save();
-
-//     return res.status(201).json({
-//       message: "Job profile created successfully!",
-//       data: savedProfile,
-//     });
-//   } catch (error) {
-//     console.error("Error creating job profile:", {
-//       message: error.message,
-//       stack: error.stack,
-//     });
-//     return res.status(500).json({
-//       message: "Failed to create job profile.",
-//       error: error.message,
-//     });
-//   }
-// };
-
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -736,71 +425,6 @@ export const deleteJob = async (req, res) => {
     res.status(500).json({ success: false, error: 'Server Error' });
   }
 };
-
-// export const getJobProfiletostudent = async (req, res) => {
-//   try {
-//     const studentId = req.user.userId;
-//     if (!studentId) {
-//       return res.status(400).json({ message: "User ID is missing in the request." });
-//     }
-//     const student = await Student.findById({_id:studentId});
-//     let batch;
-//     try {
-//       const rollNumbers = [student.rollno];
-//       const course = student.course;
-//       const response = await axios.post(`${process.env.ERP_SERVER}`, rollNumbers);
-//       const erpStudents = response.data.data;
-//       const erpData = erpStudents[0];
-//       const erpBatch = erpData.batch;
-//       const courseDurations = {
-//         "B.Tech": 4,
-//         "M.Tech": 2,
-//         "B.Sc.-B.Ed.": 4,
-//         "MBA": 2,
-//         "M.Sc.": 2
-//         };
-//        const adjustment = courseDurations[course] || 0; // Default to 0 if course not found
-//        const adjustedBatch = String(Number(erpBatch) + adjustment);
-//       batch = adjustedBatch;
-//     } catch (erpError) {
-//       console.error("ERP server error, falling back to database batch:", erpError);
-//       batch = student.batch;
-//     }
-//     const JobProfiles = await JobProfile.find({
-//       Approved_Status: true,
-//       'eligibility_criteria.eligible_batch': batch
-//   });
-  
-//     const applied = [];
-//     const notApplied = [];
-//     const liveButNotApplied = [];
-
-//     const currentDate = new Date();
-
-//     JobProfiles.forEach((job) => {
-//       const isApplied = job.Applied_Students.includes(studentId);
-//       const isLive = new Date(job.deadline) > currentDate;
-
-//       if (isApplied) {
-//         applied.push(job);
-//       } else if (!isApplied && isLive) {
-//         liveButNotApplied.push(job);
-//       } else {
-//         notApplied.push(job);
-//       }
-//     });
-
-//     return res.status(200).json({
-//       applied,
-//       notApplied,
-//       liveButNotApplied,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching job status:", error);
-//     return res.status(500).json({ message: "An error occurred while fetching job status." });
-//   }
-// };
-
 export const getJobProfiletostudent = async (req, res) => {
   try {
     const studentId = req.user.userId;
@@ -809,30 +433,7 @@ export const getJobProfiletostudent = async (req, res) => {
     }
 
     const student = await Student.findById({ _id: studentId });
-    let batch;
-
-    try {
-      const rollNumbers = [student.rollno];
-      const course = student.course;
-      const response = await axios.post(`${process.env.ERP_SERVER}`, rollNumbers);
-      const erpStudents = response.data.data;
-      const erpData = erpStudents[0];
-      const erpBatch = erpData.batch;
-
-      const courseDurations = {
-        "B.Tech": 4,
-        "M.Tech": 2,
-        "B.Sc.-B.Ed.": 4,
-        "MBA": 2,
-        "M.Sc.": 2,
-      };
-      const adjustment = courseDurations[course] || 0;
-      const adjustedBatch = String(Number(erpBatch) + adjustment);
-      batch = adjustedBatch;
-    } catch (erpError) {
-      console.error("ERP server error, falling back to database batch:", erpError);
-      batch = student.batch;
-    }
+    let batch='2026'
 
     const course = student.course;
 
@@ -875,6 +476,82 @@ export const getJobProfiletostudent = async (req, res) => {
     return res.status(500).json({ message: "An error occurred while fetching job status." });
   }
 };
+
+
+// export const getJobProfiletostudent = async (req, res) => {
+//   try {
+//     const studentId = req.user.userId;
+//     if (!studentId) {
+//       return res.status(400).json({ message: "User ID is missing in the request." });
+//     }
+
+//     const student = await Student.findById({ _id: studentId });
+//     let batch;
+
+//     try {
+//       const rollNumbers = [student.rollno];
+//       const course = student.course;
+//       const response = await axios.post(`${process.env.ERP_SERVER}`, rollNumbers);
+//       const erpStudents = response.data.data;
+//       const erpData = erpStudents[0];
+//       const erpBatch = erpData.batch;
+
+//       const courseDurations = {
+//         "B.Tech": 4,
+//         "M.Tech": 2,
+//         "B.Sc.-B.Ed.": 4,
+//         "MBA": 2,
+//         "M.Sc.": 2,
+//       };
+//       const adjustment = courseDurations[course] || 0;
+//       const adjustedBatch = String(Number(erpBatch) + adjustment);
+//       batch = adjustedBatch;
+//     } catch (erpError) {
+//       console.error("ERP server error, falling back to database batch:", erpError);
+//       batch = student.batch;
+//     }
+
+//     const course = student.course;
+
+//     const JobProfiles = await JobProfile.find({
+//       Approved_Status: true,
+//       eligibility_criteria: {
+//         $elemMatch: {
+//           eligible_batch: batch,
+//           course_allowed: course,
+//         },
+//       },
+//     });
+
+//     const applied = [];
+//     const notApplied = [];
+//     const liveButNotApplied = [];
+
+//     const currentDate = new Date();
+
+//     JobProfiles.forEach((job) => {
+//       const isApplied = job.Applied_Students.includes(studentId);
+//       const isLive = new Date(job.deadline) > currentDate;
+
+//       if (isApplied) {
+//         applied.push(job);
+//       } else if (!isApplied && isLive) {
+//         liveButNotApplied.push(job);
+//       } else {
+//         notApplied.push(job);
+//       }
+//     });
+
+//     return res.status(200).json({
+//       applied,
+//       notApplied,
+//       liveButNotApplied,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching job status:", error);
+//     return res.status(500).json({ message: "An error occurred while fetching job status." });
+//   }
+// };
 
 
 export const getJobProfiledetails = async (req, res) => {

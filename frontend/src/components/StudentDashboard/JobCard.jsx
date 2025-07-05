@@ -1,13 +1,14 @@
 import React from 'react';
 import { Clock, Briefcase, Tag } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const JobCard = ({ 
   job_id, 
   jobtype, 
   jobtitle, 
   company, 
-  deadline, 
-  onShowDetails 
+  deadline,
+  jpid, 
 }) => {
   // Format deadline with more robust date handling
   const formatDeadline = (deadlineDate) => {
@@ -24,6 +25,11 @@ const JobCard = ({
     } catch (error) {
       return 'Invalid Date';
     }
+  };
+
+  const navigate = useNavigate();
+   const handleClick = () => {
+    navigate(`${jpid}`);
   };
 
   return (
@@ -60,7 +66,7 @@ const JobCard = ({
 
         {/* Action Button */}
         <button 
-          onClick={onShowDetails}
+          onClick={handleClick}
           className="w-full bg-custom-blue text-white py-2 rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           View Details

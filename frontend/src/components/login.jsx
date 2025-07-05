@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useLocation } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
@@ -30,6 +30,10 @@ const LoginSignup = ({ Login }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const altchaRef = useRef(null);
+
+  const { search } = useLocation();
+  const queryParams = new URLSearchParams(search);
+  const redirectUrl = queryParams.get("redirect") || null;
 
   useEffect(() => {
     setName("");
@@ -76,7 +80,7 @@ const LoginSignup = ({ Login }) => {
       const response = await toast.promise(
         axios.post(
           `${import.meta.env.REACT_APP_BASE_URL}/auth/login`,
-          { email, password /* code *//* , captcha: captchaValue */ },
+          { email, password/* , captcha: captchaValue */ },
           { withCredentials: true }
         ),
         {
@@ -93,14 +97,20 @@ const LoginSignup = ({ Login }) => {
           userType: response.data.userType,
         })
       );
-  
+     
+      if(redirectUrl){
+        console.log("Redirecting to:", redirectUrl);
+        navigate(redirectUrl, { replace: true });
+        console.log("Redirected to:", redirectUrl);
+      }
+      else{
       if (response.data.userType === "Student") {
         navigate("/sdashboard/home");
       } else if (response.data.userType === "Recuiter") {
         navigate("/rdashboard/home");
       } else if (response.data.userType === "Professor") {
         navigate("/pdashboard/dashboard");
-      }
+      }}
     } catch (error) {
       if (error.response?.data?.message === "Account locked. Please check your email for OTP.") {
         toast.error("Account Locked");
